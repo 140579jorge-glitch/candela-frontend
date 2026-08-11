@@ -33,12 +33,15 @@ const candela = {
     auth: {
         async login(email, password) {
             const data = await candela._req('POST', '/api/auth/login', { email, password });
-            localStorage.setItem('candela_token', data.access_token);
-            localStorage.setItem('candela_user', JSON.stringify({
-                tipo: data.tipo_usuario,
-                nombre: data.nombre,
-                slug: data.creadora_slug,
-            }));
+            if (data.requires_otp) return data;  // admin 2FA — no guardar token aun
+            if (data.access_token) {
+                localStorage.setItem('candela_token', data.access_token);
+                localStorage.setItem('candela_user', JSON.stringify({
+                    tipo: data.tipo_usuario,
+                    nombre: data.nombre,
+                    slug: data.creadora_slug,
+                }));
+            }
             return data;
         },
         async registroSuscriptor(email, password, nombre) {
