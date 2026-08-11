@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrate como Creadora — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
+                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
+                        "c-soft":"#8B7D77","c-border":"#F0E6E1"
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
+        .c-btn:active { transform:scale(.97); }
+        .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
+        .step-dot { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;transition:all .3s; }
+        .step-dot.done { background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff; }
+        .step-dot.active { background:#fff;color:#F4A261;border:2px solid #F4A261; }
+        .step-dot.idle { background:#F0E6E1;color:#8B7D77; }
+        .step-line { flex:1;height:2px;transition:background .3s; }
+        .step-line.done { background:linear-gradient(90deg,#F4A261,#E8A598); }
+        .step-line.idle { background:#F0E6E1; }
+        .pais-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem; }
+        .pais-opt { padding:.55rem;border-radius:.75rem;border:1.5px solid #F0E6E1;font-size:.8rem;font-weight:600;text-align:center;cursor:pointer;transition:all .15s; }
+        .pais-opt.selected { border-color:#F4A261;background:rgba(244,162,97,.08);color:#E08947; }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text antialiased min-h-screen">
+
+<!-- Topbar minimal -->
+<header class="fixed top-0 w-full z-40 bg-white/90 backdrop-blur-md border-b border-c-border">
+    <div class="flex items-center justify-between h-14 px-5 max-w-lg mx-auto">
+        <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+        <a href="../index.html" class="text-c-soft text-sm hover:text-c-text transition-colors">Cancelar</a>
+    </div>
+</header>
+
+<main class="max-w-lg mx-auto px-5 pt-20 pb-20">
+
+    <!-- Hero -->
+    <div class="text-center mb-6">
+        <div class="inline-block bg-gradient-to-br from-c-champagne to-c-rose rounded-2xl p-3 mb-3">
+            <span class="ms" style="font-size:2rem;color:#E08947">auto_awesome</span>
+        </div>
+        <h1 class="font-display text-2xl font-semibold mb-1">Convierte tu contenido en ingresos</h1>
+        <p class="text-c-soft text-sm">Solo te llevara 2 minutos. Empieza hoy.</p>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="flex items-center mb-6">
+        <div class="flex flex-col items-center">
+            <div class="step-dot active" id="dot1">1</div>
+            <span class="text-[10px] text-c-soft mt-1 font-semibold">Tu cuenta</span>
+        </div>
+        <div class="step-line idle" id="line1-2"></div>
+        <div class="flex flex-col items-center">
+            <div class="step-dot idle" id="dot2">2</div>
+            <span class="text-[10px] text-c-soft mt-1 font-semibold">Perfil</span>
+        </div>
+        <div class="step-line idle" id="line2-3"></div>
+        <div class="flex flex-col items-center">
+            <div class="step-dot idle" id="dot3">3</div>
+            <span class="text-[10px] text-c-soft mt-1 font-semibold">Terminos</span>
+        </div>
+    </div>
+
+    <!-- PASO 1 -->
+    <div id="paso1" class="bg-white rounded-2xl border border-c-border shadow-sm p-6">
+        <h2 class="font-bold text-base mb-4">Crea tu cuenta</h2>
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Nombre real (privado, solo para verificacion)</label>
+                <input id="r-nombre" type="text" placeholder="Tu nombre completo" autocomplete="name"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Email</label>
+                <input id="r-email" type="email" placeholder="tu@email.com" autocomplete="email"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contrasena</label>
+                <div class="relative">
+                    <input id="r-pass" type="password" placeholder="Minimo 8 caracteres" autocomplete="new-password"
+                        class="w-full px-4 py-2.5 pr-12 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    <button type="button" onclick="togglePass('r-pass','eye1')" class="absolute right-3 top-1/2 -translate-y-1/2 text-c-soft hover:text-c-accent">
+                        <span class="ms" id="eye1" style="font-size:18px">visibility_off</span>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Confirmar contrasena</label>
+                <div class="relative">
+                    <input id="r-pass2" type="password" placeholder="Repite tu contrasena" autocomplete="new-password"
+                        class="w-full px-4 py-2.5 pr-12 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    <button type="button" onclick="togglePass('r-pass2','eye2')" class="absolute right-3 top-1/2 -translate-y-1/2 text-c-soft hover:text-c-accent">
+                        <span class="ms" id="eye2" style="font-size:18px">visibility_off</span>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Fecha de nacimiento (debes ser mayor de 18)</label>
+                <input id="r-nacimiento" type="date" max=""
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+        </div>
+        <button onclick="irPaso2()" class="c-btn text-white w-full py-3 rounded-xl font-bold text-sm shadow-md mt-5 flex items-center justify-center gap-2">
+            Siguiente <span class="ms" style="font-size:18px">arrow_forward</span>
+        </button>
+        <p class="text-center text-xs text-c-soft mt-3">Ya tienes cuenta? <a href="../index.html?open=login" class="text-c-accent font-bold hover:underline">Inicia sesion</a></p>
+    </div>
+
+    <!-- PASO 2 -->
+    <div id="paso2" class="hidden bg-white rounded-2xl border border-c-border shadow-sm p-6">
+        <h2 class="font-bold text-base mb-4">Tu perfil publico</h2>
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Nombre artistico</label>
+                <input id="r-artistico" type="text" placeholder="Como te llaman tus fans" maxlength="40"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                <p class="text-[11px] text-c-soft mt-1">Tu url publica: candela.app/<span id="preview-slug" class="text-c-accent font-bold">tuapodo</span></p>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Bio (opcional)</label>
+                <textarea id="r-bio" rows="3" placeholder="Cuéntale a tus fans quién eres y que ofreces..."
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Tu pais</label>
+                <div class="pais-grid">
+                    <div class="pais-opt" onclick="selPais('Bolivia',this)">🇧🇴 Bolivia</div>
+                    <div class="pais-opt" onclick="selPais('Colombia',this)">🇨🇴 Colombia</div>
+                    <div class="pais-opt" onclick="selPais('Argentina',this)">🇦🇷 Argentina</div>
+                    <div class="pais-opt" onclick="selPais('Mexico',this)">🇲🇽 Mexico</div>
+                    <div class="pais-opt" onclick="selPais('Peru',this)">🇵🇪 Peru</div>
+                    <div class="pais-opt" onclick="selPais('Venezuela',this)">🇻🇪 Venezuela</div>
+                    <div class="pais-opt" onclick="selPais('Chile',this)">🇨🇱 Chile</div>
+                    <div class="pais-opt" onclick="selPais('Ecuador',this)">🇪🇨 Ecuador</div>
+                    <div class="pais-opt" onclick="selPais('Otro',this)">🌎 Otro</div>
+                </div>
+                <input type="hidden" id="r-pais" value="">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio suscripcion mensual ($)</label>
+                <p class="text-[11px] text-c-soft mb-2">Puedes cambiarlo despues. Pon 0 si quieres decidirlo mas tarde.</p>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
+                    <input id="r-precio" type="number" min="0" max="100" step="0.5" value="9.99"
+                        class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-5">
+            <button onclick="irPaso(1)" class="flex-1 border border-c-border text-c-text py-3 rounded-xl font-semibold text-sm hover:border-c-accent hover:text-c-accent transition-all flex items-center justify-center gap-1">
+                <span class="ms" style="font-size:18px">arrow_back</span> Atras
+            </button>
+            <button onclick="irPaso3()" class="c-btn text-white flex-1 py-3 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2">
+                Siguiente <span class="ms" style="font-size:18px">arrow_forward</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- PASO 3 -->
+    <div id="paso3" class="hidden bg-white rounded-2xl border border-c-border shadow-sm p-6">
+        <h2 class="font-bold text-base mb-1">Casi lista!</h2>
+        <p class="text-c-soft text-sm mb-4">Confirma que aceptas los terminos de Candela.</p>
+
+        <div class="bg-c-bg rounded-xl p-4 border border-c-border text-sm mb-4">
+            <div class="flex items-start gap-2">
+                <span class="ms" style="font-size:18px;color:#F4A261;margin-top:1px">info</span>
+                <div>
+                    <p class="font-bold mb-1">Que pasa despues del registro:</p>
+                    <ul class="text-c-soft space-y-1 text-xs">
+                        <li>• Tu cuenta queda en estado <strong class="text-c-text">pendiente</strong></li>
+                        <li>• Debes subir tu CI + selfie para verificacion de edad</li>
+                        <li>• El equipo Candela revisa en <strong class="text-c-text">24-48 horas</strong></li>
+                        <li>• Al aprobarse, recibes acceso completo al panel</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3 mb-5">
+            <label class="flex items-start gap-3 cursor-pointer text-sm">
+                <input type="checkbox" id="t-edad" class="mt-0.5 w-4 h-4 accent-orange-400 shrink-0">
+                <span>Declaro que tengo <strong>18 anos o mas</strong> y que la informacion que proporcioné es verdadera.</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer text-sm">
+                <input type="checkbox" id="t-terminos" class="mt-0.5 w-4 h-4 accent-orange-400 shrink-0">
+                <span>Acepto los <a href="terminos.html" target="_blank" class="text-c-accent font-bold hover:underline">Terminos de Servicio</a> y la <a href="privacidad.html" target="_blank" class="text-c-accent font-bold hover:underline">Politica de Privacidad</a>.</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer text-sm">
+                <input type="checkbox" id="t-contenido" class="mt-0.5 w-4 h-4 accent-orange-400 shrink-0">
+                <span>Entiendo que todo contenido publicado debe cumplir las <a href="#" class="text-c-accent font-bold hover:underline">Normas de contenido</a>.</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer text-sm">
+                <input type="checkbox" id="t-comision" class="mt-0.5 w-4 h-4 accent-orange-400 shrink-0">
+                <span>Entiendo que Candela retiene el <strong>15% de comision</strong>. Yo recibo el <strong>85%</strong>.</span>
+            </label>
+        </div>
+
+        <div id="error-reg" class="hidden text-sm text-red-500 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-4"></div>
+
+        <div class="flex gap-3">
+            <button onclick="irPaso(2)" class="flex-1 border border-c-border text-c-text py-3 rounded-xl font-semibold text-sm hover:border-c-accent hover:text-c-accent transition-all flex items-center justify-center gap-1">
+                <span class="ms" style="font-size:18px">arrow_back</span> Atras
+            </button>
+            <button onclick="registrar()" id="btn-registrar" class="c-btn text-white flex-1 py-3 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2">
+                <span class="ms" style="font-size:18px">rocket_launch</span> Registrarme
+            </button>
+        </div>
+    </div>
+
+    <!-- EXITO -->
+    <div id="exito" class="hidden text-center py-10">
+        <div class="inline-block bg-gradient-to-br from-orange-100 to-rose-100 rounded-3xl p-5 mb-5">
+            <span class="ms" style="font-size:3rem;color:#F4A261">celebration</span>
+        </div>
+        <h2 class="font-display text-2xl font-semibold mb-2">Bienvenida a Candela!</h2>
+        <p class="text-c-soft mb-5 text-sm max-w-xs mx-auto">Tu cuenta fue creada. Sube tu verificacion de CI para activarla.</p>
+        <a href="dashboard-creadora.html" class="c-btn text-white inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-md">
+            <span class="ms" style="font-size:18px">arrow_forward</span> Ir a mi panel
+        </a>
+    </div>
+
+</main>
+
+<div id="toasts" class="fixed bottom-6 right-4 z-[200] flex flex-col gap-2 pointer-events-none"></div>
+<script src="../js/api.js"></script>
+<script>
+let pasoActual = 1;
+let paisSel = '';
+
+const hoy = new Date();
+hoy.setFullYear(hoy.getFullYear() - 18);
+document.getElementById('r-nacimiento').max = hoy.toISOString().split('T')[0];
+
+document.getElementById('r-artistico')?.addEventListener('input', function() {
+    const slug = this.value.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    document.getElementById('preview-slug').textContent = slug || 'tuapodo';
+});
+
+function selPais(pais, el) {
+    document.querySelectorAll('.pais-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    paisSel = pais;
+}
+
+function togglePass(id, eyeId) {
+    const input = document.getElementById(id);
+    const eye = document.getElementById(eyeId);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    eye.textContent = show ? 'visibility' : 'visibility_off';
+}
+
+function irPaso2() {
+    const nombre = document.getElementById('r-nombre').value.trim();
+    const email = document.getElementById('r-email').value.trim();
+    const pass = document.getElementById('r-pass').value;
+    const pass2 = document.getElementById('r-pass2').value;
+    const nac = document.getElementById('r-nacimiento').value;
+    if (!nombre) { toast('Ingresa tu nombre', 'error'); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Email invalido', 'error'); return; }
+    if (pass.length < 8) { toast('La contrasena debe tener al menos 8 caracteres', 'error'); return; }
+    if (pass !== pass2) { toast('Las contrasenas no coinciden', 'error'); return; }
+    if (!nac) { toast('Ingresa tu fecha de nacimiento', 'error'); return; }
+    const nacDate = new Date(nac);
+    const limite = new Date(); limite.setFullYear(limite.getFullYear() - 18);
+    if (nacDate > limite) { toast('Debes tener al menos 18 anos', 'error'); return; }
+    irPaso(2);
+}
+
+function irPaso3() {
+    if (!document.getElementById('r-artistico').value.trim()) { toast('Ingresa tu nombre artistico', 'error'); return; }
+    if (!paisSel) { toast('Selecciona tu pais', 'error'); return; }
+    irPaso(3);
+}
+
+function irPaso(n) {
+    document.getElementById('paso' + pasoActual).classList.add('hidden');
+    document.getElementById('paso' + n).classList.remove('hidden');
+    for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById('dot' + i);
+        dot.classList.remove('done','active','idle');
+        if (i < n) dot.classList.add('done');
+        else if (i === n) dot.classList.add('active');
+        else dot.classList.add('idle');
+    }
+    const upd = (id, done) => { const el=document.getElementById(id); el.classList.toggle('done',done); el.classList.toggle('idle',!done); };
+    upd('line1-2', n > 1);
+    upd('line2-3', n > 2);
+    pasoActual = n;
+    window.scrollTo(0, 0);
+}
+
+async function registrar() {
+    const checks = ['t-edad','t-terminos','t-contenido','t-comision'];
+    if (checks.some(id => !document.getElementById(id).checked)) { toast('Debes aceptar todos los terminos', 'error'); return; }
+    const btn = document.getElementById('btn-registrar');
+    btn.innerHTML = '<span class="ms" style="font-size:18px">hourglass_top</span> Creando...';
+    btn.disabled = true;
+    document.getElementById('error-reg').classList.add('hidden');
+    const refCode = new URLSearchParams(window.location.search).get('ref') || null;
+    const data = {
+        nombre: document.getElementById('r-nombre').value.trim(),
+        email: document.getElementById('r-email').value.trim(),
+        password: document.getElementById('r-pass').value,
+        fecha_nacimiento: document.getElementById('r-nacimiento').value,
+        nombre_artistico: document.getElementById('r-artistico').value.trim(),
+        bio: document.getElementById('r-bio').value.trim(),
+        pais: paisSel,
+        precio_suscripcion: parseFloat(document.getElementById('r-precio').value) || 0,
+        ref_code: refCode,
+    };
+    try {
+        await candela.auth.registroCreadora(data);
+        await candela.auth.login(data.email, data.password);
+        document.getElementById('paso3').classList.add('hidden');
+        document.getElementById('exito').classList.remove('hidden');
+    } catch(err) {
+        const errEl = document.getElementById('error-reg');
+        errEl.textContent = err.message || 'Error al crear la cuenta';
+        errEl.classList.remove('hidden');
+    } finally {
+        btn.innerHTML = '<span class="ms" style="font-size:18px">rocket_launch</span> Registrarme';
+        btn.disabled = false;
+    }
+}
+
+function toast(msg, tipo='info') {
+    const c = document.getElementById('toasts');
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const el = document.createElement('div');
+    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:300px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.textContent = msg;
+    c.appendChild(el);
+    requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });
+    setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(100%)'; setTimeout(()=>el.remove(),300); }, 3800);
+}
+</script>
+</body>
+</html>

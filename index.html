@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candela — Descubre creadoras latinas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":        "#FFF8F5",
+                        "c-white":     "#FFFFFF",
+                        "c-accent":    "#F4A261",
+                        "c-accent-d":  "#E08947",
+                        "c-rose":      "#E8A598",
+                        "c-champagne": "#F2D5C4",
+                        "c-text":      "#2D2D2D",
+                        "c-soft":      "#8B7D77",
+                        "c-border":    "#F0E6E1",
+                        "c-surf":      "#FFFBF9",
+                    },
+                    fontFamily: {
+                        display: ["Playfair Display", "serif"],
+                        body:    ["Nunito", "sans-serif"],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+
+        /* Glass topbar */
+        .glass {
+            background: rgba(255, 248, 245, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Overlay oscuro sobre imagen (gradiente) */
+        .card-overlay {
+            background: linear-gradient(to top,
+                rgba(20, 8, 2, 0.82) 0%,
+                rgba(20, 8, 2, 0.25) 50%,
+                transparent 100%);
+        }
+
+        /* Gradiente logo */
+        .logo-text {
+            background: linear-gradient(90deg, #F4A261 0%, #E8A598 60%, #D4869D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Borde de story activa */
+        .story-ring-active {
+            background: linear-gradient(135deg, #F4A261, #E8A598, #D4869D);
+        }
+
+        /* Boton degradado */
+        .c-btn {
+            background: linear-gradient(135deg, #F4A261, #E8A598);
+            transition: filter 0.2s, transform 0.15s;
+        }
+        .c-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+        .c-btn:active { transform: scale(0.97); }
+
+        /* Boton de accion circular sobre imagen */
+        .action-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.28);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .action-btn:hover { background: rgba(244,162,97,0.75); }
+        .action-btn.liked { background: rgba(244,162,97,0.9); }
+
+        /* Boton tip (rosa) */
+        .sub-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: linear-gradient(135deg, #F4A261, #E8A598);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(244,162,97,0.45);
+        }
+        .sub-btn:hover { transform: scale(1.1); }
+
+        /* Dot online */
+        .dot-online {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #2ecc71;
+            box-shadow: 0 0 6px rgba(46,204,113,0.7);
+            display: inline-block;
+        }
+
+        /* Skeleton shimmer */
+        @keyframes shimmer {
+            0%   { background-position: -300% 0; }
+            100% { background-position:  300% 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #F2D5C4 25%, #FFF0EA 50%, #F2D5C4 75%);
+            background-size: 300% 100%;
+            animation: shimmer 1.6s infinite;
+            border-radius: 10px;
+        }
+
+        /* Feed card hover */
+        .feed-card { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+        .feed-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 52px rgba(244,162,97,0.18);
+        }
+
+        /* Modal */
+        .modal-bg {
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(45, 20, 10, 0.42);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center; padding: 1rem;
+            opacity: 0; visibility: hidden; transition: all 0.22s;
+        }
+        .modal-bg.open { opacity: 1; visibility: visible; }
+        .modal-box {
+            background: #fff; border-radius: 1.5rem; padding: 2rem;
+            width: 100%; max-width: 440px;
+            box-shadow: 0 28px 64px rgba(0,0,0,0.13);
+            transform: translateY(18px); transition: transform 0.22s;
+        }
+        .modal-bg.open .modal-box { transform: translateY(0); }
+
+        /* No scrollbar */
+        .no-scroll::-webkit-scrollbar { display: none; }
+        .no-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Chip filtro activo */
+        .chip.active {
+            background: linear-gradient(135deg, #F4A261, #E8A598);
+            color: #fff; border-color: transparent;
+        }
+
+        /* Material icons fix */
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-style: normal;
+            font-size: 22px;
+            line-height: 1;
+            user-select: none;
+        }
+        .ms-fill { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text antialiased min-h-screen pb-20 md:pb-0">
+
+<!-- ===== TOPBAR ===== -->
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,0.07);">
+    <div class="flex items-center justify-between h-16 px-4 md:px-10 max-w-7xl mx-auto">
+
+        <button class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft hover:text-c-accent">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        <a href="index.html" class="font-display text-[1.85rem] font-semibold logo-text select-none">Candela</a>
+
+        <div id="topbar-right"></div>
+    </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="pt-20 max-w-7xl mx-auto">
+
+    <!-- Hero para visitantes no logueados -->
+    <div id="hero-guest" class="hidden text-center px-4 md:px-10 pt-8 pb-2">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-c-champagne text-c-accent-d text-[11px] font-bold uppercase tracking-widest mb-4">Solo mayores de 18</span>
+        <h1 class="font-display text-4xl md:text-5xl font-semibold leading-tight mb-3">
+            Donde las <em class="text-c-accent not-italic">creadoras latinas</em><br>brillan de verdad
+        </h1>
+        <p class="text-c-soft text-base max-w-sm mx-auto mb-6">Suscribete a tus favoritas. Contenido exclusivo en tu idioma.</p>
+        <div class="flex gap-3 justify-center">
+            <button onclick="abrirModal('login')" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md">Entrar</button>
+            <a href="pages/registro-creadora.html" class="border-2 border-c-accent text-c-accent px-6 py-2.5 rounded-full text-sm font-bold hover:bg-c-accent hover:text-white transition-all">Ser creadora</a>
+        </div>
+    </div>
+
+    <!-- Stories -->
+    <section class="px-4 md:px-10 pt-5 pb-2 overflow-x-auto no-scroll">
+        <div class="flex gap-4 w-max" id="stories-row">
+            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-12 mt-1"></div></div>
+            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-10 mt-1"></div></div>
+            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-14 mt-1"></div></div>
+            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-11 mt-1"></div></div>
+        </div>
+    </section>
+
+    <!-- Chips de filtro -->
+    <section class="px-4 md:px-10 py-3 overflow-x-auto no-scroll">
+        <div class="flex gap-2 w-max">
+            <button class="chip active text-[13px] font-bold px-4 py-1.5 rounded-full border border-c-border transition-all" data-pais="" onclick="filtrar(this)">Todas</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Bolivia" onclick="filtrar(this)">Bolivia</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Colombia" onclick="filtrar(this)">Colombia</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Mexico" onclick="filtrar(this)">Mexico</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Argentina" onclick="filtrar(this)">Argentina</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Venezuela" onclick="filtrar(this)">Venezuela</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Peru" onclick="filtrar(this)">Peru</button>
+        </div>
+    </section>
+
+    <!-- Feed grid -->
+    <section class="px-4 md:px-10 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="feed-grid">
+        <!-- Skeletons iniciales -->
+        <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-2/3"></div><div class="skeleton h-3 w-1/3"></div></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm hidden sm:block"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-2/5"></div></div></div>
+    </section>
+
+    <!-- Estado vacío -->
+    <div id="empty-state" class="hidden text-center py-20 px-4">
+        <div class="text-6xl mb-4">🔥</div>
+        <h3 class="font-display text-xl font-semibold mb-2 text-c-text">Muy pronto...</h3>
+        <p class="text-c-soft text-sm">Las primeras creadoras de esta region estan llegando.</p>
+    </div>
+
+</main>
+
+<!-- ===== BOTTOM NAV (solo mobile) ===== -->
+<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,0.1);">
+    <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
+        <a href="index.html" class="flex flex-col items-center text-c-accent gap-0.5">
+            <span class="material-symbols-outlined ms-fill">home</span>
+            <span class="text-[10px] font-bold">Inicio</span>
+        </a>
+        <a href="pages/explorar.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">explore</span>
+            <span class="text-[10px] font-semibold">Explorar</span>
+        </a>
+        <a id="nav-post" href="pages/registro-creadora.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">add_circle</span>
+            <span class="text-[10px] font-semibold">Publicar</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">payments</span>
+            <span class="text-[10px] font-semibold">Wallet</span>
+        </a>
+        <a id="nav-perfil" href="#" onclick="navPerfil()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">person</span>
+            <span class="text-[10px] font-semibold">Perfil</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ===== MODAL LOGIN / REGISTRO ===== -->
+<div class="modal-bg" id="modal-auth">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+
+        <a href="index.html" class="font-display text-2xl logo-text font-semibold block mb-5">Candela</a>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-c-border mb-6">
+            <button id="tab-login" onclick="switchTab('login')" class="pb-3 px-4 text-sm font-bold text-c-accent border-b-2 border-c-accent transition-all">Iniciar sesion</button>
+            <button id="tab-reg" onclick="switchTab('registro')" class="pb-3 px-4 text-sm font-semibold text-c-soft border-b-2 border-transparent hover:text-c-accent transition-all">Crear cuenta</button>
+        </div>
+
+        <!-- Formulario Login -->
+        <form id="form-login" onsubmit="hacerLogin(event)" class="flex flex-col gap-4">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Email</label>
+                <input id="l-email" type="email" required placeholder="tu@email.com"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contrasena</label>
+                <input id="l-pass" type="password" required placeholder="••••••••"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <button type="submit" id="btn-login" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Entrar</button>
+            <div class="flex justify-between items-center">
+                <p class="text-xs text-c-soft">
+                    ¿Quieres publicar? <a href="pages/registro-creadora.html" class="text-c-accent font-bold">Sé creadora</a>
+                </p>
+                <a href="pages/resetear-password.html" class="text-xs text-c-accent font-semibold hover:text-c-accent-d">¿Olvidaste tu contraseña?</a>
+            </div>
+        </form>
+
+        <!-- Formulario Registro suscriptor -->
+        <form id="form-registro" onsubmit="hacerRegistro(event)" class="hidden flex-col gap-4">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Nombre</label>
+                <input id="r-nombre" type="text" required placeholder="Tu nombre"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Email</label>
+                <input id="r-email" type="email" required placeholder="tu@email.com"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contrasena</label>
+                <input id="r-pass" type="password" required placeholder="Minimo 8 caracteres" minlength="8"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <button type="submit" id="btn-reg" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Crear cuenta gratis</button>
+            <p class="text-center text-xs text-c-soft">
+                ¿Quieres publicar contenido? <a href="pages/registro-creadora.html" class="text-c-accent font-bold">Registrate como creadora</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts" class="fixed bottom-24 right-4 z-[200] flex flex-col gap-2 md:bottom-6 md:right-6 pointer-events-none"></div>
+
+<script src="js/api.js"></script>
+<script>
+const GRADIENTES = {
+    'melocoton':    ['#FFF4EE','#F4A261'],
+    'rosa-venecia': ['#FFF0F5','#D4869D'],
+    'lavanda':      ['#F7F2FF','#9B72CF'],
+    'rojo-carmin':  ['#3D0A0A','#C0392B'],
+    'menta':        ['#F0FAF7','#2ECC71'],
+    'cielo':        ['#F0F8FF','#5DADE2'],
+    'dorada':       ['#FFFBF0','#D4AC0D'],
+    'nude':         ['#FAF7F4','#C4A882'],
+    'noche-rosa':   ['#2D0A2D','#FF2D9B'],
+    'coral':        ['#FFF5F2','#FF6B6B'],
+    'esmeralda':    ['#0D1F19','#1ABC9C'],
+    'nube':         ['#F5F5F5','#95A5A6'],
+};
+
+let todasCreadoras = [];
+let paisFiltro = '';
+
+// ─── INIT ────────────────────────────────────────────────────────────
+function init() {
+    renderTopbar();
+    renderNavLinks();
+    cargarStories();
+    cargarFeed();
+    if (!candela.auth.isLoggedIn()) {
+        document.getElementById('hero-guest').classList.remove('hidden');
+    }
+}
+
+// ─── TOPBAR ──────────────────────────────────────────────────────────
+function renderTopbar() {
+    const el = document.getElementById('topbar-right');
+    const user = candela.auth.user();
+    if (candela.auth.isLoggedIn() && user) {
+        const inicial = (user.nombre || 'U')[0].toUpperCase();
+        el.innerHTML = `
+            <div class="flex items-center gap-2">
+                ${user.tipo === 'creadora' ? `<a href="pages/dashboard-creadora.html" class="hidden md:inline text-xs font-bold text-c-accent">Mi panel</a>` : ''}
+                ${user.tipo === 'suscriptor' ? `<a href="pages/feed.html" class="hidden md:inline text-xs font-bold text-c-accent">Mi feed</a>` : ''}
+                ${user.tipo === 'admin' ? `<a href="pages/admin.html" class="hidden md:inline text-xs font-bold text-c-accent">Admin</a>` : ''}
+                <button onclick="candela.auth.logout()"
+                    class="w-9 h-9 rounded-full c-btn text-white text-sm font-bold flex items-center justify-center shadow-sm"
+                    title="Salir">
+                    ${inicial}
+                </button>
+            </div>`;
+    } else {
+        el.innerHTML = `
+            <button onclick="abrirModal('login')" class="c-btn text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm">
+                Entrar
+            </button>`;
+    }
+}
+
+function renderNavLinks() {
+    const user = candela.auth.user();
+    if (user?.tipo === 'creadora') {
+        document.getElementById('nav-post').href = 'pages/dashboard-creadora.html';
+    }
+}
+
+function navPerfil() {
+    if (!candela.auth.isLoggedIn()) { abrirModal('login'); return; }
+    const u = candela.auth.user();
+    if (u?.tipo === 'creadora') window.location.href = 'pages/dashboard-creadora.html';
+    else if (u?.tipo === 'admin') window.location.href = 'pages/admin.html';
+    else if (u?.tipo === 'suscriptor') window.location.href = 'pages/feed.html';
+}
+
+// ─── STORIES ─────────────────────────────────────────────────────────
+async function cargarStories() {
+    try {
+        const lista = await candela.creadoras.explorar({ limit: 12 });
+        const row = document.getElementById('stories-row');
+        if (!lista.length) { row.innerHTML = ''; return; }
+
+        row.innerHTML = lista.map((c, i) => {
+            const [c1, c2] = GRADIENTES[c.tema_color] || ['#F2D5C4','#E8A598'];
+            const ring = i < 5 ? 'story-ring-active' : 'bg-c-border';
+            const inicial = c.nombre_artistico[0].toUpperCase();
+            const nombreCorto = c.nombre_artistico.split(' ')[0];
+            return `
+                <a href="pages/creadora.html?slug=${c.slug}" class="flex flex-col items-center gap-1.5 w-[62px] shrink-0">
+                    <div class="${ring} p-[2.5px] rounded-full">
+                        <div class="w-14 h-14 rounded-full border-2 border-c-bg overflow-hidden flex items-center justify-center"
+                            style="background:linear-gradient(135deg,${c1},${c2})">
+                            ${c.avatar_url
+                                ? `<img src="${c.avatar_url}" alt="${c.nombre_artistico}" class="w-full h-full object-cover">`
+                                : `<span class="text-white font-bold text-xl select-none">${inicial}</span>`}
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-semibold text-c-text text-center w-full truncate">${nombreCorto}</span>
+                </a>`;
+        }).join('');
+    } catch(e) {}
+}
+
+// ─── FEED ────────────────────────────────────────────────────────────
+async function cargarFeed() {
+    try {
+        todasCreadoras = await candela.creadoras.explorar({ limit: 30 });
+        renderFeed(todasCreadoras);
+    } catch(e) {
+        document.getElementById('feed-grid').innerHTML = `
+            <div class="col-span-full text-center py-16">
+                <p class="text-c-soft text-sm">No se pudo conectar con el servidor.</p>
+                <p class="text-xs text-c-soft mt-1">Asegurate de que el backend este corriendo en <code class="bg-c-border px-1 rounded">localhost:8000</code></p>
+                <button onclick="cargarFeed()" class="c-btn text-white px-5 py-2 rounded-full text-xs font-bold mt-4 shadow-sm">Reintentar</button>
+            </div>`;
+    }
+}
+
+function renderFeed(lista) {
+    const grid = document.getElementById('feed-grid');
+    const empty = document.getElementById('empty-state');
+
+    if (!lista.length) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+
+    grid.innerHTML = lista.map((c, idx) => {
+        const [col1, col2] = GRADIENTES[c.tema_color] || ['#F2D5C4','#E8A598'];
+        const inicial = c.nombre_artistico[0].toUpperCase();
+        const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
+        const online = idx % 4 === 0;
+
+        return `
+        <article class="feed-card rounded-2xl overflow-hidden bg-white border border-c-border shadow-sm"
+            style="cursor:pointer;" onclick="irACreadora('${c.slug}')">
+
+            <!-- Imagen / Banner -->
+            <div class="relative overflow-hidden" style="aspect-ratio:4/5">
+                ${c.banner_url
+                    ? `<img src="${c.banner_url}" alt="${c.nombre_artistico}" class="absolute inset-0 w-full h-full object-cover">`
+                    : `<div class="absolute inset-0 flex items-center justify-center"
+                            style="background:linear-gradient(135deg,${col1},${col2})">
+                            <span class="font-display select-none" style="font-size:5rem;color:rgba(255,255,255,0.22);">${inicial}</span>
+                       </div>`
+                }
+
+                <!-- Badge destacada -->
+                ${c.destacada ? `
+                    <div class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold text-white border border-white/25"
+                        style="background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);">
+                        ✨ Destacada
+                    </div>` : ''}
+
+                <!-- Overlay info -->
+                <div class="card-overlay absolute inset-0 flex flex-col justify-end p-4">
+                    <div class="flex justify-between items-end gap-3">
+
+                        <!-- Info -->
+                        <div class="flex-1 min-w-0">
+                            <div class="w-10 h-10 rounded-full border-2 border-white/70 overflow-hidden flex items-center justify-center mb-2 shrink-0"
+                                style="background:linear-gradient(135deg,${col1},${col2})">
+                                ${c.avatar_url
+                                    ? `<img src="${c.avatar_url}" alt="" class="w-full h-full object-cover">`
+                                    : `<span class="text-white font-bold text-sm">${inicial}</span>`}
+                            </div>
+                            <h3 class="text-white font-bold text-[15px] leading-tight truncate">${c.nombre_artistico}</h3>
+                            <p class="flex items-center gap-1.5 mt-0.5 text-white/65 text-xs">
+                                ${online
+                                    ? `<span class="dot-online"></span>En linea`
+                                    : `<span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${c.pais || 'Latam'}`}
+                            </p>
+                        </div>
+
+                        <!-- Botones accion -->
+                        <div class="flex flex-col gap-2 shrink-0">
+                            <button class="action-btn" onclick="toggleLike(event,'${c.id}')" title="Me gusta">
+                                <span class="material-symbols-outlined" style="font-size:18px;">favorite</span>
+                            </button>
+                            <button class="action-btn" onclick="event.stopPropagation();irACreadora('${c.slug}')" title="Ver perfil">
+                                <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+                            </button>
+                            <button class="sub-btn" onclick="event.stopPropagation();suscribirse('${c.slug}')" title="Suscribirse">
+                                <span class="material-symbols-outlined" style="font-size:18px;">favorite_border</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie de card -->
+            <div class="p-3.5 flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                    ${c.bio ? `<p class="text-c-soft text-xs leading-relaxed line-clamp-1 mb-1">${c.bio}</p>` : ''}
+                    <div class="flex items-center gap-2 text-xs text-c-soft">
+                        <span>${c.total_suscriptores} suscriptores</span>
+                        ${c.pais ? `<span class="text-c-border">·</span><span>📍 ${c.pais}</span>` : ''}
+                    </div>
+                </div>
+                <button onclick="event.stopPropagation();suscribirse('${c.slug}')"
+                    class="c-btn text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm shrink-0">
+                    ${precio}
+                </button>
+            </div>
+        </article>`;
+    }).join('');
+}
+
+// ─── FILTROS ─────────────────────────────────────────────────────────
+function filtrar(btn) {
+    document.querySelectorAll('.chip').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('text-c-soft','bg-white','border-c-border');
+    });
+    btn.classList.add('active');
+    btn.classList.remove('text-c-soft','bg-white');
+    paisFiltro = btn.dataset.pais;
+    const lista = paisFiltro
+        ? todasCreadoras.filter(c => c.pais === paisFiltro)
+        : todasCreadoras;
+    renderFeed(lista);
+}
+
+// ─── NAVEGACION ──────────────────────────────────────────────────────
+function irACreadora(slug) {
+    window.location.href = `pages/creadora.html?slug=${slug}`;
+}
+
+function suscribirse(slug) {
+    if (!candela.auth.isLoggedIn()) { abrirModal('login'); return; }
+    irACreadora(slug);
+}
+
+function toggleLike(e, id) {
+    e.stopPropagation();
+    const btn = e.currentTarget;
+    const icon = btn.querySelector('.material-symbols-outlined');
+    btn.classList.toggle('liked');
+    if (btn.classList.contains('liked')) {
+        icon.style.fontVariationSettings = "'FILL' 1";
+        icon.style.color = '#F4A261';
+    } else {
+        icon.style.fontVariationSettings = "'FILL' 0";
+        icon.style.color = '';
+    }
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────
+function abrirModal(tab = 'login') {
+    document.getElementById('modal-auth').classList.add('open');
+    switchTab(tab);
+}
+function cerrarModal() {
+    document.getElementById('modal-auth').classList.remove('open');
+}
+document.getElementById('modal-auth').addEventListener('click', e => {
+    if (e.target === e.currentTarget) cerrarModal();
+});
+
+function switchTab(tab) {
+    const isLogin = tab === 'login';
+    const tLogin = document.getElementById('tab-login');
+    const tReg   = document.getElementById('tab-reg');
+    tLogin.className = `pb-3 px-4 text-sm font-${isLogin?'bold':'semibold'} ${isLogin?'text-c-accent border-b-2 border-c-accent':'text-c-soft border-b-2 border-transparent hover:text-c-accent'} transition-all`;
+    tReg.className   = `pb-3 px-4 text-sm font-${!isLogin?'bold':'semibold'} ${!isLogin?'text-c-accent border-b-2 border-c-accent':'text-c-soft border-b-2 border-transparent hover:text-c-accent'} transition-all`;
+    document.getElementById('form-login').classList.toggle('hidden', !isLogin);
+    document.getElementById('form-login').classList.toggle('flex', isLogin);
+    document.getElementById('form-registro').classList.toggle('hidden', isLogin);
+    document.getElementById('form-registro').classList.toggle('flex', !isLogin);
+}
+
+// ─── AUTH ────────────────────────────────────────────────────────────
+async function hacerLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-login');
+    btn.textContent = 'Entrando...'; btn.disabled = true;
+    try {
+        await candela.auth.login(
+            document.getElementById('l-email').value,
+            document.getElementById('l-pass').value
+        );
+        cerrarModal();
+        const u = candela.auth.user();
+        if (u?.tipo === 'admin') { window.location.href = 'pages/admin.html'; return; }
+        if (u?.tipo === 'creadora') { window.location.href = 'pages/dashboard-creadora.html'; return; }
+        if (u?.tipo === 'suscriptor') { window.location.href = 'pages/feed.html'; return; }
+        document.getElementById('hero-guest').classList.add('hidden');
+        renderTopbar();
+        renderNavLinks();
+        toast('Bienvenida de nuevo!', 'success');
+    } catch(err) {
+        toast(err.message, 'error');
+        btn.textContent = 'Entrar'; btn.disabled = false;
+    }
+}
+
+async function hacerRegistro(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-reg');
+    btn.textContent = 'Creando cuenta...'; btn.disabled = true;
+    try {
+        await candela.auth.registroSuscriptor(
+            document.getElementById('r-email').value,
+            document.getElementById('r-pass').value,
+            document.getElementById('r-nombre').value,
+        );
+        cerrarModal();
+        document.getElementById('hero-guest').classList.add('hidden');
+        renderTopbar();
+        toast('Bienvenida a Candela!', 'success');
+    } catch(err) {
+        toast(err.message, 'error');
+        btn.textContent = 'Crear cuenta gratis'; btn.disabled = false;
+    }
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────
+function toast(msg, tipo = 'info') {
+    const c = document.getElementById('toasts');
+    const colores = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const el = document.createElement('div');
+    el.style.cssText = `
+        background:#fff; border:1px solid #F0E6E1;
+        border-left:4px solid ${colores[tipo]||colores.info};
+        padding:0.85rem 1.1rem; border-radius:12px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.09);
+        font-size:0.85rem; max-width:300px;
+        pointer-events:auto; opacity:0;
+        transform:translateX(100%);
+        transition:all 0.25s ease;
+    `;
+    el.textContent = msg;
+    c.appendChild(el);
+    requestAnimationFrame(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(0)';
+    });
+    setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(100%)';
+        setTimeout(() => el.remove(), 300);
+    }, 3800);
+}
+
+init();
+</script>
+</body>
+</html>

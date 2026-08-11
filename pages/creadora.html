@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":       "#FFF8F5",
+                        "c-accent":   "#F4A261",
+                        "c-rose":     "#E8A598",
+                        "c-champagne":"#F2D5C4",
+                        "c-text":     "#2D2D2D",
+                        "c-soft":     "#8B7D77",
+                        "c-border":   "#F0E6E1",
+                    },
+                    fontFamily: {
+                        display: ["Playfair Display","serif"],
+                        body:    ["Nunito","sans-serif"],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; }
+        .glass { background:rgba(255,248,245,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
+        .c-btn:active { transform:scale(0.97); }
+        .c-btn-outline { border:2px solid #F4A261; color:#F4A261; transition:all .2s; }
+        .c-btn-outline:hover { background:#F4A261; color:#fff; }
+
+        /* Temas de color de creadoras */
+        :root {
+            --t-bg:#FFF4EE; --t-a:#F4A261; --t-b:#E8A598; --t-text:#2D2D2D;
+        }
+        .tema-bg { background-color:var(--t-bg); }
+
+        /* Overlay imagen */
+        .img-overlay { background:linear-gradient(to top,rgba(20,8,2,.85) 0%,rgba(20,8,2,.2) 55%,transparent 100%); }
+
+        /* Blur de contenido bloqueado */
+        .content-blur img { filter:blur(22px); transform:scale(1.05); }
+        .lock-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(45,20,10,.18); gap:.5rem; }
+
+        /* Contenido desbloqueado hover */
+        .content-item { transition:transform .2s; }
+        .content-item:hover { transform:scale(1.02); }
+
+        /* Modal */
+        .modal-bg { position:fixed; inset:0; z-index:100; background:rgba(45,20,10,.42); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; visibility:hidden; transition:all .22s; }
+        .modal-bg.open { opacity:1; visibility:visible; }
+        .modal-box { background:#fff; border-radius:1.5rem; padding:2rem; width:100%; max-width:460px; box-shadow:0 28px 64px rgba(0,0,0,.13); transform:translateY(18px); transition:transform .22s; }
+        .modal-bg.open .modal-box { transform:translateY(0); }
+
+        /* No scrollbar */
+        .no-scroll::-webkit-scrollbar { display:none; }
+        .no-scroll { -ms-overflow-style:none; scrollbar-width:none; }
+
+        .ms { font-family:'Material Symbols Outlined'; font-style:normal; font-size:22px; line-height:1; user-select:none; }
+        .ms-fill { font-variation-settings:'FILL' 1; }
+
+        /* Dot online */
+        .dot-on { width:9px;height:9px;border-radius:50%;background:#2ecc71;box-shadow:0 0 7px rgba(46,204,113,.7);display:inline-block; }
+
+        /* Tab activo */
+        .tab.active { border-bottom:2px solid var(--t-a,#F4A261); color:var(--t-a,#F4A261); font-weight:700; }
+
+        /* Skeleton */
+        @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
+        .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%); background-size:300% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
+
+        /* Sticky subscribe bar */
+        .sub-bar { position:fixed; bottom:0; left:0; right:0; z-index:50; background:rgba(255,248,245,.95); backdrop-filter:blur(16px); border-top:1px solid #F0E6E1; padding:1rem 1.5rem; transform:translateY(100%); transition:transform .3s ease; }
+        .sub-bar.visible { transform:translateY(0); }
+
+        /* ── PROTECCION DE CONTENIDO ── */
+        /* Bloquear seleccion y drag en toda la zona de contenido */
+        #content-grid {
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        #content-grid img {
+            pointer-events: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            user-drag: none;
+            draggable: false;
+        }
+        /* Watermark layer */
+        .wm-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 12;
+            overflow: hidden;
+        }
+        .wm-text {
+            position: absolute;
+            color: rgba(255,255,255,.18);
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+            transform: rotate(-35deg);
+            font-family: 'Nunito', sans-serif;
+            letter-spacing: 1.5px;
+            text-shadow: 0 1px 3px rgba(0,0,0,.5);
+            pointer-events: none;
+            user-select: none;
+        }
+        /* Privacy blur: cuando la ventana pierde el foco */
+        body.privacy-mode #content-grid .content-item img,
+        body.privacy-mode #content-grid .content-item video {
+            filter: blur(30px) !important;
+            transform: scale(1.1) !important;
+            transition: filter .3s, transform .3s;
+        }
+        /* Visor de contenido a pantalla completa */
+        #visor {
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,.96);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        #visor.open { display: flex; }
+        #visor img, #visor video {
+            max-width: 100%; max-height: 90vh;
+            border-radius: .75rem;
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+        #visor video { pointer-events: auto; }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text antialiased min-h-screen pb-24">
+
+<!-- TopBar -->
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+    <div class="flex items-center justify-between h-14 px-4 max-w-4xl mx-auto">
+        <a href="../index.html" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft">
+            <span class="ms">arrow_back</span>
+        </a>
+        <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+        <button id="btn-share" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft" onclick="compartir()">
+            <span class="ms">share</span>
+        </button>
+    </div>
+</header>
+
+<!-- BANNER -->
+<div class="pt-14">
+    <div id="banner-wrap" class="relative w-full overflow-hidden" style="height:260px;background:linear-gradient(135deg,var(--t-bg,#FFF4EE),var(--t-b,#E8A598))">
+        <img id="banner-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover hidden">
+        <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 40%,rgba(20,8,2,.35) 100%)"></div>
+    </div>
+</div>
+
+<!-- PERFIL HEADER -->
+<div class="max-w-2xl mx-auto px-4">
+    <!-- Avatar -->
+    <div class="relative -mt-14 mb-3 flex items-end justify-between">
+        <div id="avatar-wrap" class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden flex items-center justify-center text-4xl font-bold text-white"
+            style="background:linear-gradient(135deg,var(--t-bg,#F2D5C4),var(--t-a,#F4A261))">
+            <span id="avatar-initial">?</span>
+            <img id="avatar-img" src="" alt="" class="w-full h-full object-cover hidden">
+        </div>
+        <div class="flex gap-2">
+            <button id="btn-msg" class="hidden c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirMensaje()">
+                <span class="ms" style="font-size:16px;vertical-align:-3px">chat_bubble</span> Mensaje
+            </button>
+            <button id="btn-sub-header" onclick="abrirSub()" class="c-btn text-white px-5 py-2 rounded-full text-sm font-bold shadow-md">
+                Suscribirme
+            </button>
+        </div>
+    </div>
+
+    <!-- Info -->
+    <h1 id="creadora-nombre" class="font-display text-2xl font-semibold text-c-text mb-1">Cargando...</h1>
+    <div class="flex items-center gap-3 text-sm text-c-soft mb-2 flex-wrap">
+        <span id="creadora-pais" class="hidden">📍 <span></span></span>
+        <span id="creadora-online" class="hidden flex items-center gap-1"><span class="dot-on"></span>En linea</span>
+        <span id="creadora-subs" class="hidden"><span class="font-bold text-c-text"></span> suscriptores</span>
+    </div>
+    <p id="creadora-bio" class="text-sm text-c-soft leading-relaxed mb-4 hidden"></p>
+
+    <!-- Precio suscripcion -->
+    <div id="precio-box" class="hidden bg-white border border-c-border rounded-2xl p-4 mb-5 flex items-center justify-between shadow-sm">
+        <div>
+            <div class="text-xs font-bold text-c-soft uppercase tracking-wide mb-0.5">Suscripcion mensual</div>
+            <div id="precio-val" class="text-2xl font-bold text-c-text"></div>
+            <div class="text-xs text-c-soft mt-0.5">Acceso a todo el contenido exclusivo</div>
+        </div>
+        <button onclick="abrirSub()" class="c-btn text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md">Suscribirme</button>
+    </div>
+
+    <!-- Tabs: Fotos / Videos -->
+    <div class="flex border-b border-c-border mb-4 gap-0">
+        <button class="tab active pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" onclick="switchTab('fotos',this)">
+            <span class="ms ms-fill" style="font-size:16px;vertical-align:-3px;">photo_camera</span> Fotos
+        </button>
+        <button class="tab pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" onclick="switchTab('videos',this)">
+            <span class="ms" style="font-size:16px;vertical-align:-3px;">videocam</span> Videos
+        </button>
+    </div>
+
+    <!-- Grid de contenido -->
+    <div id="content-grid" class="grid grid-cols-3 gap-1 mb-6">
+        <!-- skeletons -->
+        <div class="skeleton" style="aspect-ratio:1"></div>
+        <div class="skeleton" style="aspect-ratio:1"></div>
+        <div class="skeleton" style="aspect-ratio:1"></div>
+        <div class="skeleton" style="aspect-ratio:1"></div>
+        <div class="skeleton" style="aspect-ratio:1"></div>
+        <div class="skeleton" style="aspect-ratio:1"></div>
+    </div>
+
+    <p id="empty-content" class="hidden text-center text-c-soft text-sm py-10">
+        Esta creadora no ha publicado contenido aun.
+    </p>
+</div>
+
+<!-- Sticky Subscribe Bar (aparece al hacer scroll) -->
+<div class="sub-bar" id="sticky-sub">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
+        <div>
+            <p class="font-bold text-sm" id="sticky-nombre">Creadora</p>
+            <p class="text-xs text-c-soft" id="sticky-precio">Suscribete para ver contenido exclusivo</p>
+        </div>
+        <button onclick="abrirSub()" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md shrink-0">
+            Suscribirme
+        </button>
+    </div>
+</div>
+
+<!-- Modal Suscripcion -->
+<div class="modal-bg" id="modal-sub">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal('modal-sub')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+        <h2 class="font-display text-xl font-semibold mb-1" id="sub-titulo">Suscribirte</h2>
+        <p class="text-c-soft text-sm mb-5" id="sub-desc">Accede a todo el contenido exclusivo</p>
+
+        <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-5">
+            <p class="text-xs font-bold text-c-soft uppercase tracking-wide mb-2">📲 Envia exactamente:</p>
+            <div class="flex items-baseline gap-2 mb-3">
+                <span class="font-bold text-2xl text-c-text" id="sub-precio-modal">$0</span>
+                <span class="text-sm text-c-soft">USDT</span>
+            </div>
+            <p class="text-xs text-c-soft mb-2 font-semibold">Elige la red:</p>
+            <div class="flex gap-2 mb-3 flex-wrap">
+                <button onclick="elegirRed('trc20','sub')" id="sub-btn-trc20"
+                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">
+                    TRC20
+                </button>
+                <button onclick="elegirRed('polygon','sub')" id="sub-btn-polygon"
+                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
+                    Polygon
+                </button>
+                <button onclick="elegirRed('takenos','sub')" id="sub-btn-takenos"
+                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
+                    Yape/PIX/QR
+                </button>
+            </div>
+
+            <!-- Crypto wallet -->
+            <div id="sub-crypto-info">
+                <p class="text-xs text-c-soft mb-2 font-semibold">A esta wallet:</p>
+                <button onclick="copiarWallet('sub')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="sub-wallet-addr">
+                    TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH
+                </button>
+                <p class="text-[11px] text-c-soft mt-2">Memo: <span class="font-bold" id="sub-memo">SUB-slug</span></p>
+            </div>
+
+            <!-- Takenos QR -->
+            <div id="sub-takenos-info" class="hidden">
+                <p class="text-xs text-c-soft mb-2 font-semibold">Escanea con Yape, PIX o tu app local:</p>
+                <img src="../img/takenos-qr.png" alt="QR Takenos" class="w-40 mx-auto rounded-xl border border-c-border mb-2">
+                <p class="text-[11px] text-c-soft text-center">Funciona en Bolivia, Peru (Yape), Brasil (PIX) y Argentina</p>
+                <p class="text-[11px] text-amber-600 text-center mt-1 font-semibold">En descripcion del pago escribe tu usuario de Candela</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
+                <input id="sub-hash" type="text" placeholder="Pega el hash de tu transaccion"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Monto enviado ($)</label>
+                <input id="sub-monto" type="number" step="0.01"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <button onclick="confirmarSub()" id="btn-confirmar-sub" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
+                Confirmar pago
+            </button>
+            <p class="text-center text-[11px] text-c-soft">Verificamos tu pago en pocas horas y activamos tu acceso.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Compra contenido individual -->
+<div class="modal-bg" id="modal-compra">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal('modal-compra')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+        <h2 class="font-display text-xl font-semibold mb-1">Desbloquear contenido</h2>
+        <p class="text-c-soft text-sm mb-5">Pago unico para acceder a esta publicacion</p>
+
+        <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-5">
+            <p class="text-xs font-bold text-c-soft uppercase tracking-wide mb-2">📲 Envia:</p>
+            <div class="flex items-baseline gap-2 mb-3">
+                <span class="font-bold text-2xl text-c-text" id="compra-precio-modal">$0</span>
+                <span class="text-sm text-c-soft">USDT</span>
+            </div>
+            <div class="flex gap-2 mb-3 flex-wrap">
+                <button onclick="elegirRed('trc20','compra')" id="compra-btn-trc20"
+                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">
+                    TRC20
+                </button>
+                <button onclick="elegirRed('polygon','compra')" id="compra-btn-polygon"
+                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
+                    Polygon
+                </button>
+                <button onclick="elegirRed('takenos','compra')" id="compra-btn-takenos"
+                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
+                    Yape/PIX/QR
+                </button>
+            </div>
+            <div id="compra-crypto-info">
+                <button onclick="copiarWallet('compra')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="compra-wallet-addr">
+                    TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH
+                </button>
+            </div>
+            <div id="compra-takenos-info" class="hidden">
+                <img src="../img/takenos-qr.png" alt="QR Takenos" class="w-40 mx-auto rounded-xl border border-c-border mb-2">
+                <p class="text-[11px] text-c-soft text-center">Bolivia, Peru (Yape), Brasil (PIX), Argentina</p>
+                <p class="text-[11px] text-amber-600 text-center mt-1 font-semibold">Escribe tu usuario Candela en la descripcion del pago</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
+                <input id="compra-hash" type="text" placeholder="Hash TRC20"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <button onclick="confirmarCompra()" id="btn-confirmar-compra" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
+                Confirmar pago
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Visor de contenido desbloqueado -->
+<div id="visor" onclick="cerrarVisor(event)">
+    <button onclick="cerrarVisor()" style="position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.1);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <span class="ms" style="color:#fff;font-size:20px">close</span>
+    </button>
+    <div style="position:relative;display:inline-block;" id="visor-wrap">
+        <img id="visor-img" src="" alt="" style="display:none">
+        <video id="visor-video" controls controlsList="nodownload nofullscreen noplaybackrate" disablePictureInPicture style="display:none" oncontextmenu="return false"></video>
+        <!-- Watermark en visor -->
+        <div class="wm-layer" id="visor-wm"></div>
+    </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts" class="fixed bottom-6 right-4 z-[200] flex flex-col gap-2 pointer-events-none"></div>
+
+<script src="../js/api.js"></script>
+<script>
+const slug = new URLSearchParams(location.search).get('slug');
+const API_BASE = 'https://web-production-73189.up.railway.app';
+const WALLETS = {
+    trc20:   'TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH',
+    polygon: '0x120902f3be563f1fbcc96e9a3da12f3d212cfe7b',
+};
+let redSub = 'trc20';
+let redCompra = 'trc20';
+
+const TEMAS = {
+    'melocoton':    ['#FFF4EE','#F4A261','#E8A598','#2D2D2D'],
+    'rosa-venecia': ['#FFF0F5','#D4869D','#F7B8C8','#2D1530'],
+    'lavanda':      ['#F7F2FF','#9B72CF','#BBA0E0','#1A0D3D'],
+    'rojo-carmin':  ['#1A0A0A','#C0392B','#E74C3C','#F5E6E6'],
+    'menta':        ['#F0FAF7','#2ECC71','#58D68D','#1A3D30'],
+    'cielo':        ['#F0F8FF','#5DADE2','#85C1E9','#1A2D3D'],
+    'dorada':       ['#FFFBF0','#D4AC0D','#F1C40F','#2D2410'],
+    'nude':         ['#FAF7F4','#C4A882','#D4B896','#2D2018'],
+    'noche-rosa':   ['#1A0D1A','#FF2D9B','#FF6FBF','#FFE0F4'],
+    'coral':        ['#FFF5F2','#FF6B6B','#FF8E8E','#3D1010'],
+    'esmeralda':    ['#0D1F19','#1ABC9C','#48C9B0','#D0F0EA'],
+    'nube':         ['#FAFAFA','#95A5A6','#AEB6BF','#2D2D2D'],
+};
+
+let creadoraData = null;
+let todoContenido = [];
+let contenidoFiltrado = [];
+let tabActual = 'fotos';
+let contenidoSeleccionado = null;
+let suscritoActualmente = false;
+
+// ─── INIT ────────────────────────────────────────────────────
+async function init() {
+    if (!slug) { window.location.href = '../index.html'; return; }
+    try {
+        creadoraData = await candela.creadoras.ver(slug);
+        aplicarTema(creadoraData.tema_color);
+        renderHeader();
+        cargarContenido();
+        initStickyBar();
+    } catch(e) {
+        toast('No se pudo cargar el perfil', 'error');
+    }
+}
+
+// ─── TEMA ────────────────────────────────────────────────────
+function aplicarTema(tema) {
+    const [bg, a, b, text] = TEMAS[tema] || TEMAS['melocoton'];
+    const root = document.documentElement;
+    root.style.setProperty('--t-bg', bg);
+    root.style.setProperty('--t-a', a);
+    root.style.setProperty('--t-b', b);
+    root.style.setProperty('--t-text', text);
+    document.getElementById('banner-wrap').style.background = `linear-gradient(135deg,${bg},${b})`;
+}
+
+// ─── HEADER ──────────────────────────────────────────────────
+function renderHeader() {
+    const c = creadoraData;
+    document.title = c.nombre_artistico + ' — Candela';
+    document.getElementById('creadora-nombre').textContent = c.nombre_artistico;
+
+    const inicial = c.nombre_artistico[0].toUpperCase();
+    document.getElementById('avatar-initial').textContent = inicial;
+    if (c.avatar_url) {
+        const img = document.getElementById('avatar-img');
+        img.src = c.avatar_url;
+        img.classList.remove('hidden');
+        document.getElementById('avatar-initial').classList.add('hidden');
+    }
+    if (c.banner_url) {
+        const bImg = document.getElementById('banner-img');
+        bImg.src = c.banner_url;
+        bImg.classList.remove('hidden');
+    }
+
+    const paisEl = document.getElementById('creadora-pais');
+    if (c.pais) { paisEl.querySelector('span').textContent = c.pais; paisEl.classList.remove('hidden'); }
+
+    const subsEl = document.getElementById('creadora-subs');
+    subsEl.querySelector('span').textContent = c.total_suscriptores;
+    subsEl.classList.remove('hidden');
+
+    if (c.bio) {
+        const bioEl = document.getElementById('creadora-bio');
+        bioEl.textContent = c.bio;
+        bioEl.classList.remove('hidden');
+    }
+
+    if (c.precio_suscripcion > 0) {
+        document.getElementById('precio-val').textContent = `$${c.precio_suscripcion}/mes`;
+        document.getElementById('precio-box').classList.remove('hidden');
+    } else {
+        document.getElementById('btn-sub-header').textContent = 'Ver perfil';
+        document.getElementById('btn-sub-header').onclick = null;
+    }
+
+    // Sticky bar
+    document.getElementById('sticky-nombre').textContent = c.nombre_artistico;
+    document.getElementById('sticky-precio').textContent = c.precio_suscripcion > 0
+        ? `$${c.precio_suscripcion}/mes · contenido exclusivo`
+        : 'Suscribete gratis';
+
+    // Modal
+    document.getElementById('sub-titulo').textContent = `Suscribirte a ${c.nombre_artistico}`;
+    document.getElementById('sub-precio-modal').textContent = `$${c.precio_suscripcion}`;
+    document.getElementById('sub-monto').value = c.precio_suscripcion;
+    document.getElementById('sub-memo').textContent = `SUB-${c.slug}`;
+}
+
+// ─── CONTENIDO ───────────────────────────────────────────────
+async function cargarContenido() {
+    try {
+        todoContenido = await candela.contenido.listarCreadora(slug);
+        filtrarContenido();
+    } catch(e) {
+        document.getElementById('content-grid').innerHTML =
+            '<p class="col-span-3 text-center text-c-soft text-sm py-8">No se pudo cargar el contenido.</p>';
+    }
+}
+
+function filtrarContenido() {
+    contenidoFiltrado = tabActual === 'fotos'
+        ? todoContenido.filter(c => c.tipo === 'foto')
+        : todoContenido.filter(c => c.tipo === 'video');
+    renderGrid();
+}
+
+function renderGrid() {
+    const grid = document.getElementById('content-grid');
+    const empty = document.getElementById('empty-content');
+
+    if (!contenidoFiltrado.length) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+
+    grid.innerHTML = contenidoFiltrado.map(item => {
+        const bloqueado = !item.desbloqueado && !item.es_gratis;
+        const esPPV = bloqueado && item.precio > 0;
+
+        return `
+        <div class="content-item relative overflow-hidden rounded-lg cursor-pointer"
+            style="aspect-ratio:1"
+            onclick="clicContenido('${item.id}',${item.precio},${item.desbloqueado},${item.es_gratis})">
+
+            <div class="absolute inset-0 ${bloqueado ? 'overflow-hidden' : ''}">
+                ${item.preview_url
+                    ? `<img src="${API_BASE + item.preview_url}" alt="" class="w-full h-full object-cover ${bloqueado ? 'blur-xl scale-110' : ''}" draggable="false" oncontextmenu="return false">`
+                    : `<div class="w-full h-full flex items-center justify-center text-4xl"
+                            style="background:linear-gradient(135deg,var(--t-bg),var(--t-b))">
+                            ${item.tipo === 'video' ? '🎬' : '📸'}
+                       </div>`
+                }
+            </div>
+
+            ${bloqueado ? `
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5"
+                    style="background:rgba(45,20,10,.22)">
+                    ${esPPV
+                        ? `<span class="ms" style="color:#fff;font-size:28px;">lock</span>
+                           <span class="text-white text-xs font-bold bg-black/40 px-2.5 py-1 rounded-full">$${item.precio}</span>`
+                        : `<span class="ms" style="color:#fff;font-size:28px;">lock</span>
+                           <span class="text-white text-[10px] font-semibold">Solo suscriptores</span>`
+                    }
+                </div>` : ''}
+
+            ${item.tipo === 'video' && !bloqueado ? `
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:rgba(0,0,0,.5)">
+                        <span class="ms ms-fill" style="color:#fff;font-size:20px;">play_arrow</span>
+                    </div>
+                </div>` : ''}
+        </div>`;
+    }).join('');
+
+    // Agregar watermarks a todo contenido desbloqueado
+    aplicarWatermarks();
+}
+
+function clicContenido(id, precio, desbloqueado, esGratis) {
+    if (desbloqueado || esGratis) {
+        const item = todoContenido.find(c => c.id == id);
+        if (item) abrirVisor(item);
+        return;
+    }
+    if (!candela.auth.isLoggedIn()) { window.location.href = '../index.html'; return; }
+    if (precio > 0) {
+        contenidoSeleccionado = { id, precio };
+        document.getElementById('compra-precio-modal').textContent = `$${precio}`;
+        abrirModal('modal-compra');
+    } else {
+        abrirSub();
+    }
+}
+
+// ─── TABS ────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+    tabActual = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    filtrarContenido();
+}
+
+// ─── SUSCRIPCION ─────────────────────────────────────────────
+function abrirSub() {
+    if (!candela.auth.isLoggedIn()) { window.location.href = '../index.html'; return; }
+    abrirModal('modal-sub');
+}
+
+function validarHashTRC20(hash) {
+    return /^[0-9a-fA-F]{64}$/.test(hash);
+}
+
+async function confirmarSub() {
+    const hash = document.getElementById('sub-hash').value.trim();
+    const monto = parseFloat(document.getElementById('sub-monto').value);
+    if (!hash) { toast('Ingresa el hash de transaccion', 'error'); return; }
+    const btn = document.getElementById('btn-confirmar-sub');
+    btn.textContent = 'Enviando...'; btn.disabled = true;
+    try {
+        const r = await candela.pagos.confirmarSuscripcion({
+            creadora_slug: slug,
+            referencia_pago: hash,
+            monto_enviado: monto,
+            meses: 1,
+            red: redSub,
+        });
+        cerrarModal('modal-sub');
+        toast(r.mensaje, 'success');
+        setTimeout(() => location.reload(), 2000);
+    } catch(err) {
+        toast(err.message, 'error');
+        btn.textContent = 'Confirmar pago'; btn.disabled = false;
+    }
+}
+
+async function confirmarCompra() {
+    if (!contenidoSeleccionado) return;
+    const hash = document.getElementById('compra-hash').value.trim();
+    if (!hash) { toast('Ingresa el hash', 'error'); return; }
+    if (!validarHashTRC20(hash)) { toast('Hash invalido. Debe ser 64 caracteres hexadecimales', 'error'); return; }
+    const btn = document.getElementById('btn-confirmar-compra');
+    btn.textContent = 'Enviando...'; btn.disabled = true;
+    try {
+        await candela.contenido.confirmarPago(contenidoSeleccionado.id, hash, contenidoSeleccionado.precio);
+        cerrarModal('modal-compra');
+        toast('Pago recibido. Activamos tu acceso en pocas horas.', 'success');
+    } catch(err) {
+        toast(err.message, 'error');
+        btn.textContent = 'Confirmar pago'; btn.disabled = false;
+    }
+}
+
+// ─── STICKY BAR ──────────────────────────────────────────────
+function initStickyBar() {
+    const bar = document.getElementById('sticky-sub');
+    if (!creadoraData?.precio_suscripcion) return;
+    const observer = new IntersectionObserver(([e]) => {
+        bar.classList.toggle('visible', !e.isIntersecting);
+    }, { threshold: 0 });
+    observer.observe(document.getElementById('precio-box'));
+    if (!document.getElementById('precio-box').classList.contains('hidden') === false) {
+        // No hay precio, no mostrar sticky bar
+    }
+}
+
+// ─── UTILS ───────────────────────────────────────────────────
+function elegirRed(red, modal) {
+    const redes = ['trc20', 'polygon', 'takenos'];
+    const activo = 'flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all';
+    const inactivo = 'flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent';
+    if (modal === 'sub') {
+        redSub = red;
+        redes.forEach(r => {
+            const btn = document.getElementById(`sub-btn-${r}`);
+            if (btn) btn.className = r === red ? activo : inactivo;
+        });
+        const esTakenos = red === 'takenos';
+        document.getElementById('sub-crypto-info').classList.toggle('hidden', esTakenos);
+        document.getElementById('sub-takenos-info').classList.toggle('hidden', !esTakenos);
+        if (!esTakenos) document.getElementById('sub-wallet-addr').textContent = WALLETS[red];
+        document.getElementById('sub-hash').placeholder = esTakenos
+            ? 'Numero de referencia o comprobante Takenos/Yape/PIX'
+            : 'Pega el hash de tu transaccion';
+    } else {
+        redCompra = red;
+        redes.forEach(r => {
+            const btn = document.getElementById(`compra-btn-${r}`);
+            if (btn) btn.className = r === red ? activo : inactivo;
+        });
+        const esTakenos = red === 'takenos';
+        document.getElementById('compra-crypto-info').classList.toggle('hidden', esTakenos);
+        document.getElementById('compra-takenos-info').classList.toggle('hidden', !esTakenos);
+        if (!esTakenos) document.getElementById('compra-wallet-addr').textContent = WALLETS[red];
+        document.getElementById('compra-hash').placeholder = esTakenos
+            ? 'Numero de referencia o comprobante Takenos/Yape/PIX'
+            : 'Pega el hash de tu transaccion';
+    }
+}
+
+function copiarWallet(modal) {
+    const red = modal === 'sub' ? redSub : redCompra;
+    navigator.clipboard.writeText(WALLETS[red]);
+    toast('Wallet copiada', 'success');
+}
+
+function compartir() {
+    if (navigator.share) {
+        navigator.share({ title: creadoraData?.nombre_artistico || 'Candela', url: location.href });
+    } else {
+        navigator.clipboard.writeText(location.href);
+        toast('Enlace copiado', 'success');
+    }
+}
+
+function abrirModal(id) { document.getElementById(id).classList.add('open'); }
+function cerrarModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-bg').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+function abrirMensaje() { toast('Mensajes disponibles proximamente', 'info'); }
+
+function toast(msg, tipo = 'info') {
+    const c = document.getElementById('toasts');
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const el = document.createElement('div');
+    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.textContent = msg;
+    c.appendChild(el);
+    requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });
+    setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(100%)'; setTimeout(()=>el.remove(),300); }, 3800);
+}
+
+// ─── PROTECCION DE CONTENIDO ─────────────────────────────────
+
+function wmLabel() {
+    const u = candela.auth.user();
+    if (u?.nombre) return u.nombre + ' · candela';
+    if (u?.email) return u.email.split('@')[0] + ' · candela';
+    return 'candela.app';
+}
+
+function crearWmLayer(label, oscuro) {
+    const layer = document.createElement('div');
+    layer.className = 'wm-layer';
+    // Grid 3x3 de textos diagonales
+    const cols = 3, rows = 3;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            const span = document.createElement('span');
+            span.className = 'wm-text';
+            span.style.left = (c * 34 + 4) + '%';
+            span.style.top  = (r * 34 + 8) + '%';
+            span.style.color = oscuro
+                ? 'rgba(255,255,255,.17)'
+                : 'rgba(0,0,0,.1)';
+            span.textContent = label;
+            layer.appendChild(span);
+        }
+    }
+    return layer;
+}
+
+function aplicarWatermarks() {
+    const label = wmLabel();
+    document.querySelectorAll('#content-grid .content-item').forEach(item => {
+        // Solo contenido visible (no bloqueado) — los bloqueados ya tienen blur
+        if (item.querySelector('.wm-layer')) return;
+        const esBloqueado = !!item.querySelector('.ms');  // lock icon = bloqueado
+        if (!esBloqueado) {
+            const oscuro = !!item.querySelector('img');
+            item.style.position = 'relative';
+            item.appendChild(crearWmLayer(label, oscuro));
+        }
+    });
+}
+
+// Bloquear clic derecho en zona de contenido
+document.addEventListener('contextmenu', e => {
+    if (e.target.closest('#content-grid') || e.target.closest('#visor')) {
+        e.preventDefault();
+    }
+});
+
+// Privacy mode: blur cuando la pestaña no esta visible
+document.addEventListener('visibilitychange', () => {
+    document.body.classList.toggle('privacy-mode', document.hidden);
+});
+window.addEventListener('blur', () => document.body.classList.add('privacy-mode'));
+window.addEventListener('focus', () => document.body.classList.remove('privacy-mode'));
+
+// Bloquear Ctrl+S (guardar pagina con recursos)
+document.addEventListener('keydown', e => {
+    if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+        }
+    }
+});
+
+// ─── VISOR ───────────────────────────────────────────────────
+function abrirVisor(item) {
+    const visor = document.getElementById('visor');
+    const img = document.getElementById('visor-img');
+    const vid = document.getElementById('visor-video');
+    const wm  = document.getElementById('visor-wm');
+
+    img.style.display = 'none';
+    vid.style.display = 'none';
+    vid.pause && vid.pause();
+
+    if (item.tipo === 'video' && item.url_archivo) {
+        vid.src = API_BASE + item.url_archivo;
+        vid.style.display = 'block';
+    } else {
+        img.src = API_BASE + (item.url_archivo || item.preview_url || '');
+        img.style.display = 'block';
+    }
+
+    // Watermark en visor
+    wm.innerHTML = '';
+    const label = wmLabel();
+    const cols = 4, rows = 4;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            const span = document.createElement('span');
+            span.className = 'wm-text';
+            span.style.left = (c * 25 + 2) + '%';
+            span.style.top  = (r * 25 + 4) + '%';
+            span.style.color = 'rgba(255,255,255,.2)';
+            span.textContent = label;
+            wm.appendChild(span);
+        }
+    }
+
+    visor.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarVisor(e) {
+    if (e && e.target !== document.getElementById('visor') && !e.target.closest('button')) return;
+    const visor = document.getElementById('visor');
+    const vid = document.getElementById('visor-video');
+    vid.pause && vid.pause();
+    vid.src = '';
+    visor.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+init();
+</script>
+</body>
+</html>

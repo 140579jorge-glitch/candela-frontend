@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-rose":"#E8A598",
+                        "c-champagne":"#F2D5C4","c-text":"#2D2D2D","c-soft":"#8B7D77","c-border":"#F0E6E1",
+                    },
+                    fontFamily: { display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; }
+        .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
+        .card-overlay { background:linear-gradient(to top,rgba(20,8,2,.82) 0%,rgba(20,8,2,.2) 55%,transparent 100%); }
+        .feed-card { transition:transform .22s ease,box-shadow .22s ease; }
+        .feed-card:hover { transform:translateY(-4px); box-shadow:0 20px 52px rgba(244,162,97,.18); }
+        .action-btn { width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s; }
+        .action-btn:hover { background:rgba(244,162,97,.75); }
+        .action-btn.liked { background:rgba(244,162,97,.9); }
+        .dot-on { width:8px;height:8px;border-radius:50%;background:#2ecc71;box-shadow:0 0 6px rgba(46,204,113,.7);display:inline-block; }
+        .chip.active { background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;border-color:transparent; }
+        @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
+        .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:10px; }
+        .no-scroll::-webkit-scrollbar { display:none; }
+        .no-scroll { -ms-overflow-style:none;scrollbar-width:none; }
+        .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
+        .ms-fill { font-variation-settings:'FILL' 1; }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text antialiased min-h-screen pb-20 md:pb-0">
+
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+    <div class="flex items-center justify-between h-16 px-4 md:px-10 max-w-7xl mx-auto gap-3">
+        <a href="../index.html" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft shrink-0">
+            <span class="ms">arrow_back</span>
+        </a>
+        <div class="flex-1 relative max-w-md">
+            <span class="ms absolute left-3 top-1/2 -translate-y-1/2 text-c-soft" style="font-size:18px">search</span>
+            <input id="buscador" type="text" placeholder="Buscar creadora..."
+                class="w-full pl-10 pr-4 py-2 rounded-full border border-c-border bg-white text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all"
+                oninput="buscar(this.value)">
+        </div>
+        <div id="topbar-right" class="shrink-0"></div>
+    </div>
+</header>
+
+<main class="pt-20 max-w-7xl mx-auto">
+
+    <!-- Chips filtro -->
+    <section class="px-4 md:px-10 pt-4 pb-3 overflow-x-auto no-scroll">
+        <div class="flex gap-2 w-max">
+            <button class="chip active text-[13px] font-bold px-4 py-1.5 rounded-full border border-c-border transition-all" data-pais="" onclick="filtrar(this)">Todas</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Bolivia" onclick="filtrar(this)">Bolivia</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Colombia" onclick="filtrar(this)">Colombia</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Mexico" onclick="filtrar(this)">Mexico</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Argentina" onclick="filtrar(this)">Argentina</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Venezuela" onclick="filtrar(this)">Venezuela</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Peru" onclick="filtrar(this)">Peru</button>
+            <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Chile" onclick="filtrar(this)">Chile</button>
+        </div>
+    </section>
+
+    <!-- Contador + ordenar -->
+    <div class="px-4 md:px-10 pb-3 flex items-center justify-between">
+        <p class="text-sm text-c-soft"><span id="contador">0</span> creadoras</p>
+        <select id="ordenar" onchange="ordenarLista(this.value)"
+            class="text-sm border border-c-border rounded-full px-3 py-1.5 bg-white text-c-soft focus:outline-none focus:border-c-accent">
+            <option value="destacadas">Destacadas primero</option>
+            <option value="suscriptores">Mas populares</option>
+            <option value="recientes">Mas recientes</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+        </select>
+    </div>
+
+    <!-- Grid -->
+    <section class="px-4 md:px-10 pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" id="grid-creadoras">
+        <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-2/3"></div><div class="skeleton h-3 w-1/3"></div></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm hidden sm:block"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-2/5"></div></div></div>
+    </section>
+
+    <div id="empty" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🔍</div>
+        <h3 class="font-display text-xl font-semibold mb-2">Sin resultados</h3>
+        <p class="text-c-soft text-sm">Prueba con otro pais o busqueda.</p>
+    </div>
+</main>
+
+<!-- Bottom nav mobile -->
+<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+    <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
+        <a href="../index.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">home</span><span class="text-[10px] font-semibold">Inicio</span>
+        </a>
+        <a href="explorar.html" class="flex flex-col items-center text-c-accent gap-0.5">
+            <span class="ms ms-fill">explore</span><span class="text-[10px] font-bold">Explorar</span>
+        </a>
+        <a href="registro-creadora.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">add_circle</span><span class="text-[10px] font-semibold">Publicar</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">payments</span><span class="text-[10px] font-semibold">Wallet</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">person</span><span class="text-[10px] font-semibold">Perfil</span>
+        </a>
+    </div>
+</nav>
+
+<div id="toasts" class="fixed bottom-24 right-4 z-[200] flex flex-col gap-2 pointer-events-none md:bottom-6"></div>
+
+<script src="../js/api.js"></script>
+<script>
+const GRADIENTES = {
+    'melocoton':['#FFF4EE','#F4A261'],'rosa-venecia':['#FFF0F5','#D4869D'],
+    'lavanda':['#F7F2FF','#9B72CF'],'rojo-carmin':['#3D0A0A','#C0392B'],
+    'menta':['#F0FAF7','#2ECC71'],'cielo':['#F0F8FF','#5DADE2'],
+    'dorada':['#FFFBF0','#D4AC0D'],'nude':['#FAF7F4','#C4A882'],
+    'noche-rosa':['#2D0A2D','#FF2D9B'],'coral':['#FFF5F2','#FF6B6B'],
+    'esmeralda':['#0D1F19','#1ABC9C'],'nube':['#F5F5F5','#95A5A6'],
+};
+
+let todas = [];
+let lista = [];
+let paisFiltro = '';
+let textoBusca = '';
+
+function init() {
+    renderTopbar();
+    cargar();
+}
+
+function renderTopbar() {
+    const el = document.getElementById('topbar-right');
+    const user = candela.auth.user();
+    if (candela.auth.isLoggedIn() && user) {
+        el.innerHTML = `<button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${(user.nombre||'U')[0].toUpperCase()}</button>`;
+    } else {
+        el.innerHTML = `<a href="../index.html" class="text-xs font-bold text-c-accent border border-c-accent px-3 py-1.5 rounded-full hover:bg-c-accent hover:text-white transition-all">Entrar</a>`;
+    }
+}
+
+async function cargar() {
+    try {
+        todas = await candela.creadoras.explorar({ limit: 60 });
+        lista = [...todas];
+        renderGrid(lista);
+    } catch(e) {
+        document.getElementById('grid-creadoras').innerHTML = `<div class="col-span-full text-center py-16"><p class="text-c-soft text-sm">Error al cargar. Verifica que el servidor este activo.</p></div>`;
+    }
+}
+
+function filtrar(btn) {
+    document.querySelectorAll('.chip').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('text-c-soft','bg-white','border-c-border');
+    });
+    btn.classList.add('active');
+    btn.classList.remove('text-c-soft','bg-white');
+    paisFiltro = btn.dataset.pais;
+    aplicarFiltros();
+}
+
+let _buscarTimer = null;
+function buscar(q) {
+    textoBusca = q.trim();
+    clearTimeout(_buscarTimer);
+    if (!textoBusca) { aplicarFiltros(); return; }
+    _buscarTimer = setTimeout(async () => {
+        try {
+            const params = { q: textoBusca, limit: 40 };
+            if (paisFiltro) params.pais = paisFiltro;
+            lista = await candela.creadoras.explorar(params);
+            ordenarLista(document.getElementById('ordenar').value);
+        } catch(e) {
+            aplicarFiltros();
+        }
+    }, 350);
+}
+
+function aplicarFiltros() {
+    lista = todas.filter(c => {
+        const matchPais = !paisFiltro || c.pais === paisFiltro;
+        const matchBusca = !textoBusca || c.nombre_artistico.toLowerCase().includes(textoBusca) || (c.pais||'').toLowerCase().includes(textoBusca);
+        return matchPais && matchBusca;
+    });
+    ordenarLista(document.getElementById('ordenar').value);
+}
+
+function ordenarLista(criterio) {
+    switch(criterio) {
+        case 'destacadas': lista.sort((a,b) => b.destacada - a.destacada || b.total_suscriptores - a.total_suscriptores); break;
+        case 'suscriptores': lista.sort((a,b) => b.total_suscriptores - a.total_suscriptores); break;
+        case 'precio-asc': lista.sort((a,b) => a.precio_suscripcion - b.precio_suscripcion); break;
+        case 'precio-desc': lista.sort((a,b) => b.precio_suscripcion - a.precio_suscripcion); break;
+    }
+    renderGrid(lista);
+}
+
+function renderGrid(data) {
+    const grid = document.getElementById('grid-creadoras');
+    const empty = document.getElementById('empty');
+    document.getElementById('contador').textContent = data.length;
+
+    if (!data.length) { grid.innerHTML=''; empty.classList.remove('hidden'); return; }
+    empty.classList.add('hidden');
+
+    grid.innerHTML = data.map((c, idx) => {
+        const [c1,c2] = GRADIENTES[c.tema_color]||['#F2D5C4','#E8A598'];
+        const inicial = c.nombre_artistico[0].toUpperCase();
+        const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
+        const online = idx % 4 === 0;
+
+        return `
+        <article class="feed-card rounded-2xl overflow-hidden bg-white border border-c-border shadow-sm cursor-pointer" onclick="ir('${c.slug}')">
+            <div class="relative overflow-hidden" style="aspect-ratio:4/5">
+                ${c.banner_url
+                    ? `<img src="${c.banner_url}" alt="${c.nombre_artistico}" class="absolute inset-0 w-full h-full object-cover">`
+                    : `<div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,${c1},${c2})">
+                           <span class="font-display select-none" style="font-size:5rem;color:rgba(255,255,255,.22)">${inicial}</span>
+                       </div>`}
+                ${c.destacada ? `<div class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold text-white border border-white/25" style="background:rgba(255,255,255,.18);backdrop-filter:blur(8px)">✨ Destacada</div>` : ''}
+                <div class="card-overlay absolute inset-0 flex flex-col justify-end p-3.5">
+                    <div class="flex justify-between items-end gap-2">
+                        <div class="flex-1 min-w-0">
+                            <div class="w-9 h-9 rounded-full border-2 border-white/70 overflow-hidden flex items-center justify-center mb-1.5 shrink-0" style="background:linear-gradient(135deg,${c1},${c2})">
+                                ${c.avatar_url ? `<img src="${c.avatar_url}" alt="" class="w-full h-full object-cover">` : `<span class="text-white font-bold text-sm">${inicial}</span>`}
+                            </div>
+                            <h3 class="text-white font-bold text-sm leading-tight truncate">${c.nombre_artistico}</h3>
+                            <p class="flex items-center gap-1.5 mt-0.5 text-white/65 text-xs">
+                                ${online ? `<span class="dot-on"></span>En linea` : `<span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${c.pais||'Latam'}`}
+                            </p>
+                        </div>
+                        <div class="flex flex-col gap-1.5 shrink-0">
+                            <button class="action-btn" onclick="like(event,'${c.id}')"><span class="ms" style="font-size:17px">favorite</span></button>
+                            <button class="action-btn" onclick="ir('${c.slug}',event)"><span class="ms" style="font-size:17px">chat_bubble</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 flex items-center justify-between gap-2">
+                <div class="min-w-0 flex-1">
+                    ${c.bio?`<p class="text-c-soft text-xs line-clamp-1 mb-0.5">${c.bio}</p>`:''}
+                    <span class="text-xs text-c-soft">${c.total_suscriptores} suscriptores ${c.pais?'· 📍 '+c.pais:''}</span>
+                </div>
+                <button onclick="ir('${c.slug}',event)" class="c-btn text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm shrink-0">${precio}</button>
+            </div>
+        </article>`;
+    }).join('');
+}
+
+function ir(slug, e) { if(e) e.stopPropagation(); window.location.href=`creadora.html?slug=${slug}`; }
+function like(e, id) {
+    e.stopPropagation();
+    const btn = e.currentTarget;
+    btn.classList.toggle('liked');
+    const icon = btn.querySelector('.ms');
+    if (btn.classList.contains('liked')) { icon.style.fontVariationSettings="'FILL' 1"; icon.style.color='#F4A261'; }
+    else { icon.style.fontVariationSettings="'FILL' 0"; icon.style.color=''; }
+}
+
+function toast(msg,tipo='info'){const c=document.getElementById('toasts');const col={error:'#e74c3c',success:'#2ecc71',info:'#F4A261'};const el=document.createElement('div');el.style.cssText=`background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;el.textContent=msg;c.appendChild(el);requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateX(0)';});setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(100%)';setTimeout(()=>el.remove(),300);},3800);}
+
+init();
+</script>
+</body>
+</html>

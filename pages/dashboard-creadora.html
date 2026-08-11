@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Panel — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
+                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
+                        "c-soft":"#8B7D77","c-border":"#F0E6E1","c-surf":"#FFFFFF",
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; }
+        .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
+        .c-btn:active { transform:scale(.97); }
+        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#8B7D77;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
+        .nav-item:hover,.nav-item.active { color:#F4A261;background:rgba(244,162,97,.08);border-left-color:#F4A261; }
+        .stat-card { background:#fff;border:1px solid #F0E6E1;border-radius:1rem;padding:1.25rem; }
+        .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
+        .ms-fill { font-variation-settings:'FILL' 1; }
+        /* upload zone */
+        .upload-zone { border:2px dashed #F2D5C4;border-radius:1rem;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:rgba(242,213,196,.06); }
+        .upload-zone:hover,.upload-zone.drag { border-color:#F4A261;background:rgba(244,162,97,.06); }
+        /* tema picker */
+        .tema-opt { height:44px;border-radius:.75rem;cursor:pointer;border:3px solid transparent;transition:all .2s;position:relative; }
+        .tema-opt.selected { border-color:#2D2D2D;box-shadow:0 0 0 2px #2D2D2D; }
+        /* tabs */
+        .panel-tab.active { color:#F4A261;border-bottom-color:#F4A261;font-weight:700; }
+        /* badge estado */
+        .badge-pendiente { background:rgba(244,162,97,.12);color:#E08947;border:1px solid rgba(244,162,97,.3); }
+        .badge-activa { background:rgba(46,204,113,.1);color:#27ae60;border:1px solid rgba(46,204,113,.3); }
+        .badge-rechazada { background:rgba(231,76,60,.1);color:#e74c3c;border:1px solid rgba(231,76,60,.3); }
+        /* section oculta */
+        .dash-section { display:none; }
+        .dash-section.active { display:block; }
+        /* no scrollbar sidebar */
+        .sidebar::-webkit-scrollbar { display:none; }
+        .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text antialiased">
+
+<!-- TopBar -->
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+    <div class="flex items-center justify-between h-16 px-4 md:px-6">
+        <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+        <div class="flex items-center gap-3">
+            <a id="link-ver-pagina" href="#" class="hidden text-xs font-bold text-c-accent border border-c-accent px-3 py-1.5 rounded-full hover:bg-c-accent hover:text-white transition-all" target="_blank">
+                <span class="ms" style="font-size:14px;vertical-align:-2px">open_in_new</span> Ver mi pagina
+            </a>
+            <div id="topbar-estado" class="hidden px-3 py-1 rounded-full text-xs font-bold"></div>
+            <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)" id="topbar-avatar" title="Salir">?</button>
+        </div>
+    </div>
+</header>
+
+<div class="flex min-h-screen pt-16">
+
+    <!-- Sidebar (desktop) -->
+    <aside class="sidebar hidden md:flex flex-col w-56 shrink-0 fixed top-16 left-0 bottom-0 bg-white border-r border-c-border overflow-y-auto pt-4 pb-8">
+        <div class="px-4 mb-4">
+            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Mi cuenta</p>
+        </div>
+        <div class="nav-item active" onclick="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
+        <div class="nav-item" onclick="mostrar('subir',this)"><span class="ms">upload</span>Subir contenido</div>
+        <div class="nav-item" onclick="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
+        <div class="nav-item" onclick="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
+        <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificacion</div>
+        <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
+        <div class="border-t border-c-border my-4 mx-4"></div>
+        <div class="px-4 mb-2">
+            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Configuracion</p>
+        </div>
+        <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 md:ml-56 px-4 md:px-8 py-6 max-w-4xl">
+
+        <!-- ══ INICIO ══ -->
+        <section id="sec-inicio" class="dash-section active">
+            <h1 class="font-display text-2xl font-semibold mb-1" id="bienvenida-nombre">Hola!</h1>
+            <p class="text-c-soft text-sm mb-5" id="bienvenida-estado"></p>
+
+            <!-- Alerta estado -->
+            <div id="alerta-estado" class="hidden rounded-2xl p-4 mb-5 text-sm border"></div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Balance</p>
+                    <p class="text-2xl font-bold text-c-accent" id="s-balance">$0</p>
+                    <p class="text-xs text-c-soft mt-0.5">disponible</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Suscriptores</p>
+                    <p class="text-2xl font-bold text-c-text" id="s-subs">0</p>
+                    <p class="text-xs text-c-soft mt-0.5">activos</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Ganancias</p>
+                    <p class="text-2xl font-bold text-c-text" id="s-total">$0</p>
+                    <p class="text-xs text-c-soft mt-0.5">historico</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Publicaciones</p>
+                    <p class="text-2xl font-bold text-c-text" id="s-posts">0</p>
+                    <p class="text-xs text-c-soft mt-0.5">total</p>
+                </div>
+            </div>
+
+            <!-- Acciones rapidas -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button onclick="mostrar('subir')" class="c-btn text-white py-3 rounded-2xl font-bold text-sm shadow-md flex items-center justify-center gap-2">
+                    <span class="ms" style="font-size:18px">upload</span>Subir contenido
+                </button>
+                <button onclick="mostrar('ganancias')" class="bg-white border border-c-border text-c-text py-3 rounded-2xl font-semibold text-sm hover:border-c-accent hover:text-c-accent transition-all flex items-center justify-center gap-2">
+                    <span class="ms" style="font-size:18px">payments</span>Solicitar retiro
+                </button>
+            </div>
+
+            <!-- Mis publicaciones -->
+            <h2 class="font-display text-lg font-semibold mb-3">Mis publicaciones</h2>
+            <div id="grid-mis-posts" class="grid grid-cols-3 gap-2">
+                <p class="col-span-3 text-c-soft text-sm py-8 text-center" id="posts-empty">
+                    No has publicado nada aun. <button onclick="mostrar('subir')" class="text-c-accent font-bold">Sube tu primer contenido</button>
+                </p>
+            </div>
+        </section>
+
+        <!-- ══ SUBIR CONTENIDO ══ -->
+        <section id="sec-subir" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-5">Subir contenido</h2>
+            <div class="bg-white border border-c-border rounded-2xl p-5 max-w-lg shadow-sm">
+                <form id="form-subir" onsubmit="subirContenido(event)" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tipo</label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 flex items-center gap-2 p-3 rounded-xl border border-c-border cursor-pointer hover:border-c-accent transition-all has-[:checked]:border-c-accent has-[:checked]:bg-orange-50">
+                                <input type="radio" name="tipo" value="foto" checked class="accent-orange-400">
+                                <span class="ms" style="font-size:18px">photo_camera</span>
+                                <span class="text-sm font-semibold">Foto</span>
+                            </label>
+                            <label class="flex-1 flex items-center gap-2 p-3 rounded-xl border border-c-border cursor-pointer hover:border-c-accent transition-all has-[:checked]:border-c-accent has-[:checked]:bg-orange-50">
+                                <input type="radio" name="tipo" value="video" class="accent-orange-400">
+                                <span class="ms" style="font-size:18px">videocam</span>
+                                <span class="text-sm font-semibold">Video</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Archivo</label>
+                        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('archivo-input').click()">
+                            <span class="ms" style="font-size:2.5rem;color:#F2D5C4">upload_file</span>
+                            <p class="text-sm text-c-soft mt-2">Haz clic o arrastra tu archivo aqui</p>
+                            <p class="text-xs text-c-border mt-1">JPG, PNG, MP4, MOV — max 500MB</p>
+                        </div>
+                        <input type="file" id="archivo-input" accept="image/*,video/*" class="hidden" onchange="previewArchivo(this)">
+                        <p id="archivo-nombre" class="text-xs text-c-soft mt-2 hidden"></p>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo (opcional)</label>
+                        <input id="sub-titulo" type="text" placeholder="Descripcion breve"
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Descripcion</label>
+                        <textarea id="sub-desc" rows="3" placeholder="Cuéntale a tus fans..."
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Acceso</label>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2 cursor-pointer text-sm">
+                                <input type="radio" name="acceso" value="subs" checked class="accent-orange-400">
+                                <div>
+                                    <span class="font-semibold">Solo suscriptores</span>
+                                    <span class="text-c-soft text-xs ml-1">(incluido en la suscripcion mensual)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-sm">
+                                <input type="radio" name="acceso" value="ppv" class="accent-orange-400" onclick="togglePrecio(true)">
+                                <span class="font-semibold">Pago unico (PPV)</span>
+                            </label>
+                            <div id="precio-ppv" class="hidden pl-6">
+                                <input id="sub-precio" type="number" min="1" max="500" step="0.5" placeholder="Precio en $"
+                                    class="w-32 px-3 py-2 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all">
+                            </div>
+                            <label class="flex items-center gap-2 cursor-pointer text-sm">
+                                <input type="radio" name="acceso" value="gratis" class="accent-orange-400" onclick="togglePrecio(false)">
+                                <span class="font-semibold">Gratis para todos</span>
+                                <span class="text-c-soft text-xs">(preview publico)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" id="btn-subir" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2">
+                        <span class="ms" style="font-size:18px">upload</span>Publicar
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ══ GANANCIAS ══ -->
+        <section id="sec-ganancias" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-5">Mis ganancias</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Balance disponible</p>
+                    <p class="text-2xl font-bold text-c-accent" id="g-balance">$0.00</p>
+                    <p class="text-xs text-c-soft mt-0.5">listo para retirar</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Total ganado</p>
+                    <p class="text-2xl font-bold text-c-text" id="g-total">$0.00</p>
+                    <p class="text-xs text-c-soft mt-0.5">historico</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Suscriptores activos</p>
+                    <p class="text-2xl font-bold text-c-text" id="g-subs">0</p>
+                </div>
+            </div>
+
+            <!-- Solicitar retiro -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 max-w-md shadow-sm">
+                <h3 class="font-bold text-base mb-1">Solicitar retiro</h3>
+                <p class="text-xs text-c-soft mb-4">Se procesan cada lunes. Minimo $20 USDT.</p>
+                <div class="flex flex-col gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tu wallet USDT (TRC20)</label>
+                        <input id="ret-wallet" type="text" placeholder="T..."
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Monto a retirar ($)</label>
+                        <input id="ret-monto" type="number" min="20" step="1" placeholder="Minimo $20"
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    </div>
+                    <button onclick="solicitarRetiro()" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Solicitar retiro</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ PERSONALIZAR ══ -->
+        <section id="sec-personalizar" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Personalizar mi pagina</h2>
+            <p class="text-c-soft text-sm mb-5">Esto es lo que ven tus suscriptores cuando visitan tu perfil.</p>
+
+            <form onsubmit="guardarPerfil(event)" class="max-w-xl space-y-5">
+                <!-- Fotos de perfil -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-3">Fotos</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Avatar -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Foto de perfil</label>
+                            <div class="flex items-center gap-3">
+                                <div id="prev-avatar" class="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                                    <span id="prev-avatar-init">?</span>
+                                    <img id="prev-avatar-img" src="" alt="" class="hidden w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1">
+                                    <input type="file" id="input-avatar" accept="image/*" class="hidden" onchange="subirAvatar(this)">
+                                    <button type="button" onclick="document.getElementById('input-avatar').click()" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full">
+                                        Cambiar foto
+                                    </button>
+                                    <p class="text-[10px] text-c-soft mt-1">JPG o PNG, max 5MB</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Banner -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Banner (portada)</label>
+                            <div id="prev-banner" class="w-full h-16 rounded-xl overflow-hidden mb-2" style="background:linear-gradient(135deg,#FFF4EE,#F2D5C4)">
+                                <img id="prev-banner-img" src="" alt="" class="hidden w-full h-full object-cover">
+                            </div>
+                            <input type="file" id="input-banner" accept="image/*" class="hidden" onchange="subirBanner(this)">
+                            <button type="button" onclick="document.getElementById('input-banner').click()" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full">
+                                Cambiar banner
+                            </button>
+                            <p class="text-[10px] text-c-soft mt-1">JPG o PNG, recomendado 1200x300</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-3">Informacion publica</h3>
+                    <div class="flex flex-col gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Bio</label>
+                            <textarea id="p-bio" rows="3" placeholder="Cuéntale a tu audiencia quien eres..."
+                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio suscripcion mensual ($)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
+                                <input id="p-precio" type="number" min="0" max="100" step="0.5" placeholder="0 = sin suscripcion"
+                                    class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tema de color -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-3">Tema de color</h3>
+                    <div class="grid grid-cols-4 gap-2" id="tema-grid">
+                        <!-- generado por JS -->
+                    </div>
+                    <input type="hidden" id="p-tema" value="melocoton">
+                </div>
+
+                <!-- Fuente y layout -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-3">Estilo</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Fuente</label>
+                            <select id="p-fuente" class="w-full px-3 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all bg-white">
+                                <option value="Nunito">Nunito (moderna)</option>
+                                <option value="Playfair Display">Playfair (elegante)</option>
+                                <option value="Montserrat">Montserrat (bold)</option>
+                                <option value="Lato">Lato (limpia)</option>
+                                <option value="Dancing Script">Dancing Script (cursiva)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Grid de fotos</label>
+                            <select id="p-layout" class="w-full px-3 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all bg-white">
+                                <option value="grid">Grid (cuadros)</option>
+                                <option value="masonry">Mosaico</option>
+                                <option value="magazine">Revista</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="c-btn text-white py-3 px-8 rounded-xl font-bold text-sm shadow-md w-full sm:w-auto">Guardar cambios</button>
+            </form>
+        </section>
+
+        <!-- ══ VERIFICACION ══ -->
+        <section id="sec-verificacion" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Verificacion de edad</h2>
+            <p class="text-c-soft text-sm mb-5">Requerida para activar tu cuenta. Solo para mayores de 18 anos.</p>
+
+            <div id="ver-estado-box" class="hidden rounded-2xl p-4 mb-5 border text-sm"></div>
+
+            <div class="bg-white border border-c-border rounded-2xl p-5 max-w-lg shadow-sm">
+                <form id="form-verificacion" onsubmit="enviarVerificacion(event)" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tipo de documento</label>
+                        <select id="v-tipo" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all bg-white">
+                            <option value="CI">Cedula de identidad (CI)</option>
+                            <option value="pasaporte">Pasaporte</option>
+                            <option value="DNI">DNI</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Foto del documento (frente)</label>
+                        <div class="upload-zone" onclick="document.getElementById('v-doc').click()">
+                            <span class="ms" style="font-size:2rem;color:#F2D5C4">badge</span>
+                            <p class="text-sm text-c-soft mt-1">Foto clara del frente de tu CI / DNI</p>
+                        </div>
+                        <input type="file" id="v-doc" accept="image/*" class="hidden" required onchange="mostrarNombre(this,'lbl-doc')">
+                        <p id="lbl-doc" class="text-xs text-c-soft mt-1.5"></p>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Selfie sosteniendo el documento</label>
+                        <div class="upload-zone" onclick="document.getElementById('v-selfie').click()">
+                            <span class="ms" style="font-size:2rem;color:#F2D5C4">selfie</span>
+                            <p class="text-sm text-c-soft mt-1">Tu cara + el documento visibles</p>
+                        </div>
+                        <input type="file" id="v-selfie" accept="image/*" class="hidden" required onchange="mostrarNombre(this,'lbl-selfie')">
+                        <p id="lbl-selfie" class="text-xs text-c-soft mt-1.5"></p>
+                    </div>
+                    <button type="submit" id="btn-verificar" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
+                        Enviar para revision
+                    </button>
+                    <p class="text-center text-xs text-c-soft">Respondemos en 24-48h. Tus documentos son confidenciales.</p>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECCION: REFERIDAS -->
+        <section id="sec-referidas" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Programa de referidas</h2>
+            <p class="text-c-soft text-sm mb-5">Invita a otras creadoras y gana el <strong>1% de todo lo que generen, de por vida.</strong></p>
+
+            <!-- Tu enlace -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 mb-5 shadow-sm max-w-lg">
+                <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Tu enlace de referido</p>
+                <div class="flex gap-2">
+                    <input id="link-ref" readonly class="flex-1 px-4 py-2.5 rounded-xl border border-c-border text-sm bg-c-bg text-c-text" value="">
+                    <button onclick="copiarLink()" class="c-btn text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm">Copiar</button>
+                </div>
+                <p class="text-xs text-c-soft mt-2">Comparte este link con otras creadoras. Si se registran con el, quedan vinculadas a ti para siempre.</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-3 mb-5 max-w-lg">
+                <div class="bg-white border border-c-border rounded-2xl p-4 text-center shadow-sm">
+                    <p class="text-2xl font-bold text-c-accent" id="ref-total">0</p>
+                    <p class="text-xs text-c-soft mt-1">Referidas</p>
+                </div>
+                <div class="bg-white border border-c-border rounded-2xl p-4 text-center shadow-sm">
+                    <p class="text-2xl font-bold text-c-accent" id="ref-activas">0</p>
+                    <p class="text-xs text-c-soft mt-1">Activas</p>
+                </div>
+                <div class="bg-white border border-c-border rounded-2xl p-4 text-center shadow-sm">
+                    <p class="text-2xl font-bold text-c-accent" id="ref-balance">$0</p>
+                    <p class="text-xs text-c-soft mt-1">Ganado</p>
+                </div>
+            </div>
+
+            <!-- Lista de referidas -->
+            <div class="bg-white border border-c-border rounded-2xl shadow-sm max-w-lg overflow-hidden">
+                <div class="px-5 py-4 border-b border-c-border">
+                    <p class="font-semibold text-sm">Mis referidas</p>
+                </div>
+                <div id="lista-referidas">
+                    <p class="text-center text-c-soft text-sm py-8">Cargando...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- Bottom nav mobile -->
+<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+    <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
+        <button onclick="mostrar('inicio')" class="flex flex-col items-center text-c-accent gap-0.5">
+            <span class="ms ms-fill">home</span><span class="text-[10px] font-bold">Inicio</span>
+        </button>
+        <button onclick="mostrar('subir')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">upload</span><span class="text-[10px] font-semibold">Subir</span>
+        </button>
+        <button onclick="mostrar('ganancias')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">payments</span><span class="text-[10px] font-semibold">Ganancias</span>
+        </button>
+        <button onclick="mostrar('personalizar')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">palette</span><span class="text-[10px] font-semibold">Estilo</span>
+        </button>
+        <button onclick="mostrar('verificacion')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">verified_user</span><span class="text-[10px] font-semibold">CI</span>
+        </button>
+    </div>
+</nav>
+
+<div id="toasts" class="fixed bottom-24 right-4 z-[200] flex flex-col gap-2 pointer-events-none md:bottom-6"></div>
+
+<script src="../js/api.js"></script>
+<script>
+const TEMAS_DEF = [
+    { id:'melocoton',    label:'Melocoton',   g:'linear-gradient(135deg,#FFF4EE,#F4A261)' },
+    { id:'rosa-venecia', label:'Rosa Venecia', g:'linear-gradient(135deg,#FFF0F5,#D4869D)' },
+    { id:'lavanda',      label:'Lavanda',      g:'linear-gradient(135deg,#F7F2FF,#9B72CF)' },
+    { id:'rojo-carmin',  label:'Carmin',       g:'linear-gradient(135deg,#3D0A0A,#C0392B)' },
+    { id:'menta',        label:'Menta',        g:'linear-gradient(135deg,#F0FAF7,#2ECC71)' },
+    { id:'cielo',        label:'Cielo',        g:'linear-gradient(135deg,#F0F8FF,#5DADE2)' },
+    { id:'dorada',       label:'Dorada',       g:'linear-gradient(135deg,#FFFBF0,#D4AC0D)' },
+    { id:'nude',         label:'Nude',         g:'linear-gradient(135deg,#FAF7F4,#C4A882)' },
+    { id:'noche-rosa',   label:'Noche Rosa',   g:'linear-gradient(135deg,#2D0A2D,#FF2D9B)' },
+    { id:'coral',        label:'Coral',        g:'linear-gradient(135deg,#FFF5F2,#FF6B6B)' },
+    { id:'esmeralda',    label:'Esmeralda',    g:'linear-gradient(135deg,#0D1F19,#1ABC9C)' },
+    { id:'nube',         label:'Nube',         g:'linear-gradient(135deg,#F5F5F5,#95A5A6)' },
+];
+
+let perfilData = null;
+
+// ─── INIT ────────────────────────────────────────────────────
+async function init() {
+    if (!requireAuth('creadora')) return;
+    const user = candela.auth.user();
+
+    // Topbar
+    document.getElementById('topbar-avatar').textContent = (user.nombre||'C')[0].toUpperCase();
+    document.getElementById('topbar-avatar').title = 'Salir (' + (user.nombre||'') + ')';
+    if (user.slug) {
+        const link = document.getElementById('link-ver-pagina');
+        link.href = `creadora.html?slug=${user.slug}`;
+        link.classList.remove('hidden');
+    }
+
+    renderTemaGrid('melocoton');
+    cargarPerfil();
+    cargarGanancias();
+    cargarMisPosts();
+}
+
+// ─── PERFIL ──────────────────────────────────────────────────
+async function cargarPerfil() {
+    try {
+        perfilData = await candela.creadoras.miPerfil();
+        const user = candela.auth.user();
+
+        document.getElementById('bienvenida-nombre').textContent = `Hola, ${user.nombre || perfilData.nombre_artistico}!`;
+
+        // Estado badge
+        const estadoBadge = { pendiente:'badge-pendiente', activa:'badge-activa', rechazada:'badge-rechazada' };
+        const estadoLabel = { pendiente:'Pendiente de aprobacion', activa:'Cuenta activa', rechazada:'Rechazada' };
+        const badgeEl = document.getElementById('topbar-estado');
+        badgeEl.textContent = estadoLabel[perfilData.estado] || perfilData.estado;
+        badgeEl.className = `hidden px-3 py-1 rounded-full text-xs font-bold ${estadoBadge[perfilData.estado]||''}`;
+        badgeEl.classList.remove('hidden');
+
+        // Alerta si pendiente o rechazada
+        const alerta = document.getElementById('alerta-estado');
+        if (perfilData.estado === 'pendiente') {
+            alerta.className = 'rounded-2xl p-4 mb-5 text-sm border badge-pendiente';
+            alerta.innerHTML = `⏳ <strong>Tu cuenta esta pendiente.</strong> Sube tu verificacion de CI para que podamos activarla. <button onclick="mostrar('verificacion')" class="underline font-bold ml-1">Ir a verificacion</button>`;
+            alerta.classList.remove('hidden');
+        } else if (perfilData.estado === 'rechazada') {
+            alerta.className = 'rounded-2xl p-4 mb-5 text-sm border badge-rechazada';
+            alerta.innerHTML = '❌ <strong>Tu cuenta fue rechazada.</strong> Contacta a soporte para mas informacion.';
+            alerta.classList.remove('hidden');
+        } else {
+            document.getElementById('bienvenida-estado').textContent = `${perfilData.nombre_artistico} · Todo listo para brillar 🔥`;
+        }
+
+        // Pre-rellenar formulario personalizar
+        document.getElementById('p-bio').value = perfilData.bio || '';
+        document.getElementById('p-precio').value = perfilData.precio_suscripcion || 0;
+        if (perfilData.fuente) document.getElementById('p-fuente').value = perfilData.fuente;
+        if (perfilData.layout_grid) document.getElementById('p-layout').value = perfilData.layout_grid;
+
+        // Mostrar avatar y banner actuales
+        const AB = 'https://web-production-73189.up.railway.app';
+        if (perfilData.avatar_url) {
+            const ai = document.getElementById('prev-avatar-img');
+            ai.src = AB + perfilData.avatar_url;
+            ai.classList.remove('hidden');
+            document.getElementById('prev-avatar-init').classList.add('hidden');
+        } else {
+            const u = candela.auth.user();
+            document.getElementById('prev-avatar-init').textContent = (u?.nombre || 'C')[0].toUpperCase();
+        }
+        if (perfilData.banner_url) {
+            const bi = document.getElementById('prev-banner-img');
+            bi.src = AB + perfilData.banner_url;
+            bi.classList.remove('hidden');
+        }
+
+        if (perfilData.tema_color) {
+            document.getElementById('p-tema').value = perfilData.tema_color;
+            renderTemaGrid(perfilData.tema_color);
+        }
+    } catch(e) {}
+}
+
+async function cargarGanancias() {
+    try {
+        const g = await candela.creadoras.ganancias();
+        const fmt = v => '$' + (v||0).toFixed(2);
+        document.getElementById('s-balance').textContent = fmt(g.balance_disponible);
+        document.getElementById('s-subs').textContent = g.total_suscriptores;
+        document.getElementById('s-total').textContent = fmt(g.total_ganancias);
+        document.getElementById('g-balance').textContent = fmt(g.balance_disponible);
+        document.getElementById('g-total').textContent = fmt(g.total_ganancias);
+        document.getElementById('g-subs').textContent = g.suscripciones_activas;
+    } catch(e) {}
+}
+
+async function cargarMisPosts() {
+    try {
+        const user = candela.auth.user();
+        if (!user?.slug) return;
+        const lista = await candela.contenido.listarCreadora(user.slug);
+        document.getElementById('s-posts').textContent = lista.length;
+        const grid = document.getElementById('grid-mis-posts');
+        const empty = document.getElementById('posts-empty');
+
+        if (!lista.length) { empty.classList.remove('hidden'); return; }
+        empty.classList.add('hidden');
+
+        grid.innerHTML = lista.map(c => `
+            <div class="relative rounded-xl overflow-hidden cursor-pointer group" style="aspect-ratio:1;background:#F2D5C4">
+                ${c.preview_url ? `<img src="${c.preview_url}" alt="" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-3xl">${c.tipo==='video'?'🎬':'📸'}</div>`}
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <button onclick="eliminarPost('${c.id}')" class="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">Eliminar</button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-2" style="background:linear-gradient(transparent,rgba(0,0,0,.6))">
+                    <p class="text-white text-[10px] font-semibold">${c.precio > 0 ? '$'+c.precio : c.es_gratis ? 'Gratis' : 'Suscriptores'}</p>
+                </div>
+            </div>`).join('');
+    } catch(e) {}
+}
+
+// ─── ACCIONES ────────────────────────────────────────────────
+async function subirContenido(e) {
+    e.preventDefault();
+    const archivo = document.getElementById('archivo-input').files[0];
+    if (!archivo) { toast('Selecciona un archivo', 'error'); return; }
+    const tipo = document.querySelector('input[name="tipo"]:checked').value;
+    const acceso = document.querySelector('input[name="acceso"]:checked').value;
+    const precio = acceso === 'ppv' ? parseFloat(document.getElementById('sub-precio').value) || 0 : 0;
+    const esGratis = acceso === 'gratis';
+    const btn = document.getElementById('btn-subir');
+    btn.innerHTML = '<span class="ms" style="font-size:18px">hourglass_top</span> Subiendo...';
+    btn.disabled = true;
+    try {
+        await candela.contenido.subir(
+            tipo,
+            document.getElementById('sub-titulo').value,
+            document.getElementById('sub-desc').value,
+            precio, esGratis, archivo
+        );
+        toast('Contenido publicado!', 'success');
+        document.getElementById('form-subir').reset();
+        document.getElementById('archivo-nombre').classList.add('hidden');
+        mostrar('inicio');
+        cargarMisPosts();
+    } catch(err) {
+        toast(err.message, 'error');
+    } finally {
+        btn.innerHTML = '<span class="ms" style="font-size:18px">upload</span> Publicar';
+        btn.disabled = false;
+    }
+}
+
+async function guardarPerfil(e) {
+    e.preventDefault();
+    try {
+        await candela.creadoras.actualizarPerfil({
+            bio: document.getElementById('p-bio').value,
+            precio_suscripcion: parseFloat(document.getElementById('p-precio').value) || 0,
+            tema_color: document.getElementById('p-tema').value,
+            fuente: document.getElementById('p-fuente').value,
+            layout_grid: document.getElementById('p-layout').value,
+        });
+        toast('Perfil actualizado!', 'success');
+    } catch(err) { toast(err.message, 'error'); }
+}
+
+async function solicitarRetiro() {
+    const wallet = document.getElementById('ret-wallet').value.trim();
+    const monto = parseFloat(document.getElementById('ret-monto').value);
+    if (!wallet) { toast('Ingresa tu wallet USDT', 'error'); return; }
+    if (!monto || monto < 20) { toast('Minimo $20', 'error'); return; }
+    try {
+        const r = await candela.pagos.solicitarRetiro(monto, wallet);
+        toast(r.mensaje, 'success');
+        cargarGanancias();
+    } catch(err) { toast(err.message, 'error'); }
+}
+
+async function enviarVerificacion(e) {
+    e.preventDefault();
+    const doc = document.getElementById('v-doc').files[0];
+    const selfie = document.getElementById('v-selfie').files[0];
+    if (!doc || !selfie) { toast('Sube ambas fotos', 'error'); return; }
+    const btn = document.getElementById('btn-verificar');
+    btn.textContent = 'Enviando...'; btn.disabled = true;
+    try {
+        const r = await candela.creadoras.enviarVerificacion(document.getElementById('v-tipo').value, doc, selfie);
+        toast(r.mensaje, 'success');
+        const box = document.getElementById('ver-estado-box');
+        box.className = 'rounded-2xl p-4 mb-5 border text-sm badge-pendiente';
+        box.innerHTML = '⏳ Documentos enviados. Revisaremos en 24-48h y te notificaremos.';
+        box.classList.remove('hidden');
+    } catch(err) { toast(err.message, 'error'); }
+    finally { btn.textContent = 'Enviar para revision'; btn.disabled = false; }
+}
+
+async function eliminarPost(id) {
+    if (!confirm('Eliminar esta publicacion?')) return;
+    try {
+        await candela.contenido.eliminar(id);
+        toast('Eliminado', 'success');
+        cargarMisPosts();
+    } catch(err) { toast(err.message, 'error'); }
+}
+
+// ─── TEMA GRID ───────────────────────────────────────────────
+function renderTemaGrid(seleccionado) {
+    const grid = document.getElementById('tema-grid');
+    grid.innerHTML = TEMAS_DEF.map(t => `
+        <button type="button" class="tema-opt ${t.id===seleccionado?'selected':''}" style="background:${t.g}" onclick="seleccionarTema('${t.id}',this)" title="${t.label}">
+        </button>`).join('');
+}
+
+function seleccionarTema(id, el) {
+    document.querySelectorAll('.tema-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('p-tema').value = id;
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────
+function mostrar(sec, navBtn) {
+    document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + sec)?.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navBtn?.classList.add('active');
+    window.scrollTo(0, 0);
+    // Recargar datos al cambiar tab
+    if (sec === 'ganancias') cargarGanancias();
+    if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); }
+    if (sec === 'referidas') cargarReferidas();
+}
+
+// ─── REFERIDAS ───────────────────────────────────────────────
+async function cargarReferidas() {
+    try {
+        const data = await candela.creadoras.misReferidas();
+        const baseUrl = window.location.origin + window.location.pathname.replace('dashboard-creadora.html','') + '../pages/registro-creadora.html';
+        document.getElementById('link-ref').value = `${baseUrl}?ref=${data.codigo_referido}`;
+        document.getElementById('ref-total').textContent = data.total_referidas;
+        const activas = data.referidas.filter(r => r.estado === 'activa').length;
+        document.getElementById('ref-activas').textContent = activas;
+        document.getElementById('ref-balance').textContent = `$${(data.balance_referidos||0).toFixed(2)}`;
+        const lista = document.getElementById('lista-referidas');
+        if (!data.referidas.length) {
+            lista.innerHTML = '<p class="text-center text-c-soft text-sm py-8">Aun no tienes referidas. Comparte tu enlace para empezar a ganar.</p>';
+            return;
+        }
+        lista.innerHTML = data.referidas.map(r => `
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-c-border last:border-0">
+                <div>
+                    <p class="font-semibold text-sm">${r.nombre_artistico}</p>
+                    <p class="text-xs text-c-soft">@${r.slug}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm font-bold text-c-accent">$${(r.total_comision_generada||0).toFixed(2)}</p>
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${r.estado==='activa'?'bg-green-100 text-green-700':'bg-amber-100 text-amber-700'}">${r.estado}</span>
+                </div>
+            </div>
+        `).join('');
+    } catch(e) {
+        document.getElementById('lista-referidas').innerHTML = '<p class="text-center text-c-soft text-sm py-8">Error al cargar referidas</p>';
+    }
+}
+
+function copiarLink() {
+    const inp = document.getElementById('link-ref');
+    navigator.clipboard.writeText(inp.value).then(() => toast('Enlace copiado!', 'success'));
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function togglePrecio(show) {
+    document.getElementById('precio-ppv').classList.toggle('hidden', !show);
+}
+
+function previewArchivo(input) {
+    const f = input.files[0]; if (!f) return;
+    const p = document.getElementById('archivo-nombre');
+    p.textContent = `✓ ${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`;
+    p.classList.remove('hidden');
+}
+
+function mostrarNombre(input, id) {
+    document.getElementById(id).textContent = input.files[0]?.name || '';
+}
+
+function requireAuth(tipo) {
+    if (!candela.auth.isLoggedIn()) { window.location.href = '../index.html'; return false; }
+    if (tipo) {
+        const u = candela.auth.user();
+        if (u?.tipo !== tipo) { window.location.href = '../index.html'; return false; }
+    }
+    return true;
+}
+
+// ─── AVATAR / BANNER ─────────────────────────────────────────
+async function subirAvatar(input) {
+    const file = input.files[0]; if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { toast('Imagen muy grande (max 5MB)', 'error'); return; }
+    try {
+        const r = await candela.creadoras.subirAvatar(file);
+        const img = document.getElementById('prev-avatar-img');
+        img.src = 'https://web-production-73189.up.railway.app' + r.avatar_url + '?t=' + Date.now();
+        img.classList.remove('hidden');
+        document.getElementById('prev-avatar-init').classList.add('hidden');
+        // Actualizar topbar
+        document.getElementById('topbar-avatar').textContent = '';
+        document.getElementById('topbar-avatar').style.backgroundImage = `url(${img.src})`;
+        document.getElementById('topbar-avatar').style.backgroundSize = 'cover';
+        toast('Foto de perfil actualizada', 'success');
+    } catch(err) { toast(err.message, 'error'); }
+}
+
+async function subirBanner(input) {
+    const file = input.files[0]; if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { toast('Imagen muy grande (max 10MB)', 'error'); return; }
+    try {
+        const r = await candela.creadoras.subirBanner(file);
+        const img = document.getElementById('prev-banner-img');
+        img.src = 'https://web-production-73189.up.railway.app' + r.banner_url + '?t=' + Date.now();
+        img.classList.remove('hidden');
+        toast('Banner actualizado', 'success');
+    } catch(err) { toast(err.message, 'error'); }
+}
+
+function toast(msg, tipo = 'info') {
+    const c = document.getElementById('toasts');
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const el = document.createElement('div');
+    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.textContent = msg;
+    c.appendChild(el);
+    requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });
+    setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(100%)'; setTimeout(()=>el.remove(),300); }, 3800);
+}
+
+init();
+</script>
+</body>
+</html>

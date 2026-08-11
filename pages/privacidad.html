@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politica de Privacidad — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{colors:{"c-bg":"#FFF8F5","c-accent":"#F4A261","c-text":"#2D2D2D","c-soft":"#8B7D77","c-border":"#F0E6E1"},fontFamily:{display:["Playfair Display","serif"],body:["Nunito","sans-serif"]}}}}</script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>body{font-family:'Nunito',sans-serif;} .logo-text{background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;} h2{font-size:1.1rem;font-weight:700;margin-top:2rem;margin-bottom:.5rem;color:#2D2D2D;} p,li{color:#8B7D77;line-height:1.7;font-size:.925rem;} ul{list-style:disc;padding-left:1.5rem;margin:.5rem 0;} strong{color:#2D2D2D;}</style>
+</head>
+<body class="bg-c-bg text-c-text min-h-screen">
+<header class="bg-white border-b border-c-border sticky top-0 z-10">
+    <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+        <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+        <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">← Volver</a>
+    </div>
+</header>
+<main class="max-w-2xl mx-auto px-5 py-10">
+    <h1 class="font-display text-3xl font-semibold mb-2">Politica de Privacidad</h1>
+    <p class="text-c-soft text-sm mb-8">Ultima actualizacion: agosto 2026</p>
+
+    <h2>1. Datos que recopilamos</h2>
+    <p><strong>Al registrarte:</strong> nombre, email, fecha de nacimiento, pais.</p>
+    <p><strong>Creadoras adicionalmente:</strong> documento de identidad y selfie (solo para verificacion de edad, uso interno exclusivo).</p>
+    <p><strong>Uso de la plataforma:</strong> contenido visualizado, transacciones, hashes de pagos.</p>
+
+    <h2>2. Como usamos tus datos</h2>
+    <ul>
+        <li>Operar y mantener tu cuenta.</li>
+        <li>Verificar la identidad de las creadoras (mayores de edad).</li>
+        <li>Procesar pagos y retiros.</li>
+        <li>Enviarte notificaciones relacionadas con tu cuenta.</li>
+        <li>Mejorar la plataforma.</li>
+    </ul>
+
+    <h2>3. Documentos de verificacion</h2>
+    <p>Las fotos de CI y selfies de las creadoras se almacenan de forma segura y <strong>solo son accedidas por el equipo de verificacion de Candela</strong>. No se comparten con terceros. Se eliminan de nuestros registros internos una vez aprobada la cuenta.</p>
+
+    <h2>4. Contenido</h2>
+    <p>El contenido publicado por las creadoras es visible segun el nivel de acceso que cada creadora define (suscriptores, PPV, gratis). Candela no vende ni comparte este contenido con terceros.</p>
+
+    <h2>5. Cookies y almacenamiento local</h2>
+    <p>Usamos <strong>localStorage</strong> del navegador para mantener tu sesion activa (token JWT). No utilizamos cookies de rastreo de terceros.</p>
+
+    <h2>6. Seguridad</h2>
+    <ul>
+        <li>Las contrasenas se almacenan con hash bcrypt (nunca en texto plano).</li>
+        <li>Las comunicaciones se realizan sobre HTTPS en produccion.</li>
+        <li>El contenido desbloqueado incluye un <strong>watermark</strong> con el nombre del suscriptor para desincentivar la distribucion no autorizada.</li>
+    </ul>
+
+    <h2>7. Tus derechos</h2>
+    <ul>
+        <li><strong>Acceso:</strong> puedes solicitar los datos que tenemos sobre ti.</li>
+        <li><strong>Eliminacion:</strong> puedes solicitar la eliminacion de tu cuenta y datos.</li>
+        <li><strong>Rectificacion:</strong> puedes actualizar tu informacion en cualquier momento desde tu panel.</li>
+    </ul>
+    <p>Para ejercer estos derechos, escribe a: <strong>privacidad@candela.app</strong></p>
+
+    <h2>8. Retencion de datos</h2>
+    <p>Mantenemos tus datos mientras tu cuenta este activa. Al eliminar tu cuenta, eliminamos tus datos personales en un plazo de 30 dias, excepto los requeridos por obligaciones legales o financieras.</p>
+
+    <h2>9. Menores de edad</h2>
+    <p>Candela es una plataforma <strong>exclusiva para mayores de 18 anos</strong>. No recopilamos datos de menores de edad de forma intencional. Si detectamos una cuenta de menor, la cancelamos de inmediato.</p>
+
+    <h2>10. Cambios en esta politica</h2>
+    <p>Notificaremos por email cualquier cambio significativo. El uso continuado implica la aceptacion.</p>
+
+    <h2>11. Contacto</h2>
+    <p><strong>privacidad@candela.app</strong></p>
+</main>
+</body>
+</html>
