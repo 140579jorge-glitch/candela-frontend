@@ -238,8 +238,8 @@ async function cargarVerificaciones() {
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1 flex-wrap">
-                            <p class="font-bold text-sm">${v.creadora_nombre || v.creadora_id}</p>
-                            <span class="badge badge-pendiente">${v.doc_tipo || 'CI'}</span>
+                            <p class="font-bold text-sm">${esc(v.creadora_nombre || v.creadora_id)}</p>
+                            <span class="badge badge-pendiente">${esc(v.doc_tipo || 'CI')}</span>
                         </div>
                         <p class="text-xs text-c-soft mb-3">Enviado: ${fmt_fecha(v.fecha_solicitud)}</p>
                         <div class="flex gap-2 flex-wrap">
@@ -273,13 +273,13 @@ async function cargarRetiros() {
             <div class="ver-card">
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div class="flex-1 min-w-0">
-                        <p class="font-bold text-sm mb-1">${r.creadora_nombre || r.creadora_id}</p>
+                        <p class="font-bold text-sm mb-1">${esc(r.creadora_nombre || r.creadora_id)}</p>
                         <div class="flex items-center gap-3 flex-wrap mb-2">
                             <span class="text-lg font-bold text-c-accent">$${(r.monto||0).toFixed(2)}</span>
                             <span class="text-xs text-c-soft">USDT TRC20</span>
                         </div>
                         <div class="bg-c-bg rounded-xl px-3 py-2 text-xs font-mono break-all text-c-text border border-c-border mb-2">
-                            ${r.wallet_destino || '-'}
+                            ${esc(r.wallet_destino || '-')}
                         </div>
                         <p class="text-xs text-c-soft">Solicitado: ${fmt_fecha(r.fecha_solicitud)}</p>
                     </div>
@@ -360,8 +360,8 @@ async function cargarCreadoras() {
                         ${(c.nombre_artistico||'?')[0].toUpperCase()}
                     </div>
                     <div class="min-w-0">
-                        <p class="font-bold text-sm truncate">${c.nombre_artistico}</p>
-                        <p class="text-xs text-c-soft">${c.pais || '-'}</p>
+                        <p class="font-bold text-sm truncate">${esc(c.nombre_artistico)}</p>
+                        <p class="text-xs text-c-soft">${esc(c.pais || '-')}</p>
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
@@ -384,8 +384,8 @@ async function cargarCreadoras() {
                     ${(c.nombre_artistico||'?')[0].toUpperCase()}
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="font-bold text-sm">${c.nombre_artistico}</p>
-                    <p class="text-xs text-c-soft">${c.email} &bull; ${c.pais||'-'}</p>
+                    <p class="font-bold text-sm">${esc(c.nombre_artistico)}</p>
+                    <p class="text-xs text-c-soft">${esc(c.email)} &bull; ${esc(c.pais||'-')}</p>
                 </div>
                 <span class="badge badge-${c.estado}">${c.estado}</span>
             </div>`).join('');
@@ -406,10 +406,10 @@ async function cargarPagosPPV() {
             <div class="bg-white border border-c-border rounded-2xl p-4" id="pago-${p.compra_id}">
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div class="flex-1">
-                        <p class="font-bold text-sm">${p.creadora_nombre} &mdash; ${p.titulo_contenido||'Sin titulo'}</p>
-                        <p class="text-xs text-c-soft mt-0.5">Suscriptor: ${p.suscriptor_email}</p>
+                        <p class="font-bold text-sm">${esc(p.creadora_nombre)} &mdash; ${esc(p.titulo_contenido||'Sin titulo')}</p>
+                        <p class="text-xs text-c-soft mt-0.5">Suscriptor: ${esc(p.suscriptor_email)}</p>
                         <p class="text-xs text-c-soft mt-0.5">Monto: <strong>$${p.monto} USDT</strong></p>
-                        <p class="text-xs text-c-soft mt-0.5 font-mono break-all">Hash: ${p.referencia_pago}</p>
+                        <p class="text-xs text-c-soft mt-0.5 font-mono break-all">Hash: ${esc(p.referencia_pago)}</p>
                     </div>
                     <div class="flex gap-2 shrink-0">
                         <button onclick="accionPago('${p.compra_id}','confirmar')" class="px-3 py-1.5 rounded-xl text-xs font-bold text-white shadow-sm" style="background:#2ecc71">Confirmar</button>

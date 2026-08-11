@@ -242,9 +242,9 @@ function renderGrid(data) {
                             <div class="w-9 h-9 rounded-full border-2 border-white/70 overflow-hidden flex items-center justify-center mb-1.5 shrink-0" style="background:linear-gradient(135deg,${c1},${c2})">
                                 ${c.avatar_url ? `<img src="${c.avatar_url}" alt="" class="w-full h-full object-cover">` : `<span class="text-white font-bold text-sm">${inicial}</span>`}
                             </div>
-                            <h3 class="text-white font-bold text-sm leading-tight truncate">${c.nombre_artistico}</h3>
+                            <h3 class="text-white font-bold text-sm leading-tight truncate">${esc(c.nombre_artistico)}</h3>
                             <p class="flex items-center gap-1.5 mt-0.5 text-white/65 text-xs">
-                                ${online ? `<span class="dot-on"></span>En linea` : `<span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${c.pais||'Latam'}`}
+                                ${online ? `<span class="dot-on"></span>En linea` : `<span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${esc(c.pais||'Latam')}`}
                             </p>
                         </div>
                         <div class="flex flex-col gap-1.5 shrink-0">

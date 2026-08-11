@@ -1,5 +1,16 @@
 const API_URL = 'https://web-production-73189.up.railway.app';
 
+// Escapa HTML para prevenir XSS — usar en todo dato de usuario insertado via innerHTML
+function esc(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 const candela = {
     _token: () => localStorage.getItem('candela_token'),
 
