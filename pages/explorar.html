@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorar — Candela</title>
+    <title>Explorar creadoras latinas — Candela</title>
+    <meta name="description" content="Explora las mejores creadoras latinas en Candela. Bolivia, Colombia, México, Argentina, Venezuela, Perú y más. Contenido exclusivo en tu idioma.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://clubcandela.com/pages/explorar.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://clubcandela.com/pages/explorar.html">
+    <meta property="og:title" content="Explorar creadoras — Candela">
+    <meta property="og:description" content="Descubre y apoya a las mejores creadoras latinas. Contenido exclusivo en tu idioma.">
+    <meta property="og:image" content="https://clubcandela.com/img/og-cover.jpg">
+    <meta property="og:locale" content="es_BO">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Explorar creadoras — Candela">
+    <meta name="twitter:description" content="Descubre y apoya a las mejores creadoras latinas.">
+    <meta name="twitter:image" content="https://clubcandela.com/img/og-cover.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -114,8 +127,8 @@
         <a href="registro-creadora.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">add_circle</span><span class="text-[10px] font-semibold">Publicar</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
-            <span class="ms">payments</span><span class="text-[10px] font-semibold">Wallet</span>
+        <a onclick="navWallet()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5 cursor-pointer">
+            <span class="ms">account_balance_wallet</span><span class="text-[10px] font-semibold">Wallet</span>
         </a>
         <a href="#" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">person</span><span class="text-[10px] font-semibold">Perfil</span>
@@ -225,8 +238,6 @@ function renderGrid(data) {
         const [c1,c2] = GRADIENTES[c.tema_color]||['#F2D5C4','#E8A598'];
         const inicial = c.nombre_artistico[0].toUpperCase();
         const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
-        const online = idx % 4 === 0;
-
         return `
         <article class="feed-card rounded-2xl overflow-hidden bg-white border border-c-border shadow-sm cursor-pointer" onclick="ir('${c.slug}')">
             <div class="relative overflow-hidden" style="aspect-ratio:4/5">
@@ -244,7 +255,7 @@ function renderGrid(data) {
                             </div>
                             <h3 class="text-white font-bold text-sm leading-tight truncate">${esc(c.nombre_artistico)}</h3>
                             <p class="flex items-center gap-1.5 mt-0.5 text-white/65 text-xs">
-                                ${online ? `<span class="dot-on"></span>En linea` : `<span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${esc(c.pais||'Latam')}`}
+                                <span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${esc(c.pais||'Latam')}
                             </p>
                         </div>
                         <div class="flex flex-col gap-1.5 shrink-0">
@@ -263,6 +274,13 @@ function renderGrid(data) {
             </div>
         </article>`;
     }).join('');
+}
+
+function navWallet() {
+    if (!candela.auth.isLoggedIn()) { window.location.href='../index.html'; return; }
+    const u = candela.auth.user();
+    if (u?.tipo === 'creadora') window.location.href='dashboard-creadora.html';
+    else window.location.href='feed.html';
 }
 
 function ir(slug, e) { if(e) e.stopPropagation(); window.location.href=`creadora.html?slug=${slug}`; }

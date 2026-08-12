@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candela — Descubre creadoras latinas</title>
+    <title>Candela — Creadoras latinas exclusivas</title>
+    <meta name="description" content="Plataforma latina de contenido exclusivo. Descubre y apoya a las mejores creadoras de Bolivia, Colombia, México y toda Latinoamérica. Paga con Yape, USDT o PIX.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://clubcandela.com">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://clubcandela.com">
+    <meta property="og:title" content="Candela — Creadoras latinas exclusivas">
+    <meta property="og:description" content="Contenido exclusivo de las mejores creadoras de Latinoamérica. Paga con Yape, USDT o PIX. Sin tarjeta de crédito.">
+    <meta property="og:image" content="https://clubcandela.com/img/og-cover.jpg">
+    <meta property="og:locale" content="es_BO">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Candela — Creadoras latinas exclusivas">
+    <meta name="twitter:description" content="Plataforma latina de contenido exclusivo. Sin intermediarios.">
+    <meta name="twitter:image" content="https://clubcandela.com/img/og-cover.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -181,15 +194,22 @@
 
     <!-- Hero para visitantes no logueados -->
     <div id="hero-guest" class="hidden text-center px-4 md:px-10 pt-8 pb-2">
-        <span class="inline-block px-4 py-1.5 rounded-full bg-c-champagne text-c-accent-d text-[11px] font-bold uppercase tracking-widest mb-4">Solo mayores de 18</span>
+        <span class="inline-block px-4 py-1.5 rounded-full bg-c-champagne text-c-accent-d text-[11px] font-bold uppercase tracking-widest mb-4">Solo mayores de 18 · Plataforma latina exclusiva</span>
         <h1 class="font-display text-4xl md:text-5xl font-semibold leading-tight mb-3">
             Donde las <em class="text-c-accent not-italic">creadoras latinas</em><br>brillan de verdad
         </h1>
-        <p class="text-c-soft text-base max-w-sm mx-auto mb-6">Suscribete a tus favoritas. Contenido exclusivo en tu idioma.</p>
-        <div class="flex gap-3 justify-center">
+        <p class="text-c-soft text-base max-w-sm mx-auto mb-4">Contenido exclusivo en tu idioma. Sin tarjeta de credito.</p>
+        <!-- Benefit chips -->
+        <div class="flex flex-wrap gap-2 justify-center mb-5">
+            <span class="inline-flex items-center gap-1 text-xs text-c-soft border border-c-border bg-white px-3 py-1 rounded-full">🔒 100% privado</span>
+            <span class="inline-flex items-center gap-1 text-xs text-c-soft border border-c-border bg-white px-3 py-1 rounded-full">💳 Yape · USDT · PIX</span>
+            <span class="inline-flex items-center gap-1 text-xs text-c-soft border border-c-border bg-white px-3 py-1 rounded-full">🌎 Bolivia · Latam</span>
+        </div>
+        <div class="flex gap-3 justify-center mb-4">
             <button onclick="abrirModal('login')" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md">Entrar</button>
             <a href="pages/registro-creadora.html" class="border-2 border-c-accent text-c-accent px-6 py-2.5 rounded-full text-sm font-bold hover:bg-c-accent hover:text-white transition-all">Ser creadora</a>
         </div>
+        <p id="hero-stats" class="text-xs text-c-soft"></p>
     </div>
 
     <!-- Stories -->
@@ -225,10 +245,60 @@
 
     <!-- Estado vacío -->
     <div id="empty-state" class="hidden text-center py-20 px-4">
-        <div class="text-6xl mb-4">🔥</div>
-        <h3 class="font-display text-xl font-semibold mb-2 text-c-text">Muy pronto...</h3>
-        <p class="text-c-soft text-sm">Las primeras creadoras de esta region estan llegando.</p>
+        <div class="text-5xl mb-4">🌟</div>
+        <h3 class="font-display text-xl font-semibold mb-3 text-c-text">Se la primera en tu pais</h3>
+        <p class="text-c-soft text-sm mb-5 max-w-xs mx-auto">Candela es la plataforma latina de contenido exclusivo. Las primeras creadoras tienen 0% de comision por 3 meses.</p>
+        <a href="pages/registro-creadora.html" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md inline-block">Registrarme como creadora</a>
+        <p class="text-xs text-c-soft mt-3">Gratis · Sin compromiso · Ganas desde el dia 1</p>
     </div>
+
+    <!-- Como funciona (solo para visitantes) -->
+    <section id="como-funciona" class="hidden px-4 md:px-10 py-10 border-t border-c-border mt-4">
+        <h2 class="font-display text-2xl font-semibold text-center mb-2 text-c-text">Como funciona</h2>
+        <p class="text-center text-c-soft text-sm mb-8">Tres pasos. Sin complicaciones.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
+                    <span class="material-symbols-outlined text-c-accent" style="font-size:26px">search</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1.5">Explora</h3>
+                <p class="text-c-soft text-xs leading-relaxed">Descubre creadoras de Bolivia, Colombia, Mexico y toda Latam. Filtra por pais.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
+                    <span class="material-symbols-outlined text-c-accent" style="font-size:26px">payments</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1.5">Suscribete</h3>
+                <p class="text-c-soft text-xs leading-relaxed">Paga con USDT, Yape o PIX. Sin tarjeta de credito. Sin cuentas extranjeras.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
+                    <span class="material-symbols-outlined text-c-accent" style="font-size:26px">lock_open</span>
+                </div>
+                <h3 class="font-bold text-sm mb-1.5">Accede</h3>
+                <p class="text-c-soft text-xs leading-relaxed">Contenido exclusivo desbloqueado. 100% privado. Solo tu y la creadora.</p>
+            </div>
+        </div>
+        <div class="text-center mt-8">
+            <a href="pages/gana-con-candela.html" class="text-xs text-c-accent font-bold hover:text-c-accent-d transition-colors">
+                ¿Eres creadora? Conoce como ganar en Candela →
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-c-border mt-6 py-7 px-4 md:px-10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <a href="index.html" class="font-display text-xl logo-text font-semibold">Candela</a>
+            <div class="flex gap-5 flex-wrap justify-center text-xs text-c-soft">
+                <a href="pages/terminos.html" class="hover:text-c-accent transition-colors">Terminos</a>
+                <a href="pages/privacidad.html" class="hover:text-c-accent transition-colors">Privacidad</a>
+                <a href="pages/normas.html" class="hover:text-c-accent transition-colors">Normas</a>
+                <a href="pages/gana-con-candela.html" class="hover:text-c-accent transition-colors font-bold text-c-accent">Ser creadora</a>
+            </div>
+            <p class="text-xs text-c-soft">© 2026 Candela · Solo mayores de 18</p>
+        </div>
+    </footer>
 
 </main>
 
@@ -247,8 +317,8 @@
             <span class="material-symbols-outlined">add_circle</span>
             <span class="text-[10px] font-semibold">Publicar</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
-            <span class="material-symbols-outlined">payments</span>
+        <a onclick="navWallet()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5 cursor-pointer">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
             <span class="text-[10px] font-semibold">Wallet</span>
         </a>
         <a id="nav-perfil" href="#" onclick="navPerfil()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
@@ -364,6 +434,7 @@ function init() {
     cargarFeed();
     if (!candela.auth.isLoggedIn()) {
         document.getElementById('hero-guest').classList.remove('hidden');
+        document.getElementById('como-funciona').classList.remove('hidden');
     }
 }
 
@@ -407,6 +478,13 @@ function navPerfil() {
     else if (u?.tipo === 'suscriptor') window.location.href = 'pages/feed.html';
 }
 
+function navWallet() {
+    if (!candela.auth.isLoggedIn()) { abrirModal('login'); return; }
+    const u = candela.auth.user();
+    if (u?.tipo === 'creadora') window.location.href = 'pages/dashboard-creadora.html';
+    else window.location.href = 'pages/feed.html';
+}
+
 // ─── STORIES ─────────────────────────────────────────────────────────
 async function cargarStories() {
     try {
@@ -440,6 +518,13 @@ async function cargarFeed() {
     try {
         todasCreadoras = await candela.creadoras.explorar({ limit: 30 });
         renderFeed(todasCreadoras);
+        if (!candela.auth.isLoggedIn() && todasCreadoras.length > 0) {
+            const el = document.getElementById('hero-stats');
+            if (el) {
+                const paises = [...new Set(todasCreadoras.map(c => c.pais).filter(Boolean))];
+                el.textContent = `${todasCreadoras.length} creadora${todasCreadoras.length !== 1 ? 's' : ''} activa${todasCreadoras.length !== 1 ? 's' : ''} · ${paises.slice(0, 4).join(', ')}`;
+            }
+        }
     } catch(e) {
         document.getElementById('feed-grid').innerHTML = `
             <div class="col-span-full text-center py-16">
@@ -465,7 +550,6 @@ function renderFeed(lista) {
         const [col1, col2] = GRADIENTES[c.tema_color] || ['#F2D5C4','#E8A598'];
         const inicial = c.nombre_artistico[0].toUpperCase();
         const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
-        const online = idx % 4 === 0;
 
         return `
         <article class="feed-card rounded-2xl overflow-hidden bg-white border border-c-border shadow-sm"
@@ -502,9 +586,7 @@ function renderFeed(lista) {
                             </div>
                             <h3 class="text-white font-bold text-[15px] leading-tight truncate">${c.nombre_artistico}</h3>
                             <p class="flex items-center gap-1.5 mt-0.5 text-white/65 text-xs">
-                                ${online
-                                    ? `<span class="dot-online"></span>En linea`
-                                    : `<span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${c.pais || 'Latam'}`}
+                                <span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${c.pais || 'Latam'}
                             </p>
                         </div>
 

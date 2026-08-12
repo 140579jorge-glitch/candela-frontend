@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candela</title>
+    <title>Candela — Contenido exclusivo</title>
+    <meta name="description" content="Candela — Contenido exclusivo de creadoras latinas.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Candela">
+    <meta property="og:description" content="Contenido exclusivo en Candela — la plataforma latina.">
+    <meta property="og:image" content="https://clubcandela.com/img/og-cover.jpg">
+    <meta property="og:locale" content="es_BO">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Candela">
+    <meta name="twitter:description" content="Contenido exclusivo de creadoras latinas.">
+    <meta name="twitter:image" content="https://clubcandela.com/img/og-cover.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -440,6 +451,16 @@ function aplicarTema(tema) {
 function renderHeader() {
     const c = creadoraData;
     document.title = c.nombre_artistico + ' — Candela';
+    document.querySelector('meta[name="description"]')?.setAttribute('content',
+        `${c.nombre_artistico} en Candela. ${c.total_suscriptores} suscriptores. ${c.bio || 'Contenido exclusivo para sus fans.'}`);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', c.nombre_artistico + ' — Candela');
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content',
+        `Suscríbete a ${c.nombre_artistico} en Candela. ${c.bio || 'Contenido exclusivo.'}`);
+    document.querySelector('meta[property="og:image"]')?.setAttribute('content',
+        c.banner_url || 'https://clubcandela.com/img/og-cover.jpg');
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', c.nombre_artistico + ' — Candela');
+    document.querySelector('meta[name="twitter:image"]')?.setAttribute('content',
+        c.banner_url || 'https://clubcandela.com/img/og-cover.jpg');
     document.getElementById('creadora-nombre').textContent = c.nombre_artistico;
 
     const inicial = c.nombre_artistico[0].toUpperCase();
