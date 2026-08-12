@@ -209,9 +209,25 @@
         </div>
         <div class="flex gap-3 justify-center mb-4">
             <button onclick="abrirModal('login')" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md">Entrar</button>
-            <a href="pages/registro-creadora.html" class="border-2 border-c-accent text-c-accent px-6 py-2.5 rounded-full text-sm font-bold hover:bg-c-accent hover:text-white transition-all">Ser creadora</a>
+            <a href="pages/gana-con-candela.html" class="border-2 border-c-accent text-c-accent px-6 py-2.5 rounded-full text-sm font-bold hover:bg-c-accent hover:text-white transition-all">Ser creadora</a>
         </div>
         <p id="hero-stats" class="text-xs text-c-soft"></p>
+    </div>
+
+    <!-- Strip captacion creadoras (solo visitantes) -->
+    <div id="strip-creadora" class="hidden mx-4 md:mx-10 mt-3 mb-1 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#1A0A06,#3D1A0A)">
+        <div class="flex items-center justify-between gap-3 px-5 py-3.5">
+            <div class="flex items-center gap-3 min-w-0">
+                <span class="text-xl shrink-0">🔥</span>
+                <div class="min-w-0">
+                    <p class="text-white text-xs font-bold leading-tight">¿Eres creadora? Primeras 10 creadoras — 0% comision por 3 meses</p>
+                    <p class="text-white/50 text-[11px] mt-0.5">Cobra en Yape, USDT y PIX. Sin friccion de pago.</p>
+                </div>
+            </div>
+            <a href="pages/gana-con-candela.html" class="shrink-0 c-btn text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-md whitespace-nowrap">
+                Saber mas
+            </a>
+        </div>
     </div>
 
     <!-- Stories -->
@@ -435,6 +451,7 @@ function init() {
     cargarFeed();
     if (!candela.auth.isLoggedIn()) {
         document.getElementById('hero-guest').classList.remove('hidden');
+        document.getElementById('strip-creadora').classList.remove('hidden');
         document.getElementById('como-funciona').classList.remove('hidden');
     }
 }
@@ -458,9 +475,14 @@ function renderTopbar() {
             </div>`;
     } else {
         el.innerHTML = `
-            <button onclick="abrirModal('login')" class="c-btn text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm">
-                Entrar
-            </button>`;
+            <div class="flex items-center gap-2">
+                <a href="pages/gana-con-candela.html" class="hidden md:inline text-xs font-bold text-c-accent border border-c-accent px-4 py-1.5 rounded-full hover:bg-c-accent hover:text-white transition-all">
+                    Ser creadora
+                </a>
+                <button onclick="abrirModal('login')" class="c-btn text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm">
+                    Entrar
+                </button>
+            </div>`;
     }
 }
 
