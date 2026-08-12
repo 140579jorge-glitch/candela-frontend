@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /pages/admin.html
+Disallow: /pages/dashboard-creadora.html
+Disallow: /pages/feed.html
+Disallow: /pages/resetear-password.html
+Allow: /
+
+Sitemap: https://clubcandela.com/sitemap.xml
