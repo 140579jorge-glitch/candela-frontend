@@ -82,6 +82,7 @@
         <div class="nav-item" onclick="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificacion</div>
         <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
+        <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Metodos de pago</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="px-4 mb-2">
             <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Configuracion</p>
@@ -240,11 +241,17 @@
             <div class="bg-white border border-c-border rounded-2xl p-5 max-w-md shadow-sm">
                 <h3 class="font-bold text-base mb-1">Solicitar retiro</h3>
                 <p class="text-xs text-c-soft mb-4">Se procesan cada lunes. Minimo $20 USDT.</p>
-                <div class="flex flex-col gap-3">
-                    <div>
-                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tu wallet USDT (TRC20)</label>
-                        <input id="ret-wallet" type="text" placeholder="T..."
-                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all font-mono">
+                <!-- Sin metodo configurado -->
+                <div id="retiro-sin-metodo" class="hidden text-center py-4">
+                    <span class="ms text-c-accent block mb-2" style="font-size:36px">account_balance_wallet</span>
+                    <p class="text-c-soft text-sm mb-3">Primero configura tu metodo de pago</p>
+                    <button onclick="mostrar('metodos-pago')" class="c-btn text-white px-5 py-2 rounded-full text-sm font-bold shadow-sm">Configurar ahora</button>
+                </div>
+                <!-- Con metodo configurado -->
+                <div id="retiro-form" class="flex flex-col gap-3">
+                    <div class="bg-c-bg border border-c-border rounded-xl px-4 py-3">
+                        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-0.5">Metodo configurado</p>
+                        <p id="ret-metodo-desc" class="font-semibold text-sm text-c-text">—</p>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Monto a retirar ($)</label>
@@ -252,6 +259,7 @@
                             class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
                     </div>
                     <button onclick="solicitarRetiro()" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Solicitar retiro</button>
+                    <button type="button" onclick="mostrar('metodos-pago')" class="text-xs text-c-accent font-semibold text-center hover:text-c-accent-d transition-colors">Cambiar metodo de pago →</button>
                 </div>
             </div>
         </section>
@@ -441,6 +449,95 @@
             </div>
         </section>
 
+        <!-- ══ METODOS DE PAGO ══ -->
+        <section id="sec-metodos-pago" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Metodos de pago</h2>
+            <p class="text-c-soft text-sm mb-5">Configura como quieres recibir tus retiros. Solo procesamos <strong>USDT</strong>.</p>
+
+            <!-- Disclaimer -->
+            <div class="flex gap-3 items-start bg-red-50 border border-red-200 rounded-2xl p-5 mb-6 max-w-xl">
+                <span class="ms text-red-500 shrink-0" style="font-size:22px">warning</span>
+                <div>
+                    <p class="font-bold text-red-700 text-sm mb-1">Tu responsabilidad — lee antes de guardar</p>
+                    <p class="text-red-600 text-xs leading-relaxed">
+                        Candela <strong>solo procesa retiros en USDT</strong>. Si ingresas una wallet incorrecta, de otra red o de otra criptomoneda, los fondos se perderan de forma <strong>irreversible</strong>. Verifica cada direccion caracter por caracter. Candela no se hace responsable por errores en las direcciones ingresadas ni por fondos enviados a wallets equivocadas.
+                    </p>
+                </div>
+            </div>
+
+            <form onsubmit="guardarDatosRetiro(event)" class="max-w-xl space-y-5">
+
+                <!-- Metodo preferido -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-3">Metodo preferido</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label>
+                            <input type="radio" name="metodo_retiro" value="trc20" class="sr-only" onchange="actualizarMetodoOpt()">
+                            <div class="metodo-opt-box border-2 border-c-border rounded-xl p-3 text-center cursor-pointer hover:border-c-accent transition-all">
+                                <div class="text-xl mb-1">🔗</div>
+                                <div class="text-xs font-bold">USDT TRC20</div>
+                                <div class="text-[10px] text-c-soft">~$1 de fee</div>
+                            </div>
+                        </label>
+                        <label>
+                            <input type="radio" name="metodo_retiro" value="polygon" class="sr-only" onchange="actualizarMetodoOpt()">
+                            <div class="metodo-opt-box border-2 border-c-border rounded-xl p-3 text-center cursor-pointer hover:border-c-accent transition-all">
+                                <div class="text-xl mb-1">💎</div>
+                                <div class="text-xs font-bold">USDT Polygon</div>
+                                <div class="text-[10px] text-c-soft">~$0.01 de fee</div>
+                            </div>
+                        </label>
+                        <label id="opt-qr" class="hidden">
+                            <input type="radio" name="metodo_retiro" value="qr" class="sr-only" onchange="actualizarMetodoOpt()">
+                            <div class="metodo-opt-box border-2 border-c-border rounded-xl p-3 text-center cursor-pointer hover:border-c-accent transition-all">
+                                <div class="text-xl mb-1">📱</div>
+                                <div class="text-xs font-bold">QR Local</div>
+                                <div id="qr-label-pais" class="text-[10px] text-c-soft">Yape / PIX</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wallet TRC20 -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-1">Wallet USDT TRC20</h3>
+                    <p class="text-xs text-c-soft mb-3">Empieza con T, 34 caracteres. Ejemplo: TGFJDTEvC6xTuEQ...</p>
+                    <input id="w-trc20" type="text" maxlength="34" placeholder="T..."
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+
+                <!-- Wallet Polygon -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-1">Wallet USDT Polygon (POS)</h3>
+                    <p class="text-xs text-c-soft mb-3">Empieza con 0x, 42 caracteres. Es la misma que tu MetaMask o billetera EVM.</p>
+                    <input id="w-polygon" type="text" maxlength="42" placeholder="0x..."
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+
+                <!-- QR local (solo Bolivia, Peru, Argentina, Brasil) -->
+                <div id="qr-section" class="hidden bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-1">QR de pago local</h3>
+                    <p class="text-xs text-c-soft mb-3">Sube la imagen de tu QR de Yape, PIX o Takenos. Escaneamos tu codigo para pagarte.</p>
+                    <div class="flex gap-4 items-start">
+                        <div id="qr-preview-box" class="w-24 h-24 rounded-xl border-2 border-dashed border-c-border flex items-center justify-center text-c-soft shrink-0 overflow-hidden bg-c-bg">
+                            <span class="ms" style="font-size:32px">qr_code</span>
+                        </div>
+                        <div>
+                            <label class="c-btn text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm cursor-pointer inline-block">
+                                Subir QR
+                                <input id="qr-input" type="file" accept="image/*" class="hidden" onchange="previsualizarQr(this)">
+                            </label>
+                            <p class="text-[10px] text-c-soft mt-2 max-w-[200px]">Asegurate de que el QR sea tuyo y que funcione antes de subir.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-guardar-pago" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
+                    Guardar metodos de pago
+                </button>
+            </form>
+        </section>
+
     </main>
 </div>
 
@@ -568,7 +665,11 @@ async function cargarPerfil() {
 
 async function cargarGanancias() {
     try {
-        const g = await candela.creadoras.ganancias();
+        const [g, p] = await Promise.all([
+            candela.creadoras.ganancias(),
+            candela.creadoras.miPerfil(),
+        ]);
+        _perfilCreadora = p;
         const fmt = v => '$' + (v||0).toFixed(2);
         document.getElementById('s-balance').textContent = fmt(g.balance_disponible);
         document.getElementById('s-subs').textContent = g.total_suscriptores;
@@ -576,6 +677,25 @@ async function cargarGanancias() {
         document.getElementById('g-balance').textContent = fmt(g.balance_disponible);
         document.getElementById('g-total').textContent = fmt(g.total_ganancias);
         document.getElementById('g-subs').textContent = g.suscripciones_activas;
+
+        // Mostrar metodo de retiro configurado
+        const metodo = p.metodo_retiro;
+        const desc = document.getElementById('ret-metodo-desc');
+        const sinMetodo = document.getElementById('retiro-sin-metodo');
+        const retiroForm = document.getElementById('retiro-form');
+        if (!metodo) {
+            sinMetodo?.classList.remove('hidden');
+            retiroForm?.classList.add('hidden');
+        } else {
+            sinMetodo?.classList.add('hidden');
+            retiroForm?.classList.remove('hidden');
+            const etiquetas = {
+                trc20: `USDT TRC20 — ${p.wallet_trc20 ? p.wallet_trc20.slice(0,8) + '...' + p.wallet_trc20.slice(-4) : 'sin wallet'}`,
+                polygon: `USDT Polygon — ${p.wallet_polygon ? p.wallet_polygon.slice(0,8) + '...' + p.wallet_polygon.slice(-4) : 'sin wallet'}`,
+                qr: 'QR local (Yape / PIX / Takenos)',
+            };
+            if (desc) desc.textContent = etiquetas[metodo] || metodo;
+        }
     } catch(e) {}
 }
 
@@ -651,15 +771,89 @@ async function guardarPerfil(e) {
 }
 
 async function solicitarRetiro() {
-    const wallet = document.getElementById('ret-wallet').value.trim();
     const monto = parseFloat(document.getElementById('ret-monto').value);
-    if (!wallet) { toast('Ingresa tu wallet USDT', 'error'); return; }
     if (!monto || monto < 20) { toast('Minimo $20', 'error'); return; }
+    const p = _perfilCreadora;
+    const metodo = p?.metodo_retiro || 'trc20';
+    let wallet = null;
+    if (metodo === 'trc20') wallet = p?.wallet_trc20;
+    else if (metodo === 'polygon') wallet = p?.wallet_polygon;
+    if (metodo !== 'qr' && !wallet) {
+        toast('Configura tu wallet primero', 'error');
+        mostrar('metodos-pago');
+        return;
+    }
+    if (metodo === 'qr' && !p?.qr_pago_url) {
+        toast('Sube tu QR primero', 'error');
+        mostrar('metodos-pago');
+        return;
+    }
     try {
-        const r = await candela.pagos.solicitarRetiro(monto, wallet);
+        const r = await candela.pagos.solicitarRetiro(monto, wallet, metodo);
         toast(r.mensaje, 'success');
         cargarGanancias();
     } catch(err) { toast(err.message, 'error'); }
+}
+
+let _perfilCreadora = null;
+
+async function cargarDatosRetiro() {
+    try {
+        _perfilCreadora = await candela.creadoras.miPerfil();
+        const p = _perfilCreadora;
+        document.getElementById('w-trc20').value = p.wallet_trc20 || '';
+        document.getElementById('w-polygon').value = p.wallet_polygon || '';
+
+        const paisesQr = ['Bolivia', 'Peru', 'Argentina', 'Brasil'];
+        const mostrarQr = paisesQr.includes(p.pais);
+        document.getElementById('opt-qr').classList.toggle('hidden', !mostrarQr);
+        document.getElementById('qr-section').classList.toggle('hidden', !mostrarQr);
+        const labels = { Bolivia:'Takenos / QR', Peru:'Yape', Argentina:'Alias / QR', Brasil:'PIX' };
+        const lbl = document.getElementById('qr-label-pais');
+        if (lbl) lbl.textContent = labels[p.pais] || 'QR local';
+
+        if (p.qr_pago_url) {
+            document.getElementById('qr-preview-box').innerHTML =
+                `<img src="${API_BASE}${p.qr_pago_url}" class="w-full h-full object-contain">`;
+        }
+
+        if (p.metodo_retiro) {
+            const radio = document.querySelector(`input[name="metodo_retiro"][value="${p.metodo_retiro}"]`);
+            if (radio) { radio.checked = true; actualizarMetodoOpt(); }
+        }
+    } catch(e) { console.error(e); }
+}
+
+function actualizarMetodoOpt() {
+    document.querySelectorAll('.metodo-opt-box').forEach(b => b.classList.remove('border-c-accent', 'bg-orange-50'));
+    const checked = document.querySelector('input[name="metodo_retiro"]:checked');
+    if (checked) checked.closest('label')?.querySelector('.metodo-opt-box')?.classList.add('border-c-accent', 'bg-orange-50');
+}
+
+function previsualizarQr(input) {
+    const file = input.files[0]; if (!file) return;
+    const url = URL.createObjectURL(file);
+    document.getElementById('qr-preview-box').innerHTML =
+        `<img src="${url}" class="w-full h-full object-contain">`;
+}
+
+async function guardarDatosRetiro(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-guardar-pago');
+    btn.textContent = 'Guardando...'; btn.disabled = true;
+    const metodo = document.querySelector('input[name="metodo_retiro"]:checked')?.value;
+    const trc20 = document.getElementById('w-trc20').value.trim();
+    const polygon = document.getElementById('w-polygon').value.trim();
+    const qrInput = document.getElementById('qr-input');
+    try {
+        if (qrInput.files[0]) {
+            await candela.creadoras.subirQrPago(qrInput.files[0]);
+        }
+        await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined);
+        _perfilCreadora = await candela.creadoras.miPerfil();
+        toast('Metodos de pago guardados', 'success');
+    } catch(err) { toast(err.message, 'error'); }
+    finally { btn.textContent = 'Guardar metodos de pago'; btn.disabled = false; }
 }
 
 async function enviarVerificacion(e) {
@@ -714,6 +908,7 @@ function mostrar(sec, navBtn) {
     if (sec === 'ganancias') cargarGanancias();
     if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); }
     if (sec === 'referidas') cargarReferidas();
+    if (sec === 'metodos-pago') cargarDatosRetiro();
 }
 
 // ─── REFERIDAS ───────────────────────────────────────────────

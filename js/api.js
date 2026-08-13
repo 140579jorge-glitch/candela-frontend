@@ -97,6 +97,17 @@ const candela = {
             return candela._req('POST', '/api/creadoras/verificacion/enviar', fd, true);
         },
         misReferidas: () => candela._req('GET', '/api/creadoras/mi-perfil/referidas'),
+        actualizarDatosRetiro(walletTrc20, walletPolygon, metodoRetiro) {
+            const params = new URLSearchParams();
+            if (walletTrc20 !== undefined) params.append('wallet_trc20', walletTrc20);
+            if (walletPolygon !== undefined) params.append('wallet_polygon', walletPolygon);
+            if (metodoRetiro !== undefined) params.append('metodo_retiro', metodoRetiro);
+            return candela._req('PUT', `/api/creadoras/mi-perfil/datos-retiro?${params}`);
+        },
+        async subirQrPago(file) {
+            const fd = new FormData(); fd.append('imagen', file);
+            return candela._req('POST', '/api/creadoras/mi-perfil/qr-pago', fd, true);
+        },
     },
 
     contenido: {
@@ -121,7 +132,7 @@ const candela = {
     pagos: {
         instrucciones: (slug) => candela._req('GET', `/api/pagos/instrucciones-pago/${slug}`),
         confirmarSuscripcion: (data) => candela._req('POST', '/api/pagos/confirmar-suscripcion', data),
-        solicitarRetiro: (monto, wallet) => candela._req('POST', '/api/pagos/solicitar-retiro', { monto, wallet_destino: wallet, metodo: 'usdt' }),
+        solicitarRetiro: (monto, wallet, metodoRed = 'trc20') => candela._req('POST', '/api/pagos/solicitar-retiro', { monto, wallet_destino: wallet, metodo_red: metodoRed, metodo: 'usdt' }),
         misSuscripciones: () => candela._req('GET', '/api/pagos/mis-suscripciones'),
     },
 
@@ -135,6 +146,10 @@ const candela = {
         comprasPendientes: () => candela._req('GET', '/api/admin/compras-pendientes'),
         confirmarCompra: (id, accion) => candela._req('POST', `/api/admin/compras/${id}`, { accion }),
         creadoras_pendientes: () => candela._req('GET', '/api/admin/creadoras-pendientes'),
+        comisiones: (params = {}) => {
+            const q = new URLSearchParams(params).toString();
+            return candela._req('GET', `/api/admin/comisiones${q ? '?' + q : ''}`);
+        },
     },
 };
 
