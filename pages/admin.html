@@ -80,6 +80,7 @@
         <div class="nav-item" onclick="mostrar('pagos',this)"><span class="ms">receipt_long</span>Pagos PPV
             <span class="ml-auto bg-red-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-pagos">0</span>
         </div>
+        <div class="nav-item" onclick="mostrar('comisiones',this)"><span class="ms">monitoring</span>Comisiones</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <a href="../index.html" class="nav-item"><span class="ms">home</span>Ver sitio</a>
     </aside>
@@ -165,6 +166,64 @@
                 <h3 class="font-display text-xl font-semibold mb-4">Pendientes de aprobacion</h3>
                 <div id="lista-creadoras-pendientes" class="flex flex-col gap-3">
                     <p class="text-c-soft text-sm text-center py-6">Cargando...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ COMISIONES ══ -->
+        <section id="sec-comisiones" class="dash-section">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="font-display text-2xl font-semibold">Comisiones Candela</h2>
+                <div class="flex items-center gap-2">
+                    <select id="fil-tipo" onchange="cargarComisiones()" class="text-xs border border-c-border rounded-xl px-3 py-2 bg-white text-c-text">
+                        <option value="">Todos</option>
+                        <option value="suscripcion">Suscripciones</option>
+                        <option value="ppv">PPV</option>
+                    </select>
+                    <button onclick="cargarComisiones()" class="text-xs font-bold text-c-soft hover:text-c-accent flex items-center gap-1 transition-colors">
+                        <span class="ms" style="font-size:16px">refresh</span>
+                    </button>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="stat-card border-l-4" style="border-left-color:#9B72CF">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Ingreso total Candela</p>
+                    <p class="text-2xl font-bold" style="color:#9B72CF" id="com-total-ingreso">-</p>
+                </div>
+                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Total registros</p>
+                    <p class="text-2xl font-bold text-c-accent" id="com-total">-</p>
+                </div>
+            </div>
+            <div class="bg-white border border-c-border rounded-2xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-c-border bg-c-bg">
+                                <th class="text-left px-4 py-3 text-[11px] font-bold text-c-soft uppercase tracking-wide">Fecha</th>
+                                <th class="text-left px-4 py-3 text-[11px] font-bold text-c-soft uppercase tracking-wide">Tipo</th>
+                                <th class="text-left px-4 py-3 text-[11px] font-bold text-c-soft uppercase tracking-wide">Creadora</th>
+                                <th class="text-left px-4 py-3 text-[11px] font-bold text-c-soft uppercase tracking-wide">Suscriptor</th>
+                                <th class="text-right px-4 py-3 text-[11px] font-bold text-c-soft uppercase tracking-wide">Bruto</th>
+                                <th class="text-right px-4 py-3 text-[11px] font-bold text-c-soft uppercase tracking-wide">Candela 16%</th>
+                                <th class="text-right px-4 py-3 text-[11px] font-bold text-c-soft uppercase tracking-wide">Creadora 84%</th>
+                            </tr>
+                        </thead>
+                        <tbody id="com-tabla">
+                            <tr><td colspan="7" class="text-center py-8 text-c-soft text-sm">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="com-vacio" class="hidden py-12 text-center">
+                    <span class="ms" style="font-size:3rem;color:#F2D5C4">bar_chart</span>
+                    <p class="text-c-soft mt-2 text-sm">Sin comisiones registradas aun</p>
+                </div>
+                <div id="com-paginacion" class="hidden px-4 py-3 border-t border-c-border flex items-center justify-between">
+                    <span class="text-xs text-c-soft" id="com-pag-info"></span>
+                    <div class="flex gap-2">
+                        <button id="com-pag-prev" onclick="comPaginar(-1)" class="text-xs px-3 py-1.5 rounded-lg border border-c-border hover:border-c-accent transition-colors disabled:opacity-40">Anterior</button>
+                        <button id="com-pag-next" onclick="comPaginar(1)" class="text-xs px-3 py-1.5 rounded-lg border border-c-border hover:border-c-accent transition-colors disabled:opacity-40">Siguiente</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -276,7 +335,8 @@ async function cargarRetiros() {
                         <p class="font-bold text-sm mb-1">${esc(r.creadora_nombre || r.creadora_id)}</p>
                         <div class="flex items-center gap-3 flex-wrap mb-2">
                             <span class="text-lg font-bold text-c-accent">$${(r.monto||0).toFixed(2)}</span>
-                            <span class="text-xs text-c-soft">USDT TRC20</span>
+                            <span class="text-xs text-c-soft">${r.metodo_red === 'qr' ? 'QR Pago' : r.metodo_red === 'polygon' ? 'USDT Polygon' : 'USDT TRC20'}</span>
+                            ${r.creadora_pais ? `<span class="text-xs text-c-soft">&#183; ${esc(r.creadora_pais)}</span>` : ''}
                         </div>
                         <div class="bg-c-bg rounded-xl px-3 py-2 text-xs font-mono break-all text-c-text border border-c-border mb-2">
                             ${esc(r.wallet_destino || '-')}
@@ -345,6 +405,7 @@ function mostrar(sec, navBtn) {
     if (sec === 'dashboard') cargarDashboard();
     if (sec === 'creadoras') cargarCreadoras();
     if (sec === 'pagos') cargarPagosPPV();
+    if (sec === 'comisiones') cargarComisiones();
 }
 
 async function cargarCreadoras() {
@@ -428,6 +489,66 @@ async function accionPago(id, accion) {
         const actual = parseInt(document.getElementById('badge-pagos').textContent) - 1;
         document.getElementById('badge-pagos').textContent = Math.max(0, actual);
     } catch(e) { toast(e.message, 'error'); }
+}
+
+let _comOffset = 0;
+const _comLimit = 20;
+
+async function cargarComisiones() {
+    _comOffset = 0;
+    await _fetchComisiones();
+}
+
+async function comPaginar(dir) {
+    _comOffset = Math.max(0, _comOffset + dir * _comLimit);
+    await _fetchComisiones();
+}
+
+async function _fetchComisiones() {
+    const tipo = document.getElementById('fil-tipo')?.value || '';
+    const params = { limit: _comLimit, offset: _comOffset };
+    if (tipo) params.tipo = tipo;
+    const tabla = document.getElementById('com-tabla');
+    tabla.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-c-soft text-sm">Cargando...</td></tr>';
+    try {
+        const d = await candela.admin.comisiones(params);
+        document.getElementById('com-total-ingreso').textContent = `$${(d.total_ingreso_candela||0).toFixed(2)}`;
+        document.getElementById('com-total').textContent = d.total ?? '-';
+        if (!d.comisiones?.length) {
+            tabla.innerHTML = '';
+            document.getElementById('com-vacio').classList.remove('hidden');
+            document.getElementById('com-paginacion').classList.add('hidden');
+            return;
+        }
+        document.getElementById('com-vacio').classList.add('hidden');
+        tabla.innerHTML = d.comisiones.map(c => `
+            <tr class="border-b border-c-border hover:bg-c-bg transition-colors">
+                <td class="px-4 py-3 text-xs text-c-soft whitespace-nowrap">${fmt_fecha(c.fecha)}</td>
+                <td class="px-4 py-3"><span class="badge ${c.tipo==='suscripcion'?'badge-activa':'badge-pendiente'}">${esc(c.tipo)}</span></td>
+                <td class="px-4 py-3">
+                    <p class="font-semibold text-xs">${esc(c.creadora_nombre||'-')}</p>
+                    <p class="text-[10px] text-c-soft">${esc(c.creadora_pais||'')}</p>
+                </td>
+                <td class="px-4 py-3 text-xs text-c-soft">${esc(c.suscriptor_nombre||'-')}</td>
+                <td class="px-4 py-3 text-right text-xs font-mono tabular-nums">$${(c.monto_bruto||0).toFixed(2)}</td>
+                <td class="px-4 py-3 text-right text-xs font-mono tabular-nums font-bold" style="color:#9B72CF">$${(c.monto_comision||0).toFixed(2)}</td>
+                <td class="px-4 py-3 text-right text-xs font-mono tabular-nums font-bold text-c-accent">$${(c.monto_creadora||0).toFixed(2)}</td>
+            </tr>`).join('');
+        const total = d.total || 0;
+        const pag = document.getElementById('com-paginacion');
+        if (total > _comLimit) {
+            pag.classList.remove('hidden');
+            const desde = _comOffset + 1;
+            const hasta = Math.min(_comOffset + _comLimit, total);
+            document.getElementById('com-pag-info').textContent = `${desde}–${hasta} de ${total}`;
+            document.getElementById('com-pag-prev').disabled = _comOffset === 0;
+            document.getElementById('com-pag-next').disabled = _comOffset + _comLimit >= total;
+        } else {
+            pag.classList.add('hidden');
+        }
+    } catch(e) {
+        tabla.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-400 text-sm">Error al cargar comisiones</td></tr>';
+    }
 }
 
 function fmt_fecha(iso) {
