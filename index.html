@@ -401,6 +401,7 @@
                     class="w-full px-4 py-3 rounded-xl border border-c-border text-center text-2xl font-mono tracking-widest focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
             </div>
             <button type="submit" id="btn-otp" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Verificar acceso</button>
+            <button type="button" onclick="reenviarOTP()" id="btn-reenviar" class="text-xs text-c-soft hover:text-c-accent text-center transition-colors">No llego el codigo — Reenviar</button>
         </form>
 
         <!-- Formulario Registro suscriptor -->
@@ -747,6 +748,27 @@ async function hacerLogin(e) {
     } catch(err) {
         toast(err.message, 'error');
         btn.textContent = 'Entrar'; btn.disabled = false;
+    }
+}
+
+async function reenviarOTP() {
+    const btn = document.getElementById('btn-reenviar');
+    btn.textContent = 'Enviando...'; btn.disabled = true;
+    try {
+        const res = await fetch(`${API_URL}/api/auth/reenviar-otp-admin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: _adminEmailPendiente }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Error al reenviar');
+        toast('Codigo reenviado a tu Gmail', 'success');
+        document.getElementById('otp-input').value = '';
+        document.getElementById('otp-input').focus();
+    } catch(err) {
+        toast(err.message, 'error');
+    } finally {
+        setTimeout(() => { btn.textContent = 'No llego el codigo — Reenviar'; btn.disabled = false; }, 30000);
     }
 }
 
