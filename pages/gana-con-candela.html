@@ -132,11 +132,11 @@
 <section class="py-10 px-4 md:px-10 bg-white border-b border-c-border">
     <div class="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <div>
-            <div class="font-display text-3xl font-semibold text-c-accent mb-1">20%</div>
+            <div class="font-display text-3xl font-semibold text-c-accent mb-1">16%</div>
             <div class="text-xs text-c-soft font-semibold uppercase tracking-wide">Comision Candela<br><span class="text-[10px] normal-case">(0% primeros 3 meses)</span></div>
         </div>
         <div>
-            <div class="font-display text-3xl font-semibold text-c-accent mb-1">80%</div>
+            <div class="font-display text-3xl font-semibold text-c-accent mb-1">84%</div>
             <div class="text-xs text-c-soft font-semibold uppercase tracking-wide">Para la creadora</div>
         </div>
         <div>
@@ -281,7 +281,7 @@
         <div class="calc-result">
             <p class="text-white/80 text-xs font-bold uppercase tracking-wide mb-1">Tu ganancia mensual estimada</p>
             <p id="calc-resultado" class="text-white text-3xl font-bold">$600</p>
-            <p id="calc-detalle" class="text-white/70 text-xs mt-1">50 subs × $15 × 80% (tu parte)</p>
+            <p id="calc-detalle" class="text-white/70 text-xs mt-1">50 subs × $15 × 84% (tu parte)</p>
             <p class="text-white/60 text-[10px] mt-2">* Los primeros 3 meses recibes el 100% (0% comision)</p>
         </div>
     </div>
@@ -299,7 +299,7 @@
                     ¿Cuanto cobra Candela de comision?
                     <span class="ms faq-icon text-c-soft" style="font-size:20px">add</span>
                 </summary>
-                <p class="text-c-soft text-sm mt-3 leading-relaxed">El 20% sobre cada transaccion. Las primeras 10 creadoras en registrarse tienen 0% de comision durante los primeros 3 meses — es decir, se quedan con el 100% de lo que cobran en ese periodo.</p>
+                <p class="text-c-soft text-sm mt-3 leading-relaxed">El 16% sobre cada transaccion (incluyendo el 1% del programa de referidas). Las primeras 10 creadoras en registrarse tienen 0% de comision durante los primeros 3 meses — es decir, se quedan con el 100% de lo que cobran en ese periodo.</p>
             </details>
             <details class="py-4">
                 <summary class="flex justify-between items-center font-semibold text-sm cursor-pointer">
@@ -363,11 +363,11 @@ function calcular() {
     const precio = parseInt(document.getElementById('calc-precio').value);
     document.getElementById('calc-subs-val').textContent = subs;
     document.getElementById('calc-precio-val').textContent = '$' + precio;
-    const ganancia = (subs * precio * 0.80).toFixed(0);
+    const ganancia = (subs * precio * 0.84).toFixed(0);
     const ganancia100 = (subs * precio).toFixed(0);
     document.getElementById('calc-resultado').textContent = '$' + ganancia + '/mes';
     document.getElementById('calc-detalle').textContent =
-        `${subs} subs × $${precio} × 80% (tu parte) · Primeros 3 meses: $${ganancia100}`;
+        `${subs} subs × $${precio} × 84% (tu parte) · Primeros 3 meses: $${ganancia100}`;
 }
 calcular();
 </script>
