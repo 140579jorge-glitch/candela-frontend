@@ -400,11 +400,21 @@
                     </div>
                     <div>
                         <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Selfie sosteniendo el documento</p>
-                        <label for="v-selfie" class="upload-zone block cursor-pointer" id="lbl-zone-selfie">
+                        <div class="upload-zone" id="lbl-zone-selfie">
                             <span class="ms" id="v-selfie-icon" style="font-size:2rem;color:#F2D5C4">selfie</span>
                             <img id="v-selfie-prev" src="" alt="" style="display:none;max-height:120px;margin:0 auto;border-radius:8px;object-fit:cover;">
-                            <p id="v-selfie-txt" class="text-sm text-c-soft mt-1">Tu cara + el documento visibles</p>
-                        </label>
+                            <p id="v-selfie-txt" class="text-sm text-c-soft mt-1 mb-3">Tu cara + el documento visibles</p>
+                            <div class="flex gap-2 justify-center">
+                                <label for="v-selfie-cam" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer" style="background:rgba(244,162,97,.15);color:#E08947;border:1px solid #F4A261;">
+                                    <span class="ms" style="font-size:16px">photo_camera</span>Tomar foto
+                                </label>
+                                <label for="v-selfie-gal" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer" style="background:rgba(244,162,97,.08);color:#888;border:1px solid #F2D5C4;">
+                                    <span class="ms" style="font-size:16px">photo_library</span>Desde galeria
+                                </label>
+                            </div>
+                        </div>
+                        <input type="file" id="v-selfie-cam" accept="image/*" capture="user" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;">
+                        <input type="file" id="v-selfie-gal" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;">
                         <input type="file" id="v-selfie" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;" required>
                     </div>
                     <button type="submit" id="btn-verificar" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
@@ -609,8 +619,8 @@ async function init() {
     cargarPerfil();
     cargarGanancias();
     cargarMisPosts();
-    _setupVerifInput('v-doc',    'v-doc-icon',    'v-doc-prev',    'v-doc-txt');
-    _setupVerifInput('v-selfie', 'v-selfie-icon', 'v-selfie-prev', 'v-selfie-txt');
+    _setupVerifInput('v-doc', 'v-doc-icon', 'v-doc-prev', 'v-doc-txt');
+    _setupSelfieInputs();
 }
 
 // ─── PERFIL ──────────────────────────────────────────────────
@@ -989,6 +999,27 @@ function _setupVerifInput(inputId, iconId, prevId, txtId) {
         if (icon) icon.style.display = 'none';
         if (txt)  txt.textContent = '✓ ' + file.name;
     });
+}
+
+function _setupSelfieInputs() {
+    function _onSelfieChange(file) {
+        if (!file) return;
+        const prev = document.getElementById('v-selfie-prev');
+        const icon = document.getElementById('v-selfie-icon');
+        const txt  = document.getElementById('v-selfie-txt');
+        prev.src = URL.createObjectURL(file);
+        prev.style.display = 'block';
+        if (icon) icon.style.display = 'none';
+        if (txt)  txt.textContent = '✓ ' + file.name;
+        // Copiar al input "required" que valida el form
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        document.getElementById('v-selfie').files = dt.files;
+    }
+    const cam = document.getElementById('v-selfie-cam');
+    const gal = document.getElementById('v-selfie-gal');
+    if (cam) cam.addEventListener('change', function() { _onSelfieChange(this.files[0]); });
+    if (gal) gal.addEventListener('change', function() { _onSelfieChange(this.files[0]); });
 }
 
 function requireAuth(tipo) {
