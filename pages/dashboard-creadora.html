@@ -175,11 +175,19 @@
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Archivo</label>
                         <label class="upload-zone block cursor-pointer" id="upload-zone">
-                            <span class="ms" style="font-size:2.5rem;color:#F2D5C4">upload_file</span>
+                            <span class="ms" id="upload-icon" style="font-size:2.5rem;color:#F2D5C4">upload_file</span>
+                            <img id="upload-preview" src="" alt="" style="display:none;max-height:140px;border-radius:10px;margin:4px auto 0;object-fit:cover;max-width:100%">
                             <p class="text-sm text-c-soft mt-2" id="archivo-nombre">Haz clic para seleccionar archivo</p>
-                            <p class="text-xs text-c-border mt-1">JPG, PNG, MP4, MOV — max 500MB</p>
+                            <p class="text-xs text-c-border mt-1" id="upload-hint">JPG, PNG, MP4, MOV — max 500MB</p>
                             <input type="file" id="archivo-input" accept="image/*,video/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                         </label>
+                        <!-- Barra de progreso -->
+                        <div id="upload-progress" style="display:none" class="mt-3">
+                            <div class="h-2 rounded-full overflow-hidden" style="background:#F2D5C4">
+                                <div id="upload-progress-bar" style="height:100%;width:0%;background:#F4A261;border-radius:9999px;transition:width .3s ease"></div>
+                            </div>
+                            <p class="text-xs text-c-soft mt-1.5 text-center" id="upload-progress-txt">Preparando...</p>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo (opcional)</label>
@@ -336,9 +344,10 @@
                 <!-- Tema de color -->
                 <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                     <h3 class="font-bold text-sm mb-3">Tema de color</h3>
-                    <div class="grid grid-cols-4 gap-2" id="tema-grid">
+                    <div class="grid grid-cols-4 gap-2 mb-3" id="tema-grid">
                         <!-- generado por JS -->
                     </div>
+                    <div id="color-preview-bar" style="height:8px;border-radius:6px;background:linear-gradient(135deg,#FFF4EE,#F4A261);transition:background .35s ease"></div>
                     <input type="hidden" id="p-tema" value="melocoton">
                 </div>
 
@@ -367,7 +376,12 @@
                     </div>
                 </div>
 
-                <button type="submit" id="btn-guardar-perfil" class="c-btn text-white py-3 px-8 rounded-xl font-bold text-sm shadow-md w-full sm:w-auto">Guardar cambios</button>
+                <!-- Boton guardar sticky en movil -->
+                <div class="sticky bottom-[72px] md:static z-30 bg-c-bg md:bg-transparent py-3 md:py-0 -mx-0">
+                    <button type="submit" id="btn-guardar-perfil" class="c-btn text-white py-3 px-8 rounded-xl font-bold text-sm shadow-md w-full">
+                        <span id="btn-guardar-txt">Guardar cambios</span>
+                    </button>
+                </div>
             </form>
         </section>
 
@@ -759,21 +773,31 @@ async function cargarMisPosts() {
                     <p class="text-white text-[10px] font-semibold">${c.precio > 0 ? '$'+c.precio : c.es_gratis ? 'Gratis' : 'Suscriptores'}</p>
                 </div>
             </div>`).join('');
-    } catch(e) {}
+    } catch(e) { console.error('cargarMisPosts:', e); }
 }
 
 // ─── ACCIONES ────────────────────────────────────────────────
 async function subirContenido(e) {
     e.preventDefault();
     const archivo = document.getElementById('archivo-input').files[0];
-    if (!archivo) { toast('Selecciona un archivo', 'error'); return; }
+    if (!archivo) { toast('Selecciona un archivo primero', 'error'); return; }
     const tipo = document.querySelector('input[name="tipo"]:checked').value;
     const acceso = document.querySelector('input[name="acceso"]:checked').value;
     const precio = acceso === 'ppv' ? parseFloat(document.getElementById('sub-precio').value) || 0 : 0;
     const esGratis = acceso === 'gratis';
     const btn = document.getElementById('btn-subir');
+    const progressEl = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('upload-progress-bar');
+    const progressTxt = document.getElementById('upload-progress-txt');
     btn.innerHTML = '<span class="ms" style="font-size:18px">hourglass_top</span> Subiendo...';
     btn.disabled = true;
+    progressEl.style.display = 'block';
+    let pct = 0;
+    const iv = setInterval(() => {
+        pct = Math.min(pct + (Math.random() * 6 + 2), 88);
+        progressBar.style.width = pct + '%';
+        progressTxt.textContent = pct < 30 ? 'Subiendo...' : pct < 65 ? 'Procesando...' : 'Casi listo...';
+    }, 400);
     try {
         await candela.contenido.subir(
             tipo,
@@ -781,14 +805,25 @@ async function subirContenido(e) {
             document.getElementById('sub-desc').value,
             precio, esGratis, archivo
         );
-        toast('Contenido publicado!', 'success');
+        clearInterval(iv);
+        progressBar.style.width = '100%';
+        progressTxt.textContent = 'Publicado!';
+        await new Promise(r => setTimeout(r, 600));
         document.getElementById('form-subir').reset();
         document.getElementById('archivo-nombre').textContent = 'Haz clic para seleccionar archivo';
+        document.getElementById('upload-hint').textContent = 'JPG, PNG, MP4, MOV — max 500MB';
+        const prev = document.getElementById('upload-preview');
+        if (prev) { prev.style.display = 'none'; prev.src = ''; }
+        document.getElementById('upload-icon').style.display = '';
+        toast('Contenido publicado! Ya aparece en tu perfil.', 'success');
         mostrar('inicio');
         cargarMisPosts();
     } catch(err) {
-        toast(err.message, 'error');
+        clearInterval(iv);
+        toast(err.message || 'Error al subir. Intenta de nuevo.', 'error');
     } finally {
+        progressEl.style.display = 'none';
+        progressBar.style.width = '0%';
         btn.innerHTML = '<span class="ms" style="font-size:18px">upload</span> Publicar';
         btn.disabled = false;
     }
@@ -797,8 +832,8 @@ async function subirContenido(e) {
 async function guardarPerfil(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-guardar-perfil');
-    const orig = btn.textContent;
-    btn.textContent = 'Guardando...'; btn.disabled = true;
+    const txt = document.getElementById('btn-guardar-txt');
+    txt.textContent = 'Guardando...'; btn.disabled = true;
     try {
         const precio = parseFloat(document.getElementById('p-precio').value);
         await candela.creadoras.actualizarPerfil({
@@ -808,9 +843,13 @@ async function guardarPerfil(e) {
             fuente: document.getElementById('p-fuente').value || undefined,
             layout_grid: document.getElementById('p-layout').value || undefined,
         });
-        toast('Cambios guardados correctamente', 'success');
-    } catch(err) { toast(err.message || 'Error al guardar', 'error'); }
-    finally { btn.textContent = orig; btn.disabled = false; }
+        txt.textContent = 'Guardado!';
+        setTimeout(() => { txt.textContent = 'Guardar cambios'; btn.disabled = false; }, 1500);
+        toast('Cambios guardados. Visita tu pagina para verlos.', 'success');
+    } catch(err) {
+        toast(err.message || 'Error al guardar', 'error');
+        txt.textContent = 'Guardar cambios'; btn.disabled = false;
+    }
 }
 
 async function solicitarRetiro() {
@@ -933,12 +972,16 @@ function renderTemaGrid(seleccionado) {
     grid.innerHTML = TEMAS_DEF.map(t => `
         <button type="button" class="tema-opt ${t.id===seleccionado?'selected':''}" style="background:${t.g}" onclick="seleccionarTema('${t.id}',this)" title="${t.label}">
         </button>`).join('');
+    const t = TEMAS_DEF.find(x => x.id === seleccionado);
+    if (t) { const bar = document.getElementById('color-preview-bar'); if (bar) bar.style.background = t.g; }
 }
 
 function seleccionarTema(id, el) {
     document.querySelectorAll('.tema-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
     document.getElementById('p-tema').value = id;
+    const t = TEMAS_DEF.find(x => x.id === id);
+    if (t) document.getElementById('color-preview-bar').style.background = t.g;
 }
 
 // ─── NAVIGATION ──────────────────────────────────────────────
@@ -1000,7 +1043,15 @@ function togglePrecio(show) {
 function previewArchivo(input) {
     const f = input.files[0]; if (!f) return;
     const p = document.getElementById('archivo-nombre');
-    if (p) p.textContent = `✓ ${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`;
+    const hint = document.getElementById('upload-hint');
+    if (p) p.textContent = `✓ ${f.name}`;
+    if (hint) hint.textContent = `${(f.size/1024/1024).toFixed(1)} MB — listo para publicar`;
+    if (f.type.startsWith('image/')) {
+        const prev = document.getElementById('upload-preview');
+        const icon = document.getElementById('upload-icon');
+        if (prev) { prev.src = URL.createObjectURL(f); prev.style.display = 'block'; }
+        if (icon) icon.style.display = 'none';
+    }
 }
 
 function mostrarNombre(input, id) {
