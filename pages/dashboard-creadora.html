@@ -174,13 +174,12 @@
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Archivo</label>
-                        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('archivo-input').click()">
+                        <label for="archivo-input" class="upload-zone block cursor-pointer" id="upload-zone">
                             <span class="ms" style="font-size:2.5rem;color:#F2D5C4">upload_file</span>
-                            <p class="text-sm text-c-soft mt-2">Haz clic o arrastra tu archivo aqui</p>
+                            <p class="text-sm text-c-soft mt-2" id="archivo-nombre">Haz clic para seleccionar archivo</p>
                             <p class="text-xs text-c-border mt-1">JPG, PNG, MP4, MOV — max 500MB</p>
-                        </div>
-                        <input type="file" id="archivo-input" accept="image/*,video/*" class="hidden" onchange="previewArchivo(this)">
-                        <p id="archivo-nombre" class="text-xs text-c-soft mt-2 hidden"></p>
+                        </label>
+                        <input type="file" id="archivo-input" accept="image/*,video/*" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo (opcional)</label>
@@ -291,10 +290,10 @@
                                     <img id="prev-avatar-img" src="" alt="" class="hidden w-full h-full object-cover">
                                 </div>
                                 <div class="flex-1">
-                                    <input type="file" id="input-avatar" accept="image/*" class="hidden" onchange="subirAvatar(this)">
-                                    <button type="button" onclick="document.getElementById('input-avatar').click()" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full">
+                                    <input type="file" id="input-avatar" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;">
+                                    <label for="input-avatar" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full cursor-pointer block text-center">
                                         Cambiar foto
-                                    </button>
+                                    </label>
                                     <p class="text-[10px] text-c-soft mt-1">JPG o PNG, max 5MB</p>
                                 </div>
                             </div>
@@ -305,10 +304,10 @@
                             <div id="prev-banner" class="w-full h-16 rounded-xl overflow-hidden mb-2" style="background:linear-gradient(135deg,#FFF4EE,#F2D5C4)">
                                 <img id="prev-banner-img" src="" alt="" class="hidden w-full h-full object-cover">
                             </div>
-                            <input type="file" id="input-banner" accept="image/*" class="hidden" onchange="subirBanner(this)">
-                            <button type="button" onclick="document.getElementById('input-banner').click()" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full">
+                            <input type="file" id="input-banner" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;">
+                            <label for="input-banner" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full cursor-pointer block text-center">
                                 Cambiar banner
-                            </button>
+                            </label>
                             <p class="text-[10px] text-c-soft mt-1">JPG o PNG, recomendado 1200x300</p>
                         </div>
                     </div>
@@ -368,7 +367,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="c-btn text-white py-3 px-8 rounded-xl font-bold text-sm shadow-md w-full sm:w-auto">Guardar cambios</button>
+                <button type="submit" id="btn-guardar-perfil" class="c-btn text-white py-3 px-8 rounded-xl font-bold text-sm shadow-md w-full sm:w-auto">Guardar cambios</button>
             </form>
         </section>
 
@@ -631,6 +630,16 @@ async function init() {
     _setupVerifInput('v-doc',     'v-doc-icon',     'v-doc-prev',     'v-doc-txt');
     _setupVerifInput('v-doc-rev', 'v-doc-rev-icon', 'v-doc-rev-prev', 'v-doc-rev-txt');
     _setupSelfieInputs();
+
+    // File inputs — setup via addEventListener (display:none breaks mobile)
+    const archivoInput = document.getElementById('archivo-input');
+    if (archivoInput) archivoInput.addEventListener('change', function() { previewArchivo(this); });
+
+    const avatarInput = document.getElementById('input-avatar');
+    if (avatarInput) avatarInput.addEventListener('change', function() { subirAvatar(this); });
+
+    const bannerInput = document.getElementById('input-banner');
+    if (bannerInput) bannerInput.addEventListener('change', function() { subirBanner(this); });
 }
 
 // ─── PERFIL ──────────────────────────────────────────────────
@@ -788,16 +797,21 @@ async function subirContenido(e) {
 
 async function guardarPerfil(e) {
     e.preventDefault();
+    const btn = document.getElementById('btn-guardar-perfil');
+    const orig = btn.textContent;
+    btn.textContent = 'Guardando...'; btn.disabled = true;
     try {
+        const precio = parseFloat(document.getElementById('p-precio').value);
         await candela.creadoras.actualizarPerfil({
-            bio: document.getElementById('p-bio').value,
-            precio_suscripcion: parseFloat(document.getElementById('p-precio').value) || 0,
-            tema_color: document.getElementById('p-tema').value,
-            fuente: document.getElementById('p-fuente').value,
-            layout_grid: document.getElementById('p-layout').value,
+            bio: document.getElementById('p-bio').value || undefined,
+            precio_suscripcion: isNaN(precio) ? undefined : precio,
+            tema_color: document.getElementById('p-tema').value || undefined,
+            fuente: document.getElementById('p-fuente').value || undefined,
+            layout_grid: document.getElementById('p-layout').value || undefined,
         });
-        toast('Perfil actualizado!', 'success');
-    } catch(err) { toast(err.message, 'error'); }
+        toast('Cambios guardados correctamente', 'success');
+    } catch(err) { toast(err.message || 'Error al guardar', 'error'); }
+    finally { btn.textContent = orig; btn.disabled = false; }
 }
 
 async function solicitarRetiro() {
@@ -987,8 +1001,7 @@ function togglePrecio(show) {
 function previewArchivo(input) {
     const f = input.files[0]; if (!f) return;
     const p = document.getElementById('archivo-nombre');
-    p.textContent = `✓ ${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`;
-    p.classList.remove('hidden');
+    if (p) p.textContent = `✓ ${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`;
 }
 
 function mostrarNombre(input, id) {
