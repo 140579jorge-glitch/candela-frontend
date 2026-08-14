@@ -89,11 +89,12 @@ const candela = {
             const fd = new FormData(); fd.append('imagen', file);
             return candela._req('POST', '/api/creadoras/mi-perfil/banner', fd, true);
         },
-        async enviarVerificacion(docTipo, docFile, selfieFile) {
+        async enviarVerificacion(docTipo, docFile, selfieFile, docReversoFile) {
             const fd = new FormData();
             fd.append('doc_tipo', docTipo);
             fd.append('doc_imagen', docFile);
             fd.append('selfie', selfieFile);
+            if (docReversoFile) fd.append('doc_imagen_reverso', docReversoFile);
             return candela._req('POST', '/api/creadoras/verificacion/enviar', fd, true);
         },
         misReferidas: () => candela._req('GET', '/api/creadoras/mi-perfil/referidas'),

@@ -390,13 +390,22 @@
                         </select>
                     </div>
                     <div>
-                        <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Foto del documento (frente)</p>
+                        <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Documento — Anverso (frente)</p>
                         <label for="v-doc" class="upload-zone block cursor-pointer" id="lbl-zone-doc">
                             <span class="ms" id="v-doc-icon" style="font-size:2rem;color:#F2D5C4">badge</span>
                             <img id="v-doc-prev" src="" alt="" style="display:none;max-height:120px;margin:0 auto;border-radius:8px;object-fit:cover;">
-                            <p id="v-doc-txt" class="text-sm text-c-soft mt-1">Foto clara del frente de tu CI / DNI</p>
+                            <p id="v-doc-txt" class="text-sm text-c-soft mt-1">Foto del frente de tu CI / DNI</p>
                         </label>
                         <input type="file" id="v-doc" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;" required>
+                    </div>
+                    <div>
+                        <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Documento — Reverso (dorso)</p>
+                        <label for="v-doc-rev" class="upload-zone block cursor-pointer" id="lbl-zone-doc-rev">
+                            <span class="ms" id="v-doc-rev-icon" style="font-size:2rem;color:#F2D5C4">badge</span>
+                            <img id="v-doc-rev-prev" src="" alt="" style="display:none;max-height:120px;margin:0 auto;border-radius:8px;object-fit:cover;">
+                            <p id="v-doc-rev-txt" class="text-sm text-c-soft mt-1">Foto del dorso de tu CI / DNI</p>
+                        </label>
+                        <input type="file" id="v-doc-rev" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;" required>
                     </div>
                     <div>
                         <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Selfie sosteniendo el documento</p>
@@ -619,7 +628,8 @@ async function init() {
     cargarPerfil();
     cargarGanancias();
     cargarMisPosts();
-    _setupVerifInput('v-doc', 'v-doc-icon', 'v-doc-prev', 'v-doc-txt');
+    _setupVerifInput('v-doc',     'v-doc-icon',     'v-doc-prev',     'v-doc-txt');
+    _setupVerifInput('v-doc-rev', 'v-doc-rev-icon', 'v-doc-rev-prev', 'v-doc-rev-txt');
     _setupSelfieInputs();
 }
 
@@ -878,13 +888,14 @@ async function guardarDatosRetiro(e) {
 
 async function enviarVerificacion(e) {
     e.preventDefault();
-    const doc = document.getElementById('v-doc').files[0];
-    const selfie = document.getElementById('v-selfie').files[0];
-    if (!doc || !selfie) { toast('Sube ambas fotos', 'error'); return; }
+    const doc     = document.getElementById('v-doc').files[0];
+    const docRev  = document.getElementById('v-doc-rev').files[0];
+    const selfie  = document.getElementById('v-selfie').files[0];
+    if (!doc || !docRev || !selfie) { toast('Sube las tres fotos (frente, dorso y selfie)', 'error'); return; }
     const btn = document.getElementById('btn-verificar');
     btn.textContent = 'Enviando...'; btn.disabled = true;
     try {
-        const r = await candela.creadoras.enviarVerificacion(document.getElementById('v-tipo').value, doc, selfie);
+        const r = await candela.creadoras.enviarVerificacion(document.getElementById('v-tipo').value, doc, selfie, docRev);
         toast(r.mensaje, 'success');
         const box = document.getElementById('ver-estado-box');
         box.className = 'rounded-2xl p-4 mb-5 border text-sm badge-pendiente';
