@@ -116,7 +116,9 @@ const candela = {
         ver: (id) => candela._req('GET', `/api/contenido/${id}`),
         confirmarPago: (id, referencia, monto) => candela._req('POST', `/api/contenido/${id}/confirmar-pago`, { referencia_pago: referencia, monto_enviado: monto }),
         feed: () => candela._req('GET', '/api/contenido/feed'),
+        misContenidos: () => candela._req('GET', '/api/contenido/mis-contenidos'),
         eliminar: (id) => candela._req('DELETE', `/api/contenido/${id}`),
+        toggleVisibilidad: (id, visible) => candela._req('PATCH', `/api/contenido/${id}/visibilidad?visible=${visible}`),
         async subir(tipo, titulo, descripcion, precio, esGratis, archivoFile, previewFile) {
             const fd = new FormData();
             fd.append('tipo', tipo);

@@ -144,7 +144,10 @@
             </div>
 
             <!-- Mis publicaciones -->
-            <h2 class="font-display text-lg font-semibold mb-3">Mis publicaciones</h2>
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="font-display text-lg font-semibold">Mis publicaciones</h2>
+                <span id="posts-count" class="text-xs text-c-soft"></span>
+            </div>
             <div id="grid-mis-posts" class="grid grid-cols-3 gap-2">
                 <p class="col-span-3 text-c-soft text-sm py-8 text-center" id="posts-empty">
                     No has publicado nada aun. <button onclick="mostrar('subir')" class="text-c-accent font-bold">Sube tu primer contenido</button>
@@ -308,15 +311,27 @@
                         </div>
                         <!-- Banner -->
                         <div>
-                            <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Banner (portada)</p>
-                            <div id="prev-banner" class="w-full h-16 rounded-xl overflow-hidden mb-2" style="background:linear-gradient(135deg,#FFF4EE,#F2D5C4)">
+                            <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Banner (cabecera de tu pagina)</p>
+                            <div id="prev-banner" class="w-full rounded-xl overflow-hidden mb-3" style="height:72px;background:linear-gradient(135deg,#FFF4EE,#F2D5C4)">
                                 <img id="prev-banner-img" src="" alt="" class="hidden w-full h-full object-cover">
                             </div>
-                            <label class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full cursor-pointer block text-center">
-                                Cambiar banner
-                                <input type="file" id="input-banner" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
-                            </label>
-                            <p class="text-[10px] text-c-soft mt-1">JPG o PNG, recomendado 1200x300</p>
+                            <!-- Canvas oculto para auto-generacion -->
+                            <canvas id="banner-canvas" width="1200" height="300" style="display:none"></canvas>
+                            <div class="flex flex-col gap-2">
+                                <button type="button" onclick="generarBannerAuto()" class="flex items-center justify-center gap-2 text-xs font-bold text-white py-2 px-3 rounded-xl shadow-sm" style="background:linear-gradient(90deg,#F4A261,#D4869D)">
+                                    <span class="ms" style="font-size:16px">auto_awesome</span>Generar banner automaticamente
+                                </button>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 h-px bg-c-border"></div>
+                                    <span class="text-[10px] text-c-soft">o</span>
+                                    <div class="flex-1 h-px bg-c-border"></div>
+                                </div>
+                                <label class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full cursor-pointer block text-center">
+                                    <span class="ms" style="font-size:14px;vertical-align:middle">upload</span> Subir tu propio diseno
+                                    <input type="file" id="input-banner" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
+                                </label>
+                                <p class="text-[10px] text-c-soft">Cualquier tamano — se ajusta a 1200×300 px automaticamente.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -753,26 +768,42 @@ async function cargarGanancias() {
 
 async function cargarMisPosts() {
     try {
-        const user = candela.auth.user();
-        if (!user?.slug) return;
-        const lista = await candela.contenido.listarCreadora(user.slug);
+        const lista = await candela.contenido.misContenidos();
+        const visibles = lista.filter(c => c.visible !== false).length;
+        const ocultos = lista.length - visibles;
         document.getElementById('s-posts').textContent = lista.length;
+        const countEl = document.getElementById('posts-count');
+        if (countEl) countEl.textContent = ocultos > 0 ? `${visibles} visible${visibles!==1?'s':''} · ${ocultos} oculto${ocultos!==1?'s':''}` : `${lista.length} publicacion${lista.length!==1?'es':''}`;
         const grid = document.getElementById('grid-mis-posts');
         const empty = document.getElementById('posts-empty');
 
         if (!lista.length) { empty.classList.remove('hidden'); return; }
         empty.classList.add('hidden');
 
-        grid.innerHTML = lista.map(c => `
-            <div class="relative rounded-xl overflow-hidden cursor-pointer group" style="aspect-ratio:1;background:#F2D5C4">
-                ${c.preview_url ? `<img src="${c.preview_url}" alt="" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-3xl">${c.tipo==='video'?'🎬':'📸'}</div>`}
-                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <button onclick="eliminarPost('${c.id}')" class="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">Eliminar</button>
+        grid.innerHTML = lista.map(c => {
+            const oculto = c.visible === false;
+            const tipoIcon = c.tipo === 'video' ? '🎬' : '📸';
+            const accesoLabel = c.precio > 0 ? `$${c.precio}` : c.es_gratis ? 'Gratis' : 'Subs';
+            return `
+            <div class="relative rounded-xl overflow-hidden group" style="aspect-ratio:1;background:#F2D5C4${oculto?';opacity:.5':''}">
+                ${c.preview_url
+                    ? `<img src="${c.preview_url}" alt="" class="w-full h-full object-cover">`
+                    : `<div class="w-full h-full flex items-center justify-center text-3xl">${tipoIcon}</div>`}
+                ${oculto ? `<div class="absolute top-1.5 left-1.5 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">OCULTO</div>` : ''}
+                <!-- Acciones al hover -->
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex flex-col items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
+                    <button onclick="toggleOcultar('${c.id}',${oculto})" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:${oculto?'rgba(34,197,94,.8)':'rgba(251,191,36,.8)'}">
+                        ${oculto ? 'Mostrar' : 'Ocultar'}
+                    </button>
+                    <button onclick="eliminarPost('${c.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:rgba(239,68,68,.8)">
+                        Eliminar
+                    </button>
                 </div>
-                <div class="absolute bottom-0 left-0 right-0 p-2" style="background:linear-gradient(transparent,rgba(0,0,0,.6))">
-                    <p class="text-white text-[10px] font-semibold">${c.precio > 0 ? '$'+c.precio : c.es_gratis ? 'Gratis' : 'Suscriptores'}</p>
+                <div class="absolute bottom-0 left-0 right-0 px-2 py-1.5" style="background:linear-gradient(transparent,rgba(0,0,0,.65))">
+                    <p class="text-white text-[9px] font-bold">${accesoLabel}</p>
                 </div>
-            </div>`).join('');
+            </div>`;
+        }).join('');
     } catch(e) { console.error('cargarMisPosts:', e); }
 }
 
@@ -957,13 +988,82 @@ async function enviarVerificacion(e) {
     finally { btn.textContent = 'Enviar para revision'; btn.disabled = false; }
 }
 
-async function eliminarPost(id) {
-    if (!confirm('Eliminar esta publicacion?')) return;
+async function toggleOcultar(id, estaOculto) {
     try {
-        await candela.contenido.eliminar(id);
-        toast('Eliminado', 'success');
+        await candela.contenido.toggleVisibilidad(id, estaOculto);
+        toast(estaOculto ? 'Contenido visible en tu pagina' : 'Contenido oculto de tu pagina', 'success');
         cargarMisPosts();
     } catch(err) { toast(err.message, 'error'); }
+}
+
+async function eliminarPost(id) {
+    if (!confirm('Eliminar permanentemente esta publicacion? Esta accion no se puede deshacer.')) return;
+    try {
+        await candela.contenido.eliminar(id);
+        toast('Publicacion eliminada', 'success');
+        cargarMisPosts();
+    } catch(err) { toast(err.message, 'error'); }
+}
+
+// ─── BANNER AUTO-GENERADO ─────────────────────────────────────
+async function generarBannerAuto() {
+    const canvas = document.getElementById('banner-canvas');
+    const ctx = canvas.getContext('2d');
+    const nombre = perfilData?.nombre_artistico || candela.auth.user()?.nombre || 'Mi Pagina';
+    const temaId = document.getElementById('p-tema').value || 'melocoton';
+    const tema = TEMAS_DEF.find(t => t.id === temaId) || TEMAS_DEF[0];
+
+    // Fondo con gradiente del tema
+    const [c1, c2] = tema.g.match(/#[0-9a-fA-F]{6}/g) || ['#FFF4EE', '#F4A261'];
+    const grad = ctx.createLinearGradient(0, 0, 1200, 300);
+    grad.addColorStop(0, c1);
+    grad.addColorStop(1, c2);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1200, 300);
+
+    // Circulos decorativos
+    ctx.globalAlpha = 0.12;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(1050, 50, 180, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(150, 280, 120, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Nombre de la creadora
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.font = 'bold 72px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    const maxW = 800;
+    let fs = 72;
+    while (ctx.measureText(nombre).width > maxW && fs > 24) {
+        fs -= 4;
+        ctx.font = `bold ${fs}px system-ui, -apple-system, sans-serif`;
+    }
+    ctx.fillText(nombre, 72, 145);
+
+    // "en Candela" subtitulo
+    ctx.font = '28px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillText('en Candela', 76, 145 + fs * 0.75);
+
+    // Logo mark en la esquina
+    ctx.font = 'bold 18px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'right';
+    ctx.fillText('CANDELA', 1128, 270);
+
+    // Convertir a blob y subir
+    canvas.toBlob(async (blob) => {
+        if (!blob) { toast('Error generando banner', 'error'); return; }
+        const file = new File([blob], 'banner-auto.jpg', { type: 'image/jpeg' });
+        try {
+            const r = await candela.creadoras.subirBanner(file);
+            const img = document.getElementById('prev-banner-img');
+            img.src = r.banner_url;
+            img.classList.remove('hidden');
+            toast('Banner generado y guardado', 'success');
+        } catch(err) { toast(err.message, 'error'); }
+    }, 'image/jpeg', 0.92);
 }
 
 // ─── TEMA GRID ───────────────────────────────────────────────
