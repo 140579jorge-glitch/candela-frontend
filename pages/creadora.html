@@ -403,6 +403,7 @@
 <script>
 const slug = new URLSearchParams(location.search).get('slug');
 const API_BASE = 'https://web-production-73189.up.railway.app';
+const _u = u => (!u ? '' : u.startsWith('http') ? u : API_BASE + u);
 const WALLETS = {
     trc20:   'TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH',
     polygon: '0x120902f3be563f1fbcc96e9a3da12f3d212cfe7b',
@@ -561,7 +562,7 @@ function renderGrid() {
 
             <div class="absolute inset-0 ${bloqueado ? 'overflow-hidden' : ''}">
                 ${item.preview_url
-                    ? `<img src="${API_BASE + item.preview_url}" alt="" class="w-full h-full object-cover ${bloqueado ? 'blur-xl scale-110' : ''}" draggable="false" oncontextmenu="return false">`
+                    ? `<img src="${_u(item.preview_url)}" alt="" class="w-full h-full object-cover ${bloqueado ? 'blur-xl scale-110' : ''}" draggable="false" oncontextmenu="return false">`
                     : `<div class="w-full h-full flex items-center justify-center text-4xl"
                             style="background:linear-gradient(135deg,var(--t-bg),var(--t-b))">
                             ${item.tipo === 'video' ? '🎬' : '📸'}
@@ -828,10 +829,10 @@ function abrirVisor(item) {
     vid.pause && vid.pause();
 
     if (item.tipo === 'video' && item.url_archivo) {
-        vid.src = API_BASE + item.url_archivo;
+        vid.src = _u(item.url_archivo);
         vid.style.display = 'block';
     } else {
-        img.src = API_BASE + (item.url_archivo || item.preview_url || '');
+        img.src = _u(item.url_archivo || item.preview_url || '');
         img.style.display = 'block';
     }
 

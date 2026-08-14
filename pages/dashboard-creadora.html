@@ -178,7 +178,7 @@
                             <span class="ms" style="font-size:2.5rem;color:#F2D5C4">upload_file</span>
                             <p class="text-sm text-c-soft mt-2" id="archivo-nombre">Haz clic para seleccionar archivo</p>
                             <p class="text-xs text-c-border mt-1">JPG, PNG, MP4, MOV — max 500MB</p>
-                            <input type="file" id="archivo-input" accept="image/*,video/*" style="display:none">
+                            <input type="file" id="archivo-input" accept="image/*,video/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                         </label>
                     </div>
                     <div>
@@ -292,7 +292,7 @@
                                 <div class="flex-1">
                                     <label class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full cursor-pointer block text-center">
                                         Cambiar foto
-                                        <input type="file" id="input-avatar" accept="image/*" style="display:none">
+                                        <input type="file" id="input-avatar" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                                     </label>
                                     <p class="text-[10px] text-c-soft mt-1">JPG o PNG, max 5MB</p>
                                 </div>
@@ -306,7 +306,7 @@
                             </div>
                             <label class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-2 rounded-xl hover:bg-c-champagne transition-all w-full cursor-pointer block text-center">
                                 Cambiar banner
-                                <input type="file" id="input-banner" accept="image/*" style="display:none">
+                                <input type="file" id="input-banner" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                             </label>
                             <p class="text-[10px] text-c-soft mt-1">JPG o PNG, recomendado 1200x300</p>
                         </div>
@@ -783,7 +783,7 @@ async function subirContenido(e) {
         );
         toast('Contenido publicado!', 'success');
         document.getElementById('form-subir').reset();
-        document.getElementById('archivo-nombre').classList.add('hidden');
+        document.getElementById('archivo-nombre').textContent = 'Haz clic para seleccionar archivo';
         mostrar('inicio');
         cargarMisPosts();
     } catch(err) {
@@ -857,7 +857,7 @@ async function cargarDatosRetiro() {
 
         if (p.qr_pago_url) {
             document.getElementById('qr-preview-box').innerHTML =
-                `<img src="${API_BASE}${p.qr_pago_url}" class="w-full h-full object-contain">`;
+                `<img src="${_url(p.qr_pago_url)}" class="w-full h-full object-contain">`;
         }
 
         if (p.metodo_retiro) {
@@ -1057,7 +1057,8 @@ function requireAuth(tipo) {
 // Resuelve URLs relativas (Railway) y absolutas (Supabase) uniformemente
 function _url(u) {
     if (!u) return '';
-    return u.startsWith('http') ? u + '?t=' + Date.now() : 'https://web-production-73189.up.railway.app' + u + '?t=' + Date.now();
+    if (u.startsWith('http')) return u;
+    return 'https://web-production-73189.up.railway.app' + u;
 }
 
 // ─── AVATAR / BANNER ─────────────────────────────────────────
