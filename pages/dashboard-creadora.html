@@ -390,20 +390,20 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Foto del documento (frente)</label>
-                        <div class="upload-zone" onclick="document.getElementById('v-doc').click()">
+                        <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Foto del documento (frente)</p>
+                        <label for="v-doc" class="upload-zone block cursor-pointer">
                             <span class="ms" style="font-size:2rem;color:#F2D5C4">badge</span>
                             <p class="text-sm text-c-soft mt-1">Foto clara del frente de tu CI / DNI</p>
-                        </div>
+                        </label>
                         <input type="file" id="v-doc" accept="image/*" class="hidden" required onchange="mostrarNombre(this,'lbl-doc')">
                         <p id="lbl-doc" class="text-xs text-c-soft mt-1.5"></p>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Selfie sosteniendo el documento</label>
-                        <div class="upload-zone" onclick="document.getElementById('v-selfie').click()">
+                        <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Selfie sosteniendo el documento</p>
+                        <label for="v-selfie" class="upload-zone block cursor-pointer">
                             <span class="ms" style="font-size:2rem;color:#F2D5C4">selfie</span>
                             <p class="text-sm text-c-soft mt-1">Tu cara + el documento visibles</p>
-                        </div>
+                        </label>
                         <input type="file" id="v-selfie" accept="image/*" class="hidden" required onchange="mostrarNombre(this,'lbl-selfie')">
                         <p id="lbl-selfie" class="text-xs text-c-soft mt-1.5"></p>
                     </div>
