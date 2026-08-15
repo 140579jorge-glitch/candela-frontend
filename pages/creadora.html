@@ -197,6 +197,9 @@
             <img id="avatar-img" src="" alt="" class="w-full h-full object-cover hidden">
         </div>
         <div class="flex gap-2">
+            <button id="btn-propina" class="c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirPropina()">
+                <span class="ms" style="font-size:16px;vertical-align:-3px">volunteer_activism</span> Propina
+            </button>
             <button id="btn-msg" class="hidden c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirMensaje()">
                 <span class="ms" style="font-size:16px;vertical-align:-3px">chat_bubble</span> Mensaje
             </button>
@@ -378,6 +381,118 @@
             <button onclick="confirmarCompra()" id="btn-confirmar-compra" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
                 Confirmar pago
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Propina -->
+<div class="modal-bg" id="modal-propina">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal('modal-propina')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+        <h2 class="font-display text-xl font-semibold mb-1">Enviar propina</h2>
+        <p class="text-c-soft text-sm mb-4">Apoya directamente a <strong id="propina-nombre-creadora"></strong></p>
+
+        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Elige el monto (USDT):</p>
+        <div class="grid grid-cols-3 gap-2 mb-3">
+            <button onclick="elegirMontoPropina(1)" class="propina-monto-btn py-2 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all" data-monto="1">$1</button>
+            <button onclick="elegirMontoPropina(3)" class="propina-monto-btn py-2 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all" data-monto="3">$3</button>
+            <button onclick="elegirMontoPropina(5)" class="propina-monto-btn py-2 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all" data-monto="5">$5</button>
+            <button onclick="elegirMontoPropina(10)" class="propina-monto-btn py-2 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all" data-monto="10">$10</button>
+            <button onclick="elegirMontoPropina(20)" class="propina-monto-btn py-2 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all" data-monto="20">$20</button>
+            <button onclick="elegirMontoPropina(50)" class="propina-monto-btn py-2 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all" data-monto="50">$50</button>
+        </div>
+        <div class="mb-4">
+            <input id="propina-monto-custom" type="number" min="1" max="500" step="1" placeholder="Otro monto ($)"
+                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all"
+                oninput="propinaMonto=parseFloat(this.value)||0; limpiarBtnsPropina()">
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Mensaje (opcional)</label>
+            <textarea id="propina-mensaje" rows="2" maxlength="500" placeholder="Escribe algo bonito..."
+                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+        </div>
+
+        <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4">
+            <div class="flex items-baseline gap-2 mb-3">
+                <span class="text-xs text-c-soft">Enviar:</span>
+                <span class="font-bold text-xl text-c-text" id="propina-total-display">$5</span>
+                <span class="text-sm text-c-soft">USDT</span>
+            </div>
+            <p class="text-xs text-c-soft mb-2 font-semibold">Red de pago:</p>
+            <div class="flex gap-2 mb-3 flex-wrap">
+                <button onclick="elegirRed('trc20','prop')" id="prop-btn-trc20" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">TRC20</button>
+                <button onclick="elegirRed('polygon','prop')" id="prop-btn-polygon" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Polygon</button>
+                <button onclick="elegirRed('takenos','prop')" id="prop-btn-takenos" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Yape/PIX/QR</button>
+            </div>
+            <div id="prop-crypto-info">
+                <button onclick="copiarWallet('prop')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="prop-wallet-addr">TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH</button>
+            </div>
+            <div id="prop-takenos-info" class="hidden">
+                <img src="../img/takenos-qr.png" alt="QR" class="w-36 mx-auto rounded-xl border border-c-border mb-1">
+                <p class="text-[11px] text-c-soft text-center">Bolivia, Peru (Yape), Brasil (PIX), Argentina</p>
+                <p class="text-[11px] text-amber-600 text-center font-semibold mt-1">Pon tu usuario de Candela en la descripcion</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
+                <input id="propina-hash" type="text" placeholder="Pega el hash de tu pago"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <button onclick="confirmarPropina()" id="btn-confirmar-propina" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
+                Enviar propina
+            </button>
+            <p class="text-center text-[11px] text-c-soft">Verificamos el pago en pocas horas y se lo acreditamos a la creadora.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Mensaje Directo -->
+<div class="modal-bg" id="modal-dm">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal('modal-dm')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+        <h2 class="font-display text-xl font-semibold mb-1">Mensaje directo</h2>
+        <p class="text-c-soft text-sm mb-4">Escribe a <strong id="dm-nombre-creadora"></strong></p>
+
+        <div class="mb-4">
+            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tu mensaje</label>
+            <textarea id="dm-contenido" rows="4" maxlength="2000" placeholder="Escribe tu mensaje aqui..."
+                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+            <p class="text-[11px] text-c-soft mt-1 text-right"><span id="dm-char-count">0</span>/2000</p>
+        </div>
+
+        <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4">
+            <div class="flex items-baseline gap-2 mb-3">
+                <span class="text-xs text-c-soft">Costo:</span>
+                <span class="font-bold text-xl text-c-text" id="dm-precio-display">$5</span>
+                <span class="text-sm text-c-soft">USDT</span>
+            </div>
+            <div class="flex gap-2 mb-3 flex-wrap">
+                <button onclick="elegirRed('trc20','dm')" id="dm-btn-trc20" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">TRC20</button>
+                <button onclick="elegirRed('polygon','dm')" id="dm-btn-polygon" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Polygon</button>
+                <button onclick="elegirRed('takenos','dm')" id="dm-btn-takenos" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Yape/PIX/QR</button>
+            </div>
+            <div id="dm-crypto-info">
+                <button onclick="copiarWallet('dm')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="dm-wallet-addr">TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH</button>
+            </div>
+            <div id="dm-takenos-info" class="hidden">
+                <img src="../img/takenos-qr.png" alt="QR" class="w-36 mx-auto rounded-xl border border-c-border mb-1">
+                <p class="text-[11px] text-amber-600 text-center font-semibold mt-1">Pon tu usuario de Candela en la descripcion</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
+                <input id="dm-hash" type="text" placeholder="Hash de tu pago"
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+            <button onclick="confirmarMensaje()" id="btn-confirmar-dm" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
+                Enviar mensaje
+            </button>
+            <p class="text-center text-[11px] text-c-soft">El mensaje se muestra a la creadora una vez verificado el pago.</p>
         </div>
     </div>
 </div>
@@ -699,6 +814,32 @@ function elegirRed(red, modal) {
         document.getElementById('sub-hash').placeholder = esTakenos
             ? 'Numero de referencia o comprobante Takenos/Yape/PIX'
             : 'Pega el hash de tu transaccion';
+    } else if (modal === 'prop') {
+        propinaRedActual = red;
+        redes.forEach(r => {
+            const btn = document.getElementById(`prop-btn-${r}`);
+            if (btn) btn.className = r === red ? activo : inactivo;
+        });
+        const esTakenos = red === 'takenos';
+        document.getElementById('prop-crypto-info').classList.toggle('hidden', esTakenos);
+        document.getElementById('prop-takenos-info').classList.toggle('hidden', !esTakenos);
+        if (!esTakenos) document.getElementById('prop-wallet-addr').textContent = WALLETS[red];
+        document.getElementById('propina-hash').placeholder = esTakenos
+            ? 'Referencia de tu pago Yape/PIX/QR'
+            : 'Pega el hash de tu transaccion';
+    } else if (modal === 'dm') {
+        dmRedActual = red;
+        redes.forEach(r => {
+            const btn = document.getElementById(`dm-btn-${r}`);
+            if (btn) btn.className = r === red ? activo : inactivo;
+        });
+        const esTakenos = red === 'takenos';
+        document.getElementById('dm-crypto-info').classList.toggle('hidden', esTakenos);
+        document.getElementById('dm-takenos-info').classList.toggle('hidden', !esTakenos);
+        if (!esTakenos) document.getElementById('dm-wallet-addr').textContent = WALLETS[red];
+        document.getElementById('dm-hash').placeholder = esTakenos
+            ? 'Referencia de tu pago Yape/PIX/QR'
+            : 'Pega el hash de tu transaccion';
     } else {
         redCompra = red;
         redes.forEach(r => {
@@ -716,8 +857,8 @@ function elegirRed(red, modal) {
 }
 
 function copiarWallet(modal) {
-    const red = modal === 'sub' ? redSub : redCompra;
-    navigator.clipboard.writeText(WALLETS[red]);
+    const red = modal === 'sub' ? redSub : modal === 'prop' ? propinaRedActual : modal === 'dm' ? dmRedActual : redCompra;
+    navigator.clipboard.writeText(WALLETS[red] || WALLETS['trc20']);
     toast('Wallet copiada', 'success');
 }
 
@@ -737,7 +878,120 @@ document.querySelectorAll('.modal-bg').forEach(m => {
     m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
 
-function abrirMensaje() { toast('Mensajes disponibles proximamente', 'info'); }
+// --- Propinas ---
+let propinaMonto = 5;
+let propinaRedActual = 'trc20';
+
+function abrirPropina() {
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para enviar una propina', 'info'); return; }
+    document.getElementById('propina-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
+    document.getElementById('propina-total-display').textContent = `$${propinaMonto}`;
+    document.getElementById('propina-monto-custom').value = '';
+    document.getElementById('propina-mensaje').value = '';
+    document.getElementById('propina-hash').value = '';
+    limpiarBtnsPropina();
+    // resaltar $5 por defecto
+    propinaMonto = 5;
+    document.querySelectorAll('.propina-monto-btn').forEach(b => {
+        if (parseFloat(b.dataset.monto) === 5) {
+            b.classList.add('border-c-accent','text-c-accent');
+            b.classList.remove('border-c-border','text-c-soft');
+        }
+    });
+    document.getElementById('propina-total-display').textContent = '$5';
+    document.getElementById('modal-propina').classList.add('open');
+}
+
+function limpiarBtnsPropina() {
+    document.querySelectorAll('.propina-monto-btn').forEach(b => {
+        b.classList.remove('border-c-accent','text-c-accent','bg-c-accent','text-white');
+        b.classList.add('border-c-border','text-c-soft');
+    });
+}
+
+function elegirMontoPropina(monto) {
+    propinaMonto = monto;
+    limpiarBtnsPropina();
+    document.getElementById('propina-monto-custom').value = '';
+    document.querySelectorAll('.propina-monto-btn').forEach(b => {
+        if (parseFloat(b.dataset.monto) === monto) {
+            b.classList.add('border-c-accent','text-c-accent');
+            b.classList.remove('border-c-border','text-c-soft');
+        }
+    });
+    document.getElementById('propina-total-display').textContent = `$${monto}`;
+}
+
+async function confirmarPropina() {
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion primero', 'info'); return; }
+    const monto = propinaMonto || parseFloat(document.getElementById('propina-monto-custom').value);
+    if (!monto || monto < 1) { toast('Elige un monto valido (minimo $1)', 'error'); return; }
+    const hash = document.getElementById('propina-hash').value.trim();
+    const mensaje = document.getElementById('propina-mensaje').value.trim();
+    if (!hash && propinaRedActual !== 'takenos') { toast('Pega el hash de tu transaccion', 'error'); return; }
+
+    const btn = document.getElementById('btn-confirmar-propina');
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try {
+        await candela.propinas.enviar({
+            creadora_slug: creadoraData.slug,
+            monto,
+            mensaje: mensaje || null,
+            referencia_pago: hash || `QR-${Date.now()}`,
+            metodo_red: propinaRedActual,
+        });
+        cerrarModal('modal-propina');
+        toast('Propina enviada. Verificamos el pago pronto.', 'success');
+    } catch (e) {
+        toast(e.message || 'Error al enviar propina', 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Enviar propina';
+    }
+}
+
+// --- Mensajes directos ---
+let dmRedActual = 'trc20';
+
+function abrirMensaje() {
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para enviar un mensaje', 'info'); return; }
+    document.getElementById('dm-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
+    document.getElementById('dm-precio-display').textContent = `$${creadoraData?.precio_mensaje || 5}`;
+    document.getElementById('dm-contenido').value = '';
+    document.getElementById('dm-hash').value = '';
+    document.getElementById('dm-char-count').textContent = '0';
+    document.getElementById('modal-dm').classList.add('open');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dmTA = document.getElementById('dm-contenido');
+    if (dmTA) dmTA.addEventListener('input', () => {
+        document.getElementById('dm-char-count').textContent = dmTA.value.length;
+    });
+});
+
+async function confirmarMensaje() {
+    const contenido = document.getElementById('dm-contenido').value.trim();
+    if (!contenido || contenido.length < 5) { toast('El mensaje debe tener al menos 5 caracteres', 'error'); return; }
+    const hash = document.getElementById('dm-hash').value.trim();
+    if (!hash && dmRedActual !== 'takenos') { toast('Pega el hash de tu transaccion', 'error'); return; }
+
+    const btn = document.getElementById('btn-confirmar-dm');
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try {
+        await candela.mensajes.enviar({
+            creadora_slug: creadoraData.slug,
+            contenido,
+            referencia_pago: hash || `QR-${Date.now()}`,
+            metodo_red: dmRedActual,
+        });
+        cerrarModal('modal-dm');
+        toast('Mensaje enviado. Lo vera cuando confirmemos tu pago.', 'success');
+    } catch (e) {
+        toast(e.message || 'Error al enviar mensaje', 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Enviar mensaje';
+    }
+}
 
 function toast(msg, tipo = 'info') {
     const c = document.getElementById('toasts');

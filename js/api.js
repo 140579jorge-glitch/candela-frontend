@@ -139,6 +139,17 @@ const candela = {
         misSuscripciones: () => candela._req('GET', '/api/pagos/mis-suscripciones'),
     },
 
+    propinas: {
+        enviar: (data) => candela._req('POST', '/api/propinas', data),
+        misPropinas: () => candela._req('GET', '/api/propinas/mis-propinas'),
+    },
+
+    mensajes: {
+        enviar: (data) => candela._req('POST', '/api/mensajes', data),
+        miBandeja: () => candela._req('GET', '/api/mensajes/mi-bandeja'),
+        marcarLeido: (id) => candela._req('PATCH', `/api/mensajes/${id}/leer`),
+    },
+
     admin: {
         dashboard: () => candela._req('GET', '/api/admin/dashboard'),
         verificacionesPendientes: () => candela._req('GET', '/api/admin/verificaciones-pendientes'),
@@ -149,6 +160,10 @@ const candela = {
         comprasPendientes: () => candela._req('GET', '/api/admin/compras-pendientes'),
         confirmarCompra: (id, accion) => candela._req('POST', `/api/admin/compras/${id}`, { accion }),
         creadoras_pendientes: () => candela._req('GET', '/api/admin/creadoras-pendientes'),
+        propinasPendientes: () => candela._req('GET', '/api/admin/propinas-pendientes'),
+        procesarPropina: (id, accion) => candela._req('POST', `/api/admin/propinas/${id}`, { accion }),
+        mensajesPendientes: () => candela._req('GET', '/api/admin/mensajes-pendientes'),
+        procesarMensaje: (id, accion) => candela._req('POST', `/api/admin/mensajes/${id}`, { accion }),
         comisiones: (params = {}) => {
             const q = new URLSearchParams(params).toString();
             return candela._req('GET', `/api/admin/comisiones${q ? '?' + q : ''}`);

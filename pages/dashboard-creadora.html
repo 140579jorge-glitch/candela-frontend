@@ -89,6 +89,8 @@
         <div class="nav-item" onclick="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
         <div class="nav-item" onclick="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificacion</div>
+        <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
+        <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
         <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Metodos de pago</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
@@ -499,6 +501,68 @@
                     <p class="font-semibold text-sm">Mis referidas</p>
                 </div>
                 <div id="lista-referidas">
+                    <p class="text-center text-c-soft text-sm py-8">Cargando...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ PROPINAS ══ -->
+        <section id="sec-propinas" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Propinas recibidas</h2>
+            <p class="text-c-soft text-sm mb-5">Las propinas son apoyos directos que tus fans te envian.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 max-w-lg">
+                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Total recibido</p>
+                    <p class="text-2xl font-bold text-c-accent" id="prop-total">$0.00</p>
+                    <p class="text-xs text-c-soft mt-0.5">en propinas confirmadas</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Propinas</p>
+                    <p class="text-2xl font-bold text-c-text" id="prop-count">0</p>
+                    <p class="text-xs text-c-soft mt-0.5">en total</p>
+                </div>
+            </div>
+            <div class="bg-white border border-c-border rounded-2xl shadow-sm max-w-lg overflow-hidden">
+                <div class="px-5 py-4 border-b border-c-border">
+                    <p class="font-semibold text-sm">Historial de propinas</p>
+                </div>
+                <div id="lista-propinas">
+                    <p class="text-center text-c-soft text-sm py-8">Cargando...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ MENSAJES ══ -->
+        <section id="sec-mensajes" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Mensajes directos</h2>
+            <p class="text-c-soft text-sm mb-5">Mensajes de pago de tus fans. Solo aparecen una vez confirmado el pago.</p>
+
+            <!-- Toggle acepta mensajes -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 mb-5 max-w-lg shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="font-semibold text-sm">Acepto mensajes directos</p>
+                    <p class="text-xs text-c-soft mt-0.5" id="msg-precio-desc">Precio por mensaje: $5</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="toggle-acepta-msg" class="sr-only peer" onchange="guardarConfigMsg()">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-c-accent"></div>
+                </label>
+            </div>
+            <div id="msg-precio-config" class="bg-white border border-c-border rounded-2xl p-5 mb-5 max-w-lg shadow-sm">
+                <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Precio por mensaje (USDT)</p>
+                <div class="flex gap-2">
+                    <input id="msg-precio-input" type="number" min="1" max="100" step="1" value="5"
+                        class="flex-1 px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all">
+                    <button onclick="guardarPrecioMsg()" class="c-btn text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm">Guardar</button>
+                </div>
+            </div>
+
+            <div class="bg-white border border-c-border rounded-2xl shadow-sm max-w-lg overflow-hidden">
+                <div class="px-5 py-4 border-b border-c-border flex items-center justify-between">
+                    <p class="font-semibold text-sm">Bandeja de entrada</p>
+                    <span id="msg-badge" class="hidden bg-c-accent text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div id="lista-mensajes">
                     <p class="text-center text-c-soft text-sm py-8">Cargando...</p>
                 </div>
             </div>
@@ -1096,6 +1160,8 @@ function mostrar(sec, navBtn) {
     if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); }
     if (sec === 'referidas') cargarReferidas();
     if (sec === 'metodos-pago') cargarDatosRetiro();
+    if (sec === 'propinas') cargarPropinas();
+    if (sec === 'mensajes') { cargarMensajes(); if (perfilData) { document.getElementById('toggle-acepta-msg').checked = perfilData.acepta_mensajes; document.getElementById('msg-precio-input').value = perfilData.precio_mensaje || 5; document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${perfilData.precio_mensaje || 5}`; } }
 }
 
 // ─── REFERIDAS ───────────────────────────────────────────────
@@ -1133,6 +1199,99 @@ async function cargarReferidas() {
 function copiarLink() {
     const inp = document.getElementById('link-ref');
     navigator.clipboard.writeText(inp.value).then(() => toast('Enlace copiado!', 'success'));
+}
+
+// ─── PROPINAS ────────────────────────────────────────────────
+async function cargarPropinas() {
+    try {
+        const data = await candela.propinas.misPropinas();
+        document.getElementById('prop-total').textContent = `$${(data.total_recibido||0).toFixed(2)}`;
+        document.getElementById('prop-count').textContent = data.propinas.length;
+        const lista = document.getElementById('lista-propinas');
+        if (!data.propinas.length) {
+            lista.innerHTML = '<p class="text-center text-c-soft text-sm py-8">Aun no recibiste propinas.</p>';
+            return;
+        }
+        const badges = { confirmada: 'bg-green-100 text-green-700', pendiente: 'bg-amber-100 text-amber-700', rechazada: 'bg-red-100 text-red-700' };
+        lista.innerHTML = data.propinas.map(p => `
+            <div class="flex items-start gap-3 px-5 py-4 border-b border-c-border last:border-0">
+                <span class="ms text-c-accent shrink-0 mt-0.5" style="font-size:20px">volunteer_activism</span>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2 mb-0.5">
+                        <p class="font-semibold text-sm">${esc(p.remitente_nombre)}</p>
+                        <p class="font-bold text-c-accent text-sm shrink-0">$${p.monto.toFixed(2)}</p>
+                    </div>
+                    ${p.mensaje ? `<p class="text-xs text-c-soft italic">"${esc(p.mensaje)}"</p>` : ''}
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${badges[p.estado]||'bg-gray-100 text-gray-600'}">${p.estado}</span>
+                        <span class="text-[10px] text-c-soft">${p.fecha ? new Date(p.fecha).toLocaleDateString('es') : ''}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch(e) {
+        document.getElementById('lista-propinas').innerHTML = '<p class="text-center text-c-soft text-sm py-8">Error al cargar propinas</p>';
+    }
+}
+
+// ─── MENSAJES ────────────────────────────────────────────────
+async function cargarMensajes() {
+    try {
+        const data = await candela.mensajes.miBandeja();
+        const badge = document.getElementById('msg-badge');
+        if (data.no_leidos > 0) {
+            badge.textContent = data.no_leidos;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+        const lista = document.getElementById('lista-mensajes');
+        if (!data.mensajes.length) {
+            lista.innerHTML = '<p class="text-center text-c-soft text-sm py-8">No tienes mensajes aun.</p>';
+            return;
+        }
+        const badges = { confirmado: 'bg-green-100 text-green-700', pendiente: 'bg-amber-100 text-amber-700', rechazado: 'bg-red-100 text-red-700' };
+        lista.innerHTML = data.mensajes.map(m => `
+            <div class="px-5 py-4 border-b border-c-border last:border-0 ${!m.leido && m.estado==='confirmado' ? 'bg-orange-50' : ''}">
+                <div class="flex items-center justify-between mb-1">
+                    <p class="font-semibold text-sm">${esc(m.remitente_nombre)}</p>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${badges[m.estado]||'bg-gray-100 text-gray-600'}">${m.estado}</span>
+                        <span class="text-[10px] text-c-soft">${m.fecha ? new Date(m.fecha).toLocaleDateString('es') : ''}</span>
+                    </div>
+                </div>
+                <p class="text-sm text-c-text leading-relaxed">${esc(m.contenido)}</p>
+                ${!m.leido && m.estado==='confirmado' ? `<button onclick="marcarMsgLeido('${m.id}')" class="text-xs text-c-accent font-semibold mt-2">Marcar como leido</button>` : ''}
+            </div>
+        `).join('');
+    } catch(e) {
+        document.getElementById('lista-mensajes').innerHTML = '<p class="text-center text-c-soft text-sm py-8">Error al cargar mensajes</p>';
+    }
+}
+
+async function marcarMsgLeido(id) {
+    try {
+        await candela.mensajes.marcarLeido(id);
+        cargarMensajes();
+    } catch(e) {}
+}
+
+async function guardarConfigMsg() {
+    const acepta = document.getElementById('toggle-acepta-msg').checked;
+    try {
+        await candela.creadoras.actualizarPerfil({ acepta_mensajes: acepta });
+        toast(acepta ? 'Mensajes activados' : 'Mensajes desactivados', 'success');
+    } catch(e) { toast('Error al guardar', 'error'); }
+}
+
+async function guardarPrecioMsg() {
+    const precio = parseFloat(document.getElementById('msg-precio-input').value);
+    if (!precio || precio < 1) { toast('Precio minimo: $1', 'error'); return; }
+    try {
+        await candela.creadoras.actualizarPerfil({ precio_mensaje: precio });
+        document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${precio}`;
+        toast('Precio guardado', 'success');
+    } catch(e) { toast('Error al guardar', 'error'); }
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────
