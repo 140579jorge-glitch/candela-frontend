@@ -624,6 +624,11 @@ function renderHeader() {
         document.getElementById('btn-sub-header').onclick = null;
     }
 
+    // Boton mensaje directo — solo si la creadora acepta
+    if (c.acepta_mensajes) {
+        document.getElementById('btn-msg').classList.remove('hidden');
+    }
+
     // Sticky bar
     document.getElementById('sticky-nombre').textContent = c.nombre_artistico;
     document.getElementById('sticky-precio').textContent = c.precio_suscripcion > 0

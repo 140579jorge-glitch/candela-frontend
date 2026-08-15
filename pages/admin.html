@@ -102,22 +102,40 @@
                 </button>
             </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                 <div class="stat-card border-l-4" style="border-left-color:#F4A261">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Creadoras activas</p>
                     <p class="text-2xl font-bold text-c-accent" id="d-activas">-</p>
                 </div>
                 <div class="stat-card border-l-4" style="border-left-color:#E8A598">
-                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Pendientes</p>
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Pendientes aprob.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-pendientes">-</p>
                 </div>
                 <div class="stat-card border-l-4" style="border-left-color:#9B72CF">
-                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Suscriptores</p>
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Suscriptores totales</p>
                     <p class="text-2xl font-bold text-c-text" id="d-suscriptores">-</p>
                 </div>
                 <div class="stat-card border-l-4" style="border-left-color:#2ECC71">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Retiros pend.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-retiros">-</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Verificaciones CI</p>
+                    <p class="text-2xl font-bold text-c-text" id="d-verificaciones">-</p>
+                </div>
+                <div class="stat-card border-l-4" style="border-left-color:#E74C3C">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Pagos PPV pend.</p>
+                    <p class="text-2xl font-bold text-c-text" id="d-pagos">-</p>
+                </div>
+                <div class="stat-card border-l-4" style="border-left-color:#8E44AD">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Propinas pend.</p>
+                    <p class="text-2xl font-bold text-c-text" id="d-propinas">-</p>
+                </div>
+                <div class="stat-card border-l-4" style="border-left-color:#2980B9">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Mensajes pend.</p>
+                    <p class="text-2xl font-bold text-c-text" id="d-mensajes">-</p>
                 </div>
             </div>
 
@@ -310,8 +328,14 @@ async function cargarDashboard() {
         document.getElementById('d-pendientes').textContent = d.creadoras_pendientes ?? '-';
         document.getElementById('d-suscriptores').textContent = d.total_suscriptores ?? '-';
         document.getElementById('d-retiros').textContent = d.retiros_pendientes ?? '-';
+        document.getElementById('d-verificaciones').textContent = d.verificaciones_pendientes ?? '-';
+        document.getElementById('d-pagos').textContent = d.pagos_pendientes ?? '-';
+        document.getElementById('d-propinas').textContent = d.propinas_pendientes ?? '-';
+        document.getElementById('d-mensajes').textContent = d.mensajes_pendientes ?? '-';
         document.getElementById('badge-ver').textContent = d.verificaciones_pendientes ?? 0;
         document.getElementById('badge-ret').textContent = d.retiros_pendientes ?? 0;
+        document.getElementById('badge-prop').textContent = d.propinas_pendientes ?? 0;
+        document.getElementById('badge-msg').textContent = d.mensajes_pendientes ?? 0;
     } catch(e) {}
 }
 
