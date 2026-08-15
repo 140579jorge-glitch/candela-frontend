@@ -114,7 +114,7 @@ const candela = {
     contenido: {
         listarCreadora: (slug) => candela._req('GET', `/api/contenido/creadora/${slug}`),
         ver: (id) => candela._req('GET', `/api/contenido/${id}`),
-        confirmarPago: (id, referencia, monto) => candela._req('POST', `/api/contenido/${id}/confirmar-pago`, { referencia_pago: referencia, monto_enviado: monto }),
+        comprar: (id) => candela._req('POST', `/api/contenido/${id}/confirmar-pago`),
         feed: () => candela._req('GET', '/api/contenido/feed'),
         misContenidos: () => candela._req('GET', '/api/contenido/mis-contenidos'),
         eliminar: (id) => candela._req('DELETE', `/api/contenido/${id}`),
@@ -139,6 +139,12 @@ const candela = {
         misSuscripciones: () => candela._req('GET', '/api/pagos/mis-suscripciones'),
     },
 
+    wallet: {
+        miSaldo: () => candela._req('GET', '/api/wallet/mi-saldo'),
+        depositar: (data) => candela._req('POST', '/api/wallet/depositar', data),
+        movimientos: (limit = 50, offset = 0) => candela._req('GET', `/api/wallet/movimientos?limit=${limit}&offset=${offset}`),
+    },
+
     propinas: {
         enviar: (data) => candela._req('POST', '/api/propinas', data),
         misPropinas: () => candela._req('GET', '/api/propinas/mis-propinas'),
@@ -160,6 +166,8 @@ const candela = {
         comprasPendientes: () => candela._req('GET', '/api/admin/compras-pendientes'),
         confirmarCompra: (id, accion) => candela._req('POST', `/api/admin/compras/${id}`, { accion }),
         creadoras_pendientes: () => candela._req('GET', '/api/admin/creadoras-pendientes'),
+        depositosPendientes: () => candela._req('GET', '/api/admin/depositos-pendientes'),
+        procesarDeposito: (id, accion) => candela._req('POST', `/api/admin/depositos/${id}`, { accion }),
         propinasPendientes: () => candela._req('GET', '/api/admin/propinas-pendientes'),
         procesarPropina: (id, accion) => candela._req('POST', `/api/admin/propinas/${id}`, { accion }),
         mensajesPendientes: () => candela._req('GET', '/api/admin/mensajes-pendientes'),

@@ -275,61 +275,28 @@
         <p class="text-c-soft text-sm mb-5" id="sub-desc">Accede a todo el contenido exclusivo</p>
 
         <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-5">
-            <p class="text-xs font-bold text-c-soft uppercase tracking-wide mb-2">📲 Envia exactamente:</p>
-            <div class="flex items-baseline gap-2 mb-3">
-                <span class="font-bold text-2xl text-c-text" id="sub-precio-modal">$0</span>
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-c-soft uppercase tracking-wide">Tu saldo</span>
+                <a href="wallet.html" class="text-xs font-bold text-c-accent hover:underline">+ Recargar</a>
+            </div>
+            <div class="flex items-baseline gap-1.5 mb-2">
+                <span class="font-bold text-2xl text-c-text" id="sub-balance-disp">$0.00</span>
                 <span class="text-sm text-c-soft">USDT</span>
             </div>
-            <p class="text-xs text-c-soft mb-2 font-semibold">Elige la red:</p>
-            <div class="flex gap-2 mb-3 flex-wrap">
-                <button onclick="elegirRed('trc20','sub')" id="sub-btn-trc20"
-                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">
-                    TRC20
-                </button>
-                <button onclick="elegirRed('polygon','sub')" id="sub-btn-polygon"
-                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
-                    Polygon
-                </button>
-                <button onclick="elegirRed('takenos','sub')" id="sub-btn-takenos"
-                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
-                    Yape/PIX/QR
-                </button>
-            </div>
-
-            <!-- Crypto wallet -->
-            <div id="sub-crypto-info">
-                <p class="text-xs text-c-soft mb-2 font-semibold">A esta wallet:</p>
-                <button onclick="copiarWallet('sub')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="sub-wallet-addr">
-                    TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH
-                </button>
-                <p class="text-[11px] text-c-soft mt-2">Memo: <span class="font-bold" id="sub-memo">SUB-slug</span></p>
-            </div>
-
-            <!-- Takenos QR -->
-            <div id="sub-takenos-info" class="hidden">
-                <p class="text-xs text-c-soft mb-2 font-semibold">Escanea con Yape, PIX o tu app local:</p>
-                <img src="../img/takenos-qr.png" alt="QR Takenos" class="w-40 mx-auto rounded-xl border border-c-border mb-2">
-                <p class="text-[11px] text-c-soft text-center">Funciona en Bolivia, Peru (Yape), Brasil (PIX) y Argentina</p>
-                <p class="text-[11px] text-amber-600 text-center mt-1 font-semibold">En descripcion del pago escribe tu usuario de Candela</p>
+            <div class="border-t border-c-border pt-2 mt-2 flex justify-between text-sm">
+                <span class="text-c-soft">Costo suscripcion</span>
+                <span class="font-bold text-c-text" id="sub-precio-modal">$0</span>
             </div>
         </div>
 
-        <div class="flex flex-col gap-3">
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
-                <input id="sub-hash" type="text" placeholder="Pega el hash de tu transaccion"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Monto enviado ($)</label>
-                <input id="sub-monto" type="number" step="0.01"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <button onclick="confirmarSub()" id="btn-confirmar-sub" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
-                Confirmar pago
-            </button>
-            <p class="text-center text-[11px] text-c-soft">Verificamos tu pago en pocas horas y activamos tu acceso.</p>
+        <div id="sub-saldo-insuf" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-xs text-red-600 font-semibold">
+            Saldo insuficiente. Te faltan <span id="sub-falta">$0</span> USDT.
+            <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
+
+        <button onclick="confirmarSub()" id="btn-confirmar-sub" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
+            Suscribirme por <span id="sub-costo-btn">$0</span> USDT
+        </button>
     </div>
 </div>
 
@@ -341,47 +308,28 @@
         <p class="text-c-soft text-sm mb-5">Pago unico para acceder a esta publicacion</p>
 
         <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-5">
-            <p class="text-xs font-bold text-c-soft uppercase tracking-wide mb-2">📲 Envia:</p>
-            <div class="flex items-baseline gap-2 mb-3">
-                <span class="font-bold text-2xl text-c-text" id="compra-precio-modal">$0</span>
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-c-soft uppercase tracking-wide">Tu saldo</span>
+                <a href="wallet.html" class="text-xs font-bold text-c-accent hover:underline">+ Recargar</a>
+            </div>
+            <div class="flex items-baseline gap-1.5 mb-2">
+                <span class="font-bold text-2xl text-c-text" id="compra-balance-disp">$0.00</span>
                 <span class="text-sm text-c-soft">USDT</span>
             </div>
-            <div class="flex gap-2 mb-3 flex-wrap">
-                <button onclick="elegirRed('trc20','compra')" id="compra-btn-trc20"
-                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">
-                    TRC20
-                </button>
-                <button onclick="elegirRed('polygon','compra')" id="compra-btn-polygon"
-                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
-                    Polygon
-                </button>
-                <button onclick="elegirRed('takenos','compra')" id="compra-btn-takenos"
-                    class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">
-                    Yape/PIX/QR
-                </button>
-            </div>
-            <div id="compra-crypto-info">
-                <button onclick="copiarWallet('compra')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="compra-wallet-addr">
-                    TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH
-                </button>
-            </div>
-            <div id="compra-takenos-info" class="hidden">
-                <img src="../img/takenos-qr.png" alt="QR Takenos" class="w-40 mx-auto rounded-xl border border-c-border mb-2">
-                <p class="text-[11px] text-c-soft text-center">Bolivia, Peru (Yape), Brasil (PIX), Argentina</p>
-                <p class="text-[11px] text-amber-600 text-center mt-1 font-semibold">Escribe tu usuario Candela en la descripcion del pago</p>
+            <div class="border-t border-c-border pt-2 mt-2 flex justify-between text-sm">
+                <span class="text-c-soft">Precio del contenido</span>
+                <span class="font-bold text-c-text" id="compra-precio-modal">$0</span>
             </div>
         </div>
 
-        <div class="flex flex-col gap-3">
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
-                <input id="compra-hash" type="text" placeholder="Hash TRC20"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <button onclick="confirmarCompra()" id="btn-confirmar-compra" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
-                Confirmar pago
-            </button>
+        <div id="compra-saldo-insuf" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-xs text-red-600 font-semibold">
+            Saldo insuficiente. Te faltan <span id="compra-falta">$0</span> USDT.
+            <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
+
+        <button onclick="confirmarCompra()" id="btn-confirmar-compra" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
+            Desbloquear por <span id="compra-costo-btn">$0</span> USDT
+        </button>
     </div>
 </div>
 
@@ -414,38 +362,28 @@
         </div>
 
         <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4">
-            <div class="flex items-baseline gap-2 mb-3">
-                <span class="text-xs text-c-soft">Enviar:</span>
-                <span class="font-bold text-xl text-c-text" id="propina-total-display">$5</span>
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-c-soft uppercase tracking-wide">Tu saldo</span>
+                <a href="wallet.html" class="text-xs font-bold text-c-accent hover:underline">+ Recargar</a>
+            </div>
+            <div class="flex items-baseline gap-1.5 mb-1">
+                <span class="font-bold text-xl text-c-text" id="propina-balance-disp">$0.00</span>
                 <span class="text-sm text-c-soft">USDT</span>
             </div>
-            <p class="text-xs text-c-soft mb-2 font-semibold">Red de pago:</p>
-            <div class="flex gap-2 mb-3 flex-wrap">
-                <button onclick="elegirRed('trc20','prop')" id="prop-btn-trc20" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">TRC20</button>
-                <button onclick="elegirRed('polygon','prop')" id="prop-btn-polygon" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Polygon</button>
-                <button onclick="elegirRed('takenos','prop')" id="prop-btn-takenos" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Yape/PIX/QR</button>
-            </div>
-            <div id="prop-crypto-info">
-                <button onclick="copiarWallet('prop')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="prop-wallet-addr">TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH</button>
-            </div>
-            <div id="prop-takenos-info" class="hidden">
-                <img src="../img/takenos-qr.png" alt="QR" class="w-36 mx-auto rounded-xl border border-c-border mb-1">
-                <p class="text-[11px] text-c-soft text-center">Bolivia, Peru (Yape), Brasil (PIX), Argentina</p>
-                <p class="text-[11px] text-amber-600 text-center font-semibold mt-1">Pon tu usuario de Candela en la descripcion</p>
+            <div class="flex justify-between text-sm border-t border-c-border pt-2 mt-2">
+                <span class="text-c-soft">Propina a enviar</span>
+                <span class="font-bold text-c-text" id="propina-total-display">$5</span>
             </div>
         </div>
 
-        <div class="flex flex-col gap-3">
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
-                <input id="propina-hash" type="text" placeholder="Pega el hash de tu pago"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <button onclick="confirmarPropina()" id="btn-confirmar-propina" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
-                Enviar propina
-            </button>
-            <p class="text-center text-[11px] text-c-soft">Verificamos el pago en pocas horas y se lo acreditamos a la creadora.</p>
+        <div id="propina-saldo-insuf" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 mb-3 text-xs text-red-600 font-semibold">
+            Saldo insuficiente. Te faltan <span id="propina-falta">$0</span> USDT.
+            <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
+
+        <button onclick="confirmarPropina()" id="btn-confirmar-propina" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
+            Enviar propina de <span id="propina-costo-btn">$5</span> USDT
+        </button>
     </div>
 </div>
 
@@ -464,36 +402,28 @@
         </div>
 
         <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4">
-            <div class="flex items-baseline gap-2 mb-3">
-                <span class="text-xs text-c-soft">Costo:</span>
-                <span class="font-bold text-xl text-c-text" id="dm-precio-display">$5</span>
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-c-soft uppercase tracking-wide">Tu saldo</span>
+                <a href="wallet.html" class="text-xs font-bold text-c-accent hover:underline">+ Recargar</a>
+            </div>
+            <div class="flex items-baseline gap-1.5 mb-1">
+                <span class="font-bold text-xl text-c-text" id="dm-balance-disp">$0.00</span>
                 <span class="text-sm text-c-soft">USDT</span>
             </div>
-            <div class="flex gap-2 mb-3 flex-wrap">
-                <button onclick="elegirRed('trc20','dm')" id="dm-btn-trc20" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all">TRC20</button>
-                <button onclick="elegirRed('polygon','dm')" id="dm-btn-polygon" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Polygon</button>
-                <button onclick="elegirRed('takenos','dm')" id="dm-btn-takenos" class="flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent">Yape/PIX/QR</button>
-            </div>
-            <div id="dm-crypto-info">
-                <button onclick="copiarWallet('dm')" class="w-full text-left font-mono text-xs bg-white border border-c-border rounded-lg px-3 py-2.5 hover:bg-c-champagne transition-colors break-all" id="dm-wallet-addr">TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH</button>
-            </div>
-            <div id="dm-takenos-info" class="hidden">
-                <img src="../img/takenos-qr.png" alt="QR" class="w-36 mx-auto rounded-xl border border-c-border mb-1">
-                <p class="text-[11px] text-amber-600 text-center font-semibold mt-1">Pon tu usuario de Candela en la descripcion</p>
+            <div class="flex justify-between text-sm border-t border-c-border pt-2 mt-2">
+                <span class="text-c-soft">Costo del mensaje</span>
+                <span class="font-bold text-c-text" id="dm-precio-display">$5</span>
             </div>
         </div>
 
-        <div class="flex flex-col gap-3">
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion</label>
-                <input id="dm-hash" type="text" placeholder="Hash de tu pago"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <button onclick="confirmarMensaje()" id="btn-confirmar-dm" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
-                Enviar mensaje
-            </button>
-            <p class="text-center text-[11px] text-c-soft">El mensaje se muestra a la creadora una vez verificado el pago.</p>
+        <div id="dm-saldo-insuf" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 mb-3 text-xs text-red-600 font-semibold">
+            Saldo insuficiente. Te faltan <span id="dm-falta">$0</span> USDT.
+            <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
+
+        <button onclick="confirmarMensaje()" id="btn-confirmar-dm" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
+            Enviar mensaje por <span id="dm-costo-btn">$5</span> USDT
+        </button>
     </div>
 </div>
 
@@ -519,12 +449,7 @@
 const slug = new URLSearchParams(location.search).get('slug');
 const API_BASE = 'https://web-production-73189.up.railway.app';
 const _u = u => (!u ? '' : u.startsWith('http') ? u : API_BASE + u);
-const WALLETS = {
-    trc20:   'TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH',
-    polygon: '0x120902f3be563f1fbcc96e9a3da12f3d212cfe7b',
-};
-let redSub = 'trc20';
-let redCompra = 'trc20';
+let userBalance = 0;
 
 const TEMAS = {
     'melocoton':    ['#FFF4EE','#F4A261','#E8A598','#2D2D2D'],
@@ -559,6 +484,12 @@ async function init() {
         initStickyBar();
     } catch(e) {
         toast('No se pudo cargar el perfil', 'error');
+    }
+    if (candela.auth.isLoggedIn()) {
+        try {
+            const w = await candela.wallet.miSaldo();
+            userBalance = w.balance || 0;
+        } catch(e) {}
     }
 }
 
@@ -635,11 +566,9 @@ function renderHeader() {
         ? `$${c.precio_suscripcion}/mes · contenido exclusivo`
         : 'Suscribete gratis';
 
-    // Modal
     document.getElementById('sub-titulo').textContent = `Suscribirte a ${c.nombre_artistico}`;
     document.getElementById('sub-precio-modal').textContent = `$${c.precio_suscripcion}`;
-    document.getElementById('sub-monto').value = c.precio_suscripcion;
-    document.getElementById('sub-memo').textContent = `SUB-${c.slug}`;
+    document.getElementById('sub-costo-btn').textContent = `$${c.precio_suscripcion}`;
 }
 
 // ─── CONTENIDO ───────────────────────────────────────────────
@@ -724,6 +653,11 @@ function clicContenido(id, precio, desbloqueado, esGratis) {
     if (precio > 0) {
         contenidoSeleccionado = { id, precio };
         document.getElementById('compra-precio-modal').textContent = `$${precio}`;
+        document.getElementById('compra-costo-btn').textContent = `$${precio}`;
+        document.getElementById('compra-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
+        const insuf = userBalance < precio;
+        document.getElementById('compra-saldo-insuf').classList.toggle('hidden', !insuf);
+        if (insuf) document.getElementById('compra-falta').textContent = `$${(precio - userBalance).toFixed(2)}`;
         abrirModal('modal-compra');
     } else {
         abrirSub();
@@ -741,50 +675,46 @@ function switchTab(tab, btn) {
 // ─── SUSCRIPCION ─────────────────────────────────────────────
 function abrirSub() {
     if (!candela.auth.isLoggedIn()) { window.location.href = '../index.html'; return; }
+    const precio = creadoraData.precio_suscripcion;
+    document.getElementById('sub-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
+    const insuf = userBalance < precio;
+    document.getElementById('sub-saldo-insuf').classList.toggle('hidden', !insuf);
+    if (insuf) document.getElementById('sub-falta').textContent = `$${(precio - userBalance).toFixed(2)}`;
     abrirModal('modal-sub');
 }
 
-function validarHashTRC20(hash) {
-    return /^[0-9a-fA-F]{64}$/.test(hash);
-}
-
 async function confirmarSub() {
-    const hash = document.getElementById('sub-hash').value.trim();
-    const monto = parseFloat(document.getElementById('sub-monto').value);
-    if (!hash) { toast('Ingresa el hash de transaccion', 'error'); return; }
+    const precio = creadoraData.precio_suscripcion;
+    if (userBalance < precio) { window.location.href = 'wallet.html'; return; }
     const btn = document.getElementById('btn-confirmar-sub');
-    btn.textContent = 'Enviando...'; btn.disabled = true;
+    btn.textContent = 'Procesando...'; btn.disabled = true;
     try {
-        const r = await candela.pagos.confirmarSuscripcion({
-            creadora_slug: slug,
-            referencia_pago: hash,
-            monto_enviado: monto,
-            meses: 1,
-            red: redSub,
-        });
+        const r = await candela.pagos.confirmarSuscripcion({ creadora_slug: slug, meses: 1 });
+        userBalance = r.nuevo_balance || Math.max(0, userBalance - precio);
         cerrarModal('modal-sub');
-        toast(r.mensaje, 'success');
+        toast(r.mensaje || 'Suscripcion activada', 'success');
         setTimeout(() => location.reload(), 2000);
     } catch(err) {
         toast(err.message, 'error');
-        btn.textContent = 'Confirmar pago'; btn.disabled = false;
+        btn.textContent = `Suscribirme por $${precio} USDT`; btn.disabled = false;
     }
 }
 
 async function confirmarCompra() {
     if (!contenidoSeleccionado) return;
-    const hash = document.getElementById('compra-hash').value.trim();
-    if (!hash) { toast('Ingresa el hash', 'error'); return; }
-    if (!validarHashTRC20(hash)) { toast('Hash invalido. Debe ser 64 caracteres hexadecimales', 'error'); return; }
+    const precio = contenidoSeleccionado.precio;
+    if (userBalance < precio) { window.location.href = 'wallet.html'; return; }
     const btn = document.getElementById('btn-confirmar-compra');
-    btn.textContent = 'Enviando...'; btn.disabled = true;
+    btn.textContent = 'Desbloqueando...'; btn.disabled = true;
     try {
-        await candela.contenido.confirmarPago(contenidoSeleccionado.id, hash, contenidoSeleccionado.precio);
+        const r = await candela.contenido.comprar(contenidoSeleccionado.id);
+        userBalance = r.nuevo_balance || Math.max(0, userBalance - precio);
         cerrarModal('modal-compra');
-        toast('Pago recibido. Activamos tu acceso en pocas horas.', 'success');
+        toast('Contenido desbloqueado', 'success');
+        setTimeout(() => location.reload(), 1500);
     } catch(err) {
         toast(err.message, 'error');
-        btn.textContent = 'Confirmar pago'; btn.disabled = false;
+        btn.textContent = `Desbloquear por $${precio} USDT`; btn.disabled = false;
     }
 }
 
@@ -801,71 +731,7 @@ function initStickyBar() {
     }
 }
 
-// ─── UTILS ───────────────────────────────────────────────────
-function elegirRed(red, modal) {
-    const redes = ['trc20', 'polygon', 'takenos'];
-    const activo = 'flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-accent bg-c-accent text-white transition-all';
-    const inactivo = 'flex-1 py-2 rounded-lg text-xs font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent';
-    if (modal === 'sub') {
-        redSub = red;
-        redes.forEach(r => {
-            const btn = document.getElementById(`sub-btn-${r}`);
-            if (btn) btn.className = r === red ? activo : inactivo;
-        });
-        const esTakenos = red === 'takenos';
-        document.getElementById('sub-crypto-info').classList.toggle('hidden', esTakenos);
-        document.getElementById('sub-takenos-info').classList.toggle('hidden', !esTakenos);
-        if (!esTakenos) document.getElementById('sub-wallet-addr').textContent = WALLETS[red];
-        document.getElementById('sub-hash').placeholder = esTakenos
-            ? 'Numero de referencia o comprobante Takenos/Yape/PIX'
-            : 'Pega el hash de tu transaccion';
-    } else if (modal === 'prop') {
-        propinaRedActual = red;
-        redes.forEach(r => {
-            const btn = document.getElementById(`prop-btn-${r}`);
-            if (btn) btn.className = r === red ? activo : inactivo;
-        });
-        const esTakenos = red === 'takenos';
-        document.getElementById('prop-crypto-info').classList.toggle('hidden', esTakenos);
-        document.getElementById('prop-takenos-info').classList.toggle('hidden', !esTakenos);
-        if (!esTakenos) document.getElementById('prop-wallet-addr').textContent = WALLETS[red];
-        document.getElementById('propina-hash').placeholder = esTakenos
-            ? 'Referencia de tu pago Yape/PIX/QR'
-            : 'Pega el hash de tu transaccion';
-    } else if (modal === 'dm') {
-        dmRedActual = red;
-        redes.forEach(r => {
-            const btn = document.getElementById(`dm-btn-${r}`);
-            if (btn) btn.className = r === red ? activo : inactivo;
-        });
-        const esTakenos = red === 'takenos';
-        document.getElementById('dm-crypto-info').classList.toggle('hidden', esTakenos);
-        document.getElementById('dm-takenos-info').classList.toggle('hidden', !esTakenos);
-        if (!esTakenos) document.getElementById('dm-wallet-addr').textContent = WALLETS[red];
-        document.getElementById('dm-hash').placeholder = esTakenos
-            ? 'Referencia de tu pago Yape/PIX/QR'
-            : 'Pega el hash de tu transaccion';
-    } else {
-        redCompra = red;
-        redes.forEach(r => {
-            const btn = document.getElementById(`compra-btn-${r}`);
-            if (btn) btn.className = r === red ? activo : inactivo;
-        });
-        const esTakenos = red === 'takenos';
-        document.getElementById('compra-crypto-info').classList.toggle('hidden', esTakenos);
-        document.getElementById('compra-takenos-info').classList.toggle('hidden', !esTakenos);
-        if (!esTakenos) document.getElementById('compra-wallet-addr').textContent = WALLETS[red];
-        document.getElementById('compra-hash').placeholder = esTakenos
-            ? 'Numero de referencia o comprobante Takenos/Yape/PIX'
-            : 'Pega el hash de tu transaccion';
-    }
-}
-
-function copiarWallet(modal) {
-    const red = modal === 'sub' ? redSub : modal === 'prop' ? propinaRedActual : modal === 'dm' ? dmRedActual : redCompra;
-    navigator.clipboard.writeText(WALLETS[red] || WALLETS['trc20']);
-    toast('Wallet copiada', 'success');
-}
+// elegirRed y copiarWallet ya no se usan en los modales (wallet-based flow)
 
 function compartir() {
     if (navigator.share) {
@@ -885,26 +751,32 @@ document.querySelectorAll('.modal-bg').forEach(m => {
 
 // --- Propinas ---
 let propinaMonto = 5;
-let propinaRedActual = 'trc20';
 
 function abrirPropina() {
     if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para enviar una propina', 'info'); return; }
     document.getElementById('propina-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
-    document.getElementById('propina-total-display').textContent = `$${propinaMonto}`;
     document.getElementById('propina-monto-custom').value = '';
     document.getElementById('propina-mensaje').value = '';
-    document.getElementById('propina-hash').value = '';
-    limpiarBtnsPropina();
-    // resaltar $5 por defecto
     propinaMonto = 5;
+    limpiarBtnsPropina();
     document.querySelectorAll('.propina-monto-btn').forEach(b => {
         if (parseFloat(b.dataset.monto) === 5) {
             b.classList.add('border-c-accent','text-c-accent');
             b.classList.remove('border-c-border','text-c-soft');
         }
     });
-    document.getElementById('propina-total-display').textContent = '$5';
+    _actualizarModalPropina();
     document.getElementById('modal-propina').classList.add('open');
+}
+
+function _actualizarModalPropina() {
+    const m = propinaMonto || parseFloat(document.getElementById('propina-monto-custom').value) || 0;
+    document.getElementById('propina-total-display').textContent = `$${m}`;
+    document.getElementById('propina-costo-btn').textContent = `$${m}`;
+    document.getElementById('propina-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
+    const insuf = m > 0 && userBalance < m;
+    document.getElementById('propina-saldo-insuf').classList.toggle('hidden', !insuf);
+    if (insuf) document.getElementById('propina-falta').textContent = `$${(m - userBalance).toFixed(2)}`;
 }
 
 function limpiarBtnsPropina() {
@@ -924,46 +796,47 @@ function elegirMontoPropina(monto) {
             b.classList.remove('border-c-border','text-c-soft');
         }
     });
-    document.getElementById('propina-total-display').textContent = `$${monto}`;
+    _actualizarModalPropina();
 }
 
 async function confirmarPropina() {
     if (!candela.auth.isLoggedIn()) { toast('Inicia sesion primero', 'info'); return; }
     const monto = propinaMonto || parseFloat(document.getElementById('propina-monto-custom').value);
     if (!monto || monto < 1) { toast('Elige un monto valido (minimo $1)', 'error'); return; }
-    const hash = document.getElementById('propina-hash').value.trim();
+    if (userBalance < monto) { window.location.href = 'wallet.html'; return; }
     const mensaje = document.getElementById('propina-mensaje').value.trim();
-    if (!hash && propinaRedActual !== 'takenos') { toast('Pega el hash de tu transaccion', 'error'); return; }
 
     const btn = document.getElementById('btn-confirmar-propina');
     btn.disabled = true; btn.textContent = 'Enviando...';
     try {
-        await candela.propinas.enviar({
+        const r = await candela.propinas.enviar({
             creadora_slug: creadoraData.slug,
             monto,
             mensaje: mensaje || null,
-            referencia_pago: hash || `QR-${Date.now()}`,
-            metodo_red: propinaRedActual,
         });
+        userBalance = r.nuevo_balance || Math.max(0, userBalance - monto);
         cerrarModal('modal-propina');
-        toast('Propina enviada. Verificamos el pago pronto.', 'success');
+        toast(`Propina de $${monto} enviada a ${creadoraData.nombre_artistico}`, 'success');
     } catch (e) {
         toast(e.message || 'Error al enviar propina', 'error');
     } finally {
-        btn.disabled = false; btn.textContent = 'Enviar propina';
+        btn.disabled = false; btn.textContent = `Enviar propina de $${monto} USDT`;
     }
 }
 
 // --- Mensajes directos ---
-let dmRedActual = 'trc20';
-
 function abrirMensaje() {
     if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para enviar un mensaje', 'info'); return; }
+    const precio = creadoraData?.precio_mensaje || 5;
     document.getElementById('dm-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
-    document.getElementById('dm-precio-display').textContent = `$${creadoraData?.precio_mensaje || 5}`;
+    document.getElementById('dm-precio-display').textContent = `$${precio}`;
+    document.getElementById('dm-costo-btn').textContent = `$${precio}`;
+    document.getElementById('dm-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
     document.getElementById('dm-contenido').value = '';
-    document.getElementById('dm-hash').value = '';
     document.getElementById('dm-char-count').textContent = '0';
+    const insuf = userBalance < precio;
+    document.getElementById('dm-saldo-insuf').classList.toggle('hidden', !insuf);
+    if (insuf) document.getElementById('dm-falta').textContent = `$${(precio - userBalance).toFixed(2)}`;
     document.getElementById('modal-dm').classList.add('open');
 }
 
@@ -977,24 +850,23 @@ document.addEventListener('DOMContentLoaded', () => {
 async function confirmarMensaje() {
     const contenido = document.getElementById('dm-contenido').value.trim();
     if (!contenido || contenido.length < 5) { toast('El mensaje debe tener al menos 5 caracteres', 'error'); return; }
-    const hash = document.getElementById('dm-hash').value.trim();
-    if (!hash && dmRedActual !== 'takenos') { toast('Pega el hash de tu transaccion', 'error'); return; }
+    const precio = creadoraData?.precio_mensaje || 5;
+    if (userBalance < precio) { window.location.href = 'wallet.html'; return; }
 
     const btn = document.getElementById('btn-confirmar-dm');
     btn.disabled = true; btn.textContent = 'Enviando...';
     try {
-        await candela.mensajes.enviar({
+        const r = await candela.mensajes.enviar({
             creadora_slug: creadoraData.slug,
             contenido,
-            referencia_pago: hash || `QR-${Date.now()}`,
-            metodo_red: dmRedActual,
         });
+        userBalance = r.nuevo_balance || Math.max(0, userBalance - precio);
         cerrarModal('modal-dm');
-        toast('Mensaje enviado. Lo vera cuando confirmemos tu pago.', 'success');
+        toast(`Mensaje enviado a ${creadoraData.nombre_artistico}`, 'success');
     } catch (e) {
         toast(e.message || 'Error al enviar mensaje', 'error');
     } finally {
-        btn.disabled = false; btn.textContent = 'Enviar mensaje';
+        btn.disabled = false; btn.textContent = `Enviar mensaje por $${precio} USDT`;
     }
 }
 
