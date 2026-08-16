@@ -495,7 +495,7 @@ async function cargarDepositos() {
                         <div class="flex items-center gap-3 flex-wrap mb-2">
                             <span class="text-xl font-bold text-c-accent">$${(d.monto||0).toFixed(2)}</span>
                             ${d.monto_bonus > 0 ? `<span class="text-xs text-green-600 font-bold bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">+$${d.monto_bonus.toFixed(2)} bonus</span>` : ''}
-                            <span class="text-xs text-c-soft">${esc(d.metodo_red||'trc20').toUpperCase()}</span>
+                            <span class="text-xs text-c-soft">${_labelMetodo(d.metodo_red)}</span>
                         </div>
                         <div class="bg-c-bg rounded-xl px-3 py-2 text-xs font-mono break-all text-c-text border border-c-border mb-1">
                             ${esc(d.referencia_pago||'-')}
@@ -751,6 +751,19 @@ async function _fetchComisiones() {
     } catch(e) {
         tabla.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-400 text-sm">Error al cargar comisiones</td></tr>';
     }
+}
+
+function _labelMetodo(red) {
+    const m = {
+        trc20:   'USDT TRC20',
+        polygon: 'USDT Polygon',
+        qr_bo:   'QR Bolivia',
+        qr_pe:   'Yape (Peru)',
+        pix:     'PIX (Brasil)',
+        qr_ar:   'QR Argentina',
+        takelink:'Tarjeta/Link',
+    };
+    return m[red] || (red ? red.toUpperCase() : 'USDT');
 }
 
 function fmt_fecha(iso) {
