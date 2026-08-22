@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stream en vivo — Candela</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%;height:100dvh;overflow:hidden;background:#000;color:#fff;font-family:'Nunito',sans-serif;-webkit-font-smoothing:antialiased}
+        .ms{font-family:'Material Symbols Outlined';font-style:normal;line-height:1;user-select:none}
+
+        /* video */
+        #video-el{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#111}
+
+        /* gradients */
+        .grad-top{position:fixed;top:0;left:0;right:0;height:200px;background:linear-gradient(to bottom,rgba(0,0,0,.72) 0%,transparent 100%);z-index:10;pointer-events:none}
+        .grad-bot{position:fixed;bottom:0;left:0;right:0;height:320px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%);z-index:10;pointer-events:none}
+
+        /* top bar */
+        #top-bar{position:fixed;top:0;left:0;right:0;z-index:20;padding:14px 14px 0;display:flex;align-items:center;gap:10px}
+        .back-btn{width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+        .creadora-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #F4A261;flex-shrink:0;background:#333}
+        .live-pill{background:#E8413E;font-size:10px;font-weight:800;letter-spacing:.8px;padding:3px 7px;border-radius:5px;flex-shrink:0}
+        #top-info{flex:1;min-width:0}
+        #stream-titulo{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+        #creadora-nombre{font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
+        .viewers-pill{background:rgba(0,0,0,.5);border-radius:16px;padding:4px 9px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px;flex-shrink:0}
+        #balance-pill{background:rgba(0,0,0,.5);border:1px solid rgba(244,162,97,.5);border-radius:16px;padding:4px 9px;font-size:12px;font-weight:700;color:#F4A261;flex-shrink:0}
+
+        /* chat */
+        #chat-area{position:fixed;bottom:90px;left:0;width:58%;max-width:280px;z-index:20;padding:0 12px;display:flex;flex-direction:column;gap:5px;pointer-events:none}
+        .chat-msg{display:inline-flex;align-items:flex-start;gap:6px;background:rgba(0,0,0,.42);backdrop-filter:blur(4px);border-radius:18px;padding:6px 12px;font-size:12.5px;line-height:1.35;animation:fadeUp .25s ease;max-width:100%;word-break:break-word}
+        .chat-uname{color:#F4A261;font-weight:700;flex-shrink:0}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* gifts panel */
+        #gift-panel{position:fixed;bottom:90px;right:10px;z-index:20;display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+        .gift-btn{display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,.52);backdrop-filter:blur(6px);border-radius:14px;padding:8px 9px;cursor:pointer;border:1px solid rgba(255,255,255,.1);min-width:56px;transition:transform .1s,background .12s}
+        .gift-btn:hover{background:rgba(244,162,97,.3);border-color:#F4A261}
+        .gift-btn:active{transform:scale(.9)}
+        .gift-emoji{font-size:22px;line-height:1}
+        .gift-name{font-size:9.5px;font-weight:700;opacity:.75;margin-top:2px}
+        .gift-price{font-size:9.5px;color:#F4A261;font-weight:800}
+
+        /* bottom bar */
+        #bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:20;padding:10px 12px;display:flex;align-items:center;gap:8px}
+        #chat-input{flex:1;background:rgba(255,255,255,.13);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);border-radius:22px;padding:10px 16px;font-size:14px;color:#fff;font-family:'Nunito',sans-serif;min-width:0}
+        #chat-input::placeholder{color:rgba(255,255,255,.45)}
+        #chat-input:focus{outline:none;border-color:#F4A261}
+        .send-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.14);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;transition:background .12s}
+        .send-btn:hover{background:rgba(244,162,97,.4)}
+
+        /* animations layer */
+        #anim-layer{position:fixed;inset:0;z-index:30;pointer-events:none;overflow:hidden}
+        .gift-float{position:absolute;font-size:46px;animation:giftRise 2s ease-out forwards}
+        @keyframes giftRise{0%{opacity:1;transform:translateY(0) scale(1)}80%{opacity:.7;transform:translateY(-260px) scale(1.25)}100%{opacity:0;transform:translateY(-320px) scale(.8)}}
+        .ev-toast{position:absolute;left:50%;transform:translateX(-50%);bottom:160px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);border:1px solid #F4A261;border-radius:20px;padding:9px 18px;font-size:13px;font-weight:700;white-space:nowrap;animation:toastAnim 2.6s ease forwards}
+        @keyframes toastAnim{0%{opacity:0;transform:translateX(-50%) translateY(16px)}12%{opacity:1;transform:translateX(-50%) translateY(0)}72%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-8px)}}
+
+        /* loading */
+        #loading{position:fixed;inset:0;z-index:50;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+        .spinner{width:38px;height:38px;border:3px solid rgba(244,162,97,.25);border-top-color:#F4A261;border-radius:50%;animation:spin .75s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        #loading p{font-size:14px;color:rgba(255,255,255,.55)}
+
+        /* modal entrada */
+        #modal-entrada{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.75);display:none;align-items:flex-end;justify-content:center}
+        .sheet{background:#1c1c1e;border-radius:24px 24px 0 0;padding:28px 22px 32px;width:100%;max-width:480px}
+        .sheet-avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;background:#333;object-fit:cover;border:2px solid #F4A261}
+        .sheet h2{text-align:center;font-size:18px;font-weight:800;margin-bottom:2px}
+        .sheet .sub{text-align:center;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px}
+        .precio-box{background:rgba(255,255,255,.06);border-radius:16px;padding:16px;text-align:center;margin-bottom:14px}
+        .precio-box .lbl{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:4px}
+        .precio-box .amt{font-size:32px;font-weight:800;color:#F4A261}
+        .balance-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.04);border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:13px}
+        .balance-row span:first-child{color:rgba(255,255,255,.5)}
+        .balance-row span:last-child{font-weight:700}
+        .c-btn{background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:800;font-size:15px;padding:14px;border:none;border-radius:18px;width:100%;cursor:pointer;font-family:'Nunito',sans-serif;transition:filter .12s}
+        .c-btn:hover{filter:brightness(1.06)}
+        .c-btn:active{filter:brightness(.95)}
+        .c-btn:disabled{opacity:.6;cursor:not-allowed}
+        .ghost-btn{background:none;border:none;color:rgba(255,255,255,.35);font-size:13px;font-family:'Nunito',sans-serif;cursor:pointer;width:100%;padding:10px;margin-top:4px}
+    </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading">
+    <div class="spinner"></div>
+    <p>Conectando al stream...</p>
+</div>
+
+<!-- Modal: pagar entrada -->
+<div id="modal-entrada">
+    <div class="sheet">
+        <img id="modal-avatar" src="" class="sheet-avatar" onerror="this.style.background='#444'">
+        <h2 id="modal-titulo"></h2>
+        <p class="sub" id="modal-creadora"></p>
+        <div class="precio-box">
+            <div class="lbl">Precio de entrada</div>
+            <div class="amt" id="modal-precio"></div>
+            <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:4px">Se debita de tu saldo</div>
+        </div>
+        <div class="balance-row">
+            <span>Tu saldo</span>
+            <span id="modal-balance">$0.00</span>
+        </div>
+        <button class="c-btn" id="btn-pagar" onclick="pagarEntrada()">Entrar al stream</button>
+        <button class="ghost-btn" onclick="volverAtras()">Volver</button>
+    </div>
+</div>
+
+<!-- Video -->
+<video id="video-el" autoplay playsinline></video>
+
+<!-- Gradients -->
+<div class="grad-top"></div>
+<div class="grad-bot"></div>
+
+<!-- Animation layer -->
+<div id="anim-layer"></div>
+
+<!-- Top bar -->
+<div id="top-bar">
+    <button class="back-btn" onclick="volverAtras()">
+        <span class="ms" style="font-size:22px">arrow_back</span>
+    </button>
+    <img id="creadora-avatar" src="" class="creadora-avatar" onerror="this.src='https://ui-avatars.com/api/?name=C&background=F4A261&color=fff&size=80'">
+    <div id="top-info">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span class="live-pill">EN VIVO</span>
+            <span id="stream-titulo"></span>
+        </div>
+        <div id="creadora-nombre"></div>
+    </div>
+    <div class="viewers-pill">
+        <span class="ms" style="font-size:13px;color:#ff6b6b">visibility</span>
+        <span id="viewers-count">0</span>
+    </div>
+    <div id="balance-pill">$<span id="balance-display">0.00</span></div>
+</div>
+
+<!-- Chat -->
+<div id="chat-area"></div>
+
+<!-- Gifts -->
+<div id="gift-panel"></div>
+
+<!-- Bottom bar -->
+<div id="bottom-bar">
+    <input type="text" id="chat-input" placeholder="Escribe algo..." maxlength="200">
+    <button class="send-btn" onclick="enviarChat()">
+        <span class="ms" style="font-size:20px">send</span>
+    </button>
+</div>
+
+<script>
+const API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://localhost:8000'
+    : 'https://web-production-73189.up.railway.app';
+const WS = API.replace('https://', 'wss://').replace('http://', 'ws://');
+
+const params = new URLSearchParams(location.search);
+const STREAM_ID = params.get('id');
+const token = localStorage.getItem('candela_token');
+const _cu = (() => { try { return JSON.parse(localStorage.getItem('candela_user') || '{}'); } catch(e) { return {}; } })();
+const miNombre = _cu.nombre || 'Fan';
+
+let ws = null;
+let streamInfo = null;
+let miBalance = 0;
+let hls = null;
+
+// ------------------------------------------------------------------ //
+// Init
+// ------------------------------------------------------------------ //
+async function init() {
+    if (!STREAM_ID) { location.href = '../index.html'; return; }
+
+    try {
+        const r = await fetch(`${API}/api/streams/${STREAM_ID}`);
+        if (!r.ok) { mostrarError('Stream no disponible'); return; }
+        streamInfo = await r.json();
+    } catch(e) { mostrarError('Error de conexion'); return; }
+
+    if (streamInfo.estado !== 'live') { mostrarError('Este stream ha terminado'); return; }
+
+    document.getElementById('stream-titulo').textContent = streamInfo.titulo;
+    document.getElementById('creadora-nombre').textContent = streamInfo.creadora_nombre;
+    document.getElementById('viewers-count').textContent = streamInfo.viewers;
+    if (streamInfo.creadora_avatar) {
+        document.getElementById('creadora-avatar').src = streamInfo.creadora_avatar;
+    }
+
+    if (!token) { mostrarLoginPrompt(); return; }
+
+    await cargarBalance();
+    await intentarUnirse();
+}
+
+async function cargarBalance() {
+    try {
+        const r = await fetch(`${API}/api/wallet/mi-saldo`, { headers: { Authorization: `Bearer ${token}` } });
+        if (r.ok) {
+            const d = await r.json();
+            miBalance = d.balance || 0;
+            actualizarBalance(miBalance);
+        }
+    } catch(e) {}
+}
+
+async function intentarUnirse() {
+    try {
+        const r = await fetch(`${API}/api/streams/${STREAM_ID}/unirse`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const d = await r.json();
+        if (r.ok) {
+            arrancarStream(d.url_hls);
+        } else if (r.status === 400 && streamInfo.precio_entrada > 0) {
+            mostrarModalEntrada();
+        } else {
+            mostrarError(d.detail || 'No se pudo acceder al stream');
+        }
+    } catch(e) { mostrarError('Error de conexion'); }
+}
+
+// ------------------------------------------------------------------ //
+// Modal entrada
+// ------------------------------------------------------------------ //
+function mostrarModalEntrada() {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('modal-titulo').textContent = streamInfo.titulo;
+    document.getElementById('modal-creadora').textContent = streamInfo.creadora_nombre;
+    document.getElementById('modal-precio').textContent = `$${streamInfo.precio_entrada.toFixed(2)}`;
+    document.getElementById('modal-balance').textContent = `$${miBalance.toFixed(2)}`;
+    if (streamInfo.creadora_avatar) {
+        document.getElementById('modal-avatar').src = streamInfo.creadora_avatar;
+    }
+    document.getElementById('modal-entrada').style.display = 'flex';
+}
+
+async function pagarEntrada() {
+    const btn = document.getElementById('btn-pagar');
+    btn.textContent = 'Procesando...';
+    btn.disabled = true;
+    try {
+        const r = await fetch(`${API}/api/streams/${STREAM_ID}/unirse`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const d = await r.json();
+        if (r.ok) {
+            document.getElementById('modal-entrada').style.display = 'none';
+            document.getElementById('loading').style.display = 'flex';
+            miBalance = Math.max(0, miBalance - streamInfo.precio_entrada);
+            actualizarBalance(miBalance);
+            arrancarStream(d.url_hls);
+        } else {
+            btn.textContent = d.detail || 'Error';
+            btn.disabled = false;
+        }
+    } catch(e) {
+        btn.textContent = 'Error de conexion';
+        btn.disabled = false;
+    }
+}
+
+// ------------------------------------------------------------------ //
+// Player
+// ------------------------------------------------------------------ //
+function arrancarStream(hlsUrl) {
+    document.getElementById('loading').style.display = 'none';
+    const video = document.getElementById('video-el');
+
+    if (Hls.isSupported()) {
+        hls = new Hls({ maxBufferLength: 8, lowLatencyMode: false });
+        hls.loadSource(hlsUrl);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+        hls.on(Hls.Events.ERROR, (_, d) => {
+            if (d.fatal) setTimeout(() => hls.loadSource(hlsUrl), 3000);
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = hlsUrl;
+        video.play().catch(() => {});
+    }
+
+    cargarObsequios();
+    conectarWS();
+}
+
+// ------------------------------------------------------------------ //
+// WebSocket
+// ------------------------------------------------------------------ //
+function conectarWS() {
+    ws = new WebSocket(`${WS}/api/streams/${STREAM_ID}/ws`);
+    ws.onmessage = (e) => {
+        const ev = JSON.parse(e.data);
+        if (ev.tipo === 'chat')      agregarChat(ev.usuario, ev.texto);
+        else if (ev.tipo === 'obsequio') manejarObsequio(ev);
+        else if (ev.tipo === 'viewers')  document.getElementById('viewers-count').textContent = ev.count;
+        else if (ev.tipo === 'stream_fin') mostrarError('El stream ha terminado');
+    };
+    ws.onclose = () => { if (streamInfo?.estado === 'live') setTimeout(conectarWS, 3000); };
+}
+
+// ------------------------------------------------------------------ //
+// Chat
+// ------------------------------------------------------------------ //
+const chatArea = document.getElementById('chat-area');
+
+function agregarChat(usuario, texto) {
+    const msgs = chatArea.querySelectorAll('.chat-msg');
+    if (msgs.length >= 14) msgs[0].remove();
+    const el = document.createElement('div');
+    el.className = 'chat-msg';
+    el.innerHTML = `<span class="chat-uname">${esc(usuario)}</span><span>${esc(texto)}</span>`;
+    chatArea.appendChild(el);
+    setTimeout(() => el.remove(), 9000);
+}
+
+function enviarChat() {
+    const inp = document.getElementById('chat-input');
+    const texto = inp.value.trim();
+    if (!texto || !ws || ws.readyState !== WebSocket.OPEN) return;
+    ws.send(JSON.stringify({ tipo: 'chat', usuario: miNombre, texto }));
+    inp.value = '';
+}
+
+document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter') enviarChat(); });
+
+// ------------------------------------------------------------------ //
+// Obsequios
+// ------------------------------------------------------------------ //
+async function cargarObsequios() {
+    try {
+        const r = await fetch(`${API}/api/streams/catalogo-obsequios`);
+        const catalogo = await r.json();
+        const panel = document.getElementById('gift-panel');
+        catalogo.forEach(g => {
+            const btn = document.createElement('button');
+            btn.className = 'gift-btn';
+            btn.innerHTML = `<span class="gift-emoji">${g.emoji}</span><span class="gift-name">${g.nombre}</span><span class="gift-price">$${g.precio.toFixed(2)}</span>`;
+            btn.onclick = () => enviarObsequio(g);
+            panel.appendChild(btn);
+        });
+    } catch(e) {}
+}
+
+async function enviarObsequio(g) {
+    if (!token) { location.href = '../index.html?login=1'; return; }
+    if (miBalance < g.precio) {
+        mostrarToast(`Saldo insuficiente`, '#E8413E');
+        return;
+    }
+    try {
+        const r = await fetch(`${API}/api/streams/${STREAM_ID}/obsequio`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ obsequio_id: g.id, cantidad: 1 }),
+        });
+        const d = await r.json();
+        if (r.ok) {
+            miBalance = d.nuevo_balance;
+            actualizarBalance(miBalance);
+        } else {
+            mostrarToast(d.detail || 'Error al enviar obsequio', '#E8413E');
+        }
+    } catch(e) {}
+}
+
+function manejarObsequio(ev) {
+    const layer = document.getElementById('anim-layer');
+
+    // emoji flotante
+    const el = document.createElement('div');
+    el.className = 'gift-float';
+    el.textContent = ev.obsequio_emoji;
+    el.style.cssText = `left:${25 + Math.random() * 40}%;bottom:100px`;
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+
+    // toast
+    const toast = document.createElement('div');
+    toast.className = 'ev-toast';
+    toast.innerHTML = `<span style="color:#F4A261">${esc(ev.remitente)}</span> envio ${ev.obsequio_emoji} ${esc(ev.obsequio_nombre)}`;
+    layer.appendChild(toast);
+    setTimeout(() => toast.remove(), 2800);
+
+    agregarChat(ev.remitente, `envio ${ev.obsequio_emoji} ${ev.obsequio_nombre}`);
+}
+
+function mostrarToast(msg, color) {
+    const layer = document.getElementById('anim-layer');
+    const toast = document.createElement('div');
+    toast.className = 'ev-toast';
+    toast.style.borderColor = color || '#F4A261';
+    toast.textContent = msg;
+    layer.appendChild(toast);
+    setTimeout(() => toast.remove(), 2800);
+}
+
+// ------------------------------------------------------------------ //
+// Util
+// ------------------------------------------------------------------ //
+function actualizarBalance(b) {
+    document.getElementById('balance-display').textContent = b.toFixed(2);
+    document.getElementById('modal-balance').textContent = `$${b.toFixed(2)}`;
+}
+
+function mostrarLoginPrompt() {
+    document.getElementById('loading').innerHTML = `
+        <div style="font-size:48px;margin-bottom:16px">🔒</div>
+        <p style="color:rgba(255,255,255,.8);font-size:15px;font-weight:700;margin-bottom:4px">Inicia sesion para ver este stream</p>
+        <p style="color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px">${streamInfo.precio_entrada > 0 ? 'Este stream tiene precio de entrada' : ''}</p>
+        <button onclick="location.href='../index.html?login=1'" style="background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:800;padding:13px 32px;border-radius:20px;font-size:15px;border:none;cursor:pointer;font-family:Nunito,sans-serif">
+            Iniciar sesion
+        </button>
+        <button onclick="volverAtras()" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:13px;cursor:pointer;margin-top:12px;font-family:Nunito,sans-serif">Volver</button>
+    `;
+}
+
+function mostrarError(msg) {
+    if (hls) { hls.destroy(); hls = null; }
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading').innerHTML = `
+        <div style="font-size:48px;margin-bottom:14px">📺</div>
+        <p style="color:rgba(255,255,255,.85);font-size:16px;font-weight:700">${esc(msg)}</p>
+        <button onclick="volverAtras()" style="margin-top:22px;color:#F4A261;font-size:14px;background:none;border:none;cursor:pointer;font-family:Nunito,sans-serif">Volver</button>
+    `;
+}
+
+function volverAtras() {
+    if (hls) { hls.destroy(); hls = null; }
+    if (ws) ws.close();
+    history.back();
+}
+
+function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+init();
+</script>
+</body>
+</html>

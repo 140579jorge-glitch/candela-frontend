@@ -93,6 +93,7 @@
         <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
         <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Metodos de pago</div>
+        <div class="nav-item" onclick="mostrar('stream',this)"><span class="ms">live_tv</span>Stream en vivo</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="px-4 mb-2">
             <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Configuracion</p>
@@ -606,14 +607,6 @@
                                 <div class="text-[10px] text-c-soft">~$0.01 de fee</div>
                             </div>
                         </label>
-                        <label id="opt-qr" class="hidden">
-                            <input type="radio" name="metodo_retiro" value="qr" class="sr-only" onchange="actualizarMetodoOpt()">
-                            <div class="metodo-opt-box border-2 border-c-border rounded-xl p-3 text-center cursor-pointer hover:border-c-accent transition-all">
-                                <div class="text-xl mb-1">📱</div>
-                                <div class="text-xs font-bold">QR Local</div>
-                                <div id="qr-label-pais" class="text-[10px] text-c-soft">Yape / PIX</div>
-                            </div>
-                        </label>
                     </div>
                 </div>
 
@@ -633,28 +626,115 @@
                         class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
                 </div>
 
-                <!-- QR local (solo Bolivia, Peru, Argentina, Brasil) -->
-                <div id="qr-section" class="hidden bg-white border border-c-border rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-sm mb-1">QR de pago local</h3>
-                    <p class="text-xs text-c-soft mb-3">Sube la imagen de tu QR de Yape, PIX o Takenos. Escaneamos tu codigo para pagarte.</p>
-                    <div class="flex gap-4 items-start">
-                        <div id="qr-preview-box" class="w-24 h-24 rounded-xl border-2 border-dashed border-c-border flex items-center justify-center text-c-soft shrink-0 overflow-hidden bg-c-bg">
-                            <span class="ms" style="font-size:32px">qr_code</span>
-                        </div>
-                        <div>
-                            <label class="c-btn text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm cursor-pointer inline-block">
-                                Subir QR
-                                <input id="qr-input" type="file" accept="image/*" class="hidden" onchange="previsualizarQr(this)">
-                            </label>
-                            <p class="text-[10px] text-c-soft mt-2 max-w-[200px]">Asegurate de que el QR sea tuyo y que funcione antes de subir.</p>
-                        </div>
-                    </div>
-                </div>
 
                 <button type="submit" id="btn-guardar-pago" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
                     Guardar metodos de pago
                 </button>
             </form>
+        </section>
+
+        <!-- ══ STREAM EN VIVO ══ -->
+        <section id="sec-stream" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Stream en vivo</h2>
+            <p class="text-c-soft text-sm mb-6">Transmite en vivo para tus fans y recibe obsequios en tiempo real.</p>
+
+            <!-- Estado: sin stream activo -->
+            <div id="stream-sin-activo">
+                <!-- Crear stream -->
+                <div class="bg-white border border-c-border rounded-2xl p-6 shadow-sm max-w-lg mb-5">
+                    <h3 class="font-bold text-base mb-4">Nuevo stream</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo del stream</label>
+                            <input id="stream-titulo-inp" type="text" maxlength="200" placeholder="Ej: Noche especial de preguntas..."
+                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio de entrada (USD)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-c-soft font-bold text-sm">$</span>
+                                <input id="stream-precio-inp" type="number" min="0" step="0.50" value="0" placeholder="0.00"
+                                    class="w-full pl-7 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                            </div>
+                            <p class="text-[11px] text-c-soft mt-1">Pon 0 para stream gratuito</p>
+                        </div>
+                        <button onclick="crearStream()" class="c-btn w-full py-3 rounded-xl text-white font-bold text-sm">
+                            Crear stream
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Historial -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm max-w-lg">
+                    <h3 class="font-bold text-sm mb-3">Streams anteriores</h3>
+                    <div id="stream-historial" class="text-sm text-c-soft">Cargando...</div>
+                </div>
+            </div>
+
+            <!-- Estado: stream activo -->
+            <div id="stream-activo" style="display:none" class="max-w-lg space-y-4">
+                <!-- Badge live -->
+                <div class="flex items-center gap-3 bg-red-50 border border-red-200 rounded-2xl p-4">
+                    <span class="inline-block w-3 h-3 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
+                    <div>
+                        <p class="font-bold text-red-700 text-sm" id="stream-activo-titulo">Stream activo</p>
+                        <p class="text-red-500 text-xs" id="stream-activo-estado">Preparando...</p>
+                    </div>
+                    <div class="ml-auto text-right">
+                        <p class="text-xs text-c-soft">Ingresos</p>
+                        <p class="font-extrabold text-c-text text-sm" id="stream-activo-ingresos">$0.00</p>
+                    </div>
+                </div>
+
+                <!-- Datos de conexion -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-4">Configuracion OBS / Larix</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1">URL del servidor RTMP</p>
+                            <div class="flex items-center gap-2">
+                                <code class="flex-1 bg-c-bg rounded-lg px-3 py-2 text-xs font-mono text-c-text overflow-x-auto" id="stream-rtmp-url"></code>
+                                <button onclick="copiar('stream-rtmp-url')" class="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg border border-c-border hover:bg-c-bg transition-colors">
+                                    <span class="ms text-c-soft" style="font-size:16px">content_copy</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1">Clave de stream (Stream Key)</p>
+                            <div class="flex items-center gap-2">
+                                <code class="flex-1 bg-c-bg rounded-lg px-3 py-2 text-xs font-mono text-c-text overflow-x-auto" id="stream-key-val"></code>
+                                <button onclick="copiar('stream-key-val')" class="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg border border-c-border hover:bg-c-bg transition-colors">
+                                    <span class="ms text-c-soft" style="font-size:16px">content_copy</span>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-c-soft bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                            En Larix: pega la URL completa en "Conexion RTMP". En OBS: pega la URL del servidor y la clave por separado.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="btn-iniciar-stream" onclick="iniciarStream()" class="c-btn py-3 rounded-xl text-white font-bold text-sm">
+                        Ir en vivo
+                    </button>
+                    <button onclick="terminarStream()" class="py-3 rounded-xl font-bold text-sm border-2 border-red-300 text-red-500 hover:bg-red-50 transition-colors">
+                        Terminar stream
+                    </button>
+                </div>
+
+                <!-- Link para compartir -->
+                <div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Link para fans</p>
+                    <div class="flex items-center gap-2">
+                        <code class="flex-1 bg-c-bg rounded-lg px-3 py-2 text-xs font-mono text-c-text overflow-x-auto" id="stream-fan-url"></code>
+                        <button onclick="copiar('stream-fan-url')" class="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg border border-c-border hover:bg-c-bg transition-colors">
+                            <span class="ms text-c-soft" style="font-size:16px">content_copy</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </section>
 
     </main>
@@ -823,7 +903,6 @@ async function cargarGanancias() {
             const etiquetas = {
                 trc20: `USDT TRC20 — ${p.wallet_trc20 ? p.wallet_trc20.slice(0,8) + '...' + p.wallet_trc20.slice(-4) : 'sin wallet'}`,
                 polygon: `USDT Polygon — ${p.wallet_polygon ? p.wallet_polygon.slice(0,8) + '...' + p.wallet_polygon.slice(-4) : 'sin wallet'}`,
-                qr: 'QR local (Yape / PIX / Takenos)',
             };
             if (desc) desc.textContent = etiquetas[metodo] || metodo;
         }
@@ -981,13 +1060,6 @@ async function cargarDatosRetiro() {
         document.getElementById('w-trc20').value = p.wallet_trc20 || '';
         document.getElementById('w-polygon').value = p.wallet_polygon || '';
 
-        const paisesQr = ['Bolivia', 'Peru', 'Argentina', 'Brasil'];
-        const mostrarQr = paisesQr.includes(p.pais);
-        document.getElementById('opt-qr').classList.toggle('hidden', !mostrarQr);
-        document.getElementById('qr-section').classList.toggle('hidden', !mostrarQr);
-        const labels = { Bolivia:'Takenos / QR', Peru:'Yape', Argentina:'Alias / QR', Brasil:'PIX' };
-        const lbl = document.getElementById('qr-label-pais');
-        if (lbl) lbl.textContent = labels[p.pais] || 'QR local';
 
         if (p.qr_pago_url) {
             document.getElementById('qr-preview-box').innerHTML =
@@ -1161,6 +1233,7 @@ function mostrar(sec, navBtn) {
     if (sec === 'referidas') cargarReferidas();
     if (sec === 'metodos-pago') cargarDatosRetiro();
     if (sec === 'propinas') cargarPropinas();
+    if (sec === 'stream') cargarStreamActivo();
     if (sec === 'mensajes') { cargarMensajes(); if (perfilData) { document.getElementById('toggle-acepta-msg').checked = perfilData.acepta_mensajes; document.getElementById('msg-precio-input').value = perfilData.precio_mensaje || 5; document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${perfilData.precio_mensaje || 5}`; } }
 }
 
@@ -1409,6 +1482,98 @@ function toast(msg, tipo = 'info') {
 }
 
 init();
+
+// ------------------------------------------------------------------ //
+// STREAM EN VIVO
+// ------------------------------------------------------------------ //
+let streamActivoId = null;
+
+async function cargarStreamActivo() {
+    try {
+        const r = await candela._req('GET', '/api/streams/mis-streams');
+        const activo = r.find(s => s.estado === 'preparando' || s.estado === 'live');
+        if (activo) {
+            streamActivoId = activo.id;
+            document.getElementById('stream-sin-activo').style.display = 'none';
+            document.getElementById('stream-activo').style.display = '';
+            document.getElementById('stream-activo-titulo').textContent = activo.titulo;
+            document.getElementById('stream-activo-estado').textContent = activo.estado === 'live' ? 'EN VIVO' : 'Preparando (aun no en vivo)';
+            document.getElementById('stream-activo-ingresos').textContent = `$${(activo.total_ingresos || 0).toFixed(2)}`;
+            document.getElementById('btn-iniciar-stream').style.display = activo.estado === 'live' ? 'none' : '';
+        } else {
+            streamActivoId = null;
+            document.getElementById('stream-sin-activo').style.display = '';
+            document.getElementById('stream-activo').style.display = 'none';
+            cargarHistorialStreams(r.filter(s => s.estado === 'terminado'));
+        }
+    } catch(e) {}
+}
+
+function cargarHistorialStreams(lista) {
+    const el = document.getElementById('stream-historial');
+    if (!lista || !lista.length) { el.textContent = 'Sin streams anteriores.'; return; }
+    el.innerHTML = lista.slice(0, 5).map(s => `
+        <div class="flex items-center justify-between py-2 border-b border-c-border last:border-0">
+            <div>
+                <p class="font-semibold text-c-text text-sm">${esc(s.titulo)}</p>
+                <p class="text-xs text-c-soft">${s.started_at ? new Date(s.started_at).toLocaleDateString('es') : 'No iniciado'}</p>
+            </div>
+            <span class="text-sm font-bold text-c-accent">$${(s.total_ingresos || 0).toFixed(2)}</span>
+        </div>
+    `).join('');
+}
+
+async function crearStream() {
+    const titulo = document.getElementById('stream-titulo-inp').value.trim();
+    const precio = parseFloat(document.getElementById('stream-precio-inp').value) || 0;
+    if (!titulo) { toast('Escribe un titulo para el stream', 'error'); return; }
+    try {
+        const d = await candela._req('POST', '/api/streams/crear', { titulo, precio_entrada: precio });
+        streamActivoId = d.stream_id;
+        document.getElementById('stream-rtmp-url').textContent = d.rtmp_url;
+        document.getElementById('stream-key-val').textContent = d.stream_key;
+        const fanUrl = `${location.origin}/pages/stream.html?id=${d.stream_id}`;
+        document.getElementById('stream-fan-url').textContent = fanUrl;
+        document.getElementById('stream-activo-titulo').textContent = d.titulo;
+        document.getElementById('stream-activo-estado').textContent = 'Preparando (aun no en vivo)';
+        document.getElementById('stream-activo-ingresos').textContent = '$0.00';
+        document.getElementById('btn-iniciar-stream').style.display = '';
+        document.getElementById('stream-sin-activo').style.display = 'none';
+        document.getElementById('stream-activo').style.display = '';
+        toast('Stream creado. Conecta OBS o Larix y presiona "Ir en vivo"', 'success');
+    } catch(e) { toast(e.message || 'Error al crear stream', 'error'); }
+}
+
+async function iniciarStream() {
+    if (!streamActivoId) return;
+    try {
+        await candela._req('POST', `/api/streams/${streamActivoId}/iniciar`);
+        document.getElementById('stream-activo-estado').textContent = 'EN VIVO';
+        document.getElementById('btn-iniciar-stream').style.display = 'none';
+        toast('Stream en vivo!', 'success');
+    } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+async function terminarStream() {
+    if (!streamActivoId) return;
+    if (!confirm('Terminar el stream?')) return;
+    try {
+        await candela._req('POST', `/api/streams/${streamActivoId}/terminar`);
+        streamActivoId = null;
+        document.getElementById('stream-sin-activo').style.display = '';
+        document.getElementById('stream-activo').style.display = 'none';
+        document.getElementById('stream-titulo-inp').value = '';
+        document.getElementById('stream-precio-inp').value = '0';
+        toast('Stream terminado', 'success');
+        cargarStreamActivo();
+    } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+function copiar(elementId) {
+    const texto = document.getElementById(elementId).textContent.trim();
+    navigator.clipboard.writeText(texto).then(() => toast('Copiado', 'success')).catch(() => {});
+}
+
 </script>
 </body>
 </html>
