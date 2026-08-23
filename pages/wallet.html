@@ -94,18 +94,9 @@
 
         <!-- Metodo de pago -->
         <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-3">Metodo de pago</p>
-        <div class="grid grid-cols-2 gap-2 mb-5">
+        <div class="grid grid-cols-1 gap-2 mb-5">
 
-            <div class="metodo-card sel" id="card-qr" onclick="elegirMetodo('qr')">
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="ms text-c-accent" style="font-size:22px">qr_code_2</span>
-                    <span class="font-bold text-sm text-c-text">QR Local</span>
-                </div>
-                <p class="text-[11px] text-c-soft leading-tight">Yape, PIX, QR Bolivia, Mercado Pago</p>
-                <span class="inline-block mt-1.5 text-[10px] font-bold text-green-600 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">Sin comision</span>
-            </div>
-
-            <div class="metodo-card" id="card-usdt" onclick="elegirMetodo('usdt')">
+            <div class="metodo-card sel" id="card-usdt" onclick="elegirMetodo('usdt')">
                 <div class="flex items-center gap-2 mb-1">
                     <span class="ms text-c-accent" style="font-size:22px">currency_bitcoin</span>
                     <span class="font-bold text-sm text-c-text">USDT Crypto</span>
@@ -114,7 +105,7 @@
                 <span class="inline-block mt-1.5 text-[10px] font-bold text-green-600 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">Sin comision</span>
             </div>
 
-            <div class="metodo-card disabled col-span-2" id="card-tarjeta">
+            <div class="metodo-card disabled" id="card-tarjeta">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <span class="ms text-c-soft" style="font-size:22px">credit_card</span>
@@ -128,78 +119,10 @@
             </div>
         </div>
 
-        <!-- ===== PANEL QR ===== -->
-        <div id="panel-qr">
-            <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-2">Tu pais</p>
-            <div class="flex flex-wrap gap-2 mb-4">
-                <button class="pais-btn sel" data-pais="qr_bo" onclick="elegirPais(this)">Bolivia</button>
-                <button class="pais-btn" data-pais="qr_pe"   onclick="elegirPais(this)">Peru (Yape)</button>
-                <button class="pais-btn" data-pais="pix"     onclick="elegirPais(this)">Brasil (PIX)</button>
-                <button class="pais-btn" data-pais="qr_ar"   onclick="elegirPais(this)">Argentina</button>
-            </div>
-
-            <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4 text-sm">
-                <div id="inst-qr_bo">
-                    <p class="font-bold text-c-text mb-2">Pagar con QR Simple — Bolivia</p>
-                    <ol class="text-c-soft space-y-1 text-xs list-decimal list-inside leading-relaxed">
-                        <li>Abre tu app bancaria (BNB, Banco Union, Tigo Money, etc.)</li>
-                        <li>Selecciona "Pagar con QR" o "Escanear QR"</li>
-                        <li>Escanea el QR de abajo</li>
-                        <li>Ingresa el equivalente en bolivianos de <strong id="monto-inst-qr_bo" class="text-c-accent">$5.00 USD</strong></li>
-                        <li>Confirma y copia el <strong>numero de operacion</strong></li>
-                    </ol>
-                </div>
-                <div id="inst-qr_pe" class="hidden">
-                    <p class="font-bold text-c-text mb-2">Pagar con Yape — Peru</p>
-                    <ol class="text-c-soft space-y-1 text-xs list-decimal list-inside leading-relaxed">
-                        <li>Abre Yape, Plin o tu app bancaria</li>
-                        <li>Selecciona "Pagar con QR"</li>
-                        <li>Escanea el QR de abajo</li>
-                        <li>Ingresa el equivalente en soles de <strong id="monto-inst-qr_pe" class="text-c-accent">$5.00 USD</strong></li>
-                        <li>Confirma y copia el <strong>numero de operacion Yape</strong></li>
-                    </ol>
-                </div>
-                <div id="inst-pix" class="hidden">
-                    <p class="font-bold text-c-text mb-2">Pagar con PIX — Brasil</p>
-                    <ol class="text-c-soft space-y-1 text-xs list-decimal list-inside leading-relaxed">
-                        <li>Abre tu banco, Nubank, PicPay o Mercado Pago</li>
-                        <li>Selecciona "Pagar com PIX" o "Ler QR Code"</li>
-                        <li>Escanea el QR de abajo</li>
-                        <li>Ingresa el equivalente en reales de <strong id="monto-inst-pix" class="text-c-accent">$5.00 USD</strong></li>
-                        <li>Confirma y copia el <strong>ID de transaccion PIX</strong></li>
-                    </ol>
-                </div>
-                <div id="inst-qr_ar" class="hidden">
-                    <p class="font-bold text-c-text mb-2">Pagar con QR — Argentina</p>
-                    <ol class="text-c-soft space-y-1 text-xs list-decimal list-inside leading-relaxed">
-                        <li>Abre Mercado Pago, MODO o tu app bancaria</li>
-                        <li>Selecciona "Escanear QR"</li>
-                        <li>Escanea el QR de abajo</li>
-                        <li>Ingresa el equivalente en pesos de <strong id="monto-inst-qr_ar" class="text-c-accent">$5.00 USD</strong></li>
-                        <li>Confirma y copia el <strong>numero de operacion</strong></li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- QR Takenos -->
-            <div class="flex justify-center mb-4">
-                <div class="bg-white border-2 border-c-border rounded-2xl p-4 inline-block shadow-sm">
-                    <img src="../img/takenos-qr.png" alt="QR Candela"
-                         class="w-44 h-44 object-contain rounded-xl"
-                         onerror="this.parentElement.innerHTML='<div class=\'w-44 h-44 flex items-center justify-center text-c-soft text-xs text-center p-4\'>QR no disponible.<br>Contacta soporte.</div>'">
-                    <p class="text-[10px] text-center text-c-soft mt-2 font-semibold">Jorge Rodriguez — Candela</p>
-                </div>
-            </div>
-
-            <label class="block text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5">Numero de operacion</label>
-            <input id="ref-qr" type="text" placeholder="Ej: 123456789 o ID de la transaccion"
-                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all mb-4">
-        </div>
-
         <!-- ===== PANEL USDT ===== -->
-        <div id="panel-usdt" class="hidden">
+        <div id="panel-usdt">
             <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-2">Red</p>
-            <div class="flex gap-2 mb-4">
+            <div class="flex gap-2 mb-5">
                 <button onclick="elegirRed('trc20')" id="red-trc20"
                     class="flex-1 py-2.5 rounded-xl text-sm font-bold border-2 border-c-accent bg-orange-50 text-c-accent transition-all">
                     USDT TRC20
@@ -209,26 +132,44 @@
                     USDT Polygon
                 </button>
             </div>
-            <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5">
-                Envia exactamente <span id="usdt-monto-label" class="text-c-accent">$5.00</span> a esta wallet
-            </p>
-            <button onclick="copiarWallet()" id="wallet-addr-btn"
-                class="w-full text-left font-mono text-xs bg-c-bg border border-c-border rounded-xl px-4 py-3 hover:bg-c-champagne transition-colors break-all mb-1 flex items-center gap-2">
-                <span class="ms text-c-soft flex-shrink-0" style="font-size:16px">content_copy</span>
-                <span id="wallet-addr-text">TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH</span>
-            </button>
-            <p class="text-[11px] text-c-soft mb-4">Toca para copiar la direccion</p>
-
-            <label class="block text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5">Hash de transaccion (64 caracteres hex)</label>
-            <input id="ref-usdt" type="text" placeholder="Pega el hash de tu transaccion"
-                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent transition-all mb-4">
         </div>
 
-        <button onclick="enviarDeposito()" id="btn-depositar"
-            class="c-btn w-full text-white py-3 rounded-xl font-bold text-sm shadow-md">
-            Solicitar carga de <span id="btn-monto-label">$5</span>
-        </button>
-        <p class="text-center text-[11px] text-c-soft mt-2">Verificamos y acreditamos en pocas horas.</p>
+        <!-- Paso 1: boton generar -->
+        <div id="step-generar">
+            <button onclick="generarDireccion()" id="btn-generar"
+                class="c-btn w-full text-white py-3 rounded-xl font-bold text-sm shadow-md">
+                Generar direccion de pago — <span id="btn-monto-label">$5</span>
+            </button>
+            <p class="text-center text-[11px] text-c-soft mt-2">Se genera una direccion unica para este pago.</p>
+        </div>
+
+        <!-- Paso 2: mostrar direccion -->
+        <div id="step-direccion" class="hidden">
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-700 flex items-center gap-2">
+                <span class="ms text-amber-500 flex-shrink-0" style="font-size:16px">schedule</span>
+                <span>Envia el pago antes de que expire. <strong id="countdown-label">--:--</strong></span>
+            </div>
+            <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5">
+                Envia exactamente <span id="pay-amount-label" class="text-c-accent font-extrabold">— USDT</span>
+            </p>
+            <button onclick="copiarDireccion()" id="pay-addr-btn"
+                class="w-full text-left font-mono text-xs bg-c-bg border border-c-border rounded-xl px-4 py-3 hover:bg-c-champagne transition-colors break-all mb-1 flex items-center gap-2">
+                <span class="ms text-c-soft flex-shrink-0" style="font-size:16px">content_copy</span>
+                <span id="pay-addr-text">—</span>
+            </button>
+            <p class="text-[11px] text-c-soft mb-4">Toca para copiar · no envies a otras direcciones</p>
+            <div id="pay-status" class="flex items-center gap-2 text-sm text-c-soft">
+                <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="pay-status-text">Esperando pago...</span>
+            </div>
+        </div>
+
+        <!-- Paso 3: confirmado -->
+        <div id="step-confirmado" class="hidden bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+            <span class="ms text-green-500" style="font-size:36px">check_circle</span>
+            <p class="font-bold text-green-700 mt-1">Pago confirmado</p>
+            <p class="text-xs text-green-600 mt-1">Tu saldo ha sido acreditado.</p>
+        </div>
     </div>
 
     <!-- Dormancy -->
@@ -251,15 +192,11 @@
 
 <script src="../js/api.js"></script>
 <script>
-const WALLETS = {
-    trc20:   'TGFJDTEvC6xTuEQi4BBmjvsLytqx1KTTH',
-    polygon: '0x120902f3be563f1fbcc96e9a3da12f3d212cfe7b',
-};
-
-let metodoActual = 'qr';
-let redActual    = 'trc20';
-let paisActual   = 'qr_bo';
-let montoActual  = 5;
+let redActual   = 'trc20';
+let montoActual = 5;
+let depositoId  = null;
+let pollTimer   = null;
+let countTimer  = null;
 
 if (!candela.auth.isLoggedIn()) window.location.href = '../index.html';
 const user = candela.auth.user();
@@ -281,19 +218,7 @@ async function init() {
 }
 
 function elegirMetodo(m) {
-    metodoActual = m;
-    document.getElementById('card-qr').classList.toggle('sel', m === 'qr');
     document.getElementById('card-usdt').classList.toggle('sel', m === 'usdt');
-    document.getElementById('panel-qr').classList.toggle('hidden', m !== 'qr');
-    document.getElementById('panel-usdt').classList.toggle('hidden', m !== 'usdt');
-}
-
-function elegirPais(btn) {
-    document.querySelectorAll('.pais-btn').forEach(b => b.classList.remove('sel'));
-    btn.classList.add('sel');
-    paisActual = btn.dataset.pais;
-    document.querySelectorAll('[id^="inst-"]').forEach(el => el.classList.add('hidden'));
-    document.getElementById('inst-' + paisActual)?.classList.remove('hidden');
 }
 
 function elegirRed(red) {
@@ -302,8 +227,6 @@ function elegirRed(red) {
     const inact  = 'flex-1 py-2.5 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent';
     document.getElementById('red-trc20').className  = red === 'trc20'   ? activo : inact;
     document.getElementById('red-polygon').className = red === 'polygon' ? activo : inact;
-    document.getElementById('wallet-addr-text').textContent = WALLETS[red];
-    actualizarUI();
 }
 
 function elegirMonto(m) {
@@ -323,8 +246,8 @@ function elegirMonto(m) {
 
 function actualizarUI() {
     const m = montoActual || parseFloat(document.getElementById('monto-custom').value) || 0;
-    document.getElementById('btn-monto-label').textContent = m > 0 ? `$${m}` : '$?';
-
+    const lbl = document.getElementById('btn-monto-label');
+    if (lbl) lbl.textContent = m > 0 ? `$${m}` : '$?';
     const bonusEl = document.getElementById('bonus-notice');
     if (m >= 20) {
         document.getElementById('bonus-val').textContent = `$${(m * 0.10).toFixed(2)}`;
@@ -332,56 +255,68 @@ function actualizarUI() {
     } else {
         bonusEl.classList.add('hidden');
     }
-
-    const mStr = m > 0 ? `$${m.toFixed(2)} USD` : '?';
-    ['qr_bo','qr_pe','pix','qr_ar'].forEach(p => {
-        const el = document.getElementById('monto-inst-' + p);
-        if (el) el.textContent = mStr;
-    });
-    const ul = document.getElementById('usdt-monto-label');
-    if (ul) ul.textContent = m > 0 ? `$${m.toFixed(2)}` : '?';
 }
 
-function copiarWallet() {
-    navigator.clipboard.writeText(WALLETS[redActual]);
+function copiarDireccion() {
+    const addr = document.getElementById('pay-addr-text').textContent;
+    navigator.clipboard.writeText(addr);
     toast('Direccion copiada', 'success');
 }
 
-async function enviarDeposito() {
+async function generarDireccion() {
     const monto = montoActual || parseFloat(document.getElementById('monto-custom').value);
     if (!monto || monto < 5) { toast('El monto minimo es $5', 'error'); return; }
 
-    let ref = '';
-    let metodo_red = '';
+    const btn = document.getElementById('btn-generar');
+    btn.disabled = true; btn.textContent = 'Generando...';
 
-    if (metodoActual === 'qr') {
-        ref = document.getElementById('ref-qr').value.trim();
-        metodo_red = paisActual;
-        if (!ref) { toast('Ingresa el numero de operacion', 'error'); return; }
-        if (ref.length < 4) { toast('Numero de operacion muy corto', 'error'); return; }
-    } else {
-        ref = document.getElementById('ref-usdt').value.trim();
-        metodo_red = redActual;
-        if (!ref) { toast('Pega el hash de la transaccion', 'error'); return; }
-        if (!/^[a-fA-F0-9]{64}$/.test(ref)) {
-            toast('Hash invalido — debe tener exactamente 64 caracteres hexadecimales', 'error');
-            return;
-        }
-    }
-
-    const btn = document.getElementById('btn-depositar');
-    btn.disabled = true; btn.textContent = 'Enviando...';
     try {
-        const r = await candela.wallet.depositar({ monto, referencia_pago: ref, metodo_red });
-        toast(r.mensaje, 'success');
-        document.getElementById('ref-qr').value = '';
-        document.getElementById('ref-usdt').value = '';
-        setTimeout(() => location.reload(), 2500);
+        const r = await candela.wallet.crearPago({ monto, metodo_red: redActual });
+        depositoId = r.deposito_id;
+
+        document.getElementById('pay-addr-text').textContent  = r.pay_address;
+        document.getElementById('pay-amount-label').textContent = `${r.pay_amount} USDT`;
+
+        document.getElementById('step-generar').classList.add('hidden');
+        document.getElementById('panel-usdt').classList.add('hidden');
+        document.getElementById('step-direccion').classList.remove('hidden');
+
+        if (r.expiration) iniciarCountdown(new Date(r.expiration));
+        iniciarPolling();
     } catch(e) {
-        toast(e.message || 'Error al enviar', 'error');
+        toast(e.message || 'Error al generar pago', 'error');
         btn.disabled = false;
-        btn.innerHTML = `Solicitar carga de <span id="btn-monto-label">$${monto}</span>`;
+        btn.innerHTML = `Generar direccion de pago — <span id="btn-monto-label">$${monto}</span>`;
     }
+}
+
+function iniciarCountdown(expira) {
+    clearInterval(countTimer);
+    countTimer = setInterval(() => {
+        const diff = Math.max(0, Math.floor((expira - Date.now()) / 1000));
+        const m = String(Math.floor(diff / 60)).padStart(2, '0');
+        const s = String(diff % 60).padStart(2, '0');
+        document.getElementById('countdown-label').textContent = `${m}:${s}`;
+        if (diff === 0) clearInterval(countTimer);
+    }, 1000);
+}
+
+function iniciarPolling() {
+    clearInterval(pollTimer);
+    pollTimer = setInterval(async () => {
+        try {
+            const r = await candela.wallet.estadoPago(depositoId);
+            if (r.estado === 'confirmado') {
+                clearInterval(pollTimer);
+                clearInterval(countTimer);
+                document.getElementById('step-direccion').classList.add('hidden');
+                document.getElementById('step-confirmado').classList.remove('hidden');
+                setTimeout(() => location.reload(), 3000);
+            } else if (r.estado !== 'pendiente') {
+                document.getElementById('pay-status-text').textContent = 'Pago detectado, confirmando...';
+            }
+        } catch(_) {}
+    }, 15000);
 }
 
 function renderMovimientos(movs) {

@@ -299,7 +299,8 @@ function arrancarStream(hlsUrl) {
 // WebSocket
 // ------------------------------------------------------------------ //
 function conectarWS() {
-    ws = new WebSocket(`${WS}/api/streams/${STREAM_ID}/ws`);
+    const wsToken = localStorage.getItem('candela_token') || '';
+    ws = new WebSocket(`${WS}/api/streams/${STREAM_ID}/ws${wsToken ? '?token=' + encodeURIComponent(wsToken) : ''}`);
     ws.onmessage = (e) => {
         const ev = JSON.parse(e.data);
         if (ev.tipo === 'chat')      agregarChat(ev.usuario, ev.texto);

@@ -141,7 +141,8 @@ const candela = {
 
     wallet: {
         miSaldo: () => candela._req('GET', '/api/wallet/mi-saldo'),
-        depositar: (data) => candela._req('POST', '/api/wallet/depositar', data),
+        crearPago: (data) => candela._req('POST', '/api/wallet/crear-pago', data),
+        estadoPago: (id) => candela._req('GET', `/api/wallet/estado-pago/${id}`),
         movimientos: (limit = 50, offset = 0) => candela._req('GET', `/api/wallet/movimientos?limit=${limit}&offset=${offset}`),
     },
 
