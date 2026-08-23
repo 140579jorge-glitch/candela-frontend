@@ -1617,7 +1617,17 @@ async function startWhip(hlsUrl, localStream) {
     _whipPc = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
     });
-    localStream.getTracks().forEach(t => _whipPc.addTrack(t, localStream));
+    localStream.getTracks().forEach(t => {
+        const tc = _whipPc.addTransceiver(t, { streams: [localStream] });
+        if (t.kind === 'video') {
+            const caps = RTCRtpSender.getCapabilities('video');
+            if (caps) {
+                const h264 = caps.codecs.filter(c => c.mimeType.toLowerCase() === 'video/h264');
+                const rest = caps.codecs.filter(c => c.mimeType.toLowerCase() !== 'video/h264');
+                if (h264.length) tc.setCodecPreferences([...h264, ...rest]);
+            }
+        }
+    });
     const offer = await _whipPc.createOffer();
     await _whipPc.setLocalDescription(offer);
     await new Promise(resolve => {
