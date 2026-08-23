@@ -636,7 +636,10 @@
         <!-- ══ STREAM EN VIVO ══ -->
         <section id="sec-stream" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Stream en vivo</h2>
-            <p class="text-c-soft text-sm mb-6">Transmite en vivo para tus fans y recibe obsequios en tiempo real.</p>
+            <p class="text-c-soft text-sm mb-4">Transmite en vivo para tus fans y recibe obsequios en tiempo real.</p>
+            <a href="guia-stream.html" target="_blank" class="inline-flex items-center gap-2 text-c-accent text-sm font-semibold hover:underline mb-6">
+                <span class="ms" style="font-size:16px">help_outline</span>Ver guia paso a paso
+            </a>
 
             <!-- Estado: sin stream activo -->
             <div id="stream-sin-activo">
@@ -757,6 +760,9 @@
         </button>
         <button onclick="mostrar('verificacion')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">verified_user</span><span class="text-[10px] font-semibold">CI</span>
+        </button>
+        <button onclick="mostrar('stream')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">live_tv</span><span class="text-[10px] font-semibold">Live</span>
         </button>
     </div>
 </nav>
