@@ -142,6 +142,9 @@
         <span id="viewers-count">0</span>
     </div>
     <div id="balance-pill">$<span id="balance-display">0.00</span></div>
+    <button class="back-btn" onclick="toggleFullscreen()" title="Pantalla completa">
+        <span class="ms" id="fs-icon" style="font-size:20px">fullscreen</span>
+    </button>
 </div>
 
 <!-- Chat -->
@@ -159,6 +162,18 @@
 </div>
 
 <script>
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+        document.exitFullscreen();
+    }
+}
+document.addEventListener('fullscreenchange', () => {
+    const icon = document.getElementById('fs-icon');
+    if (icon) icon.textContent = document.fullscreenElement ? 'fullscreen_exit' : 'fullscreen';
+});
+
 const API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
     ? 'http://localhost:8000'
     : 'https://web-production-73189.up.railway.app';

@@ -698,6 +698,11 @@
                     <div id="monitor-connecting" class="absolute inset-0 flex items-center justify-center bg-black/70">
                         <p class="text-white text-sm font-semibold">Conectando camara...</p>
                     </div>
+                    <button id="btn-flip-cam" onclick="cambiarCamara()" style="display:none"
+                        class="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center pointer-events-auto"
+                        style="background:rgba(0,0,0,.5)">
+                        <span class="ms text-white" style="font-size:20px">flip_camera_android</span>
+                    </button>
                 </div>
 
                 <!-- Acciones -->
@@ -1519,6 +1524,7 @@ let _streamHlsUrl = null;
 let _localStream = null;
 let _whipPc = null;
 let _monitorWs = null;
+let _currentFacing = 'user';
 let _ingresosInterval = null;
 let _wsReconnect = null;
 
@@ -1600,6 +1606,7 @@ async function irEnVivo() {
         await candela._req('POST', `/api/streams/${d.stream_id}/iniciar`);
         document.getElementById('monitor-badge').style.display = '';
         document.getElementById('monitor-connecting').style.display = 'none';
+        document.getElementById('btn-flip-cam').style.display = 'flex';
 
         conectarMonitorWs(d.stream_id);
         _ingresosInterval = setInterval(actualizarIngresos, 30000);
@@ -1706,7 +1713,32 @@ function detenerCamara() {
     if (_localStream) { _localStream.getTracks().forEach(t => t.stop()); _localStream = null; }
     if (_whipPc) { _whipPc.close(); _whipPc = null; }
     const v = document.getElementById('monitor-preview');
-    if (v) v.srcObject = null;
+    if (v) { v.srcObject = null; v.style.transform = 'scaleX(-1)'; }
+    const flip = document.getElementById('btn-flip-cam');
+    if (flip) flip.style.display = 'none';
+    _currentFacing = 'user';
+}
+
+async function cambiarCamara() {
+    if (!_whipPc) return;
+    const newFacing = _currentFacing === 'user' ? 'environment' : 'user';
+    let newStream;
+    try {
+        newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: newFacing }, audio: false });
+    } catch(e) {
+        toast('No se pudo cambiar la camara', 'error');
+        return;
+    }
+    const newVideoTrack = newStream.getVideoTracks()[0];
+    const sender = _whipPc.getSenders().find(s => s.track && s.track.kind === 'video');
+    if (sender) await sender.replaceTrack(newVideoTrack);
+    const oldTrack = _localStream.getVideoTracks()[0];
+    if (oldTrack) { oldTrack.stop(); _localStream.removeTrack(oldTrack); }
+    _localStream.addTrack(newVideoTrack);
+    const previewEl = document.getElementById('monitor-preview');
+    previewEl.srcObject = _localStream;
+    previewEl.style.transform = newFacing === 'user' ? 'scaleX(-1)' : 'none';
+    _currentFacing = newFacing;
 }
 
 async function terminarStream() {
