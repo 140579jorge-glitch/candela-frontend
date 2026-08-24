@@ -710,6 +710,10 @@
                         class="w-12 py-3 rounded-xl border border-c-border bg-c-bg text-c-text hover:bg-gray-50 transition-colors flex items-center justify-center shrink-0">
                         <span class="ms" style="font-size:20px">flip_camera_android</span>
                     </button>
+                    <button onclick="toggleMonitorFullscreen()"
+                        class="w-12 py-3 rounded-xl border border-c-border bg-c-bg text-c-text hover:bg-gray-50 transition-colors flex items-center justify-center shrink-0">
+                        <span class="ms" id="monitor-fs-icon" style="font-size:20px">fullscreen</span>
+                    </button>
                     <button onclick="compartirLink()"
                         class="flex-1 py-3 rounded-xl font-bold text-sm bg-c-bg border border-c-border text-c-text hover:bg-gray-50 transition-colors flex items-center justify-center gap-1">
                         <span class="ms text-sm">share</span>Compartir
@@ -1717,6 +1721,19 @@ function detenerCamara() {
     if (flip) flip.style.display = 'none';
     _currentFacing = 'user';
 }
+
+function toggleMonitorFullscreen() {
+    const el = document.getElementById('monitor-preview');
+    if (!document.fullscreenElement) {
+        (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen).call(el).catch(() => {});
+    } else {
+        document.exitFullscreen();
+    }
+}
+document.addEventListener('fullscreenchange', () => {
+    const icon = document.getElementById('monitor-fs-icon');
+    if (icon) icon.textContent = document.fullscreenElement ? 'fullscreen_exit' : 'fullscreen';
+});
 
 async function cambiarCamara() {
     if (!_whipPc) return;
