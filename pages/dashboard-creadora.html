@@ -1605,6 +1605,10 @@ async function irEnVivo() {
         _ingresosInterval = setInterval(actualizarIngresos, 30000);
         toast('Estas en vivo!', 'success');
     } catch(e) {
+        if (streamActivoId) {
+            candela._req('POST', `/api/streams/${streamActivoId}/terminar`).catch(() => {});
+            streamActivoId = null;
+        }
         detenerCamara();
         document.getElementById('stream-sin-activo').style.display = '';
         document.getElementById('stream-activo').style.display = 'none';
