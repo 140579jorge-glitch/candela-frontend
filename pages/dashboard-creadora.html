@@ -698,11 +698,6 @@
                     <div id="monitor-connecting" class="absolute inset-0 flex items-center justify-center bg-black/70">
                         <p class="text-white text-sm font-semibold">Conectando camara...</p>
                     </div>
-                    <button id="btn-flip-cam" onclick="cambiarCamara()" style="display:none"
-                        class="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center pointer-events-auto"
-                        style="background:rgba(0,0,0,.5)">
-                        <span class="ms text-white" style="font-size:20px">flip_camera_android</span>
-                    </button>
                 </div>
 
                 <!-- Acciones -->
@@ -710,6 +705,10 @@
                     <button onclick="terminarStream()"
                         class="flex-1 py-3 rounded-xl font-bold text-sm border-2 border-red-400 text-red-500 hover:bg-red-50 transition-colors">
                         Terminar live
+                    </button>
+                    <button id="btn-flip-cam" onclick="cambiarCamara()" style="display:none"
+                        class="w-12 py-3 rounded-xl border border-c-border bg-c-bg text-c-text hover:bg-gray-50 transition-colors flex items-center justify-center shrink-0">
+                        <span class="ms" style="font-size:20px">flip_camera_android</span>
                     </button>
                     <button onclick="compartirLink()"
                         class="flex-1 py-3 rounded-xl font-bold text-sm bg-c-bg border border-c-border text-c-text hover:bg-gray-50 transition-colors flex items-center justify-center gap-1">
