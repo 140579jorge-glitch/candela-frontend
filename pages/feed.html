@@ -87,6 +87,15 @@
 
 <main class="max-w-2xl mx-auto px-4 py-4">
 
+    <!-- STREAMS EN VIVO -->
+    <div id="sec-lives" class="hidden mb-4">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            <span class="text-xs font-bold text-c-text uppercase tracking-wider">En vivo ahora</span>
+        </div>
+        <div id="lives-row" class="flex gap-3 overflow-x-auto pb-1" style="scrollbar-width:none;-ms-overflow-style:none"></div>
+    </div>
+
     <!-- FEED -->
     <div id="sec-feed">
         <div id="feed-skeleton" class="flex flex-col gap-4">
@@ -167,6 +176,27 @@ async function init() {
     av.textContent = (u?.nombre || 'U')[0].toUpperCase();
 
     cargarFeed();
+    cargarLives();
+}
+
+async function cargarLives() {
+    try {
+        const r = await fetch(`${API_BASE}/api/streams/activos`);
+        if (!r.ok) return;
+        const lives = await r.json();
+        if (!lives.length) return;
+        const row = document.getElementById('lives-row');
+        row.innerHTML = lives.map(s => {
+            const avatar = s.creadora_avatar
+                ? `<img src="${s.creadora_avatar}" class="w-14 h-14 rounded-full object-cover border-2 border-red-500 shrink-0">`
+                : `<div class="w-14 h-14 rounded-full border-2 border-red-500 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${esc((s.creadora_nombre||'C')[0])}</div>`;
+            return `<a href="stream.html?id=${esc(s.id)}" class="flex flex-col items-center gap-1 shrink-0" style="min-width:64px">
+                <div class="relative">${avatar}<span class="absolute bottom-0 right-0 bg-red-500 text-white text-[8px] font-bold px-1 rounded">EN VIVO</span></div>
+                <span class="text-[10px] font-semibold text-c-text text-center leading-tight max-w-[60px] truncate">${esc(s.creadora_nombre||'Creadora')}</span>
+            </a>`;
+        }).join('');
+        document.getElementById('sec-lives').classList.remove('hidden');
+    } catch(_) {}
 }
 
 async function cargarFeed() {
