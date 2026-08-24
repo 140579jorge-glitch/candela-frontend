@@ -22,528 +22,440 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <style>
-        body { font-family:'Nunito',sans-serif; background:#FFF8F5; color:#2D2D2D; }
-        .ms { font-family:'Material Symbols Outlined'; font-style:normal; line-height:1; user-select:none; }
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .glass { background:rgba(255,248,245,.9); backdrop-filter:blur(20px); }
+        *,*::before,*::after{box-sizing:border-box}
+        body{font-family:'Nunito',sans-serif;background:#FFF8F5;color:#2D2D2D;margin:0}
+        .ms{font-family:'Material Symbols Outlined';font-style:normal;line-height:1;user-select:none}
+        .logo-text{background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .glass{background:rgba(255,248,245,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+        .c-btn{background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:800;border:none;cursor:pointer;font-family:'Nunito',sans-serif;transition:filter .15s,transform .12s}
+        .c-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
 
-        /* step card */
-        .step-card { background:#fff; border:1px solid #F0E6E1; border-radius:24px; padding:28px; box-shadow:0 2px 16px rgba(244,162,97,.08); }
-        .step-num { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff; font-weight:800; font-size:16px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .step-title { font-weight:800; font-size:17px; color:#2D2D2D; }
-        .step-desc { font-size:14px; color:#8B7D77; line-height:1.6; margin-top:6px; }
+        /* Hero */
+        .hero-gradient{background:linear-gradient(135deg,#FFF0E8 0%,#FFF8F5 60%,#FFF0EC 100%)}
 
-        /* phone mockup */
-        .phone { width:180px; height:320px; border-radius:30px; background:#1a1a1a; border:4px solid #333; position:relative; flex-shrink:0; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.25); }
-        .phone-screen { position:absolute; inset:6px; border-radius:24px; overflow:hidden; background:#111; }
-        .phone-notch { position:absolute; top:0; left:50%; transform:translateX(-50%); width:60px; height:16px; background:#1a1a1a; border-radius:0 0 12px 12px; z-index:10; }
+        /* Step cards */
+        .step-card{background:#fff;border:1px solid #F0E6E1;border-radius:24px;padding:32px;box-shadow:0 4px 24px rgba(244,162,97,.07);position:relative;overflow:hidden}
+        .step-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#F4A261,#E8A598)}
+        .step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(244,162,97,.35)}
+        .step-title{font-weight:800;font-size:18px;color:#2D2D2D;margin-bottom:4px}
+        .step-desc{font-size:14px;color:#8B7D77;line-height:1.65}
+        .step-connector{width:2px;height:28px;background:linear-gradient(180deg,#F4A261,#F2D5C4);margin:0 auto;margin-left:19px}
 
-        /* larix screen mockups */
-        .larix-main { background:linear-gradient(180deg,#1a1a2e 0%,#16213e 100%); width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px 12px 16px; }
-        .larix-cam { flex:1; width:100%; background:linear-gradient(135deg,#2a2a3e,#1a1a2e); border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; position:relative; }
-        .larix-rec-btn { width:54px; height:54px; border-radius:50%; background:#E8413E; border:4px solid rgba(232,65,62,.3); display:flex; align-items:center; justify-content:center; }
+        /* Phone mockup */
+        .phone{width:160px;height:300px;border-radius:28px;background:#111;border:5px solid #222;position:relative;flex-shrink:0;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.28)}
+        .phone-screen{position:absolute;inset:0;overflow:hidden}
+        .phone-bar{position:absolute;top:0;left:50%;transform:translateX(-50%);width:48px;height:14px;background:#111;border-radius:0 0 10px 10px;z-index:10}
 
-        .settings-screen { background:#f2f2f7; width:100%; height:100%; display:flex; flex-direction:column; }
-        .settings-header { background:#1c1c1e; padding:10px 12px 8px; display:flex; align-items:center; gap:6px; }
-        .settings-row { background:#fff; margin:0 8px 1px; padding:8px 10px; font-size:10px; display:flex; justify-content:space-between; align-items:center; color:#1c1c1e; }
-        .settings-row:first-of-type { border-radius:8px 8px 0 0; margin-top:10px; }
-        .settings-row:last-of-type { border-radius:0 0 8px 8px; margin-bottom:10px; }
-        .settings-row .val { color:#8e8e93; font-size:9px; }
-        .settings-section { font-size:9px; color:#6d6d72; margin:4px 16px 4px; text-transform:uppercase; letter-spacing:.5px; }
+        /* Dashboard mockup screens */
+        .dash-bg{background:#FFF8F5;width:100%;height:100%;display:flex;flex-direction:column}
+        .dash-nav{background:#fff;border-bottom:1px solid #F0E6E1;padding:8px 10px;display:flex;align-items:center;justify-content:space-between}
+        .dash-nav-logo{font-size:13px;font-weight:800;background:linear-gradient(90deg,#F4A261,#E8A598);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .dash-body{padding:12px;flex:1;overflow:hidden}
+        .dash-field{background:#fff;border:1px solid #F0E6E1;border-radius:10px;padding:8px 10px;margin-bottom:6px}
+        .dash-field .lbl{font-size:8px;color:#8B7D77;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+        .dash-field .val{font-size:10px;color:#2D2D2D;font-weight:600;margin-top:2px}
+        .dash-live-btn{background:linear-gradient(135deg,#F4A261,#E8A598);border-radius:10px;padding:9px;text-align:center;color:#fff;font-size:10px;font-weight:900;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:4px}
+        .dash-live-btn .dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.2s ease-in-out infinite}
+        @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
 
-        .connections-screen { background:#f2f2f7; width:100%; height:100%; display:flex; flex-direction:column; }
-        .conn-header { background:#fff; border-bottom:1px solid #e5e5ea; padding:8px 10px; font-size:11px; font-weight:700; color:#1c1c1e; display:flex; align-items:center; justify-content:space-between; }
-        .conn-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:16px; }
-        .conn-add-row { background:#fff; margin:8px; padding:10px; border-radius:10px; font-size:11px; color:#007AFF; display:flex; align-items:center; gap:6px; }
+        /* En vivo screen mockup */
+        .live-bg{background:#000;width:100%;height:100%;position:relative;overflow:hidden}
+        .live-cam{width:100%;height:100%;background:linear-gradient(160deg,#1a0d0d 0%,#2d1515 40%,#1a0808 100%);display:flex;align-items:center;justify-content:center}
+        .live-grad-top{position:absolute;top:0;left:0;right:0;height:90px;background:linear-gradient(to bottom,rgba(0,0,0,.7),transparent)}
+        .live-grad-bot{position:absolute;bottom:0;left:0;right:0;height:110px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent)}
+        .live-badge{position:absolute;top:10px;left:10px;background:#E8413E;color:#fff;font-size:8px;font-weight:900;padding:3px 7px;border-radius:5px;letter-spacing:.6px;display:flex;align-items:center;gap:3px}
+        .live-badge .dot{width:5px;height:5px;border-radius:50%;background:#fff;animation:pulse 1.2s ease-in-out infinite}
+        .live-viewers{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;font-size:8px;font-weight:700;padding:3px 7px;border-radius:10px}
+        .live-chat-msg{position:absolute;bottom:55px;left:8px;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border-radius:12px;padding:5px 9px;font-size:8px;color:#fff;max-width:100px}
+        .live-chat-user{color:#F4A261;font-weight:800}
+        .live-gift-float{position:absolute;bottom:60px;right:8px;font-size:20px;animation:giftUp 2.5s ease-out infinite}
+        @keyframes giftUp{0%{opacity:1;transform:translateY(0)}80%{opacity:.6;transform:translateY(-50px)}100%{opacity:0;transform:translateY(-60px)}}
+        .live-input{position:absolute;bottom:8px;left:8px;right:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:6px 10px;font-size:8px;color:rgba(255,255,255,.7)}
 
-        .url-screen { background:#f2f2f7; width:100%; height:100%; display:flex; flex-direction:column; }
-        .url-header { background:#fff; border-bottom:1px solid #e5e5ea; padding:8px 10px; font-size:11px; font-weight:700; color:#1c1c1e; }
-        .url-field { background:#fff; margin:8px; border-radius:10px; padding:10px; }
-        .url-label { font-size:9px; color:#6d6d72; text-transform:uppercase; letter-spacing:.4px; margin-bottom:3px; }
-        .url-value { font-size:9px; color:#1c1c1e; font-family:monospace; word-break:break-all; background:#f2f2f7; padding:4px 6px; border-radius:6px; }
-        .url-save { background:#007AFF; color:#fff; font-size:11px; font-weight:700; padding:8px; border-radius:10px; text-align:center; margin:0 8px; }
+        /* Permisos mockup */
+        .perm-bg{background:#fff;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:12px}
+        .perm-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598);display:flex;align-items:center;justify-content:center;font-size:24px}
+        .perm-title{font-size:11px;font-weight:800;color:#1c1c1e;text-align:center}
+        .perm-sub{font-size:8px;color:#8e8e93;text-align:center;line-height:1.4}
+        .perm-btn{width:100%;background:#007AFF;color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:7px;text-align:center}
+        .perm-btn-ghost{width:100%;background:none;color:#8e8e93;font-size:9px;text-align:center;padding:4px}
 
-        .live-screen { background:#000; width:100%; height:100%; position:relative; overflow:hidden; }
-        .live-cam-view { width:100%; height:70%; background:linear-gradient(135deg,#2d2d2d,#1a1a1a); display:flex; align-items:center; justify-content:center; }
-        .live-top-bar { position:absolute; top:8px; left:8px; right:8px; display:flex; align-items:center; justify-between; gap:6px; }
-        .live-badge-sm { background:#E8413E; color:#fff; font-size:8px; font-weight:800; padding:2px 6px; border-radius:4px; letter-spacing:.5px; }
-        .live-bottom { position:absolute; bottom:0; left:0; right:0; padding:8px 10px; background:linear-gradient(to top, rgba(0,0,0,.8),transparent); }
-        .live-rec-btn { width:44px; height:44px; border-radius:50%; background:rgba(232,65,62,.9); border:3px solid rgba(255,255,255,.3); margin:0 auto; }
+        /* Tip box */
+        .tip{background:rgba(244,162,97,.07);border:1px solid rgba(244,162,97,.22);border-radius:14px;padding:14px 16px}
+        .tip-green{background:rgba(52,199,89,.07);border-color:rgba(52,199,89,.25)}
 
-        /* dashboard mockup */
-        .dash-screen { background:#FFF8F5; width:100%; height:100%; display:flex; flex-direction:column; }
-        .dash-header { background:#fff; border-bottom:1px solid #F0E6E1; padding:8px 10px; display:flex; align-items:center; gap:4px; }
-        .dash-logo { font-size:12px; font-weight:700; color:#F4A261; }
-        .dash-section { padding:10px; }
-        .dash-label { font-size:8px; color:#8B7D77; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
-        .dash-field { background:#fff; border:1px solid #F0E6E1; border-radius:8px; padding:6px 8px; margin-bottom:5px; }
-        .dash-field .lbl { font-size:8px; color:#8B7D77; }
-        .dash-field .val { font-size:8px; color:#2D2D2D; font-family:monospace; word-break:break-all; margin-top:1px; }
-        .dash-btn { background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff; font-size:9px; font-weight:800; padding:7px; border-radius:8px; text-align:center; margin-top:6px; }
+        /* Feature pills */
+        .feat-pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #F0E6E1;border-radius:30px;padding:8px 14px;font-size:13px;font-weight:600;color:#2D2D2D;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+        .feat-pill .ms{font-size:18px;color:#F4A261}
 
-        /* tip box */
-        .tip-box { background:rgba(244,162,97,.08); border:1px solid rgba(244,162,97,.25); border-radius:14px; padding:14px 16px; }
-        .tip-box.rojo { background:rgba(232,65,62,.06); border-color:rgba(232,65,62,.2); }
+        /* Gift grid */
+        .gift-item{background:#fff;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px}
+        .gift-item .emoji{font-size:28px;line-height:1}
+        .gift-item .name{font-weight:800;font-size:14px}
+        .gift-item .price{font-size:11px;color:#8B7D77;margin-top:1px}
+        .gift-item .earn{font-size:11px;color:#34C759;font-weight:700}
 
-        /* store badges */
-        .store-btn { display:inline-flex; align-items:center; gap:8px; background:#1c1c1e; color:#fff; border-radius:12px; padding:10px 16px; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; }
-        .store-btn.verde { background:#157efb; }
-
-        /* progress bar */
-        .progress-bar { height:4px; background:#F2D5C4; border-radius:2px; margin:6px 0; }
-        .progress-fill { height:100%; background:linear-gradient(90deg,#F4A261,#E8A598); border-radius:2px; transition:width .3s; }
+        /* FAQ */
+        details summary{list-style:none}
+        details summary::-webkit-details-marker{display:none}
+        details[open] summary .chevron{transform:rotate(180deg)}
+        .chevron{transition:transform .2s;display:inline-block}
     </style>
 </head>
 <body class="min-h-screen">
 
 <!-- Nav -->
 <nav class="glass sticky top-0 z-50 border-b border-c-border px-4 py-3 flex items-center gap-3">
-    <a href="javascript:history.back()" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-c-bg transition-colors text-c-soft">
+    <a href="javascript:history.back()" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-c-champagne/40 transition-colors text-c-soft">
         <span class="ms">arrow_back</span>
     </a>
     <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
-    <span class="text-c-border">|</span>
-    <span class="text-sm font-bold text-c-text">Como hacer un stream en vivo</span>
+    <span class="text-c-border mx-1">|</span>
+    <span class="text-sm font-bold text-c-text">Guia de streaming</span>
 </nav>
 
-<div class="max-w-2xl mx-auto px-4 py-8 pb-20 space-y-6">
-
-    <!-- Hero -->
-    <div class="text-center py-4">
-        <div class="text-5xl mb-3">📱🎥</div>
-        <h1 class="font-display text-2xl font-semibold text-c-text mb-2">Transmite en vivo en 5 minutos</h1>
-        <p class="text-c-soft text-sm max-w-sm mx-auto">Solo necesitas tu celular y la app gratuita Larix Broadcaster. Sigue estos pasos y ya.</p>
+<!-- Hero -->
+<div class="hero-gradient border-b border-c-border px-4 py-12 text-center">
+    <div class="inline-flex items-center gap-2 bg-red-50 border border-red-200 rounded-full px-4 py-1.5 mb-5">
+        <span class="w-2 h-2 rounded-full bg-red-500 inline-block animate-pulse"></span>
+        <span class="text-red-600 text-xs font-bold tracking-wide uppercase">Sin apps. Sin configuracion.</span>
     </div>
-
-    <!-- Barra de progreso visual -->
-    <div class="bg-white border border-c-border rounded-2xl p-4">
-        <div class="flex justify-between text-xs font-bold text-c-soft mb-2">
-            <span>Inicio</span>
-            <span>En vivo</span>
-        </div>
-        <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-full bg-c-accent text-white flex items-center justify-center text-xs font-black flex-shrink-0">1</div>
-            <div class="flex-1 progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-            <div class="w-7 h-7 rounded-full bg-c-accent text-white flex items-center justify-center text-xs font-black flex-shrink-0">2</div>
-            <div class="flex-1 progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-            <div class="w-7 h-7 rounded-full bg-c-accent text-white flex items-center justify-center text-xs font-black flex-shrink-0">3</div>
-            <div class="flex-1 progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-            <div class="w-7 h-7 rounded-full bg-c-accent text-white flex items-center justify-center text-xs font-black flex-shrink-0">4</div>
-            <div class="flex-1 progress-bar"><div class="progress-fill" style="width:0%"></div></div>
-            <div class="w-7 h-7 rounded-full border-2 border-c-border text-c-soft flex items-center justify-center text-xs font-black flex-shrink-0">5</div>
-        </div>
-        <div class="flex justify-between text-[10px] text-c-soft mt-2 px-1">
-            <span>Instalar</span>
-            <span>Crear stream</span>
-            <span>Configurar</span>
-            <span>Conectar</span>
-            <span>Transmitir</span>
-        </div>
+    <h1 class="font-display text-3xl md:text-4xl font-semibold text-c-text mb-3 leading-tight">Transmite en vivo<br><em>directo desde tu navegador</em></h1>
+    <p class="text-c-soft text-sm md:text-base max-w-md mx-auto mb-8 leading-relaxed">Abre Candela desde tu celular o laptop, presiona un boton y ya estas en vivo. Tus fans te ven en tiempo real con chat y obsequios.</p>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+        <span class="feat-pill"><span class="ms">smartphone</span>Celular o laptop</span>
+        <span class="feat-pill"><span class="ms">bolt</span>En segundos</span>
+        <span class="feat-pill"><span class="ms">lock</span>Solo tu navegador</span>
     </div>
+</div>
+
+<div class="max-w-2xl mx-auto px-4 py-10 pb-24 space-y-2">
 
     <!-- PASO 1 -->
     <div class="step-card">
         <div class="flex items-start gap-4">
             <div class="step-num">1</div>
-            <div>
-                <div class="step-title">Descarga Larix Broadcaster</div>
-                <div class="step-desc">Es una app gratuita para tu celular. Es la misma que usan streamers profesionales. Disponible para Android e iPhone.</div>
+            <div class="flex-1">
+                <div class="step-title">Entra a tu dashboard y ve a "Stream en vivo"</div>
+                <div class="step-desc">Desde tu celular o computadora, abre Candela, entra a tu cuenta de creadora y selecciona <strong class="text-c-text">"Stream en vivo"</strong> en el menu lateral.</div>
             </div>
         </div>
 
-        <div class="mt-5 flex gap-3 flex-wrap">
-            <a href="#" onclick="alert('Busca Larix Broadcaster en Google Play Store')" class="store-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M3.18 23.78C3.06 23.72 3 23.59 3 23.41V0.59C3 0.41 3.06 0.28 3.18 0.22L3.22 0.19L13.05 10.02V10.15V10.27L3.22 20.1L3.18 23.78Z"/><path d="M16.32 13.3L13.05 10.03V9.91V9.79L16.32 6.52L16.38 6.56L20.24 8.77C21.32 9.38 21.32 10.36 20.24 10.97L16.38 13.26L16.32 13.3Z" fill="#FFD400"/><path d="M16.38 13.26L13.05 10L3.18 19.87C3.55 20.26 4.14 20.31 4.81 19.93L16.38 13.26Z" fill="#FF3333"/><path d="M16.38 6.56L4.81 -0.11C4.14 -0.49 3.55 -0.44 3.18 -0.05L13.05 9.82L16.38 6.56Z" fill="#00D170"/></svg>
-                Google Play
-            </a>
-            <a href="#" onclick="alert('Busca Larix Broadcaster en App Store')" class="store-btn" style="background:#157efb">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                App Store
-            </a>
-        </div>
+        <div class="mt-6 flex gap-5 items-start">
+            <div class="phone">
+                <div class="phone-bar"></div>
+                <div class="phone-screen">
+                    <div class="dash-bg">
+                        <div class="dash-nav">
+                            <div class="dash-nav-logo">Candela</div>
+                            <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598)"></div>
+                        </div>
+                        <div style="display:flex;height:100%">
+                            <div style="width:48px;background:#fff;border-right:1px solid #F0E6E1;display:flex;flex-direction:column;align-items:center;padding-top:14px;gap:14px">
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#8B7D77">home</span>
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#8B7D77">person</span>
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#F4A261;background:rgba(244,162,97,.1);border-radius:8px;padding:4px">live_tv</span>
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#8B7D77">account_balance_wallet</span>
+                            </div>
+                            <div class="dash-body">
+                                <div style="font-size:9px;font-weight:800;color:#2D2D2D;margin-bottom:8px">Live</div>
+                                <div class="dash-field">
+                                    <div class="lbl">Titulo</div>
+                                    <div class="val">Noche especial ✨</div>
+                                </div>
+                                <div class="dash-field">
+                                    <div class="lbl">Precio entrada</div>
+                                    <div class="val">$0.00 — Gratis</div>
+                                </div>
+                                <div class="dash-live-btn">
+                                    <div class="dot"></div>Ir en vivo
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="mt-4 tip-box">
-            <p class="text-sm font-bold text-c-accent mb-1">Como buscarla en tu celular:</p>
-            <p class="text-sm text-c-soft">Abre <strong>Google Play</strong> (Android) o <strong>App Store</strong> (iPhone). Busca <strong>"Larix Broadcaster"</strong>. Instala la version gratuita. El icono es un circulo rojo con una camara blanca.</p>
+            <div class="flex-1 space-y-3 text-sm text-c-soft pt-1">
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>Abre <strong class="text-c-text">clubcandela.com</strong> e inicia sesion con tu cuenta</span>
+                </div>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>En el menu, toca <strong class="text-c-text">"Stream en vivo"</strong></span>
+                </div>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>Escribe un <strong class="text-c-text">titulo</strong> para tu live</span>
+                </div>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>Pon el <strong class="text-c-text">precio de entrada</strong> ($0 para live gratis)</span>
+                </div>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>Presiona el boton <strong class="text-c-text">"Ir en vivo"</strong></span>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="step-connector"></div>
 
     <!-- PASO 2 -->
     <div class="step-card">
         <div class="flex items-start gap-4">
             <div class="step-num">2</div>
-            <div>
-                <div class="step-title">Crea tu stream en Candela</div>
-                <div class="step-desc">Entra a tu panel de creadora, ve a "Stream en vivo", pon un titulo y el precio de entrada. El sistema te dara una URL y una clave unica.</div>
+            <div class="flex-1">
+                <div class="step-title">Permite el acceso a camara y microfono</div>
+                <div class="step-desc">El navegador te pedira permiso para usar tu camara y microfono. Toca <strong class="text-c-text">"Permitir"</strong>. Esto solo ocurre la primera vez.</div>
             </div>
         </div>
 
-        <div class="mt-5 flex gap-5 items-start">
-            <!-- Mockup dashboard -->
+        <div class="mt-6 flex gap-5 items-center">
             <div class="phone">
-                <div class="phone-notch"></div>
+                <div class="phone-bar"></div>
                 <div class="phone-screen">
-                    <div class="dash-screen">
-                        <div class="dash-header">
-                            <div class="dash-logo">Candela</div>
-                        </div>
-                        <div class="dash-section">
-                            <div class="dash-label">Stream en vivo</div>
-                            <div class="dash-field">
-                                <div class="lbl">Titulo del stream</div>
-                                <div class="val">Noche especial ✨</div>
-                            </div>
-                            <div class="dash-field">
-                                <div class="lbl">Precio de entrada</div>
-                                <div class="val">$2.00</div>
-                            </div>
-                            <div class="dash-btn">Crear stream</div>
-                            <div style="margin-top:10px">
-                                <div class="dash-field">
-                                    <div class="lbl">URL RTMP</div>
-                                    <div class="val">rtmp://92.222.92.80/live</div>
-                                </div>
-                                <div class="dash-field">
-                                    <div class="lbl">Clave de stream</div>
-                                    <div class="val">a8f3d2e1b9c...</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="perm-bg">
+                        <div class="perm-icon">📷</div>
+                        <div class="perm-title">Candela quiere acceder a tu camara y microfono</div>
+                        <div class="perm-sub">Necesario para transmitir tu live en tiempo real</div>
+                        <div class="perm-btn">Permitir</div>
+                        <div class="perm-btn-ghost">No permitir</div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex-1 space-y-3 text-sm text-c-soft">
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Abre tu dashboard de creadora en <strong class="text-c-text">clubcandela.com</strong></span>
+            <div class="flex-1 space-y-3">
+                <div class="tip">
+                    <p class="text-sm font-bold text-c-accent mb-1">Solo la primera vez</p>
+                    <p class="text-sm text-c-soft">El navegador guarda el permiso. En los siguientes lives, tu camara se activa automaticamente sin volver a preguntar.</p>
                 </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>En el menu lateral, toca <strong class="text-c-text">"Stream en vivo"</strong></span>
-                </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Escribe el titulo de tu transmision</span>
-                </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Pon el precio de entrada (puedes poner $0 si quieres que sea gratis)</span>
-                </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Toca <strong class="text-c-text">"Crear stream"</strong> — apareceran la URL RTMP y la clave</span>
-                </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span><strong class="text-c-text">Copia la URL RTMP completa</strong> (la necesitas en el siguiente paso)</span>
+                <div class="tip tip-green">
+                    <p class="text-sm font-bold" style="color:#34C759;margin-bottom:4px">Si bloqueas por error</p>
+                    <p class="text-sm text-c-soft">Toca el candado en la barra de direcciones del navegador y activa camara y microfono desde ahi.</p>
                 </div>
             </div>
         </div>
-
-        <div class="mt-4 tip-box">
-            <p class="text-sm text-c-soft"><strong class="text-c-text">Importante:</strong> La URL RTMP se ve asi: <code class="bg-c-bg px-1.5 py-0.5 rounded text-xs font-mono">rtmp://92.222.92.80/live/TU_CLAVE</code>. Copia TODA esa linea completa.</p>
-        </div>
     </div>
+
+    <div class="step-connector"></div>
 
     <!-- PASO 3 -->
     <div class="step-card">
         <div class="flex items-start gap-4">
             <div class="step-num">3</div>
-            <div>
-                <div class="step-title">Configura Larix con tu URL</div>
-                <div class="step-desc">Abre Larix en tu celular y agrega una conexion nueva con la URL que copiaste de Candela.</div>
+            <div class="flex-1">
+                <div class="step-title">Ya estas en vivo — interactua con tus fans</div>
+                <div class="step-desc">Tu stream aparece al instante en Candela. Ves el chat en tiempo real, los obsequios que te mandan, y cuantos espectadores hay. Todo en una sola pantalla.</div>
             </div>
         </div>
 
-        <div class="mt-5 grid grid-cols-3 gap-3">
-            <!-- Pantalla A: ajustes -->
-            <div>
-                <div class="phone" style="width:100%;height:240px">
-                    <div class="phone-notch"></div>
-                    <div class="phone-screen">
-                        <div class="settings-screen">
-                            <div class="settings-header">
-                                <div style="width:8px;height:8px;border-radius:50%;background:#E8413E"></div>
-                                <span style="color:#fff;font-size:10px;font-weight:700;margin-left:4px">Larix</span>
-                            </div>
-                            <div class="settings-section">General</div>
-                            <div class="settings-row">Calidad <span class="val">720p</span></div>
-                            <div class="settings-row">Codec <span class="val">H.264</span></div>
-                            <div class="settings-section">Conexiones</div>
-                            <div class="settings-row" style="color:#007AFF;font-weight:700">Connections</div>
-                            <div class="settings-row">Audio <span class="val">AAC</span></div>
+        <div class="mt-6 flex gap-5 items-start">
+            <div class="phone">
+                <div class="phone-bar"></div>
+                <div class="phone-screen">
+                    <div class="live-bg">
+                        <div class="live-cam">
+                            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598);opacity:.35"></div>
                         </div>
+                        <div class="live-grad-top"></div>
+                        <div class="live-grad-bot"></div>
+                        <div class="live-badge"><div class="dot"></div>EN VIVO</div>
+                        <div class="live-viewers">👁 14</div>
+                        <div class="live-chat-msg"><span class="live-chat-user">Sofia_: </span>estas hermosa 😍</div>
+                        <div class="live-gift-float">🌹</div>
+                        <div class="live-input">Escribe algo...</div>
                     </div>
                 </div>
-                <p class="text-xs text-center text-c-soft mt-2 font-bold">A. Toca el icono ⚙️ de ajustes</p>
             </div>
 
-            <!-- Pantalla B: connections -->
-            <div>
-                <div class="phone" style="width:100%;height:240px">
-                    <div class="phone-notch"></div>
-                    <div class="phone-screen">
-                        <div class="connections-screen">
-                            <div class="conn-header">
-                                <span>Connections</span>
-                                <span style="color:#007AFF;font-size:11px">+</span>
-                            </div>
-                            <div class="conn-empty">
-                                <div style="font-size:24px">🔌</div>
-                                <div style="font-size:10px;color:#8e8e93;text-align:center">Sin conexiones. Toca + para agregar</div>
-                            </div>
-                            <div class="conn-add-row">
-                                <span style="font-size:16px">+</span> Add new connection
-                            </div>
-                        </div>
-                    </div>
+            <div class="flex-1 space-y-3 text-sm text-c-soft pt-1">
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>La <strong class="text-c-text">insignia EN VIVO</strong> aparece cuando el stream esta activo</span>
                 </div>
-                <p class="text-xs text-center text-c-soft mt-2 font-bold">B. Toca "+" o "Add new connection"</p>
-            </div>
-
-            <!-- Pantalla C: URL -->
-            <div>
-                <div class="phone" style="width:100%;height:240px">
-                    <div class="phone-notch"></div>
-                    <div class="phone-screen">
-                        <div class="url-screen">
-                            <div class="url-header">Nueva conexion</div>
-                            <div class="url-field">
-                                <div class="url-label">Nombre</div>
-                                <div class="url-value">Candela Live</div>
-                            </div>
-                            <div class="url-field">
-                                <div class="url-label">URL</div>
-                                <div class="url-value">rtmp://92.222.92.80/live/a8f3d2e1...</div>
-                            </div>
-                            <div class="url-save">Guardar</div>
-                        </div>
-                    </div>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>El <strong class="text-c-text">chat</strong> muestra los mensajes de tus fans en tiempo real</span>
                 </div>
-                <p class="text-xs text-center text-c-soft mt-2 font-bold">C. Pega la URL y toca Guardar</p>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>Los <strong class="text-c-text">obsequios</strong> aparecen con animacion y van directo a tu saldo</span>
+                </div>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>El contador muestra cuantos <strong class="text-c-text">espectadores</strong> hay en vivo</span>
+                </div>
+                <div class="flex gap-2.5 items-start">
+                    <span class="text-c-accent font-black mt-0.5">→</span>
+                    <span>Puedes <strong class="text-c-text">escribir en el chat</strong> para responder a tus fans</span>
+                </div>
             </div>
-        </div>
-
-        <div class="mt-4 space-y-2 text-sm text-c-soft">
-            <div class="flex gap-2"><span class="text-c-accent font-black">1.</span><span>Abre Larix y toca el <strong class="text-c-text">icono de engranaje ⚙️</strong> (arriba a la derecha)</span></div>
-            <div class="flex gap-2"><span class="text-c-accent font-black">2.</span><span>Toca <strong class="text-c-text">"Connections"</strong></span></div>
-            <div class="flex gap-2"><span class="text-c-accent font-black">3.</span><span>Toca el <strong class="text-c-text">"+"</strong> para agregar nueva conexion</span></div>
-            <div class="flex gap-2"><span class="text-c-accent font-black">4.</span><span>En <strong class="text-c-text">Nombre</strong> escribe: <code class="bg-c-bg px-1 py-0.5 rounded font-mono text-xs">Candela Live</code></span></div>
-            <div class="flex gap-2"><span class="text-c-accent font-black">5.</span><span>En <strong class="text-c-text">URL</strong> pega la URL RTMP completa que copiaste de Candela</span></div>
-            <div class="flex gap-2"><span class="text-c-accent font-black">6.</span><span>Toca <strong class="text-c-text">Guardar</strong> y vuelve a la pantalla principal</span></div>
-        </div>
-
-        <div class="mt-4 tip-box rojo">
-            <p class="text-sm text-c-soft"><strong class="text-c-text">Si no puedes pegar:</strong> Primero copia la URL en tu celular. Abre el dashboard de Candela desde el mismo celular, copia la URL, y luego ve a Larix. Asi no necesitas pasar el texto de un dispositivo a otro.</span></p>
         </div>
     </div>
+
+    <div class="step-connector"></div>
 
     <!-- PASO 4 -->
     <div class="step-card">
         <div class="flex items-start gap-4">
             <div class="step-num">4</div>
-            <div>
-                <div class="step-title">Inicia la transmision en Larix</div>
-                <div class="step-desc">Ya con la conexion guardada, vuelve a la pantalla principal de Larix y presiona el boton de grabar. La app empezara a transmitir.</div>
+            <div class="flex-1">
+                <div class="step-title">Termina el live cuando quieras</div>
+                <div class="step-desc">Cuando decidas terminar, toca <strong class="text-c-text">"Terminar live"</strong>. El stream se cierra y puedes ver el resumen de ingresos en tu dashboard.</div>
             </div>
         </div>
+        <div class="mt-5 tip">
+            <p class="text-sm text-c-soft">Los ingresos de la entrada y los obsequios quedan registrados en tu saldo al instante. Puedes retirarlos cuando alcances el minimo de retiro.</p>
+        </div>
+    </div>
 
-        <div class="mt-5 flex gap-5 items-start">
-            <!-- Mockup: pantalla live de Larix -->
-            <div class="phone">
-                <div class="phone-notch"></div>
-                <div class="phone-screen">
-                    <div class="live-screen">
-                        <div class="live-cam-view">
-                            <span style="font-size:32px;opacity:.3">👤</span>
-                        </div>
-                        <div style="position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center">
-                            <div class="live-badge-sm">● REC</div>
-                            <div style="background:rgba(0,0,0,.5);color:#fff;font-size:8px;padding:2px 6px;border-radius:8px">00:01:23</div>
-                        </div>
-                        <div style="position:absolute;bottom:0;left:0;right:0;padding:12px;background:linear-gradient(to top,rgba(0,0,0,.8),transparent)">
-                            <div style="display:flex;justify-content:space-around;align-items:center">
-                                <div style="width:28px;height:28px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">🔄</div>
-                                <div class="live-rec-btn" style="background:#666;border-color:rgba(255,255,255,.4)">
-                                    <div style="width:14px;height:14px;background:#fff;border-radius:3px"></div>
-                                </div>
-                                <div style="width:28px;height:28px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">⚙️</div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Funciones extras -->
+    <div class="bg-white border border-c-border rounded-2xl p-6 mt-6">
+        <h2 class="font-bold text-base mb-4 text-c-text">Funciones disponibles durante el live</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-c-bg">
+                <span class="ms text-c-accent mt-0.5" style="font-size:22px">flip_camera_android</span>
+                <div>
+                    <p class="text-sm font-bold text-c-text">Cambiar camara</p>
+                    <p class="text-xs text-c-soft mt-0.5">Alterna entre camara frontal y trasera sin cortar el stream. Ideal en celular.</p>
                 </div>
             </div>
-
-            <div class="flex-1 space-y-3 text-sm text-c-soft">
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Vuelve a la pantalla principal de Larix</span>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-c-bg">
+                <span class="ms text-c-accent mt-0.5" style="font-size:22px">fullscreen</span>
+                <div>
+                    <p class="text-sm font-bold text-c-text">Pantalla completa</p>
+                    <p class="text-xs text-c-soft mt-0.5">Expande tu preview a pantalla completa para verte mejor mientras transmites.</p>
                 </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Asegurate de que tu cara se ve en la camara</span>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-c-bg">
+                <span class="ms text-c-accent mt-0.5" style="font-size:22px">share</span>
+                <div>
+                    <p class="text-sm font-bold text-c-text">Compartir link</p>
+                    <p class="text-xs text-c-soft mt-0.5">Copia el link de tu stream y compartelo por WhatsApp, Telegram o redes sociales.</p>
                 </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Toca el <strong class="text-c-text">boton rojo de grabar</strong> (circulo rojo al centro abajo)</span>
-                </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Espera que diga <strong class="text-c-text">"Connected"</strong> o aparezca el tiempo cronometrado</span>
-                </div>
-                <div class="flex gap-2">
-                    <span class="text-c-accent font-black">→</span>
-                    <span>Si dice "Connected", ya estas transmitiendo al servidor de Candela</span>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-c-bg">
+                <span class="ms text-c-accent mt-0.5" style="font-size:22px">attach_money</span>
+                <div>
+                    <p class="text-sm font-bold text-c-text">Ingresos en tiempo real</p>
+                    <p class="text-xs text-c-soft mt-0.5">Ves cuanto llevas ganado en el live. Se actualiza automaticamente cada 30 segundos.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PASO 5 -->
-    <div class="step-card">
-        <div class="flex items-start gap-4">
-            <div class="step-num">5</div>
-            <div>
-                <div class="step-title">Activa el live en Candela y comparte el link</div>
-                <div class="step-desc">Vuelve a tu dashboard, presiona "Ir en vivo" para activar el stream, y comparte el link con tus fans.</div>
+    <!-- Tips de calidad -->
+    <div class="bg-white border border-c-border rounded-2xl p-6">
+        <h2 class="font-bold text-base mb-4 text-c-text">Tips para un stream de calidad</h2>
+        <div class="space-y-3">
+            <div class="flex gap-3 items-start">
+                <div class="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="ms text-c-accent" style="font-size:16px">wifi</span>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-c-text">Usa WiFi, no datos moviles</p>
+                    <p class="text-xs text-c-soft mt-0.5">El streaming consume ancho de banda. Una conexion WiFi estable garantiza video fluido sin cortes.</p>
+                </div>
             </div>
-        </div>
-
-        <div class="mt-5 grid grid-cols-2 gap-4 text-sm">
-            <div class="bg-c-bg rounded-2xl p-4 text-center">
-                <div class="text-3xl mb-2">📱</div>
-                <p class="font-bold text-c-text text-sm mb-1">Larix esta transmitiendo</p>
-                <p class="text-c-soft text-xs">La app de tu celular ya esta enviando el video</p>
+            <div class="flex gap-3 items-start">
+                <div class="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="ms text-c-accent" style="font-size:16px">wb_sunny</span>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-c-text">Buena iluminacion hace toda la diferencia</p>
+                    <p class="text-xs text-c-soft mt-0.5">Pon una luz frente a ti, nunca detras. Una lampara de escritorio o una ventana con luz natural funcionan perfecto.</p>
+                </div>
             </div>
-            <div class="bg-c-bg rounded-2xl p-4 text-center">
-                <div class="text-3xl mb-2">💻</div>
-                <p class="font-bold text-c-text text-sm mb-1">Activa en el dashboard</p>
-                <p class="text-c-soft text-xs">Toca "Ir en vivo" en el panel de Candela</p>
+            <div class="flex gap-3 items-start">
+                <div class="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="ms text-c-accent" style="font-size:16px">battery_charging_full</span>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-c-text">Conecta el cargador antes de empezar</p>
+                    <p class="text-xs text-c-soft mt-0.5">El streaming consume bateria rapido. Conecta tu celular o laptop al cargador para evitar que se apague en medio del live.</p>
+                </div>
             </div>
-            <div class="bg-c-bg rounded-2xl p-4 text-center">
-                <div class="text-3xl mb-2">🔗</div>
-                <p class="font-bold text-c-text text-sm mb-1">Copia el link de fans</p>
-                <p class="text-c-soft text-xs">El dashboard te da un link para compartir</p>
-            </div>
-            <div class="bg-c-bg rounded-2xl p-4 text-center">
-                <div class="text-3xl mb-2">💰</div>
-                <p class="font-bold text-c-text text-sm mb-1">Recibe ingresos</p>
-                <p class="text-c-soft text-xs">Entradas y obsequios van a tu saldo automaticamente</p>
-            </div>
-        </div>
-
-        <div class="mt-4 tip-box">
-            <p class="text-sm font-bold text-c-accent mb-1">Orden correcto siempre:</p>
-            <div class="text-sm text-c-soft space-y-1">
-                <div class="flex gap-2"><span class="text-c-accent">1.</span> Primero inicia Larix y espera "Connected"</div>
-                <div class="flex gap-2"><span class="text-c-accent">2.</span> Despues presiona "Ir en vivo" en Candela</div>
-                <div class="flex gap-2"><span class="text-c-accent">3.</span> Luego comparte el link</div>
+            <div class="flex gap-3 items-start">
+                <div class="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="ms text-c-accent" style="font-size:16px">camera_rear</span>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-c-text">La camara trasera tiene mejor calidad</p>
+                    <p class="text-xs text-c-soft mt-0.5">En celulares, la camara trasera suele tener mayor resolucion. Usa el boton de cambiar camara para alternar cuando lo necesites.</p>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Obsequios -->
-    <div class="step-card">
-        <div class="flex items-start gap-4">
-            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#E8A598,#D4869D);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">🎁</div>
-            <div>
-                <div class="step-title">Obsequios — como funcionan</div>
-                <div class="step-desc">Tus fans pueden enviarte obsequios en tiempo real mientras transmites. Cada obsequio se debita del saldo del fan y llega a tu cuenta al instante.</div>
-            </div>
+    <div class="bg-white border border-c-border rounded-2xl p-6">
+        <h2 class="font-bold text-base mb-1 text-c-text">Obsequios — cuanto ganas</h2>
+        <p class="text-xs text-c-soft mb-4">Tus fans pueden enviarte obsequios en tiempo real. El 84% es tuyo, el 16% es la comision de Candela.</p>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="gift-item"><span class="emoji">🌹</span><div><div class="name">Rosa</div><div class="price">$0.50 fan paga</div><div class="earn">Tu recibes $0.42</div></div></div>
+            <div class="gift-item"><span class="emoji">💖</span><div><div class="name">Corazon</div><div class="price">$1.00 fan paga</div><div class="earn">Tu recibes $0.84</div></div></div>
+            <div class="gift-item"><span class="emoji">💋</span><div><div class="name">Beso</div><div class="price">$2.00 fan paga</div><div class="earn">Tu recibes $1.68</div></div></div>
+            <div class="gift-item"><span class="emoji">🔥</span><div><div class="name">Fuego</div><div class="price">$5.00 fan paga</div><div class="earn">Tu recibes $4.20</div></div></div>
+            <div class="gift-item"><span class="emoji">💎</span><div><div class="name">Diamante</div><div class="price">$10.00 fan paga</div><div class="earn">Tu recibes $8.40</div></div></div>
+            <div class="gift-item"><span class="emoji">👑</span><div><div class="name">Corona</div><div class="price">$25.00 fan paga</div><div class="earn">Tu recibes $21.00</div></div></div>
+            <div class="gift-item" style="grid-column:span 2"><span class="emoji">🚀</span><div><div class="name">Cohete — el mayor</div><div class="price">$50.00 fan paga</div><div class="earn">Tu recibes $42.00</div></div></div>
         </div>
-
-        <div class="mt-5 grid grid-cols-2 gap-2">
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:28px">🌹</span>
-                <div>
-                    <div style="font-weight:800;font-size:14px">Rosa</div>
-                    <div style="font-size:12px;color:#8B7D77">$0.50 — tu recibes $0.42</div>
-                </div>
-            </div>
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:28px">💖</span>
-                <div>
-                    <div style="font-weight:800;font-size:14px">Corazon</div>
-                    <div style="font-size:12px;color:#8B7D77">$1.00 — tu recibes $0.84</div>
-                </div>
-            </div>
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:28px">💋</span>
-                <div>
-                    <div style="font-weight:800;font-size:14px">Beso</div>
-                    <div style="font-size:12px;color:#8B7D77">$2.00 — tu recibes $1.68</div>
-                </div>
-            </div>
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:28px">🔥</span>
-                <div>
-                    <div style="font-weight:800;font-size:14px">Fuego</div>
-                    <div style="font-size:12px;color:#8B7D77">$5.00 — tu recibes $4.20</div>
-                </div>
-            </div>
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:28px">💎</span>
-                <div>
-                    <div style="font-weight:800;font-size:14px">Diamante</div>
-                    <div style="font-size:12px;color:#8B7D77">$10.00 — tu recibes $8.40</div>
-                </div>
-            </div>
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:28px">👑</span>
-                <div>
-                    <div style="font-weight:800;font-size:14px">Corona</div>
-                    <div style="font-size:12px;color:#8B7D77">$25.00 — tu recibes $21.00</div>
-                </div>
-            </div>
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px;grid-column:span 2">
-                <span style="font-size:28px">🚀</span>
-                <div>
-                    <div style="font-weight:800;font-size:14px">Cohete — el obsequio mayor</div>
-                    <div style="font-size:12px;color:#8B7D77">$50.00 — tu recibes $42.00 en tu saldo</div>
-                </div>
-            </div>
-        </div>
-        <p class="text-xs text-c-soft mt-3">Candela retiene el 16% de cada obsequio como comision de plataforma. El 84% restante va directo a tu saldo disponible para retirar.</p>
     </div>
 
-    <!-- Preguntas frecuentes -->
-    <div class="step-card">
-        <h2 class="font-bold text-base mb-4">Preguntas frecuentes</h2>
-        <div class="space-y-4">
-            <details class="border border-c-border rounded-xl overflow-hidden">
-                <summary class="px-4 py-3 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors">El video no llega a los fans, que hago?</summary>
-                <div class="px-4 pb-4 text-sm text-c-soft pt-2">Verifica que Larix diga "Connected". Si no, revisa que la URL RTMP este copiada completa y correcta. Tambien asegurate de que el wifi de tu celular sea estable. Luego reinicia Larix y vuelve a intentar.</div>
+    <!-- FAQ -->
+    <div class="bg-white border border-c-border rounded-2xl p-6">
+        <h2 class="font-bold text-base mb-4 text-c-text">Preguntas frecuentes</h2>
+        <div class="space-y-2">
+            <details class="border border-c-border rounded-xl overflow-hidden group">
+                <summary class="px-4 py-3.5 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors flex justify-between items-center">
+                    <span>Necesito descargar alguna app?</span>
+                    <span class="ms text-c-soft chevron" style="font-size:18px">expand_more</span>
+                </summary>
+                <div class="px-4 pb-4 pt-1 text-sm text-c-soft leading-relaxed">No. Candela usa la camara de tu navegador directamente. No necesitas Larix, OBS ni ninguna app externa. Solo abre clubcandela.com desde Chrome, Safari o Edge.</div>
             </details>
             <details class="border border-c-border rounded-xl overflow-hidden">
-                <summary class="px-4 py-3 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors">Los fans ven el video con retraso, es normal?</summary>
-                <div class="px-4 pb-4 text-sm text-c-soft pt-2">Si, es completamente normal. El sistema tiene un retraso de 3 a 8 segundos. Esto es igual que en TikTok Live o Twitch. No hay manera de eliminar completamente ese retraso con la tecnologia actual.</div>
+                <summary class="px-4 py-3.5 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors flex justify-between items-center">
+                    <span>Los fans ven el video con retraso, es normal?</span>
+                    <span class="ms text-c-soft chevron" style="font-size:18px">expand_more</span>
+                </summary>
+                <div class="px-4 pb-4 pt-1 text-sm text-c-soft leading-relaxed">Si, es completamente normal. El sistema tiene un retraso de 3 a 8 segundos, igual que en TikTok Live o Twitch. Es inherente a como funciona el streaming en internet.</div>
             </details>
             <details class="border border-c-border rounded-xl overflow-hidden">
-                <summary class="px-4 py-3 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors">Puedo transmitir desde PC o laptop?</summary>
-                <div class="px-4 pb-4 text-sm text-c-soft pt-2">Si. Descarga OBS Studio (gratis, en obsproject.com). En Configuracion > Stream: elige Servicio: Custom, Server: la primera parte de tu URL RTMP (sin la clave), Stream Key: la clave que aparece en el dashboard de Candela.</div>
+                <summary class="px-4 py-3.5 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors flex justify-between items-center">
+                    <span>Puedo transmitir desde laptop o PC?</span>
+                    <span class="ms text-c-soft chevron" style="font-size:18px">expand_more</span>
+                </summary>
+                <div class="px-4 pb-4 pt-1 text-sm text-c-soft leading-relaxed">Si. Abre Candela desde Chrome o Edge en tu laptop, entra al dashboard y presiona "Ir en vivo". El navegador usa tu webcam automaticamente.</div>
             </details>
             <details class="border border-c-border rounded-xl overflow-hidden">
-                <summary class="px-4 py-3 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors">Cuanto tiempo puedo transmitir?</summary>
-                <div class="px-4 pb-4 text-sm text-c-soft pt-2">No hay limite de tiempo. Puedes transmitir por horas. Pero recuerda que cuanto mas larga la transmision, mejor para que tus fans lleguen y se queden. Streams de 30-60 minutos funcionan bien.</div>
+                <summary class="px-4 py-3.5 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors flex justify-between items-center">
+                    <span>Cuanto tiempo puedo transmitir?</span>
+                    <span class="ms text-c-soft chevron" style="font-size:18px">expand_more</span>
+                </summary>
+                <div class="px-4 pb-4 pt-1 text-sm text-c-soft leading-relaxed">No hay limite de tiempo. Streams de 30 a 60 minutos funcionan bien para mantener la atencion. Recuerda conectar el cargador si usas celular.</div>
             </details>
             <details class="border border-c-border rounded-xl overflow-hidden">
-                <summary class="px-4 py-3 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors">Que pasa con el dinero de los obsequios y la entrada?</summary>
-                <div class="px-4 pb-4 text-sm text-c-soft pt-2">Todo va a tu saldo de Candela en tiempo real. Cuando el stream termina puedes ver el total de ingresos en tu panel. Para retirar necesitas tener al menos $20 acumulados en tu saldo.</div>
+                <summary class="px-4 py-3.5 font-bold text-sm cursor-pointer hover:bg-c-bg transition-colors flex justify-between items-center">
+                    <span>Cuando puedo retirar lo que gane?</span>
+                    <span class="ms text-c-soft chevron" style="font-size:18px">expand_more</span>
+                </summary>
+                <div class="px-4 pb-4 pt-1 text-sm text-c-soft leading-relaxed">Todo va a tu saldo de Candela en tiempo real. Puedes solicitar retiro cuando alcances el minimo requerido desde la seccion "Metodos de pago" en tu dashboard.</div>
             </details>
         </div>
     </div>
 
-    <!-- CTA final -->
-    <div class="text-center py-4">
-        <p class="text-c-soft text-sm mb-4">Lista para empezar?</p>
-        <a href="dashboard-creadora.html" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-white font-extrabold text-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+    <!-- CTA -->
+    <div class="text-center py-6">
+        <p class="text-c-soft text-sm mb-4">Lista para tu primer live?</p>
+        <a href="dashboard-creadora.html" class="c-btn inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white font-extrabold text-sm shadow-lg" style="background:linear-gradient(135deg,#F4A261,#E8A598);text-decoration:none">
             <span class="ms" style="font-size:20px">live_tv</span>
-            Crear mi primer stream
+            Ir en vivo ahora
         </a>
     </div>
 
 </div>
-
 </body>
 </html>
