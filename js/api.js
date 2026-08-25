@@ -21,6 +21,8 @@ const candela = {
         return h;
     },
 
+    _wsBase: () => API_URL.replace(/^https/, 'wss').replace(/^http/, 'ws'),
+
     async _req(method, path, body = null, form = false) {
         const opts = { method, headers: form ? { Authorization: `Bearer ${this._token()}` } : this._headers() };
         if (body) opts.body = form ? body : JSON.stringify(body);
@@ -155,6 +157,15 @@ const candela = {
         enviar: (data) => candela._req('POST', '/api/mensajes', data),
         miBandeja: () => candela._req('GET', '/api/mensajes/mi-bandeja'),
         marcarLeido: (id) => candela._req('PATCH', `/api/mensajes/${id}/leer`),
+    },
+
+    chatSesion: {
+        solicitar: (data) => candela._req('POST', '/api/chat-sesion/solicitar', data),
+        cancelar: (id) => candela._req('POST', `/api/chat-sesion/${id}/cancelar`),
+        misSesiones: () => candela._req('GET', '/api/chat-sesion/mis-sesiones'),
+        pendientes: () => candela._req('GET', '/api/chat-sesion/pendientes'),
+        aceptar: (id) => candela._req('POST', `/api/chat-sesion/${id}/aceptar`),
+        rechazar: (id) => candela._req('POST', `/api/chat-sesion/${id}/rechazar`),
     },
 
     admin: {

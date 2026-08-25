@@ -91,6 +91,7 @@
         <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificacion</div>
         <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
+        <div class="nav-item" onclick="mostrar('chat-sesion',this)"><span class="ms">videocam</span>Chat privado</div>
         <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
         <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Metodos de pago</div>
         <div class="nav-item" onclick="mostrar('stream',this)"><span class="ms">live_tv</span>Stream en vivo</div>
@@ -462,6 +463,57 @@
                     </button>
                     <p class="text-center text-xs text-c-soft">Respondemos en 24-48h. Tus documentos son confidenciales.</p>
                 </form>
+            </div>
+        </section>
+
+        <!-- ══ CHAT PRIVADO POR SESION ══ -->
+        <section id="sec-chat-sesion" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Chat privado</h2>
+            <p class="text-c-soft text-sm mb-5">Ofrece sesiones de chat exclusivas a tus fans por minuto. Ganas el 84% de cada sesion.</p>
+
+            <!-- Config -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-semibold text-c-text">Aceptar solicitudes de chat</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-acepta-chat" class="sr-only peer" onchange="guardarAceptaChat()">
+                        <div class="w-11 h-6 bg-c-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-c-accent"></div>
+                    </label>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Precio por minuto (USD)</label>
+                    <div class="flex gap-2 items-center">
+                        <input type="number" id="chat-precio-min" min="1" max="100" step="0.5" value="5"
+                            class="w-28 border border-c-border rounded-xl px-3 py-2 text-sm bg-c-bg focus:outline-none focus:border-c-accent">
+                        <button onclick="guardarPrecioChat()" class="c-btn text-white px-4 py-2 rounded-xl text-sm font-bold">Guardar</button>
+                    </div>
+                    <p id="chat-precio-desc" class="text-xs text-c-soft mt-1"></p>
+                </div>
+            </div>
+
+            <!-- Solicitudes pendientes -->
+            <h3 class="font-semibold text-lg mb-3">Solicitudes pendientes <button onclick="cargarSolicitudesChat()" class="text-xs text-c-accent ml-2">Actualizar</button></h3>
+            <div id="chat-solicitudes-lista" class="space-y-3 mb-6">
+                <p class="text-c-soft text-sm">No hay solicitudes pendientes.</p>
+            </div>
+
+            <!-- Ventana de chat activo (creadora) -->
+            <div id="chat-sesion-activa-panel" class="hidden">
+                <h3 class="font-semibold text-lg mb-3">Chat activo</h3>
+                <div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm flex flex-col" style="height:400px">
+                    <div class="flex items-center justify-between mb-2">
+                        <span id="chat-sesion-fan-nombre" class="font-semibold text-sm text-c-text"></span>
+                        <span id="chat-sesion-timer-cr" class="text-xs text-c-soft"></span>
+                    </div>
+                    <div id="chat-sesion-msgs-cr" class="flex-1 overflow-y-auto space-y-2 text-sm pr-1 mb-3"></div>
+                    <div class="flex gap-2">
+                        <input id="chat-sesion-inp-cr" type="text" maxlength="500" placeholder="Responde..."
+                            onkeydown="if(event.key==='Enter') chatCrEnviar()"
+                            class="flex-1 bg-c-bg rounded-xl px-3 py-2 text-sm border border-c-border focus:outline-none focus:border-c-accent">
+                        <button onclick="chatCrEnviar()" class="c-btn text-white px-4 py-2 rounded-xl text-sm font-bold">Enviar</button>
+                    </div>
+                </div>
+                <button onclick="terminarChatCr()" class="mt-3 c-btn-outline px-4 py-2 rounded-full text-sm font-bold text-red-500 border-red-300">Terminar sesion</button>
             </div>
         </section>
 
@@ -1271,6 +1323,14 @@ function mostrar(sec, navBtn) {
     if (sec === 'propinas') cargarPropinas();
     if (sec === 'stream') cargarStreamActivo();
     if (sec === 'mensajes') { cargarMensajes(); if (perfilData) { document.getElementById('toggle-acepta-msg').checked = perfilData.acepta_mensajes; document.getElementById('msg-precio-input').value = perfilData.precio_mensaje || 5; document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${perfilData.precio_mensaje || 5}`; } }
+    if (sec === 'chat-sesion') {
+        cargarSolicitudesChat();
+        if (perfilData) {
+            document.getElementById('toggle-acepta-chat').checked = !!perfilData.acepta_chat_sesion;
+            document.getElementById('chat-precio-min').value = perfilData.precio_chat_minuto || 5;
+            document.getElementById('chat-precio-desc').textContent = `Precio actual: $${perfilData.precio_chat_minuto || 5}/min`;
+        }
+    }
 }
 
 // ─── REFERIDAS ───────────────────────────────────────────────
@@ -1399,6 +1459,130 @@ async function guardarPrecioMsg() {
     try {
         await candela.creadoras.actualizarPerfil({ precio_mensaje: precio });
         document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${precio}`;
+        toast('Precio guardado', 'success');
+    } catch(e) { toast('Error al guardar', 'error'); }
+}
+
+// ─── CHAT SESION (creadora) ───────────────────────────────────
+let _chatCrWs = null;
+let _chatCrTimer = null;
+
+async function cargarSolicitudesChat() {
+    try {
+        const lista = await candela.chatSesion.pendientes();
+        const cont = document.getElementById('chat-solicitudes-lista');
+        if (!lista.length) {
+            cont.innerHTML = '<p class="text-c-soft text-sm">No hay solicitudes pendientes.</p>';
+            return;
+        }
+        cont.innerHTML = lista.map(s => `
+            <div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm flex items-start gap-4">
+                <div class="flex-1">
+                    <p class="font-semibold text-sm">${esc(s.fan_nombre)}</p>
+                    <p class="text-xs text-c-soft">${s.duracion_minutos} min — $${s.precio_total.toFixed(2)}</p>
+                    ${s.mensaje_inicial ? `<p class="text-sm text-c-text mt-1 italic">"${esc(s.mensaje_inicial)}"</p>` : ''}
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="aceptarSolicitudChat('${s.id}','${esc(s.fan_nombre)}')" class="c-btn text-white px-3 py-1.5 rounded-full text-xs font-bold">Aceptar</button>
+                    <button onclick="rechazarSolicitudChat('${s.id}')" class="c-btn-outline px-3 py-1.5 rounded-full text-xs font-bold text-red-500 border-red-300">Rechazar</button>
+                </div>
+            </div>
+        `).join('');
+    } catch(e) { console.error(e); }
+}
+
+async function aceptarSolicitudChat(sesionId, fanNombre) {
+    try {
+        const r = await candela.chatSesion.aceptar(sesionId);
+        toast('Sesion aceptada. Conectando...', 'success');
+        await cargarSolicitudesChat();
+        _abrirChatCr(sesionId, fanNombre, r.expires_at);
+    } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+async function rechazarSolicitudChat(sesionId) {
+    try {
+        await candela.chatSesion.rechazar(sesionId);
+        toast('Solicitud rechazada. Saldo devuelto al fan.', 'info');
+        await cargarSolicitudesChat();
+    } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+function _abrirChatCr(sesionId, fanNombre, expiresAt) {
+    document.getElementById('chat-sesion-fan-nombre').textContent = fanNombre;
+    document.getElementById('chat-sesion-msgs-cr').innerHTML = '';
+    document.getElementById('chat-sesion-activa-panel').classList.remove('hidden');
+
+    const token = localStorage.getItem('candela_token') || '';
+    const wsBase = candela._wsBase();
+    _chatCrWs = new WebSocket(`${wsBase}/api/chat-sesion/${sesionId}/ws?token=${encodeURIComponent(token)}`);
+
+    _chatCrWs.onmessage = e => {
+        const d = JSON.parse(e.data);
+        if (d.tipo === 'sesion_info') _iniciarTimerCr(d.segundos_restantes);
+        else if (d.tipo === 'heartbeat') _actualizarTimerCr(d.segundos_restantes);
+        else if (d.tipo === 'chat') _agregarMsgCr(d.usuario, d.texto, d.role === 'creadora');
+        else if (d.tipo === 'sesion_fin') {
+            clearInterval(_chatCrTimer);
+            document.getElementById('chat-sesion-timer-cr').textContent = 'Sesion terminada';
+            document.getElementById('chat-sesion-activa-panel').classList.add('hidden');
+            toast('Sesion terminada', 'info');
+        }
+    };
+
+    const hb = setInterval(() => {
+        if (_chatCrWs && _chatCrWs.readyState === WebSocket.OPEN) _chatCrWs.send(JSON.stringify({ tipo: 'heartbeat' }));
+        else clearInterval(hb);
+    }, 30000);
+}
+
+function _iniciarTimerCr(segundos) {
+    _actualizarTimerCr(segundos);
+    _chatCrTimer = setInterval(() => { _actualizarTimerCr(Math.max(0, --segundos)); }, 1000);
+}
+
+function _actualizarTimerCr(s) {
+    const m = Math.floor(s / 60);
+    document.getElementById('chat-sesion-timer-cr').textContent = `${m}:${String(s % 60).padStart(2,'0')} restantes`;
+}
+
+function _agregarMsgCr(usuario, texto, esCr) {
+    const cont = document.getElementById('chat-sesion-msgs-cr');
+    const div = document.createElement('div');
+    div.className = esCr ? 'text-right' : 'text-left';
+    div.innerHTML = `<span class="inline-block max-w-xs px-3 py-2 rounded-2xl text-sm ${esCr ? 'bg-c-accent text-white ml-auto' : 'bg-c-border text-c-text'}">${esc(texto)}</span>`;
+    cont.appendChild(div);
+    cont.scrollTop = cont.scrollHeight;
+}
+
+function chatCrEnviar() {
+    if (!_chatCrWs || _chatCrWs.readyState !== WebSocket.OPEN) return;
+    const inp = document.getElementById('chat-sesion-inp-cr');
+    const texto = inp.value.trim();
+    if (!texto) return;
+    _chatCrWs.send(JSON.stringify({ tipo: 'chat', texto }));
+    _agregarMsgCr('Tu', texto, true);
+    inp.value = '';
+}
+
+function terminarChatCr() {
+    if (_chatCrWs && _chatCrWs.readyState === WebSocket.OPEN) _chatCrWs.send(JSON.stringify({ tipo: 'terminar' }));
+}
+
+async function guardarAceptaChat() {
+    const acepta = document.getElementById('toggle-acepta-chat').checked;
+    try {
+        await candela.creadoras.actualizarPerfil({ acepta_chat_sesion: acepta });
+        toast(acepta ? 'Chat privado activado' : 'Chat privado desactivado', 'success');
+    } catch(e) { toast('Error al guardar', 'error'); }
+}
+
+async function guardarPrecioChat() {
+    const precio = parseFloat(document.getElementById('chat-precio-min').value);
+    if (!precio || precio < 1) { toast('Precio minimo: $1/min', 'error'); return; }
+    try {
+        await candela.creadoras.actualizarPerfil({ precio_chat_minuto: precio });
+        document.getElementById('chat-precio-desc').textContent = `Precio actual: $${precio}/min`;
         toast('Precio guardado', 'success');
     } catch(e) { toast('Error al guardar', 'error'); }
 }

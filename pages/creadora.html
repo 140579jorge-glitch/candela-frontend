@@ -200,6 +200,9 @@
             <button id="btn-propina" class="c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirPropina()">
                 <span class="ms" style="font-size:16px;vertical-align:-3px">volunteer_activism</span> Propina
             </button>
+            <button id="btn-chat-sesion" class="hidden c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirChatSesion()">
+                <span class="ms" style="font-size:16px;vertical-align:-3px">videocam</span> Chat privado
+            </button>
             <button id="btn-msg" class="hidden c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirMensaje()">
                 <span class="ms" style="font-size:16px;vertical-align:-3px">chat_bubble</span> Mensaje
             </button>
@@ -330,6 +333,53 @@
         <button onclick="confirmarCompra()" id="btn-confirmar-compra" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
             Desbloquear por <span id="compra-costo-btn">$0</span> USDT
         </button>
+    </div>
+</div>
+
+<!-- Modal Chat Privado -->
+<div class="modal-bg" id="modal-chat-sesion">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal('modal-chat-sesion')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+        <h2 class="font-display text-xl font-semibold mb-1">Chat privado</h2>
+        <p class="text-c-soft text-sm mb-4">Sesion de chat exclusiva con <strong id="chat-sesion-nombre-creadora"></strong></p>
+        <div id="chat-sesion-precio-info" class="text-xs text-c-soft mb-3"></div>
+
+        <label class="block text-sm font-semibold mb-1">Duracion</label>
+        <div class="flex gap-2 mb-4 flex-wrap">
+            <button onclick="selDuracion(5)" id="dur-5" class="dur-btn c-btn-outline px-4 py-2 rounded-full text-sm font-bold">5 min</button>
+            <button onclick="selDuracion(10)" id="dur-10" class="dur-btn c-btn-outline px-4 py-2 rounded-full text-sm font-bold">10 min</button>
+            <button onclick="selDuracion(15)" id="dur-15" class="dur-btn c-btn-outline px-4 py-2 rounded-full text-sm font-bold">15 min</button>
+            <button onclick="selDuracion(30)" id="dur-30" class="dur-btn c-btn-outline px-4 py-2 rounded-full text-sm font-bold">30 min</button>
+        </div>
+        <div id="chat-sesion-resumen" class="text-c-text font-semibold text-sm mb-3 hidden"></div>
+
+        <label class="block text-sm font-semibold mb-1">Mensaje inicial (opcional)</label>
+        <textarea id="chat-sesion-msg-inicial" maxlength="500" rows="3" placeholder="Cuéntale de qué quieres hablar..." class="w-full border border-c-border rounded-xl px-3 py-2 text-sm bg-c-bg focus:outline-none focus:border-c-accent resize-none mb-4"></textarea>
+
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm text-c-soft">Tu saldo: <strong id="chat-sesion-balance"></strong></span>
+        </div>
+        <button onclick="confirmarChatSesion()" class="c-btn text-white w-full py-3 rounded-full font-bold text-sm">Solicitar sesion</button>
+    </div>
+</div>
+
+<!-- Ventana de chat activo -->
+<div class="modal-bg" id="modal-chat-activo" style="z-index:9999">
+    <div class="modal-box relative flex flex-col" style="max-height:90vh">
+        <div class="flex items-center justify-between mb-3">
+            <div>
+                <span class="font-display font-semibold" id="chat-activo-titulo">Chat privado</span>
+                <span class="ml-2 text-xs text-c-soft" id="chat-activo-timer"></span>
+            </div>
+            <button onclick="terminarChatSesion()" class="c-btn-outline px-3 py-1 rounded-full text-xs font-bold text-red-500 border-red-300">Terminar</button>
+        </div>
+        <div id="chat-activo-mensajes" class="flex-1 overflow-y-auto space-y-2 mb-3 text-sm min-h-40 max-h-80 pr-1"></div>
+        <div class="flex gap-2">
+            <input id="chat-activo-inp" type="text" maxlength="500" placeholder="Escribe un mensaje..."
+                onkeydown="if(event.key==='Enter') chatActivoEnviar()"
+                class="flex-1 bg-c-bg rounded-xl px-3 py-2 text-sm border border-c-border focus:outline-none focus:border-c-accent">
+            <button onclick="chatActivoEnviar()" class="c-btn text-white px-4 py-2 rounded-xl text-sm font-bold">Enviar</button>
+        </div>
     </div>
 </div>
 
@@ -558,6 +608,10 @@ function renderHeader() {
     // Boton mensaje directo — solo si la creadora acepta
     if (c.acepta_mensajes) {
         document.getElementById('btn-msg').classList.remove('hidden');
+    }
+    // Boton chat privado — solo si la creadora acepta sesiones
+    if (c.acepta_chat_sesion) {
+        document.getElementById('btn-chat-sesion').classList.remove('hidden');
     }
 
     // Sticky bar
@@ -821,6 +875,154 @@ async function confirmarPropina() {
         toast(e.message || 'Error al enviar propina', 'error');
     } finally {
         btn.disabled = false; btn.textContent = `Enviar propina de $${monto} USDT`;
+    }
+}
+
+// --- Chat por sesion ---
+let _chatSesionDuracion = 5;
+let _chatSesionWs = null;
+let _chatSesionTimer = null;
+
+function abrirChatSesion() {
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para solicitar un chat privado', 'info'); return; }
+    const pMin = creadoraData?.precio_chat_minuto || 5;
+    document.getElementById('chat-sesion-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
+    document.getElementById('chat-sesion-precio-info').textContent = `$${pMin.toFixed(2)} por minuto`;
+    document.getElementById('chat-sesion-balance').textContent = `$${(userBalance || 0).toFixed(2)}`;
+    document.getElementById('chat-sesion-msg-inicial').value = '';
+    selDuracion(5);
+    document.getElementById('modal-chat-sesion').style.display = 'flex';
+}
+
+function selDuracion(min) {
+    _chatSesionDuracion = min;
+    [5, 10, 15, 30].forEach(m => {
+        const btn = document.getElementById(`dur-${m}`);
+        if (btn) btn.classList.toggle('c-btn', m === min);
+    });
+    const precio = ((creadoraData?.precio_chat_minuto || 5) * min).toFixed(2);
+    const res = document.getElementById('chat-sesion-resumen');
+    res.textContent = `Total: $${precio} USDT por ${min} minutos`;
+    res.classList.remove('hidden');
+}
+
+async function confirmarChatSesion() {
+    const duracion = _chatSesionDuracion;
+    const pMin = creadoraData?.precio_chat_minuto || 5;
+    const total = pMin * duracion;
+    if ((userBalance || 0) < total) {
+        toast(`Saldo insuficiente. Necesitas $${total.toFixed(2)}`, 'error'); return;
+    }
+    const msg = document.getElementById('chat-sesion-msg-inicial').value.trim();
+    try {
+        const r = await candela._req('POST', '/api/chat-sesion/solicitar', {
+            creadora_slug: creadoraData.slug,
+            duracion_minutos: duracion,
+            mensaje_inicial: msg || null,
+        });
+        userBalance = r.nuevo_balance ?? userBalance;
+        cerrarModal('modal-chat-sesion');
+        toast('Solicitud enviada. Esperando que la creadora acepte...', 'success');
+        // Pollear hasta que la sesion sea aceptada o rechazada
+        _esperarAceptacion(r.sesion_id);
+    } catch (e) {
+        toast(e.message || 'Error al solicitar sesion', 'error');
+    }
+}
+
+async function _esperarAceptacion(sesionId) {
+    let intentos = 0;
+    const intervalo = setInterval(async () => {
+        intentos++;
+        if (intentos > 60) { clearInterval(intervalo); toast('La creadora no respondio la solicitud', 'error'); return; }
+        try {
+            const sesiones = await candela._req('GET', '/api/chat-sesion/mis-sesiones');
+            const s = sesiones.find(x => x.id === sesionId);
+            if (!s) return;
+            if (s.estado === 'activa') {
+                clearInterval(intervalo);
+                _abrirVentanaChat(sesionId, s);
+            } else if (s.estado === 'rechazada' || s.estado === 'expirada') {
+                clearInterval(intervalo);
+                toast('La creadora no acepto la solicitud. Tu saldo fue devuelto.', 'info');
+            }
+        } catch (_) {}
+    }, 5000);
+}
+
+function _abrirVentanaChat(sesionId, sesionInfo) {
+    document.getElementById('chat-activo-titulo').textContent = `Chat con ${creadoraData?.nombre_artistico || ''}`;
+    document.getElementById('chat-activo-mensajes').innerHTML = '';
+    document.getElementById('modal-chat-activo').style.display = 'flex';
+
+    const token = candela.auth.getToken ? candela.auth.getToken() : (localStorage.getItem('candela_token') || '');
+    const wsUrl = `${candela._wsBase()}/api/chat-sesion/${sesionId}/ws?token=${encodeURIComponent(token)}`;
+    _chatSesionWs = new WebSocket(wsUrl);
+
+    _chatSesionWs.onmessage = e => {
+        const d = JSON.parse(e.data);
+        if (d.tipo === 'sesion_info') {
+            _iniciarTimerChat(d.segundos_restantes);
+        } else if (d.tipo === 'heartbeat') {
+            _actualizarTimerChat(d.segundos_restantes);
+        } else if (d.tipo === 'chat') {
+            _agregarMensajeChat(d.usuario, d.texto, d.role === 'fan');
+        } else if (d.tipo === 'sesion_fin') {
+            clearInterval(_chatSesionTimer);
+            document.getElementById('chat-activo-timer').textContent = 'Sesion terminada';
+            toast('La sesion de chat ha terminado', 'info');
+            setTimeout(() => cerrarModal('modal-chat-activo'), 3000);
+        }
+    };
+
+    _chatSesionWs.onerror = () => toast('Error de conexion en el chat', 'error');
+
+    // Heartbeat cada 30s
+    const hb = setInterval(() => {
+        if (_chatSesionWs && _chatSesionWs.readyState === WebSocket.OPEN) {
+            _chatSesionWs.send(JSON.stringify({ tipo: 'heartbeat' }));
+        } else {
+            clearInterval(hb);
+        }
+    }, 30000);
+}
+
+function _iniciarTimerChat(segundos) {
+    _actualizarTimerChat(segundos);
+    _chatSesionTimer = setInterval(() => {
+        segundos = Math.max(0, segundos - 1);
+        _actualizarTimerChat(segundos);
+    }, 1000);
+}
+
+function _actualizarTimerChat(segundos) {
+    const m = Math.floor(segundos / 60);
+    const s = segundos % 60;
+    document.getElementById('chat-activo-timer').textContent = `${m}:${String(s).padStart(2, '0')} restantes`;
+}
+
+function _agregarMensajeChat(usuario, texto, esFan) {
+    const cont = document.getElementById('chat-activo-mensajes');
+    const div = document.createElement('div');
+    div.className = esFan ? 'text-right' : 'text-left';
+    div.innerHTML = `<span class="inline-block max-w-xs px-3 py-2 rounded-2xl text-sm ${esFan ? 'bg-c-accent text-white ml-auto' : 'bg-c-border text-c-text'}">${esc(texto)}</span>`;
+    cont.appendChild(div);
+    cont.scrollTop = cont.scrollHeight;
+}
+
+function chatActivoEnviar() {
+    if (!_chatSesionWs || _chatSesionWs.readyState !== WebSocket.OPEN) return;
+    const inp = document.getElementById('chat-activo-inp');
+    const texto = inp.value.trim();
+    if (!texto) return;
+    _chatSesionWs.send(JSON.stringify({ tipo: 'chat', texto }));
+    _agregarMensajeChat('Tu', texto, true);
+    inp.value = '';
+}
+
+function terminarChatSesion() {
+    if (_chatSesionWs && _chatSesionWs.readyState === WebSocket.OPEN) {
+        _chatSesionWs.send(JSON.stringify({ tipo: 'terminar' }));
     }
 }
 
