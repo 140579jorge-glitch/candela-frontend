@@ -44,14 +44,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <style>
         body { font-family:'Nunito',sans-serif; }
-        .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+
+        body::before {
+            content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
+            opacity:.025;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size:256px 256px;
+        }
+
+        .glass { background:rgba(255,248,245,.90); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); }
         .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
-        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
+        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .3s cubic-bezier(.32,.72,0,1),transform .3s cubic-bezier(.32,.72,0,1); }
+        .c-btn:hover { filter:brightness(1.07); }
         .card-overlay { background:linear-gradient(to top,rgba(20,8,2,.82) 0%,rgba(20,8,2,.2) 55%,transparent 100%); }
-        .feed-card { transition:transform .22s ease,box-shadow .22s ease; }
-        .feed-card:hover { transform:translateY(-4px); box-shadow:0 20px 52px rgba(244,162,97,.18); }
-        .action-btn { width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s; }
+        .feed-card { transition:transform .5s cubic-bezier(.32,.72,0,1),box-shadow .5s cubic-bezier(.32,.72,0,1); }
+        .feed-card:hover { transform:translateY(-5px); box-shadow:0 28px 56px rgba(244,162,97,.14); }
+        .action-btn { width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s cubic-bezier(.32,.72,0,1); }
         .action-btn:hover { background:rgba(244,162,97,.75); }
         .action-btn.liked { background:rgba(244,162,97,.9); }
         .dot-on { width:8px;height:8px;border-radius:50%;background:#2ecc71;box-shadow:0 0 6px rgba(46,204,113,.7);display:inline-block; }
