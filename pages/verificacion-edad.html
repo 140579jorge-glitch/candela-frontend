@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificación de Edad — Candela</title>
+<meta name="robots" content="index, follow">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{"c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947","c-text":"#2D2D2D","c-soft":"#8B7D77","c-border":"#F0E6E1","c-champagne":"#F2D5C4"}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Nunito',sans-serif;}
+.logo-text{background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+h2{font-size:1.05rem;font-weight:700;margin-top:2rem;margin-bottom:.5rem;color:#2D2D2D;}
+p,li{color:#8B7D77;line-height:1.7;font-size:.925rem;}
+ul{list-style:disc;padding-left:1.5rem;margin:.5rem 0;}
+strong{color:#2D2D2D;}
+.notice{background:#FFF8F5;border:1px solid #F0E6E1;border-left:4px solid #F4A261;padding:.85rem 1.1rem;border-radius:8px;font-size:.875rem;color:#8B7D77;margin:1.5rem 0;}
+.step-card{background:#fff;border:1px solid #F0E6E1;border-radius:14px;padding:1rem 1.25rem;margin:.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+.step-num{width:36px;height:36px;min-width:36px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.step-content strong{color:#2D2D2D;font-size:.9rem;display:block;margin-bottom:.25rem;}
+.step-content p{font-size:.85rem;color:#8B7D77;margin:0;}
+</style>
+</head>
+<body class="bg-c-bg text-c-text min-h-screen">
+
+<header class="bg-white border-b border-c-border sticky top-0 z-10">
+  <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+    <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+    <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">← Volver</a>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-5 py-10">
+  <h1 class="font-display text-3xl font-semibold mb-2">Política de Verificación de Edad</h1>
+  <p class="text-c-soft text-sm mb-8">Última actualización: agosto 2026</p>
+
+  <div class="notice">
+    Candela es una plataforma exclusivamente para adultos mayores de 18 años. Esta política describe cómo verificamos la edad de todos los usuarios y qué hacemos cuando detectamos una cuenta de persona menor de edad.
+  </div>
+
+  <h2>1. Requisito de edad</h2>
+  <p>El acceso a Candela está <strong>estrictamente limitado a personas de 18 años o más</strong>. Esto aplica tanto para fans como para creadoras. No se permite el registro ni el acceso a personas menores de esta edad bajo ninguna circunstancia.</p>
+
+  <h2>2. Cómo verificamos la edad</h2>
+  <p>Candela aplica verificación de edad en múltiples capas:</p>
+
+  <div class="step-card">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>Confirmación en el interstitial</strong>
+      <p>Antes de acceder al sitio, todos los visitantes deben confirmar que son mayores de 18 años. Esta confirmación incluye el año de nacimiento del visitante y se registra en el navegador.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Fecha de nacimiento al registrarse</strong>
+      <p>Al crear una cuenta (fan o creadora), el usuario debe ingresar su fecha de nacimiento completa. La plataforma valida que la edad calculada sea de 18 años o más antes de permitir el registro. El sistema rechaza automáticamente el formulario si la edad es menor.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Verificación de identidad para creadoras</strong>
+      <p>Las creadoras deben presentar además un documento de identidad oficial con foto (CI, DNI o pasaporte) y una selfie de verificación. Un miembro del equipo de Candela revisa y aprueba manualmente cada solicitud antes de activar la cuenta.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Confirmación de términos con checkbox</strong>
+      <p>Durante el registro, el usuario debe marcar explícitamente un checkbox confirmando que tiene 18 años o más y que acepta los Términos de Servicio y la Política de Privacidad. El registro no puede completarse sin esta confirmación activa (el checkbox no está pre-marcado).</p>
+    </div>
+  </div>
+
+  <h2>3. Datos de verificación almacenados</h2>
+  <ul>
+    <li><strong>Fans:</strong> Fecha de nacimiento declarada (guardada en la base de datos con marca de tiempo del registro).</li>
+    <li><strong>Creadoras:</strong> Fecha de nacimiento declarada + nombre completo real + copia del documento de identidad oficial. Los documentos se almacenan de forma segura y solo accede a ellos el equipo de verificación.</li>
+  </ul>
+
+  <h2>4. Detección y acción contra cuentas de menores</h2>
+  <p>Si Candela detecta o recibe un reporte confiable indicando que una cuenta pertenece a una persona menor de 18 años:</p>
+  <ul>
+    <li>La cuenta es <strong>suspendida de inmediato</strong> preventivamente.</li>
+    <li>Se contacta al titular de la cuenta por email para solicitar documentación verificatoria.</li>
+    <li>Si no se puede verificar la mayoría de edad, la cuenta es <strong>eliminada permanentemente</strong>.</li>
+    <li>En caso de ser una creadora, todo el contenido es removido.</li>
+    <li>En casos que involucren producción de contenido por parte de menores, Candela coopera con las autoridades y reporta a organismos internacionales como NCMEC.</li>
+  </ul>
+
+  <h2>5. Reportar una cuenta sospechosa</h2>
+  <p>Si sospechas que un usuario de Candela podría ser menor de edad, repórtalo de inmediato a través de nuestra página de <a href="/pages/reporte-abuso.html" style="color:#F4A261;font-weight:700;">Reporte de Abuso</a> o directamente a <a href="mailto:legal@clubcandela.com" style="color:#F4A261;font-weight:700;">legal@clubcandela.com</a>.</p>
+
+  <h2>6. Responsabilidad del usuario</h2>
+  <p>Al registrarte en Candela, declaras bajo tu responsabilidad que eres mayor de 18 años. Proporcionar información falsa sobre tu edad es una violación de los Términos de Servicio y puede tener consecuencias legales en tu jurisdicción.</p>
+
+  <h2>7. Contacto</h2>
+  <p>Para consultas sobre este proceso: <a href="mailto:legal@clubcandela.com" style="color:#F4A261;font-weight:700;">legal@clubcandela.com</a></p>
+</main>
+
+<footer class="border-t border-c-border mt-6 py-8 px-5">
+  <div class="max-w-2xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-xs text-c-soft mb-5">
+      <a href="/pages/terminos.html" class="hover:text-c-accent transition-colors">Términos de Servicio</a>
+      <a href="/pages/privacidad.html" class="hover:text-c-accent transition-colors">Privacidad</a>
+      <a href="/pages/normas.html" class="hover:text-c-accent transition-colors">Normas de Contenido</a>
+      <a href="/pages/cookies.html" class="hover:text-c-accent transition-colors">Política de Cookies</a>
+      <a href="/pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. § 2257</a>
+      <a href="/pages/dmca.html" class="hover:text-c-accent transition-colors">DMCA / Copyright</a>
+      <a href="/pages/reporte-abuso.html" class="hover:text-c-accent transition-colors">Reporte de Abuso</a>
+      <a href="mailto:soporte@clubcandela.com" class="hover:text-c-accent transition-colors">Soporte</a>
+    </div>
+    <p class="text-[11px] text-c-soft">© 2026 Candela. Plataforma exclusiva para mayores de 18 años.</p>
+  </div>
+</footer>
+
+<script src="/js/cookie-consent.js"></script>
+</body>
+</html>

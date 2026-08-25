@@ -1,14 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNJ89RN59N"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-HNJ89RN59N');
-    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explorar creadoras latinas — Candela</title>
@@ -185,7 +178,12 @@ let textoBusca = '';
 
 function init() {
     renderTopbar();
-    cargar();
+    if (candela.auth.isLoggedIn()) {
+        cargar();
+    } else {
+        // Redirect non-logged users to index with modal trigger
+        window.location.href = '../index.html?login=1';
+    }
 }
 
 function renderTopbar() {
@@ -326,5 +324,7 @@ function toast(msg,tipo='info'){const c=document.getElementById('toasts');const 
 
 init();
 </script>
+
+<script src="/js/cookie-consent.js"></script>
 </body>
 </html>

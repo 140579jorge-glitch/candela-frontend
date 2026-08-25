@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de Cookies — Candela</title>
+<meta name="robots" content="index, follow">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{"c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947","c-text":"#2D2D2D","c-soft":"#8B7D77","c-border":"#F0E6E1","c-champagne":"#F2D5C4"}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Nunito',sans-serif;}
+.logo-text{background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+h2{font-size:1.05rem;font-weight:700;margin-top:2rem;margin-bottom:.5rem;color:#2D2D2D;}
+p,li{color:#8B7D77;line-height:1.7;font-size:.925rem;}
+ul{list-style:disc;padding-left:1.5rem;margin:.5rem 0;}
+strong{color:#2D2D2D;}
+.notice{background:#FFF8F5;border:1px solid #F0E6E1;border-left:4px solid #F4A261;padding:.85rem 1.1rem;border-radius:8px;font-size:.875rem;color:#8B7D77;margin:1.5rem 0;}
+.cookie-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem;}
+.cookie-table th{text-align:left;padding:.6rem .75rem;border-bottom:2px solid #F0E6E1;color:#2D2D2D;font-weight:700;}
+.cookie-table td{padding:.6rem .75rem;border-bottom:1px solid #F0E6E1;color:#8B7D77;vertical-align:top;}
+.cookie-table tr:last-child td{border-bottom:none;}
+.badge-essential{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;background:#E8F5E9;color:#2E7D32;}
+.badge-analytics{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;background:#FFF8E1;color:#F57F17;}
+.badge-prefs{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;background:#E3F2FD;color:#1565C0;}
+.revoke-btn{background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;border:none;padding:.6rem 1.5rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;transition:filter .2s;}
+.revoke-btn:hover{filter:brightness(1.07);}
+</style>
+</head>
+<body class="bg-c-bg text-c-text min-h-screen">
+
+<header class="bg-white border-b border-c-border sticky top-0 z-10">
+  <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+    <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+    <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">← Volver</a>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-5 py-10">
+  <h1 class="font-display text-3xl font-semibold mb-2">Política de Cookies</h1>
+  <p class="text-c-soft text-sm mb-8">Última actualización: agosto 2026</p>
+
+  <div class="notice">
+    Candela utiliza almacenamiento local del navegador (localStorage) y, con tu consentimiento, cookies de Google Analytics. Esta política explica qué datos se guardan, para qué, y cómo gestionarlos.
+  </div>
+
+  <h2>1. ¿Qué es una cookie y localStorage?</h2>
+  <p>Una <strong>cookie</strong> es un pequeño archivo de texto que un sitio web almacena en tu navegador. <strong>localStorage</strong> es similar pero persiste sin fecha de expiración hasta que la borras manualmente. Ambos permiten que el sitio recuerde información entre visitas.</p>
+
+  <h2>2. Cookies y almacenamiento que usamos</h2>
+  <div style="overflow-x:auto;">
+  <table class="cookie-table">
+    <tr>
+      <th>Nombre</th>
+      <th>Tipo</th>
+      <th>Duración</th>
+      <th>Propósito</th>
+    </tr>
+    <tr>
+      <td><code>candela_token</code></td>
+      <td><span class="badge-essential">Esencial</span></td>
+      <td>Hasta cerrar sesión</td>
+      <td>Token JWT de autenticación. Requerido para mantener tu sesión activa.</td>
+    </tr>
+    <tr>
+      <td><code>candela_user</code></td>
+      <td><span class="badge-essential">Esencial</span></td>
+      <td>Hasta cerrar sesión</td>
+      <td>Datos básicos del perfil (nombre, rol) para personalizar la interfaz.</td>
+    </tr>
+    <tr>
+      <td><code>candela_18</code></td>
+      <td><span class="badge-prefs">Preferencias</span></td>
+      <td>Permanente</td>
+      <td>Registra que confirmaste ser mayor de 18 años para no mostrar el aviso repetidamente.</td>
+    </tr>
+    <tr>
+      <td><code>candela_cookies</code></td>
+      <td><span class="badge-prefs">Preferencias</span></td>
+      <td>Permanente</td>
+      <td>Guarda tu decisión sobre cookies analíticas (aceptado o rechazado).</td>
+    </tr>
+    <tr>
+      <td><code>_ga</code>, <code>_ga_*</code></td>
+      <td><span class="badge-analytics">Analítica</span></td>
+      <td>2 años</td>
+      <td>Google Analytics. Solo se carga si aceptas las cookies analíticas. Mide visitas anónimas para mejorar la plataforma.</td>
+    </tr>
+  </table>
+  </div>
+
+  <h2>3. Cookies esenciales — siempre activas</h2>
+  <p>Las cookies esenciales (<code>candela_token</code>, <code>candela_user</code>, <code>candela_18</code>) son necesarias para el funcionamiento de la plataforma. Sin ellas, no puedes iniciar sesión ni navegar correctamente. No pueden desactivarse.</p>
+
+  <h2>4. Cookies analíticas — requieren consentimiento</h2>
+  <p>Google Analytics (<code>_ga</code>) se carga <strong>únicamente</strong> cuando aceptas las cookies en el banner que aparece en tu primera visita. Si rechazas, no se carga ningún script de seguimiento. Google Analytics tiene activada la opción de <strong>anonimización de IP</strong> en nuestra configuración.</p>
+  <p style="margin-top:.75rem;">Puedes consultar la política de privacidad de Google Analytics en: <a href="https://policies.google.com/privacy" style="color:#F4A261;" target="_blank" rel="noopener">policies.google.com/privacy</a></p>
+
+  <h2>5. Gestionar tus preferencias</h2>
+  <p>Puedes cambiar tu decisión sobre cookies analíticas en cualquier momento desde aquí:</p>
+
+  <div style="background:#fff;border:1px solid #F0E6E1;border-radius:16px;padding:1.25rem 1.5rem;margin:1rem 0;">
+    <p id="consent-status" style="font-size:.875rem;margin-bottom:1rem;"></p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+      <button class="revoke-btn" onclick="setConsent('1')">Aceptar cookies analíticas</button>
+      <button style="background:#fff;border:2px solid #F4A261;color:#F4A261;padding:.55rem 1.25rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;" onclick="setConsent('0')">Rechazar cookies analíticas</button>
+    </div>
+  </div>
+
+  <h2>6. Eliminar cookies del navegador</h2>
+  <p>Puedes eliminar todas las cookies y el almacenamiento local de Candela desde la configuración de privacidad de tu navegador. Esto cerrará tu sesión y borrará todas tus preferencias.</p>
+  <ul>
+    <li><strong>Chrome:</strong> Configuración → Privacidad y seguridad → Borrar datos de navegación</li>
+    <li><strong>Firefox:</strong> Configuración → Privacidad y seguridad → Cookies y datos del sitio</li>
+    <li><strong>Safari:</strong> Preferencias → Privacidad → Gestionar datos de sitios web</li>
+  </ul>
+
+  <h2>7. Cookies de terceros</h2>
+  <p>Además de Google Analytics (solo con consentimiento), Candela no instala cookies de terceros. No hay píxeles de Facebook, Twitter ni redes publicitarias.</p>
+
+  <h2>8. Contacto</h2>
+  <p>Consultas sobre esta política: <a href="mailto:privacidad@clubcandela.com" style="color:#F4A261;font-weight:700;">privacidad@clubcandela.com</a></p>
+</main>
+
+<footer class="border-t border-c-border mt-6 py-8 px-5">
+  <div class="max-w-2xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-xs text-c-soft mb-5">
+      <a href="/pages/terminos.html" class="hover:text-c-accent transition-colors">Términos de Servicio</a>
+      <a href="/pages/privacidad.html" class="hover:text-c-accent transition-colors">Privacidad</a>
+      <a href="/pages/normas.html" class="hover:text-c-accent transition-colors">Normas de Contenido</a>
+      <a href="/pages/cookies.html" class="hover:text-c-accent transition-colors font-bold text-c-accent">Política de Cookies</a>
+      <a href="/pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. § 2257</a>
+      <a href="/pages/dmca.html" class="hover:text-c-accent transition-colors">DMCA / Copyright</a>
+      <a href="/pages/reporte-abuso.html" class="hover:text-c-accent transition-colors">Reporte de Abuso</a>
+      <a href="mailto:soporte@clubcandela.com" class="hover:text-c-accent transition-colors">Soporte</a>
+    </div>
+    <p class="text-[11px] text-c-soft">© 2026 Candela. Plataforma exclusiva para mayores de 18 años.</p>
+  </div>
+</footer>
+
+<script src="/js/cookie-consent.js"></script>
+<script>
+function setConsent(v) {
+  localStorage.setItem('candela_cookies', v);
+  updateStatus();
+  if (v === '1' && window.candela_cc_inject) window.candela_cc_inject();
+  else location.reload();
+}
+function updateStatus() {
+  var v = localStorage.getItem('candela_cookies');
+  var el = document.getElementById('consent-status');
+  if (v === '1') el.innerHTML = '<strong style="color:#2E7D32">✓ Has aceptado</strong> las cookies analíticas.';
+  else if (v === '0') el.innerHTML = '<strong style="color:#C62828">✗ Has rechazado</strong> las cookies analíticas. Google Analytics no está activo.';
+  else el.innerHTML = '<strong style="color:#F57F17">— Pendiente de decisión.</strong> No has aceptado ni rechazado todavía.';
+}
+updateStatus();
+</script>
+</body>
+</html>

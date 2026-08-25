@@ -1,14 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNJ89RN59N"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-HNJ89RN59N');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candela — Creadoras latinas exclusivas</title>
@@ -346,16 +338,25 @@
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-c-border mt-6 py-7 px-4 md:px-10">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <a href="index.html" class="font-display text-xl logo-text font-semibold">Candela</a>
-            <div class="flex gap-5 flex-wrap justify-center text-xs text-c-soft">
-                <a href="pages/terminos.html" class="hover:text-c-accent transition-colors">Terminos</a>
-                <a href="pages/privacidad.html" class="hover:text-c-accent transition-colors">Privacidad</a>
-                <a href="pages/normas.html" class="hover:text-c-accent transition-colors">Normas</a>
-                <a href="pages/gana-con-candela.html" class="hover:text-c-accent transition-colors font-bold text-c-accent">Ser creadora</a>
+    <footer class="border-t border-c-border mt-6 py-8 px-4 md:px-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row items-start justify-between gap-5 mb-6">
+                <a href="index.html" class="font-display text-xl logo-text font-semibold shrink-0">Candela</a>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-2 text-xs text-c-soft">
+                    <a href="pages/terminos.html" class="hover:text-c-accent transition-colors">Términos de Servicio</a>
+                    <a href="pages/privacidad.html" class="hover:text-c-accent transition-colors">Privacidad</a>
+                    <a href="pages/normas.html" class="hover:text-c-accent transition-colors">Normas de Contenido</a>
+                    <a href="pages/cookies.html" class="hover:text-c-accent transition-colors">Política de Cookies</a>
+                    <a href="pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. § 2257</a>
+                    <a href="pages/dmca.html" class="hover:text-c-accent transition-colors">DMCA / Copyright</a>
+                    <a href="pages/reporte-abuso.html" class="hover:text-c-accent transition-colors">Reporte de Abuso</a>
+                    <a href="mailto:soporte@clubcandela.com" class="hover:text-c-accent transition-colors">Soporte</a>
+                </div>
             </div>
-            <p class="text-xs text-c-soft">© 2026 Candela · Solo mayores de 18</p>
+            <div class="border-t border-c-border pt-5 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-c-soft">
+                <p>© 2026 Candela. Todos los derechos reservados. Plataforma exclusiva para mayores de 18 años.</p>
+                <p><a href="pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. § 2257 Records Custodian Statement</a></p>
+            </div>
         </div>
     </footer>
 
@@ -450,10 +451,20 @@
                     class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
             </div>
             <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contrasena</label>
-                <input id="r-pass" type="password" required placeholder="Minimo 8 caracteres" minlength="8"
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contraseña</label>
+                <input id="r-pass" type="password" required placeholder="Mínimo 8 caracteres" minlength="8"
                     class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
             </div>
+            <div>
+                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Fecha de nacimiento</label>
+                <input id="r-dob" type="date" required
+                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                <p class="text-[10px] text-c-soft mt-1">Debes tener al menos 18 años. Requerido para cumplimiento legal.</p>
+            </div>
+            <label class="flex items-start gap-2.5 cursor-pointer">
+                <input id="r-terms" type="checkbox" required class="mt-0.5 shrink-0" style="accent-color:#F4A261;width:16px;height:16px;">
+                <span class="text-xs text-c-soft leading-relaxed">Confirmo que tengo <strong class="text-c-text">18 años o más</strong> y acepto los <a href="pages/terminos.html" class="text-c-accent font-bold">Términos de Servicio</a> y la <a href="pages/privacidad.html" class="text-c-accent font-bold">Política de Privacidad</a>.</span>
+            </label>
             <button type="submit" id="btn-reg" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Crear cuenta gratis</button>
             <p class="text-center text-xs text-c-soft">
                 ¿Quieres publicar contenido? <a href="pages/registro-creadora.html" class="text-c-accent font-bold">Registrate como creadora</a>
@@ -467,6 +478,7 @@
 
 <script src="/js/age-gate.js"></script>
 <script src="js/api.js"></script>
+<script src="/js/cookie-consent.js"></script>
 <script>
 const GRADIENTES = {
     'melocoton':    ['#FFF4EE','#F4A261'],
@@ -490,13 +502,56 @@ let paisFiltro = '';
 function init() {
     renderTopbar();
     renderNavLinks();
-    cargarStories();
-    cargarFeed();
-    if (!candela.auth.isLoggedIn()) {
+    if (candela.auth.isLoggedIn()) {
+        cargarStories();
+        cargarFeed();
+    } else {
+        // Gate: non-logged users see marketing, not the feed
         document.getElementById('hero-guest').classList.remove('hidden');
         document.getElementById('strip-creadora').classList.remove('hidden');
         document.getElementById('como-funciona').classList.remove('hidden');
+        // Hide stories section (has creator avatars — private)
+        var storiesSection = document.getElementById('stories-row').closest('section');
+        if (storiesSection) storiesSection.style.display = 'none';
+        // Hide filter chips
+        var chipsSection = document.querySelector('.chip');
+        if (chipsSection) chipsSection.closest('section').style.display = 'none';
+        // Replace feed with login wall
+        document.getElementById('feed-grid').innerHTML = feedLoginWall();
     }
+
+    // Set max date on DOB field dynamically
+    var dob = document.getElementById('r-dob');
+    if (dob) {
+        var max18 = new Date();
+        max18.setFullYear(max18.getFullYear() - 18);
+        dob.max = max18.toISOString().split('T')[0];
+    }
+}
+
+function feedLoginWall() {
+    return '<div class="col-span-full py-4">' +
+        '<div class="relative max-w-xl mx-auto px-4">' +
+        // Blurred teaser cards
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 select-none pointer-events-none" style="filter:blur(6px);opacity:.6">' +
+        '<div class="rounded-2xl overflow-hidden bg-white border border-c-border" style="aspect-ratio:3/4;background:linear-gradient(135deg,#F2D5C4,#E8A598)"></div>' +
+        '<div class="rounded-2xl overflow-hidden bg-white border border-c-border" style="aspect-ratio:3/4;background:linear-gradient(135deg,#F4A261,#D4869D)"></div>' +
+        '</div>' +
+        // Overlay CTA
+        '<div class="absolute inset-0 flex flex-col items-center justify-center" style="background:linear-gradient(to top,#FFF8F5 30%,rgba(255,248,245,.7) 70%,transparent)">' +
+        '<div class="text-center px-6 py-10">' +
+        '<div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-4" style="background:#F2D5C4">' +
+        '<span class="material-symbols-outlined" style="font-size:28px;color:#F4A261">lock</span></div>' +
+        '<h3 class="font-display text-xl font-semibold mb-2">Crea tu cuenta para explorar</h3>' +
+        '<p class="text-c-soft text-sm mb-5 max-w-xs mx-auto">Descubre el contenido exclusivo de las creadoras latinas.</p>' +
+        '<button onclick="abrirModal(\'registro\')" class="c-btn text-white pl-6 pr-2 py-2.5 rounded-full font-bold text-sm shadow-md flex items-center gap-2 mx-auto group" style="width:fit-content">' +
+        'Registrarme gratis' +
+        '<span class="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(.32,.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-105" style="background:rgba(0,0,0,.15)">' +
+        '<span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></span>' +
+        '</button>' +
+        '<button onclick="abrirModal(\'login\')" class="mt-3 text-xs font-semibold block mx-auto" style="color:#F4A261">Ya tengo cuenta — Entrar</button>' +
+        '</div></div>' +
+        '</div></div>';
 }
 
 // ─── TOPBAR ──────────────────────────────────────────────────────────
@@ -829,6 +884,14 @@ async function verificarOTP(e) {
 
 async function hacerRegistro(e) {
     e.preventDefault();
+    // Age validation
+    const dob = document.getElementById('r-dob').value;
+    if (!dob) { toast('Ingresa tu fecha de nacimiento', 'error'); return; }
+    const age = Math.floor((Date.now() - new Date(dob)) / (365.25 * 24 * 3600 * 1000));
+    if (age < 18) { toast('Debes tener al menos 18 años para registrarte', 'error'); return; }
+    // Terms checkbox
+    if (!document.getElementById('r-terms').checked) { toast('Debes aceptar los términos de servicio', 'error'); return; }
+
     const btn = document.getElementById('btn-reg');
     btn.textContent = 'Creando cuenta...'; btn.disabled = true;
     try {
@@ -840,7 +903,9 @@ async function hacerRegistro(e) {
         cerrarModal();
         document.getElementById('hero-guest').classList.add('hidden');
         renderTopbar();
-        toast('Bienvenida a Candela!', 'success');
+        cargarStories();
+        cargarFeed();
+        toast('¡Bienvenida a Candela!', 'success');
     } catch(err) {
         toast(err.message, 'error');
         btn.textContent = 'Crear cuenta gratis'; btn.disabled = false;
@@ -876,6 +941,11 @@ function toast(msg, tipo = 'info') {
 }
 
 init();
+
+// Auto-open login modal if redirected from gated page
+if (new URLSearchParams(window.location.search).get('login') === '1') {
+    abrirModal('login');
+}
 </script>
 </body>
 </html>
