@@ -563,17 +563,17 @@
             <span class="material-symbols-outlined">explore</span>
             <span class="text-[10px] font-semibold">Explorar</span>
         </a>
-        <a id="nav-post" href="pages/registro-creadora.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
-            <span class="material-symbols-outlined nav-post-icon">add_circle</span>
-            <span class="text-[10px] font-semibold nav-post-label">Publicar</span>
+        <a id="nav-item3" href="pages/streams-activos.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined nav-icon">play_circle</span>
+            <span class="text-[10px] font-semibold nav-label">Live</span>
         </a>
-        <a onclick="navWallet()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5 cursor-pointer">
-            <span class="material-symbols-outlined">account_balance_wallet</span>
-            <span class="text-[10px] font-semibold">Wallet</span>
+        <a id="nav-item4" href="pages/mis-suscripciones.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined nav-icon">favorite</span>
+            <span class="text-[10px] font-semibold nav-label">Suscrip.</span>
         </a>
-        <a id="nav-perfil" href="#" onclick="navPerfil()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
-            <span class="material-symbols-outlined">person</span>
-            <span class="text-[10px] font-semibold">Perfil</span>
+        <a id="nav-item5" href="pages/wallet.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined nav-icon">account_balance_wallet</span>
+            <span class="text-[10px] font-semibold nav-label">Wallet</span>
         </a>
     </div>
 </nav>
@@ -928,34 +928,32 @@ function animarContador(el, target, suffix) {
 }
 
 // ─── NAV ─────────────────────────────────────────────────────────────
+function setNavItem(el, icon, label, href, onclick) {
+    if (!el) return;
+    el.href = href;
+    el.onclick = onclick || null;
+    el.querySelector('.nav-icon').textContent = icon;
+    el.querySelector('.nav-label').textContent = label;
+}
+
 function renderNavLinks() {
     const user = candela.auth.user();
-    const navPost = document.getElementById('nav-post');
-    if (!navPost) return;
+    const i3 = document.getElementById('nav-item3');
+    const i4 = document.getElementById('nav-item4');
+    const i5 = document.getElementById('nav-item5');
     if (user?.tipo === 'creadora') {
-        navPost.href = 'pages/dashboard-creadora.html';
-        navPost.querySelector('.nav-post-icon').textContent  = 'dashboard';
-        navPost.querySelector('.nav-post-label').textContent = 'Mi Panel';
+        setNavItem(i3, 'add_circle', 'Subir', 'pages/dashboard-creadora.html');
+        setNavItem(i4, 'dashboard', 'Mi Panel', 'pages/dashboard-creadora.html');
+        setNavItem(i5, 'account_balance_wallet', 'Wallet', 'pages/wallet.html');
     } else if (user?.tipo === 'suscriptor') {
-        navPost.href = 'pages/wallet.html';
-        navPost.querySelector('.nav-post-icon').textContent  = 'favorite';
-        navPost.querySelector('.nav-post-label').textContent = 'Suscrip.';
+        setNavItem(i3, 'play_circle', 'Live', 'pages/streams-activos.html');
+        setNavItem(i4, 'favorite', 'Suscrip.', 'pages/mis-suscripciones.html');
+        setNavItem(i5, 'account_balance_wallet', 'Wallet', 'pages/wallet.html');
+    } else {
+        setNavItem(i3, 'play_circle', 'Live', 'pages/streams-activos.html');
+        setNavItem(i4, 'auto_awesome', 'Creadora', 'pages/gana-con-candela.html');
+        setNavItem(i5, 'login', 'Entrar', '#', (e) => { e.preventDefault(); abrirModal('login'); });
     }
-}
-
-function navPerfil() {
-    if (!candela.auth.isLoggedIn()) { abrirModal('login'); return; }
-    const u = candela.auth.user();
-    if (u?.tipo === 'creadora') window.location.href = 'pages/dashboard-creadora.html';
-    else if (u?.tipo === 'admin') window.location.href = 'pages/admin.html';
-    else if (u?.tipo === 'suscriptor') window.location.href = 'pages/feed.html';
-}
-
-function navWallet() {
-    if (!candela.auth.isLoggedIn()) { abrirModal('login'); return; }
-    const u = candela.auth.user();
-    if (u?.tipo === 'creadora') window.location.href = 'pages/dashboard-creadora.html';
-    else window.location.href = 'pages/feed.html';
 }
 
 // ─── STORIES ─────────────────────────────────────────────────────────
@@ -1087,17 +1085,23 @@ function suscribirse(slug) {
     irACreadora(slug);
 }
 
-function toggleLike(e, id) {
+async function toggleLike(e, id) {
     e.stopPropagation();
+    if (!candela.auth.isLoggedIn()) { abrirModal('fan'); return; }
     const btn = e.currentTarget;
     const icon = btn.querySelector('.material-symbols-outlined');
+    const wasLiked = btn.classList.contains('liked');
     btn.classList.toggle('liked');
-    if (btn.classList.contains('liked')) {
-        icon.style.fontVariationSettings = "'FILL' 1";
-        icon.style.color = '#F4A261';
-    } else {
-        icon.style.fontVariationSettings = "'FILL' 0";
-        icon.style.color = '';
+    icon.style.fontVariationSettings = wasLiked ? "'FILL' 0" : "'FILL' 1";
+    icon.style.color = wasLiked ? '' : '#F4A261';
+    try {
+        if (wasLiked) await candela.fans.quitarFavorito(id);
+        else await candela.fans.agregarFavorito(id);
+    } catch(_) {
+        // revert on error
+        btn.classList.toggle('liked');
+        icon.style.fontVariationSettings = wasLiked ? "'FILL' 1" : "'FILL' 0";
+        icon.style.color = wasLiked ? '#F4A261' : '';
     }
 }
 

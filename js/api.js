@@ -189,6 +189,13 @@ const candela = {
             return candela._req('GET', `/api/admin/comisiones${q ? '?' + q : ''}`);
         },
     },
+
+    fans: {
+        favoritos:       () => candela._req('GET', '/api/fans/favoritos'),
+        favoritosIds:    () => candela._req('GET', '/api/fans/favoritos/ids'),
+        agregarFavorito: (id) => candela._req('POST', `/api/fans/favoritos/${id}`, {}),
+        quitarFavorito:  (id) => candela._req('DELETE', `/api/fans/favoritos/${id}`),
+    },
 };
 
 // Toast global

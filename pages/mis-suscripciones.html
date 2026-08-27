@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Suscripciones — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
+                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
+                        "c-soft":"#8B7D77","c-border":"#F0E6E1"
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; background:#FFF8F5; color:#2D2D2D; }
+        .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
+        .skeleton { background:linear-gradient(90deg,#F0E6E1 25%,#FFF8F5 50%,#F0E6E1 75%); background-size:300% 100%; animation:shimmer 1.4s infinite; border-radius:12px; }
+        .sub-card { background:#fff; border:1px solid #F0E6E1; border-radius:1.25rem; overflow:hidden; transition:box-shadow .2s; }
+        .sub-card:hover { box-shadow:0 8px 32px rgba(244,162,97,.12); }
+        .estado-activa { background:#ECFDF5; color:#059669; }
+        .estado-vencida { background:#FEF2F2; color:#DC2626; }
+        .estado-otro { background:#F9FAFB; color:#6B7280; }
+    </style>
+</head>
+<body class="min-h-screen pb-24">
+
+<!-- TOPBAR -->
+<header class="glass sticky top-0 z-40 border-b border-c-border">
+    <div class="flex items-center gap-3 px-4 h-14 max-w-lg mx-auto">
+        <a href="../index.html" class="p-1.5 rounded-full hover:bg-c-border transition-colors">
+            <span class="material-symbols-outlined text-c-soft" style="font-size:22px">arrow_back</span>
+        </a>
+        <h1 class="font-display text-lg font-semibold text-c-text flex-1">Mis Suscripciones</h1>
+        <a href="../index.html" class="logo-text font-display font-semibold text-lg">Candela</a>
+    </div>
+</header>
+
+<!-- CONTENIDO -->
+<main class="max-w-lg mx-auto px-4 pt-5">
+    <!-- Skeleton -->
+    <div id="skel" class="space-y-3">
+        <div class="skeleton h-24"></div>
+        <div class="skeleton h-24"></div>
+        <div class="skeleton h-24"></div>
+    </div>
+
+    <!-- Lista -->
+    <div id="lista" class="space-y-3 hidden"></div>
+
+    <!-- Empty state -->
+    <div id="vacio" class="hidden text-center py-16 px-4">
+        <div class="w-16 h-16 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-c-accent" style="font-size:32px">favorite_border</span>
+        </div>
+        <p class="font-semibold text-c-text mb-1">Sin suscripciones activas</p>
+        <p class="text-sm text-c-soft mb-5">Descubre creadoras y suscribete para acceder a contenido exclusivo.</p>
+        <a href="explorar.html" class="inline-flex items-center gap-2 bg-c-accent text-white font-bold px-5 py-2.5 rounded-full text-sm hover:bg-c-accent-d transition-colors">
+            <span class="material-symbols-outlined" style="font-size:18px">explore</span>
+            Explorar Creadoras
+        </a>
+    </div>
+</main>
+
+<!-- NAV -->
+<nav class="glass fixed bottom-0 w-full z-50 border-t border-c-border">
+    <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
+        <a href="../index.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">home</span>
+            <span class="text-[10px] font-semibold">Inicio</span>
+        </a>
+        <a href="explorar.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">explore</span>
+            <span class="text-[10px] font-semibold">Explorar</span>
+        </a>
+        <a href="streams-activos.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">play_circle</span>
+            <span class="text-[10px] font-semibold">Live</span>
+        </a>
+        <a href="mis-suscripciones.html" class="flex flex-col items-center text-c-accent gap-0.5">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">favorite</span>
+            <span class="text-[10px] font-bold">Suscrip.</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
+            <span class="text-[10px] font-semibold">Wallet</span>
+        </a>
+    </div>
+</nav>
+
+<script src="../js/api.js"></script>
+<script>
+const GRADIENTES = {
+    naranja: ['#F4A261','#E08947'], rosa: ['#E8A598','#D4869D'],
+    dorado: ['#F2D5C4','#E8A598'], champagne: ['#F9EBE0','#E8C9B5'],
+    coral: ['#FF6B6B','#E8A598'], default: ['#F2D5C4','#E8A598'],
+};
+
+function estadoBadge(estado) {
+    if (estado === 'activa') return `<span class="estado-activa text-[10px] font-bold px-2 py-0.5 rounded-full">Activa</span>`;
+    if (estado === 'vencida') return `<span class="estado-vencida text-[10px] font-bold px-2 py-0.5 rounded-full">Vencida</span>`;
+    return `<span class="estado-otro text-[10px] font-bold px-2 py-0.5 rounded-full">${esc(estado)}</span>`;
+}
+
+function fmtFecha(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+async function init() {
+    if (!requireAuth('suscriptor')) return;
+    try {
+        const subs = await candela.pagos.misSuscripciones();
+        document.getElementById('skel').classList.add('hidden');
+        if (!subs.length) {
+            document.getElementById('vacio').classList.remove('hidden');
+            return;
+        }
+        const lista = document.getElementById('lista');
+        lista.classList.remove('hidden');
+        lista.innerHTML = subs.map(s => {
+            const [c1, c2] = GRADIENTES[s.creadora_color] || GRADIENTES.default;
+            const inicial = (s.creadora_nombre || '?')[0].toUpperCase();
+            const vence = s.fecha_fin ? `Vence ${fmtFecha(s.fecha_fin)}` : '';
+            return `
+            <a href="creadora.html?slug=${esc(s.creadora_slug)}" class="sub-card flex items-center gap-3 p-4">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 text-white font-bold text-lg"
+                    style="background:linear-gradient(135deg,${c1},${c2})">
+                    ${s.creadora_avatar
+                        ? `<img src="${esc(s.creadora_avatar)}" class="w-full h-full object-cover rounded-full" alt="">`
+                        : inicial}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                        <p class="font-bold text-c-text truncate">${esc(s.creadora_nombre || 'Creadora')}</p>
+                        ${estadoBadge(s.estado)}
+                    </div>
+                    <p class="text-xs text-c-soft">${s.monto} USDT/mes${vence ? ' · ' + vence : ''}</p>
+                </div>
+                <span class="material-symbols-outlined text-c-soft shrink-0" style="font-size:18px">chevron_right</span>
+            </a>`;
+        }).join('');
+    } catch(err) {
+        document.getElementById('skel').classList.add('hidden');
+        document.getElementById('vacio').classList.remove('hidden');
+    }
+}
+
+init();
+</script>
+</body>
+</html>

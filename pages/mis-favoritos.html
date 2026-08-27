@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Favoritas — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
+                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
+                        "c-soft":"#8B7D77","c-border":"#F0E6E1"
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; background:#FFF8F5; color:#2D2D2D; }
+        .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
+        .skeleton { background:linear-gradient(90deg,#F0E6E1 25%,#FFF8F5 50%,#F0E6E1 75%); background-size:300% 100%; animation:shimmer 1.4s infinite; border-radius:12px; }
+        .fav-card { background:#fff; border:1px solid #F0E6E1; border-radius:1.25rem; overflow:hidden; transition:box-shadow .2s; }
+        .fav-card:hover { box-shadow:0 8px 32px rgba(244,162,97,.12); }
+        .unlike-btn { width:36px;height:36px;border-radius:50%;border:1.5px solid #F0E6E1;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s; }
+        .unlike-btn:active { transform:scale(.9); }
+    </style>
+</head>
+<body class="min-h-screen pb-24">
+
+<!-- TOPBAR -->
+<header class="glass sticky top-0 z-40 border-b border-c-border">
+    <div class="flex items-center gap-3 px-4 h-14 max-w-lg mx-auto">
+        <a href="../index.html" class="p-1.5 rounded-full hover:bg-c-border transition-colors">
+            <span class="material-symbols-outlined text-c-soft" style="font-size:22px">arrow_back</span>
+        </a>
+        <h1 class="font-display text-lg font-semibold text-c-text flex-1">Mis Favoritas</h1>
+        <a href="../index.html" class="logo-text font-display font-semibold text-lg">Candela</a>
+    </div>
+</header>
+
+<!-- CONTENIDO -->
+<main class="max-w-lg mx-auto px-4 pt-5">
+    <div id="skel" class="space-y-3">
+        <div class="skeleton h-20"></div>
+        <div class="skeleton h-20"></div>
+        <div class="skeleton h-20"></div>
+    </div>
+
+    <div id="lista" class="space-y-3 hidden"></div>
+
+    <div id="vacio" class="hidden text-center py-16 px-4">
+        <div class="w-16 h-16 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-c-rose" style="font-size:32px">favorite_border</span>
+        </div>
+        <p class="font-semibold text-c-text mb-1">Aun no tienes favoritas</p>
+        <p class="text-sm text-c-soft mb-5">Toca el corazon en una creadora para guardarla aqui.</p>
+        <a href="explorar.html" class="inline-flex items-center gap-2 bg-c-accent text-white font-bold px-5 py-2.5 rounded-full text-sm hover:bg-c-accent-d transition-colors">
+            <span class="material-symbols-outlined" style="font-size:18px">explore</span>
+            Explorar Creadoras
+        </a>
+    </div>
+</main>
+
+<!-- NAV -->
+<nav class="glass fixed bottom-0 w-full z-50 border-t border-c-border">
+    <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
+        <a href="../index.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">home</span>
+            <span class="text-[10px] font-semibold">Inicio</span>
+        </a>
+        <a href="explorar.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">explore</span>
+            <span class="text-[10px] font-semibold">Explorar</span>
+        </a>
+        <a href="streams-activos.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">play_circle</span>
+            <span class="text-[10px] font-semibold">Live</span>
+        </a>
+        <a href="mis-suscripciones.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">favorite</span>
+            <span class="text-[10px] font-semibold">Suscrip.</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
+            <span class="text-[10px] font-semibold">Wallet</span>
+        </a>
+    </div>
+</nav>
+
+<script src="../js/api.js"></script>
+<script>
+const GRADIENTES = {
+    naranja: ['#F4A261','#E08947'], rosa: ['#E8A598','#D4869D'],
+    dorado: ['#F2D5C4','#E8A598'], champagne: ['#F9EBE0','#E8C9B5'],
+    coral: ['#FF6B6B','#E8A598'], default: ['#F2D5C4','#E8A598'],
+};
+
+async function quitarFavorita(creadoraId, cardEl) {
+    try {
+        await candela.fans.quitarFavorito(creadoraId);
+        cardEl.style.transition = 'opacity .3s, transform .3s';
+        cardEl.style.opacity = '0';
+        cardEl.style.transform = 'scale(.95)';
+        setTimeout(() => {
+            cardEl.remove();
+            const lista = document.getElementById('lista');
+            if (!lista.children.length) {
+                lista.classList.add('hidden');
+                document.getElementById('vacio').classList.remove('hidden');
+            }
+        }, 300);
+    } catch(_) {}
+}
+
+async function init() {
+    if (!requireAuth('suscriptor')) return;
+    try {
+        const favs = await candela.fans.favoritos();
+        document.getElementById('skel').classList.add('hidden');
+        if (!favs.length) {
+            document.getElementById('vacio').classList.remove('hidden');
+            return;
+        }
+        const lista = document.getElementById('lista');
+        lista.classList.remove('hidden');
+        lista.innerHTML = favs.map(c => {
+            const [c1, c2] = GRADIENTES[c.tema_color] || GRADIENTES.default;
+            const inicial = (c.nombre_artistico || '?')[0].toUpperCase();
+            const precio = c.precio_suscripcion > 0 ? `${c.precio_suscripcion} USDT/mes` : 'Gratis';
+            return `
+            <div class="fav-card flex items-center gap-3 p-4" id="fav-${esc(c.id)}">
+                <a href="creadora.html?slug=${esc(c.slug)}" class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-white font-bold"
+                        style="background:linear-gradient(135deg,${c1},${c2})">
+                        ${c.avatar_url
+                            ? `<img src="${esc(c.avatar_url)}" class="w-full h-full object-cover rounded-full" alt="">`
+                            : inicial}
+                    </div>
+                    <div class="min-w-0">
+                        <p class="font-bold text-c-text truncate">${esc(c.nombre_artistico)}</p>
+                        <p class="text-xs text-c-soft">${precio} · ${c.total_suscriptores || 0} fans</p>
+                    </div>
+                </a>
+                <button class="unlike-btn" onclick="quitarFavorita('${esc(c.id)}', document.getElementById('fav-${esc(c.id)}'))" title="Quitar de favoritas">
+                    <span class="material-symbols-outlined text-c-rose" style="font-size:20px;font-variation-settings:'FILL' 1">favorite</span>
+                </button>
+            </div>`;
+        }).join('');
+    } catch(err) {
+        document.getElementById('skel').classList.add('hidden');
+        document.getElementById('vacio').classList.remove('hidden');
+    }
+}
+
+init();
+</script>
+</body>
+</html>
