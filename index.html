@@ -1245,6 +1245,7 @@ async function hacerRegistro(e) {
             document.getElementById('r-nombre').value,
         );
         cerrarModal();
+        toast('Cuenta creada. Revisa tu email para verificar tu cuenta.', 'info');
         const returnUrl = sessionStorage.getItem('candela_return');
         if (returnUrl) { sessionStorage.removeItem('candela_return'); window.location.href = returnUrl; return; }
         document.getElementById('hero-guest').classList.add('hidden');
@@ -1254,7 +1255,6 @@ async function hacerRegistro(e) {
         renderTopbar(false);
         cargarStories();
         cargarFeed();
-        toast('¡Bienvenida a Candela!', 'success');
     } catch(err) {
         toast(err.message, 'error');
         btn.textContent = 'Crear cuenta gratis'; btn.disabled = false;

@@ -42,6 +42,7 @@ const candela = {
                     tipo: data.tipo_usuario,
                     nombre: data.nombre,
                     slug: data.creadora_slug,
+                    email_verificado: data.email_verificado !== false,
                 }));
             }
             return data;
@@ -49,15 +50,25 @@ const candela = {
         async registroSuscriptor(email, password, nombre) {
             const data = await candela._req('POST', '/api/auth/registro/suscriptor', { email, password, nombre });
             localStorage.setItem('candela_token', data.access_token);
-            localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre }));
+            localStorage.setItem('candela_user', JSON.stringify({
+                tipo: data.tipo_usuario, nombre: data.nombre,
+                email_verificado: data.email_verificado !== false,
+            }));
             return data;
         },
         async registroCreadora(form) {
             const data = await candela._req('POST', '/api/auth/registro/creadora', form);
             localStorage.setItem('candela_token', data.access_token);
-            localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug }));
+            localStorage.setItem('candela_user', JSON.stringify({
+                tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug,
+                email_verificado: data.email_verificado !== false,
+            }));
             return data;
         },
+        emailVerificado() {
+            return candela.auth.user()?.email_verificado !== false;
+        },
+        reenviarVerificacion: (email) => candela._req('POST', '/api/auth/reenviar-verificacion', { email }),
         logout() {
             localStorage.removeItem('candela_token');
             localStorage.removeItem('candela_user');

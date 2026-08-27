@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Email — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
+                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
+                        "c-soft":"#8B7D77","c-border":"#F0E6E1"
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; background:#FFF8F5; color:#2D2D2D; }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center px-4">
+
+    <a href="../index.html" class="logo-text font-display font-bold text-3xl mb-10">Candela</a>
+
+    <!-- Estado: verificando -->
+    <div id="estado-verificando" class="text-center">
+        <div class="w-16 h-16 border-4 border-c-champagne border-t-c-accent rounded-full animate-spin mx-auto mb-6"></div>
+        <p class="text-c-soft font-semibold">Verificando tu email...</p>
+    </div>
+
+    <!-- Estado: exito -->
+    <div id="estado-ok" class="hidden text-center max-w-sm">
+        <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+            <span class="material-symbols-outlined text-green-600" style="font-size:40px;font-variation-settings:'FILL' 1">check_circle</span>
+        </div>
+        <h1 class="font-display text-2xl font-semibold text-c-text mb-2">Email verificado</h1>
+        <p class="text-c-soft mb-8">Tu cuenta esta activa. Ya puedes ingresar y disfrutar Candela.</p>
+        <a href="../index.html?login=1"
+           class="inline-flex items-center gap-2 bg-c-accent text-white font-bold px-8 py-3 rounded-full hover:bg-c-accent-d transition-colors">
+            <span class="material-symbols-outlined" style="font-size:18px">login</span>
+            Ingresar ahora
+        </a>
+    </div>
+
+    <!-- Estado: error -->
+    <div id="estado-error" class="hidden text-center max-w-sm">
+        <div class="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6">
+            <span class="material-symbols-outlined text-red-500" style="font-size:40px">error</span>
+        </div>
+        <h1 class="font-display text-2xl font-semibold text-c-text mb-2">Enlace invalido</h1>
+        <p id="error-msg" class="text-c-soft mb-6">El enlace de verificacion es invalido o ya expiro.</p>
+        <div class="bg-c-champagne rounded-2xl p-5 text-left mb-6">
+            <p class="text-sm font-semibold text-c-text mb-2">Solicita un nuevo enlace</p>
+            <div class="flex gap-2">
+                <input id="email-reenvio" type="email" placeholder="tu@email.com"
+                    class="flex-1 border border-c-border rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:border-c-accent">
+                <button onclick="reenviar()" id="btn-reenviar"
+                    class="bg-c-accent text-white font-bold px-4 py-2 rounded-xl text-sm hover:bg-c-accent-d transition-colors whitespace-nowrap">
+                    Reenviar
+                </button>
+            </div>
+        </div>
+        <a href="../index.html" class="text-c-soft text-sm hover:text-c-accent transition-colors">Volver al inicio</a>
+    </div>
+
+<script>
+const API_URL = 'https://web-production-73189.up.railway.app';
+
+async function reenviar() {
+    const email = document.getElementById('email-reenvio').value.trim();
+    if (!email) return;
+    const btn = document.getElementById('btn-reenviar');
+    btn.textContent = '...'; btn.disabled = true;
+    try {
+        const res = await fetch(`${API_URL}/api/auth/reenviar-verificacion`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Error');
+        btn.textContent = 'Enviado';
+        btn.style.background = '#27ae60';
+    } catch(e) {
+        btn.textContent = 'Error'; btn.disabled = false;
+    }
+}
+
+(async () => {
+    const token = new URLSearchParams(location.search).get('token');
+    if (!token) {
+        document.getElementById('estado-verificando').classList.add('hidden');
+        document.getElementById('estado-error').classList.remove('hidden');
+        return;
+    }
+    try {
+        const res = await fetch(`${API_URL}/api/auth/verificar-email?token=${encodeURIComponent(token)}`);
+        const data = await res.json();
+        document.getElementById('estado-verificando').classList.add('hidden');
+        if (res.ok) {
+            document.getElementById('estado-ok').classList.remove('hidden');
+        } else {
+            document.getElementById('error-msg').textContent = data.detail || 'Token invalido o expirado.';
+            document.getElementById('estado-error').classList.remove('hidden');
+        }
+    } catch(_) {
+        document.getElementById('estado-verificando').classList.add('hidden');
+        document.getElementById('estado-error').classList.remove('hidden');
+    }
+})();
+</script>
+</body>
+</html>
