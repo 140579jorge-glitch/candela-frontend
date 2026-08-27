@@ -1,0 +1,21 @@
+{
+  "name": "Candela",
+  "short_name": "Candela",
+  "description": "Plataforma latina de contenido exclusivo. Creadoras de Bolivia, Colombia, México y toda Latinoamérica.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#110805",
+  "theme_color": "#F4A261",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["entertainment", "social"],
+  "screenshots": []
+}
