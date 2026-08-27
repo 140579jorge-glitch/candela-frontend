@@ -564,8 +564,8 @@
             <span class="text-[10px] font-semibold">Explorar</span>
         </a>
         <a id="nav-post" href="pages/registro-creadora.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
-            <span class="material-symbols-outlined">add_circle</span>
-            <span class="text-[10px] font-semibold">Publicar</span>
+            <span class="material-symbols-outlined nav-post-icon">add_circle</span>
+            <span class="text-[10px] font-semibold nav-post-label">Publicar</span>
         </a>
         <a onclick="navWallet()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5 cursor-pointer">
             <span class="material-symbols-outlined">account_balance_wallet</span>
@@ -930,8 +930,16 @@ function animarContador(el, target, suffix) {
 // ─── NAV ─────────────────────────────────────────────────────────────
 function renderNavLinks() {
     const user = candela.auth.user();
+    const navPost = document.getElementById('nav-post');
+    if (!navPost) return;
     if (user?.tipo === 'creadora') {
-        document.getElementById('nav-post').href = 'pages/dashboard-creadora.html';
+        navPost.href = 'pages/dashboard-creadora.html';
+        navPost.querySelector('.nav-post-icon').textContent  = 'dashboard';
+        navPost.querySelector('.nav-post-label').textContent = 'Mi Panel';
+    } else if (user?.tipo === 'suscriptor') {
+        navPost.href = 'pages/wallet.html';
+        navPost.querySelector('.nav-post-icon').textContent  = 'favorite';
+        navPost.querySelector('.nav-post-label').textContent = 'Suscrip.';
     }
 }
 
@@ -1159,6 +1167,8 @@ async function hacerLogin(e) {
             return;
         }
         cerrarModal();
+        const returnUrl = sessionStorage.getItem('candela_return');
+        if (returnUrl) { sessionStorage.removeItem('candela_return'); window.location.href = returnUrl; return; }
         const u = candela.auth.user();
         if (u?.tipo === 'admin') { window.location.href = 'pages/admin.html'; return; }
         if (u?.tipo === 'creadora') { window.location.href = 'pages/dashboard-creadora.html'; return; }
@@ -1231,6 +1241,8 @@ async function hacerRegistro(e) {
             document.getElementById('r-nombre').value,
         );
         cerrarModal();
+        const returnUrl = sessionStorage.getItem('candela_return');
+        if (returnUrl) { sessionStorage.removeItem('candela_return'); window.location.href = returnUrl; return; }
         document.getElementById('hero-guest').classList.add('hidden');
         document.getElementById('stories-section').style.display = '';
         document.getElementById('chips-section').style.display = '';

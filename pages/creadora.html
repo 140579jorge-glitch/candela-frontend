@@ -736,12 +736,26 @@ function switchTab(tab, btn) {
 
 // ─── SUSCRIPCION ─────────────────────────────────────────────
 function abrirSub() {
-    if (!candela.auth.isLoggedIn()) { window.location.href = '../index.html'; return; }
+    if (!candela.auth.isLoggedIn()) {
+        sessionStorage.setItem('candela_return', location.href);
+        window.location.href = '../index.html?login=1';
+        return;
+    }
     const precio = creadoraData.precio_suscripcion;
+    if (precio > 0 && userBalance < precio) {
+        const falta = (precio - userBalance).toFixed(2);
+        sessionStorage.setItem('candela_return', location.href);
+        sessionStorage.setItem('candela_recarga_ctx', JSON.stringify({
+            nombre: creadoraData.nombre_artistico,
+            precio: precio,
+            falta: parseFloat(falta),
+        }));
+        toast(`Para suscribirte a ${esc(creadoraData.nombre_artistico)} necesitas $${falta} USDT más. Tu saldo: $${userBalance.toFixed(2)}. Redirigiendo a tu wallet...`, 'info');
+        setTimeout(() => { window.location.href = 'wallet.html'; }, 3000);
+        return;
+    }
     document.getElementById('sub-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
-    const insuf = userBalance < precio;
-    document.getElementById('sub-saldo-insuf').classList.toggle('hidden', !insuf);
-    if (insuf) document.getElementById('sub-falta').textContent = `$${(precio - userBalance).toFixed(2)}`;
+    document.getElementById('sub-saldo-insuf').classList.add('hidden');
     abrirModal('modal-sub');
 }
 

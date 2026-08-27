@@ -51,6 +51,18 @@
     <div class="ml-auto text-sm text-c-soft font-semibold" id="nav-nombre"></div>
 </nav>
 
+<!-- Banner contextual — se muestra cuando el fan llega desde una creadora con saldo insuficiente -->
+<div id="recarga-banner" class="hidden max-w-lg mx-auto px-4 pt-4">
+    <div style="background:#FFF4EE;border:1.5px solid #F4A261;border-radius:16px;padding:.9rem 1.1rem;display:flex;gap:.75rem;align-items:flex-start">
+        <span style="font-size:1.3rem;line-height:1;flex-shrink:0">💡</span>
+        <div>
+            <p class="font-bold text-sm" id="banner-titulo" style="color:#2D2D2D;margin-bottom:.2rem"></p>
+            <p class="text-xs" id="banner-msg" style="color:#8B7D77;line-height:1.5"></p>
+            <a id="banner-return" href="#" class="text-xs font-bold mt-1.5 inline-block" style="color:#F4A261">← Volver a suscribirme</a>
+        </div>
+    </div>
+</div>
+
 <div class="max-w-lg mx-auto px-4 py-6 space-y-5">
 
     <!-- Balance card -->
@@ -204,6 +216,23 @@ let countTimer  = null;
 if (!candela.auth.isLoggedIn()) window.location.href = '../index.html';
 const user = candela.auth.user();
 if (user?.nombre) document.getElementById('nav-nombre').textContent = user.nombre;
+
+// Mostrar banner si el fan fue redirigido por saldo insuficiente
+(function() {
+    try {
+        const ctx = JSON.parse(sessionStorage.getItem('candela_recarga_ctx') || 'null');
+        if (!ctx) return;
+        sessionStorage.removeItem('candela_recarga_ctx');
+        const banner = document.getElementById('recarga-banner');
+        if (!banner) return;
+        document.getElementById('banner-titulo').textContent = `Suscripción a ${ctx.nombre} — faltan $${ctx.falta.toFixed(2)} USDT`;
+        document.getElementById('banner-msg').textContent = `Precio: $${ctx.precio} USDT · Tu saldo actual no es suficiente. Recarga aquí y después vuelve para completar tu suscripción.`;
+        const returnUrl = sessionStorage.getItem('candela_return');
+        if (returnUrl) document.getElementById('banner-return').href = returnUrl;
+        else document.getElementById('banner-return').style.display = 'none';
+        banner.classList.remove('hidden');
+    } catch(e) {}
+})();
 
 async function init() {
     try {
