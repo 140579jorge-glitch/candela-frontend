@@ -190,7 +190,7 @@ function renderTopbar() {
     const el = document.getElementById('topbar-right');
     const user = candela.auth.user();
     if (candela.auth.isLoggedIn() && user) {
-        el.innerHTML = `<button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${(user.nombre||'U')[0].toUpperCase()}</button>`;
+        el.innerHTML = `<button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${esc((user.nombre||'U')[0].toUpperCase())}</button>`;
     } else {
         el.innerHTML = `<a href="../index.html" class="text-xs font-bold text-c-accent border border-c-accent px-3 py-1.5 rounded-full hover:bg-c-accent hover:text-white transition-all">Entrar</a>`;
     }

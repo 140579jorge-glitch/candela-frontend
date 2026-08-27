@@ -1,21 +1,21 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candela — Creadoras latinas exclusivas</title>
-    <meta name="description" content="Plataforma latina de contenido exclusivo. Descubre y apoya a las mejores creadoras de Bolivia, Colombia, México y toda Latinoamérica. Paga con USDT.">
+    <meta name="description" content="Plataforma latina de contenido exclusivo. Descubre y apoya a las mejores creadoras de Bolivia, Colombia, México y toda Latinoamérica. Pago discreto con USDT.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://clubcandela.com">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://clubcandela.com">
     <meta property="og:title" content="Candela — Creadoras latinas exclusivas">
-    <meta property="og:description" content="Contenido exclusivo de las mejores creadoras de Latinoamérica. Paga con USDT. Sin tarjeta de crédito.">
+    <meta property="og:description" content="Contenido exclusivo de las mejores creadoras de Latinoamérica. Pago discreto. Sin tarjeta de crédito.">
     <meta property="og:image" content="https://clubcandela.com/img/og-cover.jpg">
     <meta property="og:locale" content="es_BO">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Candela — Creadoras latinas exclusivas">
-    <meta name="twitter:description" content="Plataforma latina de contenido exclusivo. Sin intermediarios.">
+    <meta name="twitter:description" content="Plataforma latina de contenido exclusivo. Pago discreto. Sin intermediarios.">
     <meta name="twitter:image" content="https://clubcandela.com/img/og-cover.jpg">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="alternate icon" href="/favicon.svg">
@@ -50,7 +50,7 @@
     <style>
         body { font-family: 'Nunito', sans-serif; }
 
-        /* Grain — fixed, no repaint */
+        /* Grain texture — fixed overlay, no scroll repaint */
         body::before {
             content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
             opacity:.025;
@@ -64,8 +64,9 @@
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
         }
+        #main-header { transition: background .4s cubic-bezier(.32,.72,0,1), border-color .4s cubic-bezier(.32,.72,0,1); }
 
-        /* Overlay oscuro sobre imagen (gradiente) */
+        /* Card gradient overlay */
         .card-overlay {
             background: linear-gradient(to top,
                 rgba(20, 8, 2, 0.82) 0%,
@@ -73,7 +74,7 @@
                 transparent 100%);
         }
 
-        /* Gradiente logo */
+        /* Logo gradient */
         .logo-text {
             background: linear-gradient(90deg, #F4A261 0%, #E8A598 60%, #D4869D 100%);
             -webkit-background-clip: text;
@@ -81,12 +82,12 @@
             background-clip: text;
         }
 
-        /* Borde de story activa */
+        /* Story ring */
         .story-ring-active {
             background: linear-gradient(135deg, #F4A261, #E8A598, #D4869D);
         }
 
-        /* Boton degradado */
+        /* Gradient button */
         .c-btn {
             background: linear-gradient(135deg, #F4A261, #E8A598);
             transition: filter .3s cubic-bezier(.32,.72,0,1), transform .3s cubic-bezier(.32,.72,0,1);
@@ -94,35 +95,31 @@
         .c-btn:hover { filter: brightness(1.07); }
         .c-btn:active { transform: scale(0.97); }
 
-        /* Boton de accion circular sobre imagen */
+        /* Circular action button on cards */
         .action-btn {
             width: 38px; height: 38px; border-radius: 50%;
-            background: rgba(255,255,255,0.18);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.28);
-            color: #fff;
+            background: rgba(255,255,255,0.18); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.28); color: #fff;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.18s;
         }
         .action-btn:hover { background: rgba(244,162,97,0.75); }
         .action-btn.liked { background: rgba(244,162,97,0.9); }
 
-        /* Boton tip (rosa) */
+        /* Tip / sub button */
         .sub-btn {
             width: 38px; height: 38px; border-radius: 50%;
-            background: linear-gradient(135deg, #F4A261, #E8A598);
-            color: #fff;
+            background: linear-gradient(135deg, #F4A261, #E8A598); color: #fff;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s;
             box-shadow: 0 4px 14px rgba(244,162,97,0.45);
         }
         .sub-btn:hover { transform: scale(1.1); }
 
-        /* Dot online */
+        /* Online dot */
         .dot-online {
             width: 8px; height: 8px; border-radius: 50%;
-            background: #2ecc71;
-            box-shadow: 0 0 6px rgba(46,204,113,0.7);
+            background: #2ecc71; box-shadow: 0 0 6px rgba(46,204,113,0.7);
             display: inline-block;
         }
 
@@ -140,16 +137,12 @@
 
         /* Feed card hover */
         .feed-card { transition: transform .5s cubic-bezier(.32,.72,0,1), box-shadow .5s cubic-bezier(.32,.72,0,1); }
-        .feed-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 28px 56px rgba(244,162,97,.14);
-        }
+        .feed-card:hover { transform: translateY(-5px); box-shadow: 0 28px 56px rgba(244,162,97,.14); }
 
         /* Modal */
         .modal-bg {
             position: fixed; inset: 0; z-index: 100;
-            background: rgba(45, 20, 10, 0.42);
-            backdrop-filter: blur(5px);
+            background: rgba(45, 20, 10, 0.42); backdrop-filter: blur(5px);
             display: flex; align-items: center; justify-content: center; padding: 1rem;
             opacity: 0; visibility: hidden; transition: all 0.22s;
         }
@@ -166,86 +159,86 @@
         .no-scroll::-webkit-scrollbar { display: none; }
         .no-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Chip filtro activo */
-        .chip.active {
-            background: linear-gradient(135deg, #F4A261, #E8A598);
-            color: #fff; border-color: transparent;
-        }
+        /* Active chip */
+        .chip.active { background: linear-gradient(135deg, #F4A261, #E8A598); color: #fff; border-color: transparent; }
 
-        /* Material icons fix */
+        /* Material icons */
         .material-symbols-outlined {
             font-family: 'Material Symbols Outlined';
-            font-style: normal;
-            font-size: 22px;
-            line-height: 1;
-            user-select: none;
+            font-style: normal; font-size: 22px; line-height: 1; user-select: none;
         }
         .ms-fill { font-variation-settings: 'FILL' 1; }
+
+        /* ─── DARK HERO ─────────────────────────────── */
+        @keyframes ambientDrift1 {
+            0%,100% { transform: translate(0,0) scale(1); opacity: 1; }
+            33%      { transform: translate(-22px,-16px) scale(1.1); opacity: .78; }
+            66%      { transform: translate(16px,-10px) scale(.94); opacity: .9; }
+        }
+        @keyframes ambientDrift2 {
+            0%,100% { transform: translate(0,0) scale(1); opacity: .7; }
+            40%      { transform: translate(22px,14px) scale(1.08); opacity: .55; }
+            80%      { transform: translate(-12px,8px) scale(.92); opacity: .82; }
+        }
+        .hero-glow-1 {
+            position:absolute; border-radius:50%; pointer-events:none;
+            width:650px; height:650px; top:-180px; left:-80px;
+            background:radial-gradient(circle, rgba(244,162,97,.19) 0%, transparent 65%);
+            animation: ambientDrift1 14s ease-in-out infinite; will-change:transform;
+        }
+        .hero-glow-2 {
+            position:absolute; border-radius:50%; pointer-events:none;
+            width:450px; height:450px; bottom:-100px; right:-60px;
+            background:radial-gradient(circle, rgba(232,165,152,.13) 0%, transparent 65%);
+            animation: ambientDrift2 18s ease-in-out infinite; will-change:transform;
+        }
+
+        /* ─── PREVIEW CARDS ─────────────────────────── */
+        .preview-card {
+            border-radius: 20px; overflow: hidden; cursor: pointer;
+            position: relative; aspect-ratio: 3/4;
+            transition: transform .45s cubic-bezier(.32,.72,0,1), box-shadow .45s cubic-bezier(.32,.72,0,1);
+        }
+        .preview-card:hover { transform: translateY(-6px); box-shadow: 0 28px 56px rgba(0,0,0,.28); }
+        .preview-card:hover .pcard-hover { opacity: 1; }
+        .pcard-hover {
+            position:absolute; inset:0; z-index:4;
+            display:flex; align-items:center; justify-content:center;
+            background:rgba(17,8,5,.38); opacity:0;
+            transition:opacity .3s ease;
+        }
+
+        /* ─── SCROLL ENTRY ANIMATIONS ───────────────── */
+        .s-anim {
+            opacity: 0; transform: translateY(22px);
+            transition: opacity .7s cubic-bezier(.32,.72,0,1), transform .7s cubic-bezier(.32,.72,0,1);
+        }
+        .s-anim.visible { opacity: 1; transform: translateY(0); }
+        .s-anim-delay-1 { transition-delay: .08s; }
+        .s-anim-delay-2 { transition-delay: .16s; }
+        .s-anim-delay-3 { transition-delay: .24s; }
+        .s-anim-delay-4 { transition-delay: .32s; }
     </style>
 </head>
 <body class="bg-c-bg text-c-text antialiased min-h-screen pb-20 md:pb-0">
 
 <!-- ===== TOPBAR ===== -->
-<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,0.07);">
+<header id="main-header" class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,0.07);">
     <div class="flex items-center justify-between h-16 px-4 md:px-10 max-w-7xl mx-auto">
-
         <button class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft hover:text-c-accent">
             <span class="material-symbols-outlined">menu</span>
         </button>
-
         <a href="index.html" class="font-display text-[1.85rem] font-semibold logo-text select-none">Candela</a>
-
         <div id="topbar-right"></div>
     </div>
 </header>
 
 <!-- ===== MAIN ===== -->
-<main class="pt-20 max-w-7xl mx-auto">
+<main class="pt-16 max-w-7xl mx-auto">
 
-    <!-- Hero para visitantes no logueados -->
-    <div id="hero-guest" class="hidden text-center px-4 md:px-10 pt-8 pb-2">
-        <span class="inline-block px-4 py-1.5 rounded-full bg-c-champagne text-c-accent-d text-[11px] font-bold uppercase tracking-widest mb-4">Solo mayores de 18 · Plataforma latina exclusiva</span>
-        <h1 class="font-display text-4xl md:text-5xl font-semibold leading-tight mb-3">
-            Donde las <em class="text-c-accent not-italic">creadoras latinas</em><br>brillan de verdad
-        </h1>
-        <p class="text-c-soft text-base max-w-sm mx-auto mb-4">Contenido exclusivo en tu idioma. Sin tarjeta de credito.</p>
-        <!-- Benefit chips -->
-        <div class="flex flex-wrap gap-2 justify-center mb-5">
-            <span class="inline-flex items-center gap-1 text-xs text-c-soft border border-c-border bg-white px-3 py-1 rounded-full">🔒 100% privado</span>
-            <span class="inline-flex items-center gap-1 text-xs text-c-soft border border-c-border bg-white px-3 py-1 rounded-full">💳 USDT Crypto</span>
-            <span class="inline-flex items-center gap-1 text-xs text-c-soft border border-c-border bg-white px-3 py-1 rounded-full">🌎 Bolivia · Latam</span>
-        </div>
-        <div class="flex gap-3 justify-center mb-4">
-            <button onclick="abrirModal('login')" class="c-btn text-white pl-6 pr-2 py-2 rounded-full text-sm font-bold shadow-md flex items-center gap-2 group">
-                Entrar
-                <span class="w-8 h-8 rounded-full bg-black/15 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(.32,.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px">
-                    <span class="material-symbols-outlined" style="font-size:15px">arrow_forward</span>
-                </span>
-            </button>
-            <a href="pages/gana-con-candela.html" class="border-2 border-c-accent text-c-accent px-6 py-2.5 rounded-full text-sm font-bold hover:bg-c-accent hover:text-white transition-all duration-300 ease-[cubic-bezier(.32,.72,0,1)]">Ser creadora</a>
-        </div>
-        <p id="hero-stats" class="text-xs text-c-soft"></p>
-    </div>
-
-    <!-- Strip captacion creadoras (solo visitantes) -->
-    <div id="strip-creadora" class="hidden mx-4 md:mx-10 mt-3 mb-1 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#1A0A06,#3D1A0A)">
-        <div class="flex items-center justify-between gap-3 px-5 py-3.5">
-            <div class="flex items-center gap-3 min-w-0">
-                <span class="text-xl shrink-0">🔥</span>
-                <div class="min-w-0">
-                    <p class="text-white text-xs font-bold leading-tight">¿Eres creadora? Publica tu contenido y cobra desde el primer dia</p>
-                    <p class="text-white/50 text-[11px] mt-0.5">Cobra en USDT. Sin friccion de pago.</p>
-                </div>
-            </div>
-            <a href="pages/gana-con-candela.html" class="shrink-0 c-btn text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-md whitespace-nowrap">
-                Saber mas
-            </a>
-        </div>
-    </div>
-
-    <!-- Banner streams en vivo -->
+    <!-- Strip streams en vivo (siempre visible) -->
     <div id="strip-streams" class="mx-4 md:mx-10 mt-3 mb-1 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#1a0a1a,#3d0a2a)">
-        <a href="pages/streams-activos.html" class="flex items-center justify-between gap-3 px-5 py-3.5">
+        <a href="pages/streams-activos.html" class="flex items-center justify-between gap-3 px-5 py-3">
             <div class="flex items-center gap-3 min-w-0">
                 <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shrink-0"></span>
                 <div class="min-w-0">
@@ -257,18 +250,229 @@
         </a>
     </div>
 
-    <!-- Stories -->
-    <section class="px-4 md:px-10 pt-5 pb-2 overflow-x-auto no-scroll">
-        <div class="flex gap-4 w-max" id="stories-row">
-            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-12 mt-1"></div></div>
-            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-10 mt-1"></div></div>
-            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-14 mt-1"></div></div>
-            <div class="flex flex-col items-center gap-1.5"><div class="skeleton w-16 h-16 rounded-full"></div><div class="skeleton h-2.5 w-11 mt-1"></div></div>
+    <!-- ══════════════════════════════════════════════
+         SECCIÓN INVITADOS — todo va dentro de este div
+    ══════════════════════════════════════════════ -->
+    <div id="hero-guest" class="hidden">
+
+        <!-- ── Dark atmospheric hero ── -->
+        <div id="hero-darkbg" style="background:linear-gradient(160deg,#110805 0%,#1F0B05 45%,#110805 100%);min-height:92dvh;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 1.5rem 4rem">
+            <div class="hero-glow-1"></div>
+            <div class="hero-glow-2"></div>
+
+            <div style="position:relative;z-index:2;text-align:center;max-width:680px;width:100%">
+
+                <!-- Eyebrow badge -->
+                <span style="display:inline-block;padding:.38rem 1.1rem;border-radius:99px;background:rgba(244,162,97,.12);border:1px solid rgba(244,162,97,.28);color:#F4A261;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.75rem">
+                    Solo mayores de 18 · Plataforma latina exclusiva
+                </span>
+
+                <!-- H1 -->
+                <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.1rem,5.5vw,3.75rem);color:#FFF8F5;line-height:1.1;margin-bottom:1.25rem;text-wrap:balance">
+                    Las mejores creadoras<br>de Latinoamérica.<br>
+                    <em style="color:#F4A261;font-style:italic">Solo para ti.</em>
+                </h1>
+
+                <!-- Subtext — psychological framing -->
+                <p style="color:rgba(255,248,245,.6);font-size:1.05rem;margin-bottom:.55rem;line-height:1.6">
+                    Contenido exclusivo en español.
+                </p>
+                <p style="color:rgba(255,248,245,.38);font-size:.9rem;margin-bottom:2.25rem;font-style:italic">
+                    Tu banco no lo va a ver. Tú decides.
+                </p>
+
+                <!-- Benefit chips (reframed as emotional benefits) -->
+                <div style="display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:2.4rem">
+                    <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:rgba(255,248,245,.72);border:1px solid rgba(255,248,245,.13);background:rgba(255,255,255,.05);padding:.4rem .95rem;border-radius:99px">🔒 Sin rastro bancario</span>
+                    <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:rgba(255,248,245,.72);border:1px solid rgba(255,248,245,.13);background:rgba(255,255,255,.05);padding:.4rem .95rem;border-radius:99px">✅ Gratis para registrarse</span>
+                    <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:rgba(255,248,245,.72);border:1px solid rgba(255,248,245,.13);background:rgba(255,255,255,.05);padding:.4rem .95rem;border-radius:99px">🌎 Bolivia · Colombia · México · Perú</span>
+                </div>
+
+                <!-- CTAs -->
+                <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.75rem">
+                    <button onclick="abrirModal('registro')" class="c-btn" style="color:#fff;padding:.85rem 1.8rem .85rem 1.55rem;border-radius:99px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;display:flex;align-items:center;gap:.6rem;box-shadow:0 10px 36px rgba(244,162,97,.38)">
+                        Crear cuenta gratis
+                        <span style="width:2rem;height:2rem;border-radius:50%;background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <span class="material-symbols-outlined" style="font-size:15px">arrow_forward</span>
+                        </span>
+                    </button>
+                    <button onclick="abrirModal('login')"
+                        style="padding:.85rem 1.55rem;border-radius:99px;font-weight:700;font-size:.95rem;border:2px solid rgba(255,248,245,.2);color:rgba(255,248,245,.8);background:transparent;cursor:pointer;transition:all .3s ease"
+                        onmouseover="this.style.borderColor='rgba(244,162,97,.6)';this.style.color='#F4A261'"
+                        onmouseout="this.style.borderColor='rgba(255,248,245,.2)';this.style.color='rgba(255,248,245,.8)'">
+                        Ya tengo cuenta
+                    </button>
+                </div>
+
+                <!-- Animated stats counter -->
+                <div style="display:flex;gap:2.5rem;justify-content:center;padding-top:1.75rem;border-top:1px solid rgba(255,248,245,.08)">
+                    <div style="text-align:center">
+                        <div id="stat-creadoras" style="font-family:'Playfair Display',serif;font-size:1.95rem;color:#F4A261;font-weight:600;line-height:1;min-width:3ch">···</div>
+                        <div style="font-size:.63rem;color:rgba(255,248,245,.38);text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Creadoras</div>
+                    </div>
+                    <div style="width:1px;background:rgba(255,248,245,.1)"></div>
+                    <div style="text-align:center">
+                        <div id="stat-paises" style="font-family:'Playfair Display',serif;font-size:1.95rem;color:#F4A261;font-weight:600;line-height:1">7</div>
+                        <div style="font-size:.63rem;color:rgba(255,248,245,.38);text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Países</div>
+                    </div>
+                    <div style="width:1px;background:rgba(255,248,245,.1)"></div>
+                    <div style="text-align:center">
+                        <div style="font-family:'Playfair Display',serif;font-size:1.95rem;color:#F4A261;font-weight:600;line-height:1">84%</div>
+                        <div style="font-size:.63rem;color:rgba(255,248,245,.38);text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Para creadoras</div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- ── Creator preview section ── -->
+        <div style="background:#FFF8F5;padding:3.5rem 1.5rem 1.5rem" class="md:px-10">
+            <div class="max-w-4xl mx-auto">
+                <p style="text-align:center;font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8B7D77;margin-bottom:.5rem">Creadoras activas en este momento</p>
+                <h2 class="font-display text-2xl text-center text-c-text font-semibold mb-2">Descubre quién te está esperando</h2>
+                <p style="text-align:center;font-size:.85rem;color:#8B7D77;margin-bottom:2rem">Regístrate gratis para ver todo su contenido exclusivo</p>
+
+                <!-- Grid filled by cargarPreviewPublico() -->
+                <div id="preview-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-2">
+                    <div class="rounded-2xl overflow-hidden" style="aspect-ratio:3/4"><div class="skeleton w-full h-full rounded-2xl"></div></div>
+                    <div class="rounded-2xl overflow-hidden" style="aspect-ratio:3/4"><div class="skeleton w-full h-full rounded-2xl"></div></div>
+                    <div class="rounded-2xl overflow-hidden hidden md:block" style="aspect-ratio:3/4"><div class="skeleton w-full h-full rounded-2xl"></div></div>
+                </div>
+
+                <!-- Login wall CTA -->
+                <div class="text-center py-8 px-4">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                        <span class="material-symbols-outlined text-white" style="font-size:26px">lock</span>
+                    </div>
+                    <h3 class="font-display text-lg font-semibold mb-1.5">Contenido exclusivo esperándote</h3>
+                    <p class="text-c-soft text-sm mb-5 max-w-xs mx-auto">Crea tu cuenta en 2 minutos y accede a todo el contenido de las creadoras latinas.</p>
+                    <button onclick="abrirModal('registro')" class="c-btn text-white pl-6 pr-2 py-3 rounded-full font-bold text-sm shadow-md flex items-center gap-2 mx-auto group" style="width:fit-content">
+                        Registrarme gratis
+                        <span class="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(.32,.72,0,1)] group-hover:translate-x-0.5 group-hover:scale-105" style="background:rgba(0,0,0,.15)">
+                            <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span>
+                        </span>
+                    </button>
+                    <p class="text-xs text-c-soft mt-3">Gratis · Sin tarjeta de crédito · En 2 minutos</p>
+                    <button onclick="abrirModal('login')" class="mt-2 text-xs font-semibold text-c-accent hover:text-c-accent-d transition-colors block mx-auto">
+                        Ya tengo cuenta — Entrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Por qué Candela ── -->
+        <div id="por-que-candela" style="background:#FFFBF9;padding:3rem 1.5rem" class="md:px-10 border-t border-c-border">
+            <div class="max-w-4xl mx-auto">
+                <p style="text-align:center;font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8B7D77;margin-bottom:.5rem">Por qué Candela</p>
+                <h2 class="font-display text-2xl text-center text-c-text font-semibold mb-8">Construida para Latinoamérica</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="s-anim" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
+                        <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                                <span class="material-symbols-outlined text-white" style="font-size:22px">lock</span>
+                            </div>
+                            <h3 class="font-bold text-c-text text-sm mb-1.5">Tu banco no lo va a ver</h3>
+                            <p class="text-c-soft text-xs leading-relaxed">Los pagos son en USDT. Sin tarjeta de crédito, sin registro bancario, sin rastro en tu estado de cuenta. Total privacidad — solo tú y la creadora.</p>
+                        </div>
+                    </div>
+                    <div class="s-anim s-anim-delay-1" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
+                        <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                                <span class="material-symbols-outlined text-white" style="font-size:22px">language</span>
+                            </div>
+                            <h3 class="font-bold text-c-text text-sm mb-1.5">En español. Para ti.</h3>
+                            <p class="text-c-soft text-xs leading-relaxed">No somos una copia de OnlyFans traducida. Somos una plataforma creada desde cero para Bolivia, Colombia, México y toda Latinoamérica.</p>
+                        </div>
+                    </div>
+                    <div class="s-anim s-anim-delay-2" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
+                        <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                                <span class="material-symbols-outlined text-white" style="font-size:22px">credit_card_off</span>
+                            </div>
+                            <h3 class="font-bold text-c-text text-sm mb-1.5">Sin tarjeta internacional</h3>
+                            <p class="text-c-soft text-xs leading-relaxed">No necesitas Visa ni Mastercard extranjera. Compra USDT localmente en tu país y suscríbete en minutos. Tan simple como eso.</p>
+                        </div>
+                    </div>
+                    <div class="s-anim s-anim-delay-3" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
+                        <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                                <span class="material-symbols-outlined text-white" style="font-size:22px">diversity_3</span>
+                            </div>
+                            <h3 class="font-bold text-c-text text-sm mb-1.5">Creadoras que te entienden</h3>
+                            <p class="text-c-soft text-xs leading-relaxed">Las creadoras son latinas, publican en español y viven tu misma realidad. No hay barrera cultural ni de idioma. Es contenido de verdad.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Strip captación creadoras (con ganancias) ── -->
+        <div class="mx-4 md:mx-10 my-6 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#1A0A06,#3D1A0A)">
+            <div class="px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-center md:text-left">
+                    <p class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-1">¿Eres creadora?</p>
+                    <h3 class="text-white font-display text-xl font-semibold mb-1">
+                        Gana el <span style="color:#F4A261">84%</span> de cada suscripción
+                    </h3>
+                    <p class="text-white/45 text-xs">OnlyFans paga 80%. Aquí ganas más, desde el primer día. Sin trámites.</p>
+                </div>
+                <div class="flex flex-col items-center gap-2 shrink-0">
+                    <a href="pages/gana-con-candela.html" class="c-btn text-white text-sm font-bold px-6 py-2.5 rounded-full shadow-lg whitespace-nowrap">
+                        Empieza gratis
+                    </a>
+                    <p class="text-white/35 text-[10px]">Gratis · Sin compromiso · Cobras desde el día 1</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Como funciona ── -->
+        <div class="px-4 md:px-10 py-10 border-t border-c-border">
+            <h2 class="font-display text-2xl font-semibold text-center mb-2 text-c-text">Como funciona</h2>
+            <p class="text-center text-c-soft text-sm mb-8">Tres pasos. Sin complicaciones.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                <div class="s-anim" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
+                    <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)" class="text-center h-full">
+                        <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
+                            <span class="material-symbols-outlined text-c-accent" style="font-size:26px">search</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1.5">Explora</h3>
+                        <p class="text-c-soft text-xs leading-relaxed">Descubre creadoras de Bolivia, Colombia, Mexico y toda Latam. Filtra por pais.</p>
+                    </div>
+                </div>
+                <div class="s-anim s-anim-delay-1" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
+                    <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)" class="text-center h-full">
+                        <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
+                            <span class="material-symbols-outlined text-c-accent" style="font-size:26px">payments</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1.5">Suscríbete</h3>
+                        <p class="text-c-soft text-xs leading-relaxed">Paga con USDT. Sin tarjeta de crédito. Sin que tu banco lo registre. Sin datos bancarios.</p>
+                    </div>
+                </div>
+                <div class="s-anim s-anim-delay-2" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
+                    <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)" class="text-center h-full">
+                        <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
+                            <span class="material-symbols-outlined text-c-accent" style="font-size:26px">lock_open</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1.5">Accede</h3>
+                        <p class="text-c-soft text-xs leading-relaxed">Contenido exclusivo desbloqueado. 100% privado. Solo tu y la creadora lo saben.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /hero-guest -->
+
+    <!-- ══════════════════════════════════════════════
+         SECCIÓN LOGUEADOS
+    ══════════════════════════════════════════════ -->
+
+    <!-- Stories -->
+    <section id="stories-section" class="px-4 md:px-10 pt-5 pb-2 overflow-x-auto no-scroll">
+        <div class="flex gap-4 w-max" id="stories-row"></div>
     </section>
 
-    <!-- Chips de filtro -->
-    <section class="px-4 md:px-10 py-3 overflow-x-auto no-scroll">
+    <!-- Chips filtro -->
+    <section id="chips-section" class="px-4 md:px-10 py-3 overflow-x-auto no-scroll">
         <div class="flex gap-2 w-max">
             <button class="chip active text-[13px] font-bold px-4 py-1.5 rounded-full border border-c-border transition-all" data-pais="" onclick="filtrar(this)">Todas</button>
             <button class="chip text-[13px] font-semibold px-4 py-1.5 rounded-full border border-c-border text-c-soft bg-white hover:border-c-accent hover:text-c-accent transition-all" data-pais="Bolivia" onclick="filtrar(this)">Bolivia</button>
@@ -282,7 +486,6 @@
 
     <!-- Feed grid -->
     <section class="px-4 md:px-10 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="feed-grid">
-        <!-- Skeletons iniciales -->
         <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-1/2"></div></div></div>
         <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-2/3"></div><div class="skeleton h-3 w-1/3"></div></div></div>
         <div class="rounded-2xl overflow-hidden border border-c-border bg-white shadow-sm hidden sm:block"><div class="skeleton w-full" style="aspect-ratio:4/5"></div><div class="p-4 flex flex-col gap-2"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-2/5"></div></div></div>
@@ -297,46 +500,6 @@
         <p class="text-xs text-c-soft mt-3">Gratis · Sin compromiso · Ganas desde el dia 1</p>
     </div>
 
-    <!-- Como funciona (solo para visitantes) -->
-    <section id="como-funciona" class="hidden px-4 md:px-10 py-10 border-t border-c-border mt-4">
-        <h2 class="font-display text-2xl font-semibold text-center mb-2 text-c-text">Como funciona</h2>
-        <p class="text-center text-c-soft text-sm mb-8">Tres pasos. Sin complicaciones.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
-                <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)" class="text-center h-full">
-                    <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
-                        <span class="material-symbols-outlined text-c-accent" style="font-size:26px">search</span>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1.5">Explora</h3>
-                    <p class="text-c-soft text-xs leading-relaxed">Descubre creadoras de Bolivia, Colombia, Mexico y toda Latam. Filtra por pais.</p>
-                </div>
-            </div>
-            <div style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
-                <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)" class="text-center h-full">
-                    <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
-                        <span class="material-symbols-outlined text-c-accent" style="font-size:26px">payments</span>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1.5">Suscribete</h3>
-                    <p class="text-c-soft text-xs leading-relaxed">Paga con USDT. Sin tarjeta de credito. Sin cuentas extranjeras.</p>
-                </div>
-            </div>
-            <div style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
-                <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)" class="text-center h-full">
-                    <div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-3">
-                        <span class="material-symbols-outlined text-c-accent" style="font-size:26px">lock_open</span>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1.5">Accede</h3>
-                    <p class="text-c-soft text-xs leading-relaxed">Contenido exclusivo desbloqueado. 100% privado. Solo tu y la creadora.</p>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mt-8">
-            <a href="pages/gana-con-candela.html" class="text-xs text-c-accent font-bold hover:text-c-accent-d transition-colors">
-                ¿Eres creadora? Conoce como ganar en Candela →
-            </a>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="border-t border-c-border mt-6 py-8 px-4 md:px-10">
         <div class="max-w-7xl mx-auto">
@@ -350,6 +513,7 @@
                     <a href="pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. § 2257</a>
                     <a href="pages/dmca.html" class="hover:text-c-accent transition-colors">DMCA / Copyright</a>
                     <a href="pages/reporte-abuso.html" class="hover:text-c-accent transition-colors">Reporte de Abuso</a>
+                    <a href="pages/modelo-release.html" class="hover:text-c-accent transition-colors">Acuerdo Creadora</a>
                     <a href="mailto:soporte@clubcandela.com" class="hover:text-c-accent transition-colors">Soporte</a>
                 </div>
             </div>
@@ -362,7 +526,7 @@
 
 </main>
 
-<!-- ===== BOTTOM NAV (solo mobile) ===== -->
+<!-- ===== BOTTOM NAV (mobile) ===== -->
 <nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,0.1);">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
         <a href="index.html" class="flex flex-col items-center text-c-accent gap-0.5">
@@ -392,84 +556,122 @@
 <div class="modal-bg" id="modal-auth">
     <div class="modal-box relative">
         <button onclick="cerrarModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
-
         <a href="index.html" class="font-display text-2xl logo-text font-semibold block mb-5">Candela</a>
 
-        <!-- Tabs -->
-        <div class="flex border-b border-c-border mb-6">
-            <button id="tab-login" onclick="switchTab('login')" class="pb-3 px-4 text-sm font-bold text-c-accent border-b-2 border-c-accent transition-all">Iniciar sesion</button>
-            <button id="tab-reg" onclick="switchTab('registro')" class="pb-3 px-4 text-sm font-semibold text-c-soft border-b-2 border-transparent hover:text-c-accent transition-all">Crear cuenta</button>
+        <!-- Selector de rol (step 0) -->
+        <div id="role-selector">
+            <p class="text-sm text-c-soft mb-4 text-center">¿Cómo quieres usar Candela?</p>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <button onclick="elegirRol('fan')"
+                    class="flex flex-col items-center gap-2 py-5 rounded-2xl border-2 border-c-border hover:border-c-accent hover:bg-orange-50 transition-all">
+                    <span class="text-2xl">🔥</span>
+                    <strong class="text-sm text-c-text">Soy Fan</strong>
+                    <span class="text-[11px] text-c-soft">Explorar y suscribirme</span>
+                </button>
+                <button onclick="elegirRol('creadora')"
+                    class="flex flex-col items-center gap-2 py-5 rounded-2xl border-2 border-c-border hover:border-c-accent hover:bg-orange-50 transition-all">
+                    <span class="text-2xl">✨</span>
+                    <strong class="text-sm text-c-text">Soy Creadora</strong>
+                    <span class="text-[11px] text-c-soft">Publicar y ganar</span>
+                </button>
+            </div>
+            <p class="text-xs text-center text-c-soft">¿Ya tienes cuenta?
+                <button onclick="elegirRol('login')" class="text-c-accent font-bold hover:underline">Iniciar sesion</button>
+            </p>
         </div>
 
-        <!-- Formulario Login -->
-        <form id="form-login" onsubmit="hacerLogin(event)" class="flex flex-col gap-4">
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Email</label>
-                <input id="l-email" type="email" required placeholder="tu@email.com"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+        <!-- Panel creadora -->
+        <div id="panel-creadora" class="hidden text-center">
+            <div class="text-4xl mb-3">✨</div>
+            <h3 class="font-bold text-lg text-c-text mb-1">Hola, creadora</h3>
+            <p class="text-sm text-c-soft mb-5">¿Qué quieres hacer?</p>
+            <a href="pages/registro-creadora.html"
+                class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full block text-center mb-3">
+                Registrarme como creadora
+            </a>
+            <button onclick="mostrarFormsFan('login')"
+                class="w-full py-3 rounded-xl font-bold text-sm border-2 border-c-border hover:border-c-accent text-c-text transition-all mb-4">
+                Ya tengo cuenta — Entrar
+            </button>
+            <button onclick="mostrarRoleSelector()" class="text-xs text-c-soft hover:text-c-accent transition-colors">← Volver</button>
+        </div>
+
+        <!-- Formularios fan/suscriptor -->
+        <div id="forms-fan" class="hidden">
+            <!-- Tabs -->
+            <div class="flex border-b border-c-border mb-6">
+                <button id="tab-login" onclick="switchTab('login')" class="pb-3 px-4 text-sm font-bold text-c-accent border-b-2 border-c-accent transition-all">Iniciar sesion</button>
+                <button id="tab-reg" onclick="switchTab('registro')" class="pb-3 px-4 text-sm font-semibold text-c-soft border-b-2 border-transparent hover:text-c-accent transition-all">Crear cuenta</button>
             </div>
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contrasena</label>
-                <input id="l-pass" type="password" required placeholder="••••••••"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <button type="submit" id="btn-login" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Entrar</button>
-            <div class="flex justify-between items-center">
-                <p class="text-xs text-c-soft">
-                    ¿Quieres publicar? <a href="pages/registro-creadora.html" class="text-c-accent font-bold">Sé creadora</a>
+
+            <!-- Login -->
+            <form id="form-login" onsubmit="hacerLogin(event)" class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Email</label>
+                    <input id="l-email" type="email" required placeholder="tu@email.com"
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contrasena</label>
+                    <input id="l-pass" type="password" required placeholder="••••••••"
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+                <button type="submit" id="btn-login" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Entrar</button>
+                <div class="flex justify-between items-center">
+                    <p class="text-xs text-c-soft">¿Quieres publicar? <a href="pages/registro-creadora.html" class="text-c-accent font-bold">Sé creadora</a></p>
+                    <a href="pages/resetear-password.html" class="text-xs text-c-accent font-semibold hover:text-c-accent-d">¿Olvidaste tu contraseña?</a>
+                </div>
+            </form>
+
+            <!-- OTP Admin (2FA) -->
+            <form id="form-otp" onsubmit="verificarOTP(event)" class="hidden flex-col gap-4">
+                <div class="text-center mb-2">
+                    <span class="ms text-c-accent" style="font-size:2.5rem">lock</span>
+                    <h3 class="font-bold text-c-text text-lg mt-1">Verificacion de dos factores</h3>
+                    <p class="text-xs text-c-soft mt-1">Revisa tu email y escribe el codigo de 6 digitos.</p>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Codigo de acceso</label>
+                    <input id="otp-input" type="text" required maxlength="6" pattern="[0-9]{6}" placeholder="000000"
+                        class="w-full px-4 py-3 rounded-xl border border-c-border text-center text-2xl font-mono tracking-widest focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+                <button type="submit" id="btn-otp" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Verificar acceso</button>
+                <button type="button" onclick="reenviarOTP()" id="btn-reenviar" class="text-xs text-c-soft hover:text-c-accent text-center transition-colors">No llego el codigo — Reenviar</button>
+            </form>
+
+            <!-- Registro suscriptor -->
+            <form id="form-registro" onsubmit="hacerRegistro(event)" class="hidden flex-col gap-4">
+                <div>
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Nombre</label>
+                    <input id="r-nombre" type="text" required placeholder="Tu nombre"
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Email</label>
+                    <input id="r-email" type="email" required placeholder="tu@email.com"
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contraseña</label>
+                    <input id="r-pass" type="password" required placeholder="Mínimo 8 caracteres" minlength="8"
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Fecha de nacimiento</label>
+                    <input id="r-dob" type="date" required
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    <p class="text-[10px] text-c-soft mt-1">Debes tener al menos 18 años. Requerido para cumplimiento legal.</p>
+                </div>
+                <label class="flex items-start gap-2.5 cursor-pointer">
+                    <input id="r-terms" type="checkbox" required class="mt-0.5 shrink-0" style="accent-color:#F4A261;width:16px;height:16px;">
+                    <span class="text-xs text-c-soft leading-relaxed">Confirmo que tengo <strong class="text-c-text">18 años o más</strong> y acepto los <a href="pages/terminos.html" class="text-c-accent font-bold">Términos de Servicio</a> y la <a href="pages/privacidad.html" class="text-c-accent font-bold">Política de Privacidad</a>.</span>
+                </label>
+                <button type="submit" id="btn-reg" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Crear cuenta gratis</button>
+                <p class="text-center text-xs text-c-soft">
+                    ¿Quieres publicar contenido? <a href="pages/registro-creadora.html" class="text-c-accent font-bold">Registrate como creadora</a>
                 </p>
-                <a href="pages/resetear-password.html" class="text-xs text-c-accent font-semibold hover:text-c-accent-d">¿Olvidaste tu contraseña?</a>
-            </div>
-        </form>
-
-        <!-- Formulario OTP Admin (2FA) -->
-        <form id="form-otp" onsubmit="verificarOTP(event)" class="hidden flex-col gap-4">
-            <div class="text-center mb-2">
-                <span class="ms text-c-accent" style="font-size:2.5rem">lock</span>
-                <h3 class="font-bold text-c-text text-lg mt-1">Verificacion de dos factores</h3>
-                <p class="text-xs text-c-soft mt-1">Revisa tu email y escribe el codigo de 6 digitos.</p>
-            </div>
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Codigo de acceso</label>
-                <input id="otp-input" type="text" required maxlength="6" pattern="[0-9]{6}" placeholder="000000"
-                    class="w-full px-4 py-3 rounded-xl border border-c-border text-center text-2xl font-mono tracking-widest focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <button type="submit" id="btn-otp" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Verificar acceso</button>
-            <button type="button" onclick="reenviarOTP()" id="btn-reenviar" class="text-xs text-c-soft hover:text-c-accent text-center transition-colors">No llego el codigo — Reenviar</button>
-        </form>
-
-        <!-- Formulario Registro suscriptor -->
-        <form id="form-registro" onsubmit="hacerRegistro(event)" class="hidden flex-col gap-4">
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Nombre</label>
-                <input id="r-nombre" type="text" required placeholder="Tu nombre"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Email</label>
-                <input id="r-email" type="email" required placeholder="tu@email.com"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Contraseña</label>
-                <input id="r-pass" type="password" required placeholder="Mínimo 8 caracteres" minlength="8"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-            </div>
-            <div>
-                <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Fecha de nacimiento</label>
-                <input id="r-dob" type="date" required
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-                <p class="text-[10px] text-c-soft mt-1">Debes tener al menos 18 años. Requerido para cumplimiento legal.</p>
-            </div>
-            <label class="flex items-start gap-2.5 cursor-pointer">
-                <input id="r-terms" type="checkbox" required class="mt-0.5 shrink-0" style="accent-color:#F4A261;width:16px;height:16px;">
-                <span class="text-xs text-c-soft leading-relaxed">Confirmo que tengo <strong class="text-c-text">18 años o más</strong> y acepto los <a href="pages/terminos.html" class="text-c-accent font-bold">Términos de Servicio</a> y la <a href="pages/privacidad.html" class="text-c-accent font-bold">Política de Privacidad</a>.</span>
-            </label>
-            <button type="submit" id="btn-reg" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Crear cuenta gratis</button>
-            <p class="text-center text-xs text-c-soft">
-                ¿Quieres publicar contenido? <a href="pages/registro-creadora.html" class="text-c-accent font-bold">Registrate como creadora</a>
-            </p>
-        </form>
+            </form>
+        </div><!-- /forms-fan -->
     </div>
 </div>
 
@@ -495,32 +697,52 @@ const GRADIENTES = {
     'nube':         ['#F5F5F5','#95A5A6'],
 };
 
+// Darker gradients for preview cards (visible on light bg with depth)
+const PREVIEW_GRAD = {
+    'melocoton':    ['#2A1208','#F4A261'],
+    'rosa-venecia': ['#2A0A1A','#D4869D'],
+    'lavanda':      ['#16082A','#9B72CF'],
+    'rojo-carmin':  ['#2A0808','#C0392B'],
+    'menta':        ['#08180E','#2ECC71'],
+    'cielo':        ['#081220','#5DADE2'],
+    'dorada':       ['#181000','#D4AC0D'],
+    'nude':         ['#180E08','#C4A882'],
+    'noche-rosa':   ['#1A0420','#FF2D9B'],
+    'coral':        ['#280808','#FF6B6B'],
+    'esmeralda':    ['#060E0A','#1ABC9C'],
+    'nube':         ['#10101C','#95A5A6'],
+};
+
+const FLAGS = {
+    'Bolivia':'🇧🇴','Colombia':'🇨🇴','Mexico':'🇲🇽','México':'🇲🇽',
+    'Argentina':'🇦🇷','Venezuela':'🇻🇪','Peru':'🇵🇪','Perú':'🇵🇪',
+    'Chile':'🇨🇱','Uruguay':'🇺🇾','Ecuador':'🇪🇨','Panama':'🇵🇦'
+};
+
 let todasCreadoras = [];
 let paisFiltro = '';
 
 // ─── INIT ────────────────────────────────────────────────────────────
 function init() {
-    renderTopbar();
+    const isGuest = !candela.auth.isLoggedIn();
+
+    renderTopbar(isGuest);
     renderNavLinks();
-    if (candela.auth.isLoggedIn()) {
+
+    if (isGuest) {
+        document.getElementById('hero-guest').classList.remove('hidden');
+        document.getElementById('stories-section').style.display = 'none';
+        document.getElementById('chips-section').style.display = 'none';
+        document.getElementById('feed-grid').style.display = 'none';
+        cargarPreviewPublico();
+        modoTopbarOscuro();
+        initScrollAnimations();
+    } else {
         cargarStories();
         cargarFeed();
-    } else {
-        // Gate: non-logged users see marketing, not the feed
-        document.getElementById('hero-guest').classList.remove('hidden');
-        document.getElementById('strip-creadora').classList.remove('hidden');
-        document.getElementById('como-funciona').classList.remove('hidden');
-        // Hide stories section (has creator avatars — private)
-        var storiesSection = document.getElementById('stories-row').closest('section');
-        if (storiesSection) storiesSection.style.display = 'none';
-        // Hide filter chips
-        var chipsSection = document.querySelector('.chip');
-        if (chipsSection) chipsSection.closest('section').style.display = 'none';
-        // Replace feed with login wall
-        document.getElementById('feed-grid').innerHTML = feedLoginWall();
     }
 
-    // Set max date on DOB field dynamically
+    // DOB max = 18 years ago
     var dob = document.getElementById('r-dob');
     if (dob) {
         var max18 = new Date();
@@ -529,33 +751,8 @@ function init() {
     }
 }
 
-function feedLoginWall() {
-    return '<div class="col-span-full py-4">' +
-        '<div class="relative max-w-xl mx-auto px-4">' +
-        // Blurred teaser cards
-        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 select-none pointer-events-none" style="filter:blur(6px);opacity:.6">' +
-        '<div class="rounded-2xl overflow-hidden bg-white border border-c-border" style="aspect-ratio:3/4;background:linear-gradient(135deg,#F2D5C4,#E8A598)"></div>' +
-        '<div class="rounded-2xl overflow-hidden bg-white border border-c-border" style="aspect-ratio:3/4;background:linear-gradient(135deg,#F4A261,#D4869D)"></div>' +
-        '</div>' +
-        // Overlay CTA
-        '<div class="absolute inset-0 flex flex-col items-center justify-center" style="background:linear-gradient(to top,#FFF8F5 30%,rgba(255,248,245,.7) 70%,transparent)">' +
-        '<div class="text-center px-6 py-10">' +
-        '<div class="w-14 h-14 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-4" style="background:#F2D5C4">' +
-        '<span class="material-symbols-outlined" style="font-size:28px;color:#F4A261">lock</span></div>' +
-        '<h3 class="font-display text-xl font-semibold mb-2">Crea tu cuenta para explorar</h3>' +
-        '<p class="text-c-soft text-sm mb-5 max-w-xs mx-auto">Descubre el contenido exclusivo de las creadoras latinas.</p>' +
-        '<button onclick="abrirModal(\'registro\')" class="c-btn text-white pl-6 pr-2 py-2.5 rounded-full font-bold text-sm shadow-md flex items-center gap-2 mx-auto group" style="width:fit-content">' +
-        'Registrarme gratis' +
-        '<span class="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(.32,.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-105" style="background:rgba(0,0,0,.15)">' +
-        '<span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></span>' +
-        '</button>' +
-        '<button onclick="abrirModal(\'login\')" class="mt-3 text-xs font-semibold block mx-auto" style="color:#F4A261">Ya tengo cuenta — Entrar</button>' +
-        '</div></div>' +
-        '</div></div>';
-}
-
 // ─── TOPBAR ──────────────────────────────────────────────────────────
-function renderTopbar() {
+function renderTopbar(isDark = false) {
     const el = document.getElementById('topbar-right');
     const user = candela.auth.user();
     if (candela.auth.isLoggedIn() && user) {
@@ -566,15 +763,27 @@ function renderTopbar() {
                 ${user.tipo === 'suscriptor' ? `<a href="pages/feed.html" class="hidden md:inline text-xs font-bold text-c-accent">Mi feed</a>` : ''}
                 ${user.tipo === 'admin' ? `<a href="pages/admin.html" class="hidden md:inline text-xs font-bold text-c-accent">Admin</a>` : ''}
                 <button onclick="candela.auth.logout()"
-                    class="w-9 h-9 rounded-full c-btn text-white text-sm font-bold flex items-center justify-center shadow-sm"
-                    title="Salir">
+                    class="w-9 h-9 rounded-full c-btn text-white text-sm font-bold flex items-center justify-center shadow-sm" title="Salir">
                     ${inicial}
+                </button>
+            </div>`;
+    } else if (isDark) {
+        el.innerHTML = `
+            <div class="flex items-center gap-2">
+                <a href="pages/gana-con-candela.html" id="topbar-creadora-link"
+                    class="hidden md:inline text-xs font-bold px-4 py-1.5 rounded-full transition-all"
+                    style="color:rgba(255,248,245,.65);border:1px solid rgba(255,248,245,.2)">
+                    Ser creadora
+                </a>
+                <button onclick="abrirModal('registro')" class="c-btn text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm">
+                    Registrarse
                 </button>
             </div>`;
     } else {
         el.innerHTML = `
             <div class="flex items-center gap-2">
-                <a href="pages/gana-con-candela.html" class="hidden md:inline text-xs font-bold text-c-accent border border-c-accent px-4 py-1.5 rounded-full hover:bg-c-accent hover:text-white transition-all">
+                <a href="pages/gana-con-candela.html"
+                    class="hidden md:inline text-xs font-bold text-c-accent border border-c-accent px-4 py-1.5 rounded-full hover:bg-c-accent hover:text-white transition-all">
                     Ser creadora
                 </a>
                 <button onclick="abrirModal('login')" class="c-btn text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm">
@@ -584,6 +793,115 @@ function renderTopbar() {
     }
 }
 
+function modoTopbarOscuro() {
+    const header = document.getElementById('main-header');
+    const heroSection = document.getElementById('hero-darkbg');
+    if (!header || !heroSection) return;
+
+    const setDark = () => {
+        header.style.background = 'rgba(17,8,5,.88)';
+        header.style.borderBottomColor = 'rgba(244,162,97,.14)';
+        header.style.boxShadow = 'none';
+    };
+    const setLight = () => {
+        header.style.background = '';
+        header.style.borderBottomColor = '';
+        header.style.boxShadow = '';
+        renderTopbar(false);
+    };
+
+    setDark();
+
+    let heroH = heroSection.offsetHeight;
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > heroH * 0.85) {
+            setLight();
+        } else {
+            setDark();
+            // restore dark topbar buttons if they were replaced
+            const reg = document.querySelector('#topbar-right button');
+            if (reg && reg.textContent.trim() === 'Entrar') {
+                renderTopbar(true);
+            }
+        }
+    }, { passive: true });
+}
+
+// ─── SCROLL ANIMATIONS ───────────────────────────────────────────────
+function initScrollAnimations() {
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.s-anim').forEach(el => obs.observe(el));
+}
+
+// ─── PUBLIC CREATOR PREVIEW (guests) ─────────────────────────────────
+async function cargarPreviewPublico() {
+    try {
+        const base = (window.API_URL || '').replace(/\/$/, '');
+        const resp = await fetch(`${base}/api/creadoras/explorar?limit=6`);
+        if (!resp.ok) throw new Error('no data');
+        const lista = await resp.json();
+        if (!lista || !lista.length) return;
+
+        // Animate stats counter
+        const statC = document.getElementById('stat-creadoras');
+        if (statC) animarContador(statC, lista.length, '+');
+        const paises = [...new Set(lista.map(c => c.pais).filter(Boolean))];
+        const statP = document.getElementById('stat-paises');
+        if (statP && paises.length) animarContador(statP, paises.length, '');
+
+        // Render preview cards
+        const grid = document.getElementById('preview-grid');
+        if (!grid) return;
+
+        grid.innerHTML = lista.slice(0, 6).map(c => {
+            const [c1, c2] = PREVIEW_GRAD[c.tema_color] || ['#1A0D08', '#F4A261'];
+            const flag = FLAGS[c.pais] || '🌎';
+            const inicial = (c.nombre_artistico || '?')[0].toUpperCase();
+            const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
+            const subs = c.total_suscriptores || 0;
+
+            return `
+            <div class="preview-card" onclick="abrirModal('registro')">
+                <div style="position:absolute;inset:0;background:linear-gradient(160deg,${c1} 0%,${c2} 100%)"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1">
+                    <span style="font-family:'Playfair Display',serif;font-size:5.5rem;color:rgba(255,255,255,.1);user-select:none;line-height:1">${inicial}</span>
+                </div>
+                <div style="position:absolute;bottom:0;left:0;right:0;z-index:2;padding:1rem;background:linear-gradient(to top,rgba(17,8,5,.92) 0%,rgba(17,8,5,.32) 60%,transparent 100%)">
+                    <div style="color:#fff;font-weight:700;font-size:.88rem;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.nombre_artistico)}</div>
+                    <div style="color:rgba(255,255,255,.52);font-size:.7rem;margin-bottom:.5rem">${flag} ${esc(c.pais || 'Latam')}</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="color:#F4A261;font-size:.74rem;font-weight:700">${esc(precio)}</span>
+                        <span style="font-size:.62rem;color:rgba(255,255,255,.38)">${subs} subs</span>
+                    </div>
+                </div>
+                <div class="pcard-hover">
+                    <div style="background:linear-gradient(135deg,#F4A261,#E8A598);border-radius:50%;width:46px;height:46px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(244,162,97,.5)">
+                        <span class="material-symbols-outlined" style="color:#fff;font-size:20px">lock</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch(e) {
+        // Fail silently — CTA below still works
+        const grid = document.getElementById('preview-grid');
+        if (grid) grid.innerHTML = '';
+    }
+}
+
+function animarContador(el, target, suffix) {
+    let current = 0;
+    const step = Math.max(1, Math.ceil(target / 25));
+    const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current + suffix;
+        if (current >= target) clearInterval(timer);
+    }, 45);
+}
+
+// ─── NAV ─────────────────────────────────────────────────────────────
 function renderNavLinks() {
     const user = candela.auth.user();
     if (user?.tipo === 'creadora') {
@@ -612,7 +930,6 @@ async function cargarStories() {
         const lista = await candela.creadoras.explorar({ limit: 12 });
         const row = document.getElementById('stories-row');
         if (!lista.length) { row.innerHTML = ''; return; }
-
         row.innerHTML = lista.map((c, i) => {
             const [c1, c2] = GRADIENTES[c.tema_color] || ['#F2D5C4','#E8A598'];
             const ring = i < 5 ? 'story-ring-active' : 'bg-c-border';
@@ -639,18 +956,10 @@ async function cargarFeed() {
     try {
         todasCreadoras = await candela.creadoras.explorar({ limit: 30 });
         renderFeed(todasCreadoras);
-        if (!candela.auth.isLoggedIn() && todasCreadoras.length > 0) {
-            const el = document.getElementById('hero-stats');
-            if (el) {
-                const paises = [...new Set(todasCreadoras.map(c => c.pais).filter(Boolean))];
-                el.textContent = `${todasCreadoras.length} creadora${todasCreadoras.length !== 1 ? 's' : ''} activa${todasCreadoras.length !== 1 ? 's' : ''} · ${paises.slice(0, 4).join(', ')}`;
-            }
-        }
     } catch(e) {
         document.getElementById('feed-grid').innerHTML = `
             <div class="col-span-full text-center py-16">
                 <p class="text-c-soft text-sm">No se pudo conectar con el servidor.</p>
-                <p class="text-xs text-c-soft mt-1">Por favor intenta de nuevo en unos momentos.</p>
                 <button onclick="cargarFeed()" class="c-btn text-white px-5 py-2 rounded-full text-xs font-bold mt-4 shadow-sm">Reintentar</button>
             </div>`;
     }
@@ -659,45 +968,27 @@ async function cargarFeed() {
 function renderFeed(lista) {
     const grid = document.getElementById('feed-grid');
     const empty = document.getElementById('empty-state');
-
-    if (!lista.length) {
-        grid.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
-    }
+    if (!lista.length) { grid.innerHTML = ''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
 
-    grid.innerHTML = lista.map((c, idx) => {
+    grid.innerHTML = lista.map(c => {
         const [col1, col2] = GRADIENTES[c.tema_color] || ['#F2D5C4','#E8A598'];
         const inicial = c.nombre_artistico[0].toUpperCase();
         const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
-
         return `
         <article class="feed-card rounded-2xl overflow-hidden bg-white border border-c-border shadow-sm"
             style="cursor:pointer;" onclick="irACreadora('${c.slug}')">
-
-            <!-- Imagen / Banner -->
             <div class="relative overflow-hidden" style="aspect-ratio:4/5">
                 ${c.banner_url
                     ? `<img src="${c.banner_url}" alt="${c.nombre_artistico}" class="absolute inset-0 w-full h-full object-cover">`
-                    : `<div class="absolute inset-0 flex items-center justify-center"
-                            style="background:linear-gradient(135deg,${col1},${col2})">
+                    : `<div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,${col1},${col2})">
                             <span class="font-display select-none" style="font-size:5rem;color:rgba(255,255,255,0.22);">${inicial}</span>
-                       </div>`
-                }
-
-                <!-- Badge destacada -->
+                       </div>`}
                 ${c.destacada ? `
                     <div class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold text-white border border-white/25"
-                        style="background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);">
-                        ✨ Destacada
-                    </div>` : ''}
-
-                <!-- Overlay info -->
+                        style="background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);">✨ Destacada</div>` : ''}
                 <div class="card-overlay absolute inset-0 flex flex-col justify-end p-4">
                     <div class="flex justify-between items-end gap-3">
-
-                        <!-- Info -->
                         <div class="flex-1 min-w-0">
                             <div class="w-10 h-10 rounded-full border-2 border-white/70 overflow-hidden flex items-center justify-center mb-2 shrink-0"
                                 style="background:linear-gradient(135deg,${col1},${col2})">
@@ -710,24 +1001,20 @@ function renderFeed(lista) {
                                 <span class="w-2 h-2 rounded-full bg-white/30 inline-block"></span>${c.pais || 'Latam'}
                             </p>
                         </div>
-
-                        <!-- Botones accion -->
                         <div class="flex flex-col gap-2 shrink-0">
                             <button class="action-btn" onclick="toggleLike(event,'${c.id}')" title="Me gusta">
-                                <span class="material-symbols-outlined" style="font-size:18px;">favorite</span>
+                                <span class="material-symbols-outlined" style="font-size:18px">favorite</span>
                             </button>
                             <button class="action-btn" onclick="event.stopPropagation();irACreadora('${c.slug}')" title="Ver perfil">
-                                <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+                                <span class="material-symbols-outlined" style="font-size:18px">chat_bubble</span>
                             </button>
                             <button class="sub-btn" onclick="event.stopPropagation();suscribirse('${c.slug}')" title="Suscribirse">
-                                <span class="material-symbols-outlined" style="font-size:18px;">favorite_border</span>
+                                <span class="material-symbols-outlined" style="font-size:18px">favorite_border</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Pie de card -->
             <div class="p-3.5 flex items-center justify-between gap-3">
                 <div class="min-w-0 flex-1">
                     ${c.bio ? `<p class="text-c-soft text-xs leading-relaxed line-clamp-1 mb-1">${c.bio}</p>` : ''}
@@ -754,16 +1041,12 @@ function filtrar(btn) {
     btn.classList.add('active');
     btn.classList.remove('text-c-soft','bg-white');
     paisFiltro = btn.dataset.pais;
-    const lista = paisFiltro
-        ? todasCreadoras.filter(c => c.pais === paisFiltro)
-        : todasCreadoras;
+    const lista = paisFiltro ? todasCreadoras.filter(c => c.pais === paisFiltro) : todasCreadoras;
     renderFeed(lista);
 }
 
 // ─── NAVEGACION ──────────────────────────────────────────────────────
-function irACreadora(slug) {
-    window.location.href = `pages/creadora.html?slug=${slug}`;
-}
+function irACreadora(slug) { window.location.href = `pages/creadora.html?slug=${slug}`; }
 
 function suscribirse(slug) {
     if (!candela.auth.isLoggedIn()) { abrirModal('login'); return; }
@@ -785,12 +1068,33 @@ function toggleLike(e, id) {
 }
 
 // ─── MODAL ───────────────────────────────────────────────────────────
-function abrirModal(tab = 'login') {
+function abrirModal(tab = '') {
     document.getElementById('modal-auth').classList.add('open');
-    switchTab(tab);
+    if (tab === 'login') {
+        mostrarFormsFan('login');
+    } else {
+        mostrarRoleSelector();
+    }
 }
-function cerrarModal() {
-    document.getElementById('modal-auth').classList.remove('open');
+function cerrarModal() { document.getElementById('modal-auth').classList.remove('open'); }
+function mostrarRoleSelector() {
+    document.getElementById('role-selector').classList.remove('hidden');
+    document.getElementById('panel-creadora').classList.add('hidden');
+    document.getElementById('forms-fan').classList.add('hidden');
+}
+function elegirRol(rol) {
+    if (rol === 'fan') { mostrarFormsFan('registro'); }
+    else if (rol === 'login') { mostrarFormsFan('login'); }
+    else {
+        document.getElementById('role-selector').classList.add('hidden');
+        document.getElementById('panel-creadora').classList.remove('hidden');
+    }
+}
+function mostrarFormsFan(tab) {
+    document.getElementById('role-selector').classList.add('hidden');
+    document.getElementById('panel-creadora').classList.add('hidden');
+    document.getElementById('forms-fan').classList.remove('hidden');
+    switchTab(tab || 'login');
 }
 document.getElementById('modal-auth').addEventListener('click', e => {
     if (e.target === e.currentTarget) cerrarModal();
@@ -884,12 +1188,10 @@ async function verificarOTP(e) {
 
 async function hacerRegistro(e) {
     e.preventDefault();
-    // Age validation
     const dob = document.getElementById('r-dob').value;
     if (!dob) { toast('Ingresa tu fecha de nacimiento', 'error'); return; }
     const age = Math.floor((Date.now() - new Date(dob)) / (365.25 * 24 * 3600 * 1000));
     if (age < 18) { toast('Debes tener al menos 18 años para registrarte', 'error'); return; }
-    // Terms checkbox
     if (!document.getElementById('r-terms').checked) { toast('Debes aceptar los términos de servicio', 'error'); return; }
 
     const btn = document.getElementById('btn-reg');
@@ -902,7 +1204,10 @@ async function hacerRegistro(e) {
         );
         cerrarModal();
         document.getElementById('hero-guest').classList.add('hidden');
-        renderTopbar();
+        document.getElementById('stories-section').style.display = '';
+        document.getElementById('chips-section').style.display = '';
+        document.getElementById('feed-grid').style.display = '';
+        renderTopbar(false);
         cargarStories();
         cargarFeed();
         toast('¡Bienvenida a Candela!', 'success');
@@ -929,13 +1234,9 @@ function toast(msg, tipo = 'info') {
     `;
     el.textContent = msg;
     c.appendChild(el);
-    requestAnimationFrame(() => {
-        el.style.opacity = '1';
-        el.style.transform = 'translateX(0)';
-    });
+    requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateX(0)'; });
     setTimeout(() => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(100%)';
+        el.style.opacity = '0'; el.style.transform = 'translateX(100%)';
         setTimeout(() => el.remove(), 300);
     }, 3800);
 }

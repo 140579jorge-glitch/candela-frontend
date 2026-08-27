@@ -239,7 +239,11 @@
             </label>
             <label class="flex items-start gap-3 cursor-pointer text-sm">
                 <input type="checkbox" id="t-contenido" class="mt-0.5 w-4 h-4 accent-orange-400 shrink-0">
-                <span>Entiendo que todo contenido publicado debe cumplir las <a href="#" class="text-c-accent font-bold hover:underline">Normas de contenido</a>.</span>
+                <span>Entiendo que todo contenido publicado debe cumplir las <a href="normas.html" target="_blank" class="text-c-accent font-bold hover:underline">Normas de contenido</a>.</span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer text-sm">
+                <input type="checkbox" id="t-release" class="mt-0.5 w-4 h-4 accent-orange-400 shrink-0">
+                <span>He leído y acepto el <a href="modelo-release.html" target="_blank" class="text-c-accent font-bold hover:underline">Acuerdo de Creadora e Intérprete</a>, incluyendo los requisitos de registro de 18 U.S.C. § 2257.</span>
             </label>
             <label class="flex items-start gap-3 cursor-pointer text-sm">
                 <input type="checkbox" id="t-comision" class="mt-0.5 w-4 h-4 accent-orange-400 shrink-0">
@@ -344,7 +348,7 @@ function irPaso(n) {
 }
 
 async function registrar() {
-    const checks = ['t-edad','t-terminos','t-contenido','t-comision'];
+    const checks = ['t-edad','t-terminos','t-contenido','t-release','t-comision'];
     if (checks.some(id => !document.getElementById(id).checked)) { toast('Debes aceptar todos los terminos', 'error'); return; }
     const btn = document.getElementById('btn-registrar');
     btn.innerHTML = '<span class="ms" style="font-size:18px">hourglass_top</span> Creando...';
