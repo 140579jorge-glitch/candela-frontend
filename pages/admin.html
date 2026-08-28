@@ -891,7 +891,7 @@ async function ejecutarMantenimiento() {
     if (!confirm('Aplicar comision de inactividad a creadoras sin retiro en 90+ dias?\nEsta accion es irreversible.')) return;
     try {
         const r = await candela._req('POST', '/api/admin/run-maintenance', {});
-        toast(`Mantenimiento: ${r.procesadas} creadoras, $${(r.total_comision||0).toFixed(2)} cobrado`, 'success');
+        toast(`Mantenimiento: ${r.creadoras_cobradas} creadoras, $${(r.total_fee_cobrado||0).toFixed(2)} cobrado`, 'success');
     } catch(e) { toast(e.message||'Error en mantenimiento', 'error'); }
 }
 
