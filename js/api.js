@@ -70,6 +70,7 @@ const candela = {
         },
         reenviarVerificacion: (email) => candela._req('POST', '/api/auth/reenviar-verificacion', { email }),
         eliminarCuenta: () => candela._req('DELETE', '/api/auth/cuenta'),
+        cambiarPassword: (password_actual, nueva_password) => candela._req('POST', '/api/auth/cambiar-password', { password_actual, nueva_password }),
         logout() {
             localStorage.removeItem('candela_token');
             localStorage.removeItem('candela_user');
