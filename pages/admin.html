@@ -90,6 +90,9 @@
         <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes
             <span class="ml-auto bg-blue-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-msg">0</span>
         </div>
+        <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">flag</span>Reclamos
+            <span class="ml-auto bg-orange-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-rec">0</span>
+        </div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <a href="../index.html" class="nav-item"><span class="ms">home</span>Ver sitio</a>
     </aside>
@@ -163,6 +166,30 @@
                         <p class="text-xs text-c-soft">Procesar pagos a creadoras</p>
                     </div>
                     <span class="ms" style="font-size:18px;color:#c9b9b4;margin-left:auto">chevron_right</span>
+                </div>
+                <div class="bg-white border border-c-border rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-c-accent transition-all" onclick="mostrar('reclamos')">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(249,115,22,.1)">
+                        <span class="ms" style="color:#ea580c">flag</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm">Reclamos</p>
+                        <p class="text-xs text-c-soft">Disputas de fans y creadoras</p>
+                    </div>
+                    <span class="ms" style="font-size:18px;color:#c9b9b4;margin-left:auto">chevron_right</span>
+                </div>
+            </div>
+            <!-- Acciones de mantenimiento -->
+            <div class="mt-6">
+                <h3 class="font-bold text-sm text-c-soft uppercase tracking-wider mb-3">Mantenimiento</h3>
+                <div class="bg-white border border-c-border rounded-2xl p-4 flex items-center gap-4 max-w-sm">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(107,114,128,.08)">
+                        <span class="ms" style="color:#6b7280">schedule</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-sm">Comision inactividad</p>
+                        <p class="text-xs text-c-soft">0.5%/mes a creadoras sin retiro en 90+ dias</p>
+                    </div>
+                    <button onclick="ejecutarMantenimiento()" class="shrink-0 text-xs font-bold px-3 py-2 rounded-xl border border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all">Ejecutar</button>
                 </div>
             </div>
         </section>
@@ -278,6 +305,21 @@
             <h2 class="font-display text-2xl font-semibold mb-5">Propinas pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Verifica el hash en blockchain antes de confirmar.</p>
             <div id="lista-propinas" class="flex flex-col gap-3">
+                <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
+            </div>
+        </section>
+
+        <!-- ══ RECLAMOS ══ -->
+        <section id="sec-reclamos" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Reclamos y Disputas</h2>
+            <p class="text-c-soft text-sm mb-5">Gestiona los reclamos enviados por fans y creadoras. Plazo de respuesta: 48 hs habiles.</p>
+            <div class="flex gap-2 mb-5">
+                <button onclick="filtrarReclamos('')" id="rfil-todos" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border bg-c-accent text-white transition-all">Todos</button>
+                <button onclick="filtrarReclamos('nuevo')" id="rfil-nuevo" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-c-accent transition-all">Nuevos</button>
+                <button onclick="filtrarReclamos('en_revision')" id="rfil-en_revision" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-c-accent transition-all">En revision</button>
+                <button onclick="filtrarReclamos('resuelto')" id="rfil-resuelto" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-c-accent transition-all">Resueltos</button>
+            </div>
+            <div id="lista-reclamos" class="flex flex-col gap-3">
                 <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
             </div>
         </section>
@@ -476,6 +518,7 @@ function mostrar(sec, navBtn) {
     if (sec === 'depositos') cargarDepositos();
     if (sec === 'propinas') cargarPropinas();
     if (sec === 'mensajes') cargarMensajesAdmin();
+    if (sec === 'reclamos') cargarReclamos();
 }
 
 async function cargarDepositos() {
@@ -776,6 +819,80 @@ function toast(msg, tipo='info') {
     c.appendChild(el);
     requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });
     setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(100%)'; setTimeout(()=>el.remove(),300); }, 3800);
+}
+
+// ══ RECLAMOS ══
+let _reclamosFiltro = '';
+async function cargarReclamos(filtro) {
+    if (filtro !== undefined) _reclamosFiltro = filtro;
+    const cont = document.getElementById('lista-reclamos');
+    cont.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Cargando...</p>';
+    try {
+        const qs = _reclamosFiltro ? `?estado=${_reclamosFiltro}` : '';
+        const lista = await candela._req('GET', `/api/admin/reclamos${qs}`);
+        document.getElementById('badge-rec').textContent = lista.filter(r => r.estado === 'nuevo').length;
+        if (!lista.length) { cont.innerHTML = '<p class="text-c-soft text-sm text-center py-12">Sin reclamos</p>'; return; }
+        const LABS = { cobro_no_autorizado:'Cobro no autorizado', contenido_no_recibido:'Contenido no recibido', acceso_denegado:'Acceso denegado', stream_problema:'Problema con stream', pago_no_acreditado:'Pago no acreditado', otro:'Otro' };
+        const BCLS = { nuevo:'badge-pendiente', en_revision:'badge-aprobada', resuelto:'badge-activa', rechazado:'badge-rechazada' };
+        cont.innerHTML = lista.map(r => `
+            <div class="ver-card">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap mb-1">
+                            <p class="font-bold text-sm">${esc(r.usuario_email||r.usuario_id)}</p>
+                            <span class="badge ${BCLS[r.estado]||'badge-pendiente'}">${esc(r.estado)}</span>
+                        </div>
+                        <p class="text-xs text-c-soft mb-1">${LABS[r.tipo_reclamo]||r.tipo_reclamo} ${r.referencia_id ? '— Ref: '+esc(r.referencia_id) : ''}</p>
+                        <p class="text-sm text-c-text leading-relaxed mb-2">${esc(r.descripcion)}</p>
+                        ${r.notas_admin ? `<p class="text-xs text-indigo-700 font-semibold">Respuesta admin: ${esc(r.notas_admin)}</p>` : ''}
+                        <p class="text-[11px] text-c-soft mt-1">${r.fecha ? new Date(r.fecha).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}) : ''}</p>
+                    </div>
+                    <div class="flex flex-col gap-2 shrink-0 min-w-[180px]">
+                        <select id="sel-est-${r.id}" class="text-xs border border-c-border rounded-lg px-2 py-1.5 focus:outline-none focus:border-c-accent">
+                            <option value="nuevo" ${r.estado==='nuevo'?'selected':''}>Nuevo</option>
+                            <option value="en_revision" ${r.estado==='en_revision'?'selected':''}>En revision</option>
+                            <option value="resuelto" ${r.estado==='resuelto'?'selected':''}>Resuelto</option>
+                            <option value="rechazado" ${r.estado==='rechazado'?'selected':''}>Rechazado</option>
+                        </select>
+                        <input id="nota-${r.id}" type="text" value="${esc(r.notas_admin||'')}" placeholder="Nota para el usuario..." class="text-xs border border-c-border rounded-lg px-2 py-1.5 focus:outline-none focus:border-c-accent">
+                        <button onclick="actualizarReclamo('${r.id}', this)" class="c-btn text-white text-xs font-bold px-3 py-1.5 rounded-xl">Guardar</button>
+                    </div>
+                </div>
+            </div>`).join('');
+    } catch(e) { cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error al cargar reclamos</p>'; }
+}
+
+function filtrarReclamos(estado) {
+    _reclamosFiltro = estado;
+    ['todos','nuevo','en_revision','resuelto'].forEach(k => {
+        const btn = document.getElementById('rfil-'+k);
+        if (!btn) return;
+        if ((k === 'todos' && estado === '') || k === estado) {
+            btn.classList.add('bg-c-accent','text-white'); btn.classList.remove('text-c-soft');
+        } else {
+            btn.classList.remove('bg-c-accent','text-white'); btn.classList.add('text-c-soft');
+        }
+    });
+    cargarReclamos();
+}
+
+async function actualizarReclamo(id, btn) {
+    btn.disabled = true; btn.textContent = '...';
+    const estado = document.getElementById('sel-est-'+id).value;
+    const notas = document.getElementById('nota-'+id).value.trim();
+    try {
+        await candela._req('POST', `/api/admin/reclamos/${id}`, { estado, notas_admin: notas || null });
+        toast('Reclamo actualizado', 'success');
+        cargarReclamos();
+    } catch(e) { toast(e.message||'Error', 'error'); btn.disabled=false; btn.textContent='Guardar'; }
+}
+
+async function ejecutarMantenimiento() {
+    if (!confirm('Aplicar comision de inactividad a creadoras sin retiro en 90+ dias?\nEsta accion es irreversible.')) return;
+    try {
+        const r = await candela._req('POST', '/api/admin/run-maintenance', {});
+        toast(`Mantenimiento: ${r.procesadas} creadoras, $${(r.total_comision||0).toFixed(2)} cobrado`, 'success');
+    } catch(e) { toast(e.message||'Error en mantenimiento', 'error'); }
 }
 
 init();

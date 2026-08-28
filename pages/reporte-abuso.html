@@ -142,7 +142,7 @@ document.getElementById('abuse-form').onsubmit = async function(e) {
 
   try {
     // ponytail: send to backend if /api/reporte endpoint exists, else email fallback
-    var API = window.CANDELA_API || 'https://sad-api-production-95b6.up.railway.app';
+    var API = window.CANDELA_API || 'https://web-production-73189.up.railway.app';
     var res = await fetch(API + '/api/reporte-abuso', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

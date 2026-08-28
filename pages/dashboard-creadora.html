@@ -1755,6 +1755,7 @@ async function irEnVivo() {
     const titulo = document.getElementById('stream-titulo-inp').value.trim();
     const precio = parseFloat(document.getElementById('stream-precio-inp').value) || 0;
     if (!titulo) { toast('Escribe un titulo para el live', 'error'); return; }
+    if (!confirm('Activar el live descuenta $1.00 USDT de tu balance.\n\n¿Continuar?')) return;
 
     let localStream;
     try {
