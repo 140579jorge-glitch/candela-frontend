@@ -786,7 +786,7 @@ function renderTopbar(isDark = false) {
         el.innerHTML = `
             <div class="flex items-center gap-2">
                 ${user.tipo === 'creadora' ? `<a href="pages/dashboard-creadora.html" class="hidden md:inline text-xs font-bold text-c-accent">Mi panel</a>` : ''}
-                ${user.tipo === 'suscriptor' ? `<a href="pages/feed.html" class="hidden md:inline text-xs font-bold text-c-accent">Mi feed</a>` : ''}
+                ${user.tipo === 'suscriptor' ? `<a href="pages/fan-dashboard.html" class="hidden md:inline text-xs font-bold text-c-accent">Mi panel</a>` : ''}
                 ${user.tipo === 'admin' ? `<a href="pages/admin.html" class="hidden md:inline text-xs font-bold text-c-accent">Admin</a>` : ''}
                 <button onclick="candela.auth.logout()"
                     class="w-9 h-9 rounded-full c-btn text-white text-sm font-bold flex items-center justify-center shadow-sm" title="Salir">
@@ -947,7 +947,7 @@ function renderNavLinks() {
         setNavItem(i5, 'account_balance_wallet', 'Wallet', 'pages/wallet.html');
     } else if (user?.tipo === 'suscriptor') {
         setNavItem(i3, 'play_circle', 'Live', 'pages/streams-activos.html');
-        setNavItem(i4, 'favorite', 'Suscrip.', 'pages/mis-suscripciones.html');
+        setNavItem(i4, 'dashboard', 'Mi Panel', 'pages/fan-dashboard.html');
         setNavItem(i5, 'account_balance_wallet', 'Wallet', 'pages/wallet.html');
     } else {
         setNavItem(i3, 'play_circle', 'Live', 'pages/streams-activos.html');

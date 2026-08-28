@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Panel — Candela</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
+                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
+                        "c-soft":"#8B7D77","c-border":"#F0E6E1","c-surf":"#FFFFFF"
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; }
+        .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
+        .ms-fill { font-variation-settings:'FILL' 1; }
+        .glass { background:rgba(255,248,245,.9); backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
+        .c-btn:active { transform:scale(.97); }
+        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#8B7D77;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
+        .nav-item:hover,.nav-item.active { color:#F4A261;background:rgba(244,162,97,.08);border-left-color:#F4A261; }
+        .dash-section { display:none; }
+        .dash-section.active { display:block; }
+        .sidebar::-webkit-scrollbar { display:none; }
+        .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
+        .card { background:#fff;border:1px solid #F0E6E1;border-radius:1rem; }
+        .badge { display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em; }
+        .badge-ok { background:rgba(46,204,113,.1);color:#27ae60; }
+        .badge-warn { background:rgba(244,162,97,.12);color:#E08947; }
+        .mov-row { display:flex;align-items:center;gap:.85rem;padding:.7rem 0;border-bottom:1px solid #F0E6E1; }
+        .mov-row:last-child { border-bottom:none; }
+        .mov-ico { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+        @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
+        .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
+        /* mobile nav bottom */
+        .bot-nav-item { display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.625rem;font-weight:600;color:#8B7D77;cursor:pointer;transition:color .15s;padding:.4rem .5rem; }
+        .bot-nav-item.active,.bot-nav-item:hover { color:#F4A261; }
+        /* toast */
+        #toast-cnt { position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none; }
+        .toast-msg { padding:.6rem 1.2rem;border-radius:12px;font-size:.875rem;font-weight:700;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.18);opacity:0;transition:opacity .3s; }
+        .toast-msg.show { opacity:1; }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text antialiased">
+
+<div id="toast-cnt"></div>
+
+<!-- TopBar -->
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+    <div class="flex items-center justify-between h-16 px-4 md:px-6">
+        <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+        <div class="flex items-center gap-3">
+            <span id="email-badge" class="hidden text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-full">Email no verificado</span>
+            <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)" id="topbar-avatar">?</button>
+        </div>
+    </div>
+</header>
+
+<div class="flex min-h-screen pt-16">
+
+    <!-- Sidebar (desktop) -->
+    <aside class="sidebar hidden md:flex flex-col w-56 shrink-0 fixed top-16 left-0 bottom-0 bg-white border-r border-c-border overflow-y-auto pt-4 pb-8">
+        <div class="px-4 mb-4">
+            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Mi cuenta</p>
+        </div>
+        <div class="nav-item active" onclick="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
+        <div class="nav-item" onclick="mostrar('suscripciones',this)"><span class="ms">favorite</span>Suscripciones</div>
+        <div class="nav-item" onclick="mostrar('compras',this)"><span class="ms">shopping_bag</span>Mis compras</div>
+        <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas enviadas</div>
+        <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">report</span>Mis reclamos</div>
+        <div class="border-t border-c-border my-4 mx-4"></div>
+        <div class="nav-item" onclick="window.location.href='wallet.html'"><span class="ms">account_balance_wallet</span>Billetera</div>
+        <div class="nav-item" onclick="mostrar('cuenta',this)"><span class="ms">manage_accounts</span>Configuracion</div>
+        <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 md:ml-56 px-4 md:px-8 py-6 max-w-4xl">
+
+        <!-- ══ INICIO ══ -->
+        <section id="sec-inicio" class="dash-section active">
+            <h2 class="font-display text-2xl font-semibold mb-1">Bienvenida</h2>
+            <p id="bienvenida-sub" class="text-c-soft text-sm mb-6">Cargando...</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <div class="card p-4">
+                    <p class="text-xs text-c-soft mb-1">Balance</p>
+                    <p class="text-xl font-extrabold" id="st-balance">—</p>
+                    <p class="text-[11px] text-c-soft">USD</p>
+                </div>
+                <div class="card p-4">
+                    <p class="text-xs text-c-soft mb-1">Suscripciones</p>
+                    <p class="text-xl font-extrabold" id="st-subs">—</p>
+                    <p class="text-[11px] text-c-soft">activas</p>
+                </div>
+                <div class="card p-4">
+                    <p class="text-xs text-c-soft mb-1">Compras PPV</p>
+                    <p class="text-xl font-extrabold" id="st-compras">—</p>
+                    <p class="text-[11px] text-c-soft">recientes</p>
+                </div>
+                <div class="card p-4">
+                    <p class="text-xs text-c-soft mb-1">Propinas</p>
+                    <p class="text-xl font-extrabold" id="st-propinas">—</p>
+                    <p class="text-[11px] text-c-soft">enviadas</p>
+                </div>
+            </div>
+
+            <!-- Accesos rapidos -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                <button onclick="window.location.href='wallet.html'" class="card p-5 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
+                    <span class="ms text-c-accent" style="font-size:28px">account_balance_wallet</span>
+                    <span class="text-sm font-bold">Recargar</span>
+                </button>
+                <button onclick="window.location.href='../index.html'" class="card p-5 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
+                    <span class="ms text-c-accent" style="font-size:28px">explore</span>
+                    <span class="text-sm font-bold">Explorar</span>
+                </button>
+                <button onclick="mostrar('reclamos')" class="card p-5 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
+                    <span class="ms text-c-accent" style="font-size:28px">report</span>
+                    <span class="text-sm font-bold">Reclamos</span>
+                </button>
+            </div>
+
+            <!-- Ultimos movimientos -->
+            <div class="card p-5">
+                <h3 class="font-bold text-sm mb-3">Ultimos movimientos de billetera</h3>
+                <div id="movs-home"></div>
+            </div>
+        </section>
+
+        <!-- ══ SUSCRIPCIONES ══ -->
+        <section id="sec-suscripciones" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Suscripciones activas</h2>
+            <p class="text-c-soft text-sm mb-5">Creadoras a las que estas suscrita actualmente.</p>
+            <div id="lista-subs" class="space-y-3">
+                <div class="skeleton h-20 w-full"></div>
+                <div class="skeleton h-20 w-full"></div>
+            </div>
+        </section>
+
+        <!-- ══ COMPRAS ══ -->
+        <section id="sec-compras" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Mis compras</h2>
+            <p class="text-c-soft text-sm mb-5">Contenido PPV que has desbloqueado.</p>
+            <div id="lista-compras" class="space-y-3">
+                <div class="skeleton h-16 w-full"></div>
+                <div class="skeleton h-16 w-full"></div>
+            </div>
+        </section>
+
+        <!-- ══ PROPINAS ══ -->
+        <section id="sec-propinas" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Propinas enviadas</h2>
+            <p class="text-c-soft text-sm mb-5">Tus contribuciones a las creadoras que apoyas.</p>
+            <div id="lista-propinas" class="space-y-3">
+                <div class="skeleton h-16 w-full"></div>
+            </div>
+        </section>
+
+        <!-- ══ RECLAMOS ══ -->
+        <section id="sec-reclamos" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Mis reclamos</h2>
+            <p class="text-c-soft text-sm mb-5">Historial de disputas y consultas enviadas.</p>
+            <div class="mb-5">
+                <a href="reporte-abuso.html" class="c-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl inline-flex items-center gap-2">
+                    <span class="ms" style="font-size:18px">add</span> Nuevo reclamo
+                </a>
+            </div>
+            <div id="lista-reclamos">
+                <div class="skeleton h-16 w-full"></div>
+            </div>
+        </section>
+
+        <!-- ══ CUENTA ══ -->
+        <section id="sec-cuenta" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Configuracion de cuenta</h2>
+            <p class="text-c-soft text-sm mb-6">Gestiona tu sesion y datos.</p>
+
+            <div class="card p-5 max-w-md mb-5">
+                <h3 class="font-bold text-sm mb-3">Verificacion de email</h3>
+                <div id="email-ver-status" class="text-sm text-c-soft">Cargando...</div>
+            </div>
+
+            <div class="card p-5 max-w-md mb-5">
+                <h3 class="font-bold text-sm mb-2">Billetera</h3>
+                <p class="text-xs text-c-soft mb-3">Deposita y gestiona tu balance USDT.</p>
+                <a href="wallet.html" class="c-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl inline-block">Ir a billetera</a>
+            </div>
+
+            <!-- Zona peligro -->
+            <div class="max-w-md border border-red-300 rounded-2xl p-5 bg-red-50">
+                <h3 class="font-bold text-red-700 text-sm mb-1">Zona de peligro</h3>
+                <p class="text-xs text-red-600 mb-3">Eliminar tu cuenta es permanente. Tus datos personales se borran en 30 dias. Si tienes balance USDT en tu billetera no podras recuperarlo.</p>
+                <input id="confirm-elim" type="text" placeholder="Escribe ELIMINAR" class="w-full px-3 py-2 rounded-xl border border-red-300 text-sm mb-3 focus:outline-none focus:border-red-500">
+                <button onclick="eliminarMiCuenta()" class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2 px-5 rounded-xl transition-colors">Eliminar mi cuenta</button>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- Bottom nav (mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-c-border flex justify-around py-1 z-50">
+    <div class="bot-nav-item active" onclick="mostrar('inicio',this)"><span class="ms" style="font-size:20px">home</span>Inicio</div>
+    <div class="bot-nav-item" onclick="mostrar('suscripciones',this)"><span class="ms" style="font-size:20px">favorite</span>Subs</div>
+    <div class="bot-nav-item" onclick="mostrar('compras',this)"><span class="ms" style="font-size:20px">shopping_bag</span>Compras</div>
+    <div class="bot-nav-item" onclick="mostrar('reclamos',this)"><span class="ms" style="font-size:20px">report</span>Reclamos</div>
+    <div class="bot-nav-item" onclick="mostrar('cuenta',this)"><span class="ms" style="font-size:20px">manage_accounts</span>Cuenta</div>
+</nav>
+
+<div class="md:hidden h-16"></div><!-- spacer for bottom nav -->
+
+<script src="../js/api.js"></script>
+<script>
+if (!candela.auth.isLoggedIn()) window.location.href = '../index.html';
+const user = candela.auth.user();
+
+// ── Utilidades ──
+function toast(msg, tipo='info') {
+    const c = document.getElementById('toast-cnt');
+    const el = document.createElement('div');
+    const col = tipo==='success'?'#27ae60':tipo==='error'?'#e74c3c':'#F4A261';
+    el.className = 'toast-msg';
+    el.style.background = col;
+    el.textContent = msg;
+    c.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    setTimeout(() => { el.classList.remove('show'); setTimeout(()=>el.remove(), 300); }, 3500);
+}
+
+function fmt(v) { return parseFloat(v||0).toFixed(2); }
+
+function fmtFecha(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('es-BO', {day:'2-digit',month:'short',year:'numeric'});
+}
+
+// ── Navegacion ──
+function mostrar(sec, el) {
+    document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-'+sec).classList.add('active');
+    document.querySelectorAll('.nav-item,.bot-nav-item').forEach(n => n.classList.remove('active'));
+    if (el) el.classList.add('active');
+}
+
+// ── Carga inicial ──
+let actData = null;
+
+async function cargar() {
+    // Avatar / nombre
+    const av = document.getElementById('topbar-avatar');
+    av.textContent = (user.nombre||'F')[0].toUpperCase();
+
+    try {
+        actData = await candela._req('GET', '/api/fans/mi-actividad');
+    } catch(e) {
+        toast('Error al cargar tu actividad: ' + e.message, 'error');
+        return;
+    }
+
+    document.getElementById('bienvenida-sub').textContent = `Hola, ${user.nombre || 'Fan'}! Todo tu historial en un lugar.`;
+
+    // Stats
+    document.getElementById('st-balance').textContent = '$' + fmt(actData.balance);
+    document.getElementById('st-subs').textContent = actData.suscripciones_activas.length;
+    document.getElementById('st-compras').textContent = actData.compras_recientes.length;
+    document.getElementById('st-propinas').textContent = actData.propinas_enviadas.length;
+
+    // Badge email
+    if (!actData.email_verificado) {
+        document.getElementById('email-badge').classList.remove('hidden');
+    }
+
+    // Movimientos en home
+    renderMovs('movs-home', actData.movimientos_wallet.slice(0,5));
+
+    // Secciones
+    renderSubs();
+    renderCompras();
+    renderPropinas();
+    renderReclamos();
+    renderCuenta();
+}
+
+// ── Suscripciones ──
+function renderSubs() {
+    const el = document.getElementById('lista-subs');
+    if (!actData.suscripciones_activas.length) {
+        el.innerHTML = '<p class="text-sm text-c-soft py-4 text-center">No tienes suscripciones activas.</p>';
+        return;
+    }
+    el.innerHTML = actData.suscripciones_activas.map(s => `
+        <div class="card p-4 flex items-center gap-4">
+            <img src="${s.creadora_avatar||'../img/default-avatar.jpg'}" class="w-12 h-12 rounded-full object-cover" onerror="this.src='../img/default-avatar.jpg'">
+            <div class="flex-1 min-w-0">
+                <p class="font-bold text-sm truncate">${s.creadora_nombre}</p>
+                <p class="text-xs text-c-soft">Hasta ${fmtFecha(s.fecha_fin)}</p>
+            </div>
+            <div class="text-right shrink-0">
+                <p class="text-sm font-bold">$${fmt(s.monto)}</p>
+                <span class="badge badge-ok">Activa</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ── Compras PPV ──
+function renderCompras() {
+    const el = document.getElementById('lista-compras');
+    if (!actData.compras_recientes.length) {
+        el.innerHTML = '<p class="text-sm text-c-soft py-4 text-center">No tienes compras recientes.</p>';
+        return;
+    }
+    el.innerHTML = actData.compras_recientes.map(c => `
+        <div class="card p-4 flex items-center gap-3">
+            <div class="mov-ico" style="background:#FFF4EE"><span class="ms text-c-accent ms-fill" style="font-size:18px">shopping_bag</span></div>
+            <div class="flex-1 min-w-0">
+                <p class="font-bold text-sm">${c.creadora_nombre}</p>
+                <p class="text-xs text-c-soft">${fmtFecha(c.fecha)}</p>
+            </div>
+            <p class="font-bold text-sm shrink-0">$${fmt(c.monto)}</p>
+        </div>
+    `).join('');
+}
+
+// ── Propinas ──
+function renderPropinas() {
+    const el = document.getElementById('lista-propinas');
+    if (!actData.propinas_enviadas.length) {
+        el.innerHTML = '<p class="text-sm text-c-soft py-4 text-center">No has enviado propinas.</p>';
+        return;
+    }
+    el.innerHTML = actData.propinas_enviadas.map(p => `
+        <div class="card p-4 flex items-center gap-3">
+            <div class="mov-ico" style="background:#FFF0EA"><span class="ms text-rose-400 ms-fill" style="font-size:18px">volunteer_activism</span></div>
+            <div class="flex-1 min-w-0">
+                <p class="font-bold text-sm">${p.creadora_nombre}</p>
+                <p class="text-xs text-c-soft">${p.mensaje ? '"'+p.mensaje+'"' : fmtFecha(p.fecha)}</p>
+            </div>
+            <p class="font-bold text-sm shrink-0">$${fmt(p.monto)}</p>
+        </div>
+    `).join('');
+}
+
+// ── Reclamos ──
+function renderReclamos() {
+    const el = document.getElementById('lista-reclamos');
+    if (!actData.reclamos.length) {
+        el.innerHTML = '<p class="text-sm text-c-soft py-4 text-center">No tienes reclamos registrados.</p>';
+        return;
+    }
+    const badges = { pendiente:'badge-warn', resuelto:'badge-ok', en_revision:'badge-warn' };
+    el.innerHTML = actData.reclamos.map(r => `
+        <div class="card p-4 mb-3">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <p class="font-bold text-sm">${r.tipo_reclamo || 'Reclamo'}</p>
+                    <p class="text-xs text-c-soft">${fmtFecha(r.fecha)}</p>
+                    ${r.notas_admin ? `<p class="text-xs mt-2 text-c-text bg-amber-50 rounded-lg px-3 py-2 border border-amber-100"><strong>Respuesta:</strong> ${r.notas_admin}</p>` : ''}
+                </div>
+                <span class="badge ${badges[r.estado]||'badge-warn'} shrink-0">${r.estado}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ── Movimientos ──
+function renderMovs(elId, movs) {
+    const el = document.getElementById(elId);
+    if (!movs || !movs.length) {
+        el.innerHTML = '<p class="text-sm text-c-soft py-2 text-center">Sin movimientos.</p>';
+        return;
+    }
+    const ico = { deposito:['savings','#E8F5E9','#27ae60'], suscripcion:['favorite','#FFF0EA','#E8A598'], bonus:['star','#FFFDE7','#F4A261'], retiro:['send','#F3E5F5','#9C27B0'] };
+    el.innerHTML = movs.map(m => {
+        const [icon, bg, color] = ico[m.tipo] || ['payments','#F5F5F5','#8B7D77'];
+        const signo = m.monto < 0 ? '' : '+';
+        return `
+            <div class="mov-row">
+                <div class="mov-ico" style="background:${bg}"><span class="ms ms-fill" style="font-size:18px;color:${color}">${icon}</span></div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold truncate">${m.descripcion||m.tipo}</p>
+                    <p class="text-xs text-c-soft">${fmtFecha(m.fecha)}</p>
+                </div>
+                <p class="font-bold text-sm shrink-0 ${m.monto<0?'text-red-500':'text-green-600'}">${signo}$${fmt(Math.abs(m.monto))}</p>
+            </div>
+        `;
+    }).join('');
+}
+
+// ── Cuenta ──
+function renderCuenta() {
+    const el = document.getElementById('email-ver-status');
+    if (actData.email_verificado) {
+        el.innerHTML = '<span class="badge badge-ok">Email verificado</span>';
+    } else {
+        el.innerHTML = '<span class="badge badge-warn">Email pendiente de verificacion</span><p class="text-xs text-c-soft mt-2">Revisa tu bandeja de entrada y verifica tu email para poder realizar transacciones.</p>';
+    }
+}
+
+// ── Eliminar cuenta ──
+async function eliminarMiCuenta() {
+    if (document.getElementById('confirm-elim').value !== 'ELIMINAR') {
+        toast('Escribe ELIMINAR (en mayusculas) para confirmar', 'error'); return;
+    }
+    if (!confirm('¿Segura? Esta accion no se puede deshacer.')) return;
+    try {
+        await candela.auth.eliminarCuenta();
+        toast('Cuenta eliminada. Cerrando sesion...', 'success');
+        setTimeout(() => { candela.auth.logout(); window.location.href = '../index.html'; }, 2000);
+    } catch(e) { toast(e.message || 'Error al eliminar cuenta', 'error'); }
+}
+
+cargar();
+</script>
+</body>
+</html>
