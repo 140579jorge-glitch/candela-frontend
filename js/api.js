@@ -47,8 +47,8 @@ const candela = {
             }
             return data;
         },
-        async registroSuscriptor(email, password, nombre) {
-            const data = await candela._req('POST', '/api/auth/registro/suscriptor', { email, password, nombre });
+        async registroSuscriptor(email, password, nombre, fecha_nacimiento) {
+            const data = await candela._req('POST', '/api/auth/registro/suscriptor', { email, password, nombre, fecha_nacimiento });
             localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre,
@@ -69,6 +69,7 @@ const candela = {
             return candela.auth.user()?.email_verificado !== false;
         },
         reenviarVerificacion: (email) => candela._req('POST', '/api/auth/reenviar-verificacion', { email }),
+        eliminarCuenta: () => candela._req('DELETE', '/api/auth/cuenta'),
         logout() {
             localStorage.removeItem('candela_token');
             localStorage.removeItem('candela_user');
