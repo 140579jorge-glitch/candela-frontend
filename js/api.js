@@ -1,4 +1,4 @@
-const API_URL = 'https://web-production-73189.up.railway.app';
+const API_URL = 'https://api.clubcandela.com';
 
 // Escapa HTML para prevenir XSS — usar en todo dato de usuario insertado via innerHTML
 function esc(str) {
