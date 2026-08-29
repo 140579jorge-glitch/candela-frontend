@@ -51,6 +51,9 @@
 <header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
     <div class="flex items-center justify-between h-16 px-4 md:px-6">
         <div class="flex items-center gap-3">
+            <button id="btn-hamburger" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full text-c-text hover:bg-c-border transition-colors" onclick="toggleMenuMobile()">
+                <span class="ms" style="font-size:22px">menu</span>
+            </button>
             <span class="font-display text-xl font-semibold logo-text">Candela</span>
             <span class="badge badge-rechazada text-[10px]">ADMIN</span>
         </div>
@@ -62,6 +65,29 @@
         </div>
     </div>
 </header>
+
+<!-- Mobile menu drawer -->
+<div id="mobile-menu" class="fixed inset-0 z-40 hidden md:hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="toggleMenuMobile()"></div>
+    <nav class="absolute top-16 left-0 bottom-0 w-64 bg-white overflow-y-auto pt-4 pb-8 shadow-xl flex flex-col">
+        <div class="px-4 mb-3">
+            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Gestion</p>
+        </div>
+        <div class="nav-item active" onclick="mostrar('dashboard',this)"><span class="ms ms-fill">dashboard</span>Dashboard</div>
+        <div class="nav-item" onclick="mostrar('verificaciones',this)"><span class="ms">verified_user</span>Verificaciones</div>
+        <div class="nav-item" onclick="mostrar('retiros',this)"><span class="ms">payments</span>Retiros</div>
+        <div class="nav-item" onclick="mostrar('creadoras',this)"><span class="ms">people</span>Creadoras</div>
+        <div class="nav-item" onclick="mostrar('pagos',this)"><span class="ms">receipt_long</span>Pagos PPV</div>
+        <div class="nav-item" onclick="mostrar('comisiones',this)"><span class="ms">monitoring</span>Comisiones</div>
+        <div class="nav-item" onclick="mostrar('depositos',this)"><span class="ms">account_balance_wallet</span>Depositos</div>
+        <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
+        <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
+        <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">flag</span>Reclamos</div>
+        <div class="mt-auto px-4 pt-4 border-t border-c-border">
+            <a href="../index.html" class="nav-item"><span class="ms">home</span>Ver sitio</a>
+        </div>
+    </nav>
+</div>
 
 <div class="flex min-h-screen pt-16">
     <!-- Sidebar -->
@@ -354,6 +380,10 @@ async function init() {
     const user = candela.auth.user();
     if (!user || user.tipo !== 'admin') { window.location.href = '../index.html'; return; }
     document.getElementById('admin-email').textContent = user.email || 'Admin';
+    // Registrar estado inicial en history para que "atras" no salga del panel
+    const secInicial = location.hash.replace('#', '') || 'dashboard';
+    history.replaceState({section: secInicial}, '', '#' + secInicial);
+    if (secInicial !== 'dashboard') _activarSeccion(secInicial);
     cargarTodo();
 }
 
@@ -503,11 +533,12 @@ function cerrarModalImg() {
     document.getElementById('modal-img-src').src = '';
 }
 
-function mostrar(sec, navBtn) {
+function _activarSeccion(sec) {
     document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
     document.getElementById('sec-' + sec)?.classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    navBtn?.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.toggle('active', !!n.getAttribute('onclick')?.includes("'" + sec + "'"));
+    });
     window.scrollTo(0, 0);
     if (sec === 'verificaciones') cargarVerificaciones();
     if (sec === 'retiros') cargarRetiros();
@@ -520,6 +551,21 @@ function mostrar(sec, navBtn) {
     if (sec === 'mensajes') cargarMensajesAdmin();
     if (sec === 'reclamos') cargarReclamos();
 }
+
+function mostrar(sec, navBtn) {
+    history.pushState({section: sec}, '', '#' + sec);
+    _activarSeccion(sec);
+    document.getElementById('mobile-menu')?.classList.add('hidden');
+}
+
+function toggleMenuMobile() {
+    document.getElementById('mobile-menu')?.classList.toggle('hidden');
+}
+
+window.addEventListener('popstate', e => {
+    const sec = e.state?.section || 'dashboard';
+    _activarSeccion(sec);
+});
 
 async function cargarDepositos() {
     const cont = document.getElementById('lista-depositos');

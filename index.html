@@ -750,6 +750,10 @@ let paisFiltro = '';
 
 // ─── INIT ────────────────────────────────────────────────────────────
 function init() {
+    // Admin ya logueado va directo a su panel
+    const u = candela.auth.user?.() || JSON.parse(localStorage.getItem('candela_user') || 'null');
+    if (u?.tipo === 'admin') { window.location.replace('pages/admin.html'); return; }
+
     const isGuest = !candela.auth.isLoggedIn();
 
     renderTopbar(isGuest);
