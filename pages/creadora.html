@@ -214,6 +214,10 @@
             <button id="btn-msg" class="hidden c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirMensaje()">
                 <span class="ms" style="font-size:16px;vertical-align:-3px">chat_bubble</span> Mensaje
             </button>
+            <button id="btn-follow" onclick="toggleFollow()" class="hidden px-4 py-2 rounded-full text-sm font-bold border border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-colors">
+                <span class="ms" style="font-size:16px;vertical-align:-3px" id="follow-icon">favorite_border</span>
+                <span id="follow-label">Seguir</span>
+            </button>
             <button id="btn-sub-header" onclick="abrirSub()" class="c-btn text-white px-5 py-2 rounded-full text-sm font-bold shadow-md">
                 Suscribirme
             </button>
@@ -636,6 +640,7 @@ let tabActual = 'fotos';
 let contenidoSeleccionado = null;
 let suscritoActualmente = false;
 let trialStatus = null; // { vistas_esta_creadora, total_creadoras, puede_ver }
+let siguiendoActualmente = false;
 
 // ─── INIT ────────────────────────────────────────────────────
 async function init() {
@@ -662,7 +667,50 @@ async function init() {
         try {
             trialStatus = await candela._req('GET', `/api/contenido/trial/estado?slug=${slug}`);
         } catch(e) {}
+        // Estado follow
+        try {
+            const favIds = await candela._req('GET', '/api/fans/favoritos/ids');
+            if (creadoraData && favIds.includes(creadoraData.id)) {
+                siguiendoActualmente = true;
+            }
+        } catch(e) {}
+        _renderFollowBtn();
     }
+}
+
+function _renderFollowBtn() {
+    const btn = document.getElementById('btn-follow');
+    if (!candela.auth.isLoggedIn() || !creadoraData) return;
+    btn.classList.remove('hidden');
+    if (siguiendoActualmente) {
+        btn.classList.add('border-c-accent','text-c-accent');
+        btn.classList.remove('border-c-border','text-c-soft');
+        document.getElementById('follow-icon').textContent = 'favorite';
+        document.getElementById('follow-label').textContent = 'Siguiendo';
+    } else {
+        btn.classList.remove('border-c-accent','text-c-accent');
+        btn.classList.add('border-c-border','text-c-soft');
+        document.getElementById('follow-icon').textContent = 'favorite_border';
+        document.getElementById('follow-label').textContent = 'Seguir';
+    }
+}
+
+async function toggleFollow() {
+    if (!candela.auth.isLoggedIn()) { window.location.href = '../index.html'; return; }
+    const creadoraId = creadoraData?.id;
+    if (!creadoraId) return;
+    try {
+        if (siguiendoActualmente) {
+            await candela._req('DELETE', '/api/fans/favoritos/' + creadoraId);
+            siguiendoActualmente = false;
+            toast('Dejaste de seguir a ' + creadoraData.nombre_artistico);
+        } else {
+            await candela._req('POST', '/api/fans/favoritos/' + creadoraId);
+            siguiendoActualmente = true;
+            toast('Ahora sigues a ' + creadoraData.nombre_artistico + '. Te avisaremos cuando publique.', 'success');
+        }
+        _renderFollowBtn();
+    } catch(e) { toast('Error al cambiar estado', 'error'); }
 }
 
 // ─── TEMA ────────────────────────────────────────────────────

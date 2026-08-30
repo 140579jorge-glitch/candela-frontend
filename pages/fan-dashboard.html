@@ -13,7 +13,8 @@
                     colors: {
                         "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
                         "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
-                        "c-soft":"#8B7D77","c-border":"#F0E6E1","c-surf":"#FFFFFF"
+                        "c-soft":"#8B7D77","c-border":"#F0E6E1","c-surf":"#FFFFFF",
+                        "c-surface":"#FFFBF9"
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
                 }
@@ -41,18 +42,22 @@
         .badge { display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em; }
         .badge-ok { background:rgba(46,204,113,.1);color:#27ae60; }
         .badge-warn { background:rgba(244,162,97,.12);color:#E08947; }
+        .badge-red { background:rgba(231,76,60,.1);color:#e74c3c; }
         .mov-row { display:flex;align-items:center;gap:.85rem;padding:.7rem 0;border-bottom:1px solid #F0E6E1; }
         .mov-row:last-child { border-bottom:none; }
         .mov-ico { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
         @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
         .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
-        /* mobile nav bottom */
         .bot-nav-item { display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.625rem;font-weight:600;color:#8B7D77;cursor:pointer;transition:color .15s;padding:.4rem .5rem; }
         .bot-nav-item.active,.bot-nav-item:hover { color:#F4A261; }
-        /* toast */
         #toast-cnt { position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none; }
         .toast-msg { padding:.6rem 1.2rem;border-radius:12px;font-size:.875rem;font-weight:700;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.18);opacity:0;transition:opacity .3s; }
         .toast-msg.show { opacity:1; }
+        .sub-card { transition:border-color .2s; }
+        .sub-card:hover { border-color:#F4A261; }
+        .compra-thumb { width:56px;height:56px;border-radius:10px;object-fit:cover;background:#F0E6E1;flex-shrink:0; }
+        .follow-card { display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 12px;background:#fff;border:1px solid #F0E6E1;border-radius:14px;cursor:pointer;transition:border-color .2s,transform .2s; text-align:center; }
+        .follow-card:hover { border-color:#F4A261;transform:translateY(-2px); }
     </style>
 </head>
 <body class="bg-c-bg text-c-text antialiased">
@@ -63,8 +68,26 @@
 <header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
     <div class="flex items-center justify-between h-16 px-4 md:px-6">
         <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
             <span id="email-badge" class="hidden text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-full">Email no verificado</span>
+
+            <!-- Campana notificaciones -->
+            <div class="relative" id="notif-wrap">
+                <button onclick="toggleNotif()" class="w-9 h-9 rounded-full flex items-center justify-center text-c-soft hover:bg-c-border transition-colors relative">
+                    <span class="ms" style="font-size:22px">notifications</span>
+                    <span id="notif-badge" class="hidden absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">0</span>
+                </button>
+                <div id="notif-dropdown" class="hidden absolute right-0 top-11 w-80 bg-white border border-c-border rounded-2xl shadow-xl z-50 overflow-hidden">
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-c-border">
+                        <p class="font-semibold text-sm">Notificaciones</p>
+                        <button onclick="leerTodasNotif()" class="text-[11px] text-c-accent font-semibold hover:underline">Marcar leidas</button>
+                    </div>
+                    <div id="notif-lista" class="max-h-80 overflow-y-auto">
+                        <p class="text-center text-c-soft text-xs py-6">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+
             <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)" id="topbar-avatar">?</button>
         </div>
     </div>
@@ -72,97 +95,112 @@
 
 <div class="flex min-h-screen pt-16">
 
-    <!-- Sidebar (desktop) -->
+    <!-- Sidebar desktop -->
     <aside class="sidebar hidden md:flex flex-col w-56 shrink-0 fixed top-16 left-0 bottom-0 bg-white border-r border-c-border overflow-y-auto pt-4 pb-8">
         <div class="px-4 mb-4">
             <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Mi cuenta</p>
         </div>
         <div class="nav-item active" onclick="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
+        <div class="nav-item" onclick="mostrar('siguiendo',this)"><span class="ms">favorite_border</span>Siguiendo</div>
         <div class="nav-item" onclick="mostrar('suscripciones',this)"><span class="ms">favorite</span>Suscripciones</div>
         <div class="nav-item" onclick="mostrar('compras',this)"><span class="ms">shopping_bag</span>Mis compras</div>
-        <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas enviadas</div>
-        <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">report</span>Mis reclamos</div>
+        <div class="nav-item" onclick="mostrar('wallet',this)"><span class="ms">account_balance_wallet</span>Billetera</div>
+        <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
+        <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">report</span>Reclamos</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
-        <div class="nav-item" onclick="window.location.href='wallet.html'"><span class="ms">account_balance_wallet</span>Billetera</div>
         <div class="nav-item" onclick="mostrar('cuenta',this)"><span class="ms">manage_accounts</span>Configuracion</div>
         <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
     </aside>
 
-    <!-- Main -->
     <main class="flex-1 md:ml-56 px-4 md:px-8 py-6 max-w-4xl">
 
-        <!-- ══ INICIO ══ -->
+        <!-- INICIO -->
         <section id="sec-inicio" class="dash-section active">
             <h2 class="font-display text-2xl font-semibold mb-1">Bienvenida</h2>
             <p id="bienvenida-sub" class="text-c-soft text-sm mb-6">Cargando...</p>
-
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                <div class="card p-4">
-                    <p class="text-xs text-c-soft mb-1">Balance</p>
-                    <p class="text-xl font-extrabold" id="st-balance">—</p>
-                    <p class="text-[11px] text-c-soft">USD</p>
-                </div>
-                <div class="card p-4">
-                    <p class="text-xs text-c-soft mb-1">Suscripciones</p>
-                    <p class="text-xl font-extrabold" id="st-subs">—</p>
-                    <p class="text-[11px] text-c-soft">activas</p>
-                </div>
-                <div class="card p-4">
-                    <p class="text-xs text-c-soft mb-1">Compras PPV</p>
-                    <p class="text-xl font-extrabold" id="st-compras">—</p>
-                    <p class="text-[11px] text-c-soft">recientes</p>
-                </div>
-                <div class="card p-4">
-                    <p class="text-xs text-c-soft mb-1">Propinas</p>
-                    <p class="text-xl font-extrabold" id="st-propinas">—</p>
-                    <p class="text-[11px] text-c-soft">enviadas</p>
-                </div>
+                <div class="card p-4"><p class="text-xs text-c-soft mb-1">Balance</p><p class="text-xl font-extrabold" id="st-balance">—</p><p class="text-[11px] text-c-soft">USDT</p></div>
+                <div class="card p-4 cursor-pointer hover:border-c-accent transition-colors" onclick="mostrar('suscripciones')"><p class="text-xs text-c-soft mb-1">Suscripciones</p><p class="text-xl font-extrabold" id="st-subs">—</p><p class="text-[11px] text-c-soft">activas</p></div>
+                <div class="card p-4 cursor-pointer hover:border-c-accent transition-colors" onclick="mostrar('siguiendo')"><p class="text-xs text-c-soft mb-1">Siguiendo</p><p class="text-xl font-extrabold" id="st-following">—</p><p class="text-[11px] text-c-soft">creadoras</p></div>
+                <div class="card p-4 cursor-pointer hover:border-c-accent transition-colors" onclick="mostrar('compras')"><p class="text-xs text-c-soft mb-1">Compras PPV</p><p class="text-xl font-extrabold" id="st-compras">—</p><p class="text-[11px] text-c-soft">recientes</p></div>
             </div>
-
             <!-- Accesos rapidos -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                <button onclick="window.location.href='wallet.html'" class="card p-5 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <button onclick="window.location.href='wallet.html'" class="card p-4 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
                     <span class="ms text-c-accent" style="font-size:28px">account_balance_wallet</span>
                     <span class="text-sm font-bold">Recargar</span>
                 </button>
-                <button onclick="window.location.href='../index.html'" class="card p-5 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
+                <button onclick="window.location.href='explorar.html'" class="card p-4 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
                     <span class="ms text-c-accent" style="font-size:28px">explore</span>
                     <span class="text-sm font-bold">Explorar</span>
                 </button>
-                <button onclick="mostrar('reclamos')" class="card p-5 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
+                <button onclick="mostrar('reclamos')" class="card p-4 flex flex-col items-center gap-2 hover:border-c-accent transition-colors cursor-pointer">
                     <span class="ms text-c-accent" style="font-size:28px">report</span>
                     <span class="text-sm font-bold">Reclamos</span>
                 </button>
             </div>
-
             <!-- Ultimos movimientos -->
             <div class="card p-5">
-                <h3 class="font-bold text-sm mb-3">Ultimos movimientos de billetera</h3>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-sm">Ultimos movimientos</h3>
+                    <button onclick="mostrar('wallet')" class="text-xs text-c-accent font-semibold hover:underline">Ver todos</button>
+                </div>
                 <div id="movs-home"></div>
             </div>
         </section>
 
-        <!-- ══ SUSCRIPCIONES ══ -->
+        <!-- SIGUIENDO -->
+        <section id="sec-siguiendo" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Siguiendo</h2>
+            <p class="text-c-soft text-sm mb-5">Creadoras que sigues. Recibiras notificaciones cuando publiquen.</p>
+            <div id="lista-siguiendo">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div class="skeleton h-32 rounded-2xl"></div>
+                    <div class="skeleton h-32 rounded-2xl"></div>
+                    <div class="skeleton h-32 rounded-2xl hidden sm:block"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUSCRIPCIONES -->
         <section id="sec-suscripciones" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Suscripciones activas</h2>
-            <p class="text-c-soft text-sm mb-5">Creadoras a las que estas suscrita actualmente.</p>
+            <p class="text-c-soft text-sm mb-5">Creadoras a las que estas suscrita. El acceso se mantiene hasta la fecha indicada aunque canceles.</p>
             <div id="lista-subs" class="space-y-3">
                 <div class="skeleton h-20 w-full"></div>
                 <div class="skeleton h-20 w-full"></div>
             </div>
         </section>
 
-        <!-- ══ COMPRAS ══ -->
+        <!-- COMPRAS -->
         <section id="sec-compras" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Mis compras</h2>
-            <p class="text-c-soft text-sm mb-5">Contenido PPV que has desbloqueado.</p>
+            <p class="text-c-soft text-sm mb-5">Contenido PPV que has desbloqueado. Haz clic para volver a verlo.</p>
             <div id="lista-compras" class="space-y-3">
                 <div class="skeleton h-16 w-full"></div>
                 <div class="skeleton h-16 w-full"></div>
             </div>
         </section>
 
-        <!-- ══ PROPINAS ══ -->
+        <!-- BILLETERA -->
+        <section id="sec-wallet" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Billetera</h2>
+            <p class="text-c-soft text-sm mb-5">Historial completo de movimientos.</p>
+            <div class="card p-5 mb-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-c-soft mb-0.5">Balance disponible</p>
+                    <p class="text-2xl font-extrabold" id="wallet-balance">—</p>
+                    <p class="text-xs text-c-soft">USDT</p>
+                </div>
+                <a href="wallet.html" class="c-btn text-white font-bold px-5 py-2.5 rounded-xl text-sm">Recargar</a>
+            </div>
+            <div class="card p-5">
+                <h3 class="font-bold text-sm mb-3">Movimientos</h3>
+                <div id="movs-wallet"></div>
+            </div>
+        </section>
+
+        <!-- PROPINAS -->
         <section id="sec-propinas" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Propinas enviadas</h2>
             <p class="text-c-soft text-sm mb-5">Tus contribuciones a las creadoras que apoyas.</p>
@@ -171,7 +209,7 @@
             </div>
         </section>
 
-        <!-- ══ RECLAMOS ══ -->
+        <!-- RECLAMOS -->
         <section id="sec-reclamos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Mis reclamos</h2>
             <p class="text-c-soft text-sm mb-5">Historial de disputas y consultas enviadas.</p>
@@ -180,31 +218,25 @@
                     <span class="ms" style="font-size:18px">add</span> Nuevo reclamo
                 </a>
             </div>
-            <div id="lista-reclamos">
-                <div class="skeleton h-16 w-full"></div>
-            </div>
+            <div id="lista-reclamos"><div class="skeleton h-16 w-full"></div></div>
         </section>
 
-        <!-- ══ CUENTA ══ -->
+        <!-- CUENTA -->
         <section id="sec-cuenta" class="dash-section">
-            <h2 class="font-display text-2xl font-semibold mb-1">Configuracion de cuenta</h2>
+            <h2 class="font-display text-2xl font-semibold mb-1">Configuracion</h2>
             <p class="text-c-soft text-sm mb-6">Gestiona tu sesion y datos.</p>
-
             <div class="card p-5 max-w-md mb-5">
                 <h3 class="font-bold text-sm mb-3">Verificacion de email</h3>
                 <div id="email-ver-status" class="text-sm text-c-soft">Cargando...</div>
             </div>
-
             <div class="card p-5 max-w-md mb-5">
                 <h3 class="font-bold text-sm mb-2">Billetera</h3>
                 <p class="text-xs text-c-soft mb-3">Deposita y gestiona tu balance USDT.</p>
                 <a href="wallet.html" class="c-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl inline-block">Ir a billetera</a>
             </div>
-
-            <!-- Zona peligro -->
             <div class="max-w-md border border-red-300 rounded-2xl p-5 bg-red-50">
                 <h3 class="font-bold text-red-700 text-sm mb-1">Zona de peligro</h3>
-                <p class="text-xs text-red-600 mb-3">Eliminar tu cuenta es permanente. Tus datos personales se borran en 30 dias. Si tienes balance USDT en tu billetera no podras recuperarlo.</p>
+                <p class="text-xs text-red-600 mb-3">Eliminar tu cuenta es permanente. Si tienes balance USDT en tu billetera no podras recuperarlo.</p>
                 <input id="confirm-elim" type="text" placeholder="Escribe ELIMINAR" class="w-full px-3 py-2 rounded-xl border border-red-300 text-sm mb-3 focus:outline-none focus:border-red-500">
                 <button onclick="eliminarMiCuenta()" class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2 px-5 rounded-xl transition-colors">Eliminar mi cuenta</button>
             </div>
@@ -213,44 +245,40 @@
     </main>
 </div>
 
-<!-- Bottom nav (mobile) -->
+<!-- Bottom nav mobile -->
 <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-c-border flex justify-around py-1 z-50">
     <div class="bot-nav-item active" onclick="mostrar('inicio',this)"><span class="ms" style="font-size:20px">home</span>Inicio</div>
+    <div class="bot-nav-item" onclick="mostrar('siguiendo',this)"><span class="ms" style="font-size:20px">favorite_border</span>Siguiendo</div>
     <div class="bot-nav-item" onclick="mostrar('suscripciones',this)"><span class="ms" style="font-size:20px">favorite</span>Subs</div>
     <div class="bot-nav-item" onclick="mostrar('compras',this)"><span class="ms" style="font-size:20px">shopping_bag</span>Compras</div>
-    <div class="bot-nav-item" onclick="mostrar('reclamos',this)"><span class="ms" style="font-size:20px">report</span>Reclamos</div>
     <div class="bot-nav-item" onclick="mostrar('cuenta',this)"><span class="ms" style="font-size:20px">manage_accounts</span>Cuenta</div>
 </nav>
-
-<div class="md:hidden h-16"></div><!-- spacer for bottom nav -->
+<div class="md:hidden h-16"></div>
 
 <script src="../js/api.js"></script>
 <script>
 if (!candela.auth.isLoggedIn()) window.location.href = '../index.html';
 const user = candela.auth.user();
+const API_URL = 'https://api.clubcandela.com';
 
-// ── Utilidades ──
+function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
 function toast(msg, tipo='info') {
     const c = document.getElementById('toast-cnt');
     const el = document.createElement('div');
-    const col = tipo==='success'?'#27ae60':tipo==='error'?'#e74c3c':'#F4A261';
     el.className = 'toast-msg';
-    el.style.background = col;
+    el.style.background = tipo==='success'?'#27ae60':tipo==='error'?'#e74c3c':'#F4A261';
     el.textContent = msg;
     c.appendChild(el);
     requestAnimationFrame(() => el.classList.add('show'));
-    setTimeout(() => { el.classList.remove('show'); setTimeout(()=>el.remove(), 300); }, 3500);
+    setTimeout(() => { el.classList.remove('show'); setTimeout(()=>el.remove(),300); }, 3500);
 }
-
 function fmt(v) { return parseFloat(v||0).toFixed(2); }
-
 function fmtFecha(iso) {
     if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('es-BO', {day:'2-digit',month:'short',year:'numeric'});
+    return new Date(iso).toLocaleDateString('es-BO', {day:'2-digit',month:'short',year:'numeric'});
 }
 
-// ── Navegacion ──
+// Navegacion
 function _activarSeccion(sec) {
     document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
     document.getElementById('sec-'+sec)?.classList.add('active');
@@ -260,46 +288,84 @@ function _activarSeccion(sec) {
     window.scrollTo(0,0);
 }
 function mostrar(sec) {
-    history.pushState({section:sec}, '', '#'+sec);
+    history.pushState({section:sec},'','#'+sec);
     _activarSeccion(sec);
 }
 window.addEventListener('popstate', e => _activarSeccion(e.state?.section || 'inicio'));
 
-// ── Carga inicial ──
+// Notificaciones
+async function cargarNotif() {
+    try {
+        const data = await candela._req('GET', '/api/notificaciones');
+        const badge = document.getElementById('notif-badge');
+        if (data.no_leidas > 0) {
+            badge.textContent = data.no_leidas > 9 ? '9+' : data.no_leidas;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+        const lista = document.getElementById('notif-lista');
+        if (!data.items || !data.items.length) {
+            lista.innerHTML = '<p class="text-center text-c-soft text-xs py-6">Sin notificaciones</p>';
+            return;
+        }
+        const icons = { nueva_suscripcion:'favorite', nueva_propina:'attach_money', nuevo_mensaje:'chat', broadcast_pagado:'lock_open', nuevo_contenido:'photo_camera' };
+        lista.innerHTML = data.items.map(n => `
+            <div class="flex items-start gap-3 px-4 py-3 border-b border-c-border last:border-0 ${n.leida?'opacity-60':'bg-c-surface'}">
+                <span class="ms text-c-accent mt-0.5" style="font-size:18px">${icons[n.tipo]||'notifications'}</span>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold leading-snug">${esc(n.titulo)}</p>
+                    ${n.mensaje ? `<p class="text-[11px] text-c-soft mt-0.5 truncate">${esc(n.mensaje)}</p>` : ''}
+                </div>
+                ${!n.leida ? '<span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></span>' : ''}
+            </div>`).join('');
+    } catch(e) {}
+}
+async function leerTodasNotif() {
+    await candela._req('PATCH', '/api/notificaciones/leer-todas');
+    document.getElementById('notif-badge').classList.add('hidden');
+    document.querySelectorAll('#notif-lista .bg-c-surface').forEach(el => el.classList.remove('bg-c-surface'));
+    document.querySelectorAll('#notif-lista .w-2.h-2.rounded-full.bg-red-500').forEach(el => el.remove());
+}
+function toggleNotif() {
+    const dd = document.getElementById('notif-dropdown');
+    dd.classList.toggle('hidden');
+    if (!dd.classList.contains('hidden')) cargarNotif();
+}
+document.addEventListener('click', e => {
+    if (!document.getElementById('notif-wrap')?.contains(e.target))
+        document.getElementById('notif-dropdown')?.classList.add('hidden');
+});
+
+// Datos
 let actData = null;
 
 async function cargar() {
     const secInicial = location.hash.replace('#','') || 'inicio';
-    history.replaceState({section:secInicial}, '', '#'+secInicial);
+    history.replaceState({section:secInicial},'','#'+secInicial);
     if (secInicial !== 'inicio') _activarSeccion(secInicial);
-    // Avatar / nombre
-    const av = document.getElementById('topbar-avatar');
-    av.textContent = (user.nombre||'F')[0].toUpperCase();
+
+    document.getElementById('topbar-avatar').textContent = (user.nombre||'F')[0].toUpperCase();
+    cargarNotif();
 
     try {
         actData = await candela._req('GET', '/api/fans/mi-actividad');
     } catch(e) {
-        toast('Error al cargar tu actividad: ' + e.message, 'error');
-        return;
+        toast('Error al cargar tu actividad', 'error'); return;
     }
 
-    document.getElementById('bienvenida-sub').textContent = `Hola, ${user.nombre || 'Fan'}! Todo tu historial en un lugar.`;
-
-    // Stats
+    document.getElementById('bienvenida-sub').textContent = `Hola, ${user.nombre||'Fan'}! Todo tu historial en un lugar.`;
     document.getElementById('st-balance').textContent = '$' + fmt(actData.balance);
     document.getElementById('st-subs').textContent = actData.suscripciones_activas.length;
     document.getElementById('st-compras').textContent = actData.compras_recientes.length;
-    document.getElementById('st-propinas').textContent = actData.propinas_enviadas.length;
+    document.getElementById('st-following').textContent = (actData.followings||[]).length;
+    document.getElementById('wallet-balance').textContent = '$' + fmt(actData.balance);
 
-    // Badge email
-    if (!actData.email_verificado) {
-        document.getElementById('email-badge').classList.remove('hidden');
-    }
+    if (!actData.email_verificado) document.getElementById('email-badge').classList.remove('hidden');
 
-    // Movimientos en home
     renderMovs('movs-home', actData.movimientos_wallet.slice(0,5));
-
-    // Secciones
+    renderMovs('movs-wallet', actData.movimientos_wallet);
+    renderSiguiendo();
     renderSubs();
     renderCompras();
     renderPropinas();
@@ -307,48 +373,139 @@ async function cargar() {
     renderCuenta();
 }
 
-// ── Suscripciones ──
+// Siguiendo
+function renderSiguiendo() {
+    const el = document.getElementById('lista-siguiendo');
+    const list = actData.followings || [];
+    if (!list.length) {
+        el.innerHTML = `<div class="text-center py-10">
+            <span class="ms text-c-border" style="font-size:48px">favorite_border</span>
+            <p class="text-c-soft text-sm font-semibold mt-3">No sigues a ninguna creadora aun</p>
+            <a href="explorar.html" class="c-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl inline-block mt-4">Explorar creadoras</a>
+        </div>`;
+        return;
+    }
+    el.innerHTML = `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">` +
+        list.map(f => `
+        <div class="follow-card" onclick="window.location.href='creadora.html?slug=${esc(f.creadora_slug)}'">
+            <div class="w-14 h-14 rounded-full overflow-hidden bg-c-champagne flex-shrink-0">
+                ${f.creadora_avatar
+                    ? `<img src="${esc(f.creadora_avatar)}" alt="${esc(f.creadora_nombre)}" class="w-full h-full object-cover">`
+                    : `<div class="w-full h-full flex items-center justify-center text-white font-bold text-xl" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${(f.creadora_nombre||'C')[0]}</div>`
+                }
+            </div>
+            <p class="font-bold text-sm leading-snug truncate w-full">${esc(f.creadora_nombre)}</p>
+            <p class="text-xs text-c-accent font-bold">${f.precio_suscripcion > 0 ? '$'+f.precio_suscripcion+'/mes' : 'Gratis'}</p>
+            <button onclick="event.stopPropagation();dejarSeguir('${esc(f.creadora_slug)}',this)"
+                class="text-[11px] text-c-soft border border-c-border rounded-full px-3 py-1 hover:border-red-300 hover:text-red-400 transition-colors">
+                Dejar de seguir
+            </button>
+        </div>`).join('') + '</div>';
+}
+
+async function dejarSeguir(slug, btn) {
+    const item = (actData.followings||[]).find(f => f.creadora_slug === slug);
+    if (!item) return;
+    try {
+        btn.disabled = true;
+        btn.textContent = '...';
+        await candela._req('DELETE', '/api/fans/favoritos/' + item.creadora_id);
+        actData.followings = actData.followings.filter(f => f.creadora_slug !== slug);
+        document.getElementById('st-following').textContent = actData.followings.length;
+        renderSiguiendo();
+        toast('Dejaste de seguir a ' + item.creadora_nombre, 'success');
+    } catch(e) {
+        toast('Error al dejar de seguir', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Dejar de seguir';
+    }
+}
+
+// Suscripciones
 function renderSubs() {
     const el = document.getElementById('lista-subs');
     if (!actData.suscripciones_activas.length) {
-        el.innerHTML = '<p class="text-sm text-c-soft py-4 text-center">No tienes suscripciones activas.</p>';
+        el.innerHTML = `<div class="text-center py-10">
+            <span class="ms text-c-border" style="font-size:48px">favorite</span>
+            <p class="text-c-soft text-sm font-semibold mt-3">No tienes suscripciones activas</p>
+            <a href="explorar.html" class="c-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl inline-block mt-4">Explorar creadoras</a>
+        </div>`;
         return;
     }
     el.innerHTML = actData.suscripciones_activas.map(s => `
-        <div class="card p-4 flex items-center gap-4">
-            <img src="${esc(s.creadora_avatar)||''}" class="w-12 h-12 rounded-full object-cover bg-c-champagne" onerror="this.style.display='none'">
-            <div class="flex-1 min-w-0">
-                <p class="font-bold text-sm truncate">${esc(s.creadora_nombre)}</p>
-                <p class="text-xs text-c-soft">Hasta ${fmtFecha(s.fecha_fin)}</p>
+        <div class="card p-4 flex items-center gap-4 sub-card" id="sub-${esc(s.creadora_slug)}">
+            <div class="w-12 h-12 rounded-full overflow-hidden bg-c-champagne flex-shrink-0">
+                ${s.creadora_avatar
+                    ? `<img src="${esc(s.creadora_avatar)}" class="w-full h-full object-cover">`
+                    : `<div class="w-full h-full flex items-center justify-center text-white font-bold" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${(s.creadora_nombre||'?')[0]}</div>`
+                }
             </div>
-            <div class="text-right shrink-0">
+            <div class="flex-1 min-w-0">
+                <a href="creadora.html?slug=${esc(s.creadora_slug)}" class="font-bold text-sm hover:text-c-accent transition-colors">${esc(s.creadora_nombre)}</a>
+                <p class="text-xs text-c-soft">Acceso hasta ${fmtFecha(s.fecha_fin)}</p>
+            </div>
+            <div class="text-right shrink-0 space-y-1.5">
                 <p class="text-sm font-bold">$${fmt(s.monto)}</p>
-                <span class="badge badge-ok">Activa</span>
+                <span class="badge badge-ok block">Activa</span>
+                <button onclick="cancelarSub('${esc(s.creadora_slug)}',this)"
+                    class="text-[10px] text-c-soft hover:text-red-500 transition-colors block">
+                    Cancelar
+                </button>
             </div>
         </div>
     `).join('');
 }
 
-// ── Compras PPV ──
+async function cancelarSub(slug, btn) {
+    if (!confirm('Cancelar suscripcion? Mantendras acceso hasta la fecha de vencimiento.')) return;
+    try {
+        btn.disabled = true;
+        btn.textContent = '...';
+        const res = await candela._req('DELETE', '/api/pagos/suscripciones/' + slug);
+        // Actualizar UI: cambiar badge a "Cancelada - acceso hasta..."
+        const card = document.getElementById('sub-'+slug);
+        if (card) {
+            card.querySelector('.badge-ok').className = 'badge badge-warn block';
+            card.querySelector('.badge-warn').textContent = 'Cancelada';
+            btn.remove();
+        }
+        toast('Suscripcion cancelada. Acceso hasta ' + fmtFecha(res.acceso_hasta), 'success');
+    } catch(e) {
+        toast(e.message||'Error al cancelar', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Cancelar';
+    }
+}
+
+// Compras
 function renderCompras() {
     const el = document.getElementById('lista-compras');
     if (!actData.compras_recientes.length) {
-        el.innerHTML = '<p class="text-sm text-c-soft py-4 text-center">No tienes compras recientes.</p>';
+        el.innerHTML = '<p class="text-sm text-c-soft py-4 text-center">No tienes compras de contenido PPV.</p>';
         return;
     }
     el.innerHTML = actData.compras_recientes.map(c => `
-        <div class="card p-4 flex items-center gap-3">
-            <div class="mov-ico" style="background:#FFF4EE"><span class="ms text-c-accent ms-fill" style="font-size:18px">shopping_bag</span></div>
+        <div class="card p-4 flex items-center gap-3 cursor-pointer hover:border-c-accent transition-colors"
+            onclick="${c.contenido_id && c.creadora_slug ? `window.location.href='creadora.html?slug=${esc(c.creadora_slug)}'` : 'void 0'}">
+            ${c.preview_url
+                ? `<img src="${esc(c.preview_url)}" class="compra-thumb">`
+                : `<div class="compra-thumb flex items-center justify-center bg-c-border">
+                    <span class="ms text-c-soft" style="font-size:22px">${c.tipo==='video'?'play_circle':'photo_camera'}</span>
+                  </div>`
+            }
             <div class="flex-1 min-w-0">
-                <p class="font-bold text-sm">${esc(c.creadora_nombre)}</p>
-                <p class="text-xs text-c-soft">${fmtFecha(c.fecha)}</p>
+                <p class="font-bold text-sm">${esc(c.titulo||c.creadora_nombre)}</p>
+                <p class="text-xs text-c-soft">${esc(c.creadora_nombre)} &middot; ${fmtFecha(c.fecha)}</p>
             </div>
-            <p class="font-bold text-sm shrink-0">$${fmt(c.monto)}</p>
+            <div class="text-right shrink-0">
+                <p class="font-bold text-sm">$${fmt(c.monto)}</p>
+                <span class="ms text-c-accent" style="font-size:16px">chevron_right</span>
+            </div>
         </div>
     `).join('');
 }
 
-// ── Propinas ──
+// Propinas
 function renderPropinas() {
     const el = document.getElementById('lista-propinas');
     if (!actData.propinas_enviadas.length) {
@@ -360,14 +517,14 @@ function renderPropinas() {
             <div class="mov-ico" style="background:#FFF0EA"><span class="ms text-rose-400 ms-fill" style="font-size:18px">volunteer_activism</span></div>
             <div class="flex-1 min-w-0">
                 <p class="font-bold text-sm">${esc(p.creadora_nombre)}</p>
-                <p class="text-xs text-c-soft">${p.mensaje ? '&quot;'+esc(p.mensaje)+'&quot;' : fmtFecha(p.fecha)}</p>
+                <p class="text-xs text-c-soft">${p.mensaje ? '"'+esc(p.mensaje)+'"' : fmtFecha(p.fecha)}</p>
             </div>
             <p class="font-bold text-sm shrink-0">$${fmt(p.monto)}</p>
         </div>
     `).join('');
 }
 
-// ── Reclamos ──
+// Reclamos
 function renderReclamos() {
     const el = document.getElementById('lista-reclamos');
     if (!actData.reclamos.length) {
@@ -379,7 +536,7 @@ function renderReclamos() {
         <div class="card p-4 mb-3">
             <div class="flex items-start justify-between gap-2">
                 <div>
-                    <p class="font-bold text-sm">${esc(r.tipo_reclamo || 'Reclamo')}</p>
+                    <p class="font-bold text-sm">${esc(r.tipo_reclamo||'Reclamo')}</p>
                     <p class="text-xs text-c-soft">${fmtFecha(r.fecha)}</p>
                     ${r.notas_admin ? `<p class="text-xs mt-2 text-c-text bg-amber-50 rounded-lg px-3 py-2 border border-amber-100"><strong>Respuesta:</strong> ${esc(r.notas_admin)}</p>` : ''}
                 </div>
@@ -389,51 +546,54 @@ function renderReclamos() {
     `).join('');
 }
 
-// ── Movimientos ──
+// Movimientos
 function renderMovs(elId, movs) {
     const el = document.getElementById(elId);
-    if (!movs || !movs.length) {
-        el.innerHTML = '<p class="text-sm text-c-soft py-2 text-center">Sin movimientos.</p>';
-        return;
-    }
-    const ico = { deposito:['savings','#E8F5E9','#27ae60'], suscripcion:['favorite','#FFF0EA','#E8A598'], bonus:['star','#FFFDE7','#F4A261'], retiro:['send','#F3E5F5','#9C27B0'] };
+    if (!movs || !movs.length) { el.innerHTML = '<p class="text-sm text-c-soft py-2 text-center">Sin movimientos.</p>'; return; }
+    const ico = {
+        deposito:  ['savings','#E8F5E9','#27ae60'],
+        suscripcion:['favorite','#FFF0EA','#E8A598'],
+        compra:    ['shopping_bag','#FFF4EE','#F4A261'],
+        propina:   ['volunteer_activism','#FFF0F0','#E8A598'],
+        mensaje:   ['chat','#F0F4FF','#5B8DEF'],
+        bonus:     ['star','#FFFDE7','#F4A261'],
+        retiro:    ['send','#F3E5F5','#9C27B0'],
+    };
     el.innerHTML = movs.map(m => {
         const [icon, bg, color] = ico[m.tipo] || ['payments','#F5F5F5','#8B7D77'];
         const signo = m.monto < 0 ? '' : '+';
-        return `
-            <div class="mov-row">
-                <div class="mov-ico" style="background:${bg}"><span class="ms ms-fill" style="font-size:18px;color:${color}">${icon}</span></div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold truncate">${esc(m.descripcion||m.tipo)}</p>
-                    <p class="text-xs text-c-soft">${fmtFecha(m.fecha)}</p>
-                </div>
-                <p class="font-bold text-sm shrink-0 ${m.monto<0?'text-red-500':'text-green-600'}">${signo}$${fmt(Math.abs(m.monto))}</p>
+        return `<div class="mov-row">
+            <div class="mov-ico" style="background:${bg}"><span class="ms ms-fill" style="font-size:18px;color:${color}">${icon}</span></div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold truncate">${esc(m.descripcion||m.tipo)}</p>
+                <p class="text-xs text-c-soft">${fmtFecha(m.fecha)}</p>
             </div>
-        `;
+            <p class="font-bold text-sm shrink-0 ${m.monto<0?'text-red-500':'text-green-600'}">${signo}$${fmt(Math.abs(m.monto))}</p>
+        </div>`;
     }).join('');
 }
 
-// ── Cuenta ──
+// Cuenta
 function renderCuenta() {
     const el = document.getElementById('email-ver-status');
     if (actData.email_verificado) {
         el.innerHTML = '<span class="badge badge-ok">Email verificado</span>';
     } else {
-        el.innerHTML = '<span class="badge badge-warn">Email pendiente de verificacion</span><p class="text-xs text-c-soft mt-2">Revisa tu bandeja de entrada y verifica tu email para poder realizar transacciones.</p>';
+        el.innerHTML = '<span class="badge badge-warn">Email pendiente</span><p class="text-xs text-c-soft mt-2">Revisa tu bandeja de entrada y verifica tu email.</p>';
     }
 }
 
-// ── Eliminar cuenta ──
+// Eliminar cuenta
 async function eliminarMiCuenta() {
     if (document.getElementById('confirm-elim').value !== 'ELIMINAR') {
-        toast('Escribe ELIMINAR (en mayusculas) para confirmar', 'error'); return;
+        toast('Escribe ELIMINAR en mayusculas para confirmar', 'error'); return;
     }
-    if (!confirm('¿Segura? Esta accion no se puede deshacer.')) return;
+    if (!confirm('Segura? Esta accion no se puede deshacer.')) return;
     try {
         await candela.auth.eliminarCuenta();
         toast('Cuenta eliminada. Cerrando sesion...', 'success');
         setTimeout(() => { candela.auth.logout(); window.location.href = '../index.html'; }, 2000);
-    } catch(e) { toast(e.message || 'Error al eliminar cuenta', 'error'); }
+    } catch(e) { toast(e.message||'Error al eliminar cuenta', 'error'); }
 }
 
 cargar();
