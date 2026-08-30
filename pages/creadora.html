@@ -224,6 +224,13 @@
         <button onclick="abrirSub()" class="c-btn text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md">Suscribirme</button>
     </div>
 
+    <!-- Carrusel de presentacion -->
+    <div id="carrusel-section" class="hidden mb-5">
+        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-3">Galeria de presentacion</p>
+        <div id="carrusel-items" class="flex gap-3 overflow-x-auto pb-2 no-scroll" style="scroll-snap-type:x mandatory">
+        </div>
+    </div>
+
     <!-- Tabs: Fotos / Videos -->
     <div class="flex border-b border-c-border mb-4 gap-0">
         <button class="tab active pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" onclick="switchTab('fotos',this)">
@@ -248,6 +255,12 @@
     <p id="empty-content" class="hidden text-center text-c-soft text-sm py-10">
         Esta creadora no ha publicado contenido aun.
     </p>
+
+    <!-- Packs de la creadora -->
+    <div id="packs-section" class="hidden mt-6 mb-8">
+        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-3">Packs disponibles</p>
+        <div id="packs-list" class="space-y-3"></div>
+    </div>
 </div>
 
 <!-- Sticky Subscribe Bar (aparece al hacer scroll) -->
@@ -382,6 +395,44 @@
                 class="flex-1 bg-c-bg rounded-xl px-3 py-2 text-sm border border-c-border focus:outline-none focus:border-c-accent">
             <button onclick="chatActivoEnviar()" class="c-btn text-white px-4 py-2 rounded-xl text-sm font-bold">Enviar</button>
         </div>
+    </div>
+</div>
+
+<!-- Modal Compra Pack -->
+<div class="modal-bg" id="modal-pack">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal('modal-pack')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+        <h2 class="font-display text-xl font-semibold mb-1" id="pack-modal-titulo">Pack</h2>
+        <p class="text-c-soft text-sm mb-4" id="pack-modal-desc"></p>
+
+        <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-c-soft uppercase tracking-wide">Tu saldo</span>
+                <a href="wallet.html" class="text-xs font-bold text-c-accent hover:underline">+ Recargar</a>
+            </div>
+            <div class="flex items-baseline gap-1.5 mb-2">
+                <span class="font-bold text-2xl text-c-text" id="pack-balance-disp">$0.00</span>
+                <span class="text-sm text-c-soft">USDT</span>
+            </div>
+            <div class="border-t border-c-border pt-2 mt-2 flex justify-between text-sm">
+                <span class="text-c-soft">Precio del pack</span>
+                <span class="font-bold text-c-text" id="pack-precio-modal">$0</span>
+            </div>
+        </div>
+
+        <div id="pack-saldo-insuf" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-xs text-red-600 font-semibold">
+            Saldo insuficiente. Te faltan <span id="pack-falta">$0</span> USDT.
+            <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
+        </div>
+
+        <div id="pack-modo-info" class="bg-c-bg border border-c-border rounded-xl p-3 mb-4 text-xs text-c-soft"></div>
+
+        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#8B7D77;line-height:1.4;">
+            <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
+        </div>
+        <button onclick="confirmarCompraPack()" id="btn-confirmar-pack" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
+            Comprar por <span id="pack-costo-btn">$0</span> USDT
+        </button>
     </div>
 </div>
 
@@ -539,6 +590,8 @@ async function init() {
         aplicarTema(creadoraData.tema_color);
         renderHeader();
         cargarContenido();
+        renderCarruselPublico();
+        cargarPacksPublicos();
         initStickyBar();
     } catch(e) {
         toast('No se pudo cargar el perfil', 'error');
@@ -1219,6 +1272,121 @@ function cerrarVisor(e) {
     vid.src = '';
     visor.classList.remove('open');
     document.body.style.overflow = '';
+}
+
+// ─── CARRUSEL ────────────────────────────────────────────────
+function renderCarruselPublico() {
+    const fotos = creadoraData?.fotos_carrusel;
+    if (!fotos || !fotos.length) return;
+
+    const sec = document.getElementById('carrusel-section');
+    const wrap = document.getElementById('carrusel-items');
+    sec.classList.remove('hidden');
+
+    const logueado = candela.auth.isLoggedIn();
+
+    wrap.innerHTML = fotos.map(url => {
+        if (logueado) {
+            return `<div class="shrink-0 rounded-2xl overflow-hidden" style="width:200px;height:260px;scroll-snap-align:start">
+                <img src="${_u(url)}" class="w-full h-full object-cover" draggable="false" oncontextmenu="return false">
+            </div>`;
+        } else {
+            return `<div class="shrink-0 rounded-2xl overflow-hidden relative" style="width:200px;height:260px;scroll-snap-align:start">
+                <img src="${_u(url)}" class="w-full h-full object-cover" style="filter:blur(18px);transform:scale(1.1)" draggable="false" oncontextmenu="return false">
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-2" style="background:rgba(45,20,10,.3)">
+                    <span class="ms" style="color:#fff;font-size:28px">lock</span>
+                    <span class="text-white text-xs font-bold text-center px-3">Inicia sesion para ver</span>
+                </div>
+            </div>`;
+        }
+    }).join('');
+
+    if (!logueado) {
+        wrap.insertAdjacentHTML('afterend', `
+            <button onclick="window.location.href='../index.html'" class="mt-3 w-full c-btn text-white py-2.5 rounded-xl text-sm font-bold shadow-md">
+                Iniciar sesion o registrarse
+            </button>`);
+    }
+}
+
+// ─── PACKS PUBLICOS ──────────────────────────────────────────
+let packSeleccionado = null;
+
+async function cargarPacksPublicos() {
+    try {
+        const packs = await candela._req('GET', `/api/packs/creadora/${slug}`);
+        if (!packs?.length) return;
+
+        const sec = document.getElementById('packs-section');
+        const lista = document.getElementById('packs-list');
+        sec.classList.remove('hidden');
+
+        lista.innerHTML = packs.map(pk => {
+            const precioFan = pk.modo === 'venta'
+                ? (pk.precio_base * 1.20).toFixed(2)
+                : pk.precio_base.toFixed(2);
+            const modoBadge = pk.modo === 'venta'
+                ? '<span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-1">Descargable</span>'
+                : '<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full ml-1">PPV</span>';
+            const archivos = pk.archivos?.length || 0;
+            return `<div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <p class="font-bold text-sm">${esc(pk.titulo)}</p>${modoBadge}
+                    </div>
+                    ${pk.descripcion ? `<p class="text-xs text-c-soft mt-0.5 line-clamp-2">${esc(pk.descripcion)}</p>` : '<p class="text-xs text-c-soft mt-0.5 italic">Contenido exclusivo</p>'}
+                    <p class="text-xs text-c-soft mt-1">${archivos} archivo${archivos !== 1 ? 's' : ''}</p>
+                </div>
+                <div class="shrink-0 text-right">
+                    <p class="text-lg font-bold text-c-text mb-1">$${precioFan}</p>
+                    <button onclick="abrirCompraPack(${pk.id},'${esc(pk.titulo)}','${esc(pk.descripcion||'')}',${pk.precio_base},'${pk.modo}')"
+                        class="c-btn text-white px-4 py-1.5 rounded-xl text-xs font-bold shadow-sm">
+                        Comprar
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch(e) {
+        // Silencioso — si falla (no auth, sin packs) no mostrar seccion
+    }
+}
+
+function abrirCompraPack(id, titulo, desc, precioBase, modo) {
+    if (!candela.auth.isLoggedIn()) {
+        window.location.href = '../index.html';
+        return;
+    }
+    const precioFan = modo === 'venta' ? precioBase * 1.20 : precioBase;
+    packSeleccionado = { id, precioFan };
+    document.getElementById('pack-modal-titulo').textContent = titulo;
+    document.getElementById('pack-modal-desc').textContent = desc || 'Pack exclusivo';
+    document.getElementById('pack-precio-modal').textContent = `$${precioFan.toFixed(2)}`;
+    document.getElementById('pack-costo-btn').textContent = `$${precioFan.toFixed(2)}`;
+    document.getElementById('pack-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
+    const insuf = userBalance < precioFan;
+    document.getElementById('pack-saldo-insuf').classList.toggle('hidden', !insuf);
+    if (insuf) document.getElementById('pack-falta').textContent = `$${(precioFan - userBalance).toFixed(2)}`;
+    document.getElementById('pack-modo-info').textContent = modo === 'venta'
+        ? 'Este pack incluye descarga permanente de todos los archivos.'
+        : 'Este pack permite ver el contenido desde la plataforma. No incluye descarga.';
+    abrirModal('modal-pack');
+}
+
+async function confirmarCompraPack() {
+    if (!packSeleccionado) return;
+    const btn = document.getElementById('btn-confirmar-pack');
+    btn.disabled = true; btn.textContent = 'Procesando...';
+    try {
+        await candela._req('POST', `/api/packs/${packSeleccionado.id}/comprar`);
+        cerrarModal('modal-pack');
+        toast('Pack comprado. Revisa tu seccion de compras.', 'success');
+        userBalance -= packSeleccionado.precioFan;
+    } catch(e) {
+        toast(e.message || 'Error al comprar', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Comprar por <span id="pack-costo-btn">$' + (packSeleccionado?.precioFan?.toFixed(2)||'0') + '</span> USDT';
+    }
 }
 
 init();

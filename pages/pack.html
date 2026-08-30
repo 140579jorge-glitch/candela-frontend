@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pack — Candela</title>
+    <meta name="description" content="Contenido exclusivo en Candela.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pack en Candela" id="og-title">
+    <meta property="og:description" content="Contenido exclusivo de creadoras latinas." id="og-desc">
+    <meta property="og:image" content="https://clubcandela.com/img/og-cover.jpg">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg": "#FFF8F5", "c-accent": "#F4A261", "c-rose": "#E8A598",
+                        "c-champagne": "#F2D5C4", "c-text": "#2D2D2D", "c-soft": "#8B7D77",
+                        "c-border": "#F0E6E1",
+                    },
+                    fontFamily: { display: ["Playfair Display","serif"], body: ["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; }
+        .glass { background:rgba(255,248,245,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
+        .c-btn:active { transform:scale(0.97); }
+        .c-btn-outline { border:2px solid #F4A261; color:#F4A261; transition:all .2s; }
+        .c-btn-outline:hover { background:#F4A261; color:#fff; }
+        .ms { font-family:'Material Symbols Outlined'; font-style:normal; font-size:22px; line-height:1; user-select:none; }
+        .modal-bg { position:fixed; inset:0; z-index:100; background:rgba(45,20,10,.42); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; visibility:hidden; transition:all .22s; }
+        .modal-bg.open { opacity:1; visibility:visible; }
+        .modal-box { background:#fff; border-radius:1.5rem; padding:2rem; width:100%; max-width:460px; box-shadow:0 28px 64px rgba(0,0,0,.13); transform:translateY(18px); transition:transform .22s; }
+        .modal-bg.open .modal-box { transform:translateY(0); }
+        .archivo-blur { filter:blur(20px); transform:scale(1.05); pointer-events:none; user-select:none; -webkit-user-drag:none; }
+        img, video { -webkit-user-drag:none; user-select:none; }
+        .toast { animation: fadeSlide .3s ease; }
+        @keyframes fadeSlide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text antialiased min-h-screen pb-20">
+
+<!-- TopBar -->
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border">
+    <div class="flex items-center justify-between h-14 px-4 max-w-2xl mx-auto">
+        <a href="../index.html" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft">
+            <span class="ms">arrow_back</span>
+        </a>
+        <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+        <button onclick="compartirPack()" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft">
+            <span class="ms">share</span>
+        </button>
+    </div>
+</header>
+
+<div class="pt-14 max-w-2xl mx-auto px-4">
+
+    <!-- Skeleton de carga -->
+    <div id="skeleton-wrap" class="py-10">
+        <div class="h-8 rounded-xl mb-3 w-3/4" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+        <div class="h-4 rounded-xl mb-5 w-1/2" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+        <div class="grid grid-cols-3 gap-2">
+            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+        </div>
+        <style>@keyframes shimmer{0%{background-position:-300% 0}100%{background-position:300% 0}}</style>
+    </div>
+
+    <!-- Contenido del pack -->
+    <div id="pack-content" class="hidden py-6">
+
+        <!-- Header pack -->
+        <div class="mb-5">
+            <a id="link-creadora" href="#" class="flex items-center gap-2 mb-3 group w-fit">
+                <div id="avatar-creadora" class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-white font-bold text-sm shrink-0"
+                    style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                    <span id="avatar-init">?</span>
+                    <img id="avatar-img" src="" alt="" class="w-full h-full object-cover hidden">
+                </div>
+                <div>
+                    <p id="creadora-nombre" class="text-sm font-bold group-hover:text-c-accent transition-colors">Cargando...</p>
+                    <p class="text-xs text-c-soft">Ver perfil completo</p>
+                </div>
+                <span class="ms text-c-soft" style="font-size:18px">chevron_right</span>
+            </a>
+            <h1 id="pack-titulo" class="font-display text-2xl font-semibold mb-2">Pack exclusivo</h1>
+            <p id="pack-desc" class="text-sm text-c-soft leading-relaxed hidden"></p>
+            <div class="flex items-center gap-2 mt-3 flex-wrap">
+                <span id="pack-archivos-count" class="text-xs text-c-soft bg-white border border-c-border px-3 py-1 rounded-full"></span>
+                <span id="pack-modo-badge" class="text-xs font-bold px-3 py-1 rounded-full"></span>
+            </div>
+        </div>
+
+        <!-- Preview borrosa de archivos -->
+        <div id="archivos-preview" class="grid grid-cols-3 gap-2 mb-6"></div>
+
+        <!-- CTA de compra -->
+        <div id="cta-box" class="bg-white border border-c-border rounded-2xl p-5 shadow-sm sticky bottom-4 z-10">
+            <div class="flex items-center justify-between mb-3">
+                <div>
+                    <p id="cta-precio" class="text-2xl font-bold text-c-text"></p>
+                    <p id="cta-modo" class="text-xs text-c-soft mt-0.5"></p>
+                </div>
+                <button id="btn-cta" onclick="accionPrincipal()" class="c-btn text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md">
+                    Comprar pack
+                </button>
+            </div>
+            <p id="cta-aviso" class="text-[10px] text-c-soft text-center">Pago en USDT. Irreversible. Solo mayores de 18 años.</p>
+        </div>
+
+    </div>
+
+    <!-- Error -->
+    <div id="error-wrap" class="hidden py-20 text-center">
+        <span class="ms text-c-soft" style="font-size:48px">sentiment_dissatisfied</span>
+        <p class="font-bold text-lg mt-3 mb-1">Pack no encontrado</p>
+        <p class="text-c-soft text-sm mb-5">El link puede haber expirado o el pack fue eliminado.</p>
+        <a href="../index.html" class="c-btn text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-md inline-block">Ir al inicio</a>
+    </div>
+
+</div>
+
+<!-- Modal compra -->
+<div class="modal-bg" id="modal-compra">
+    <div class="modal-box relative">
+        <button onclick="cerrarModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
+        <h2 class="font-display text-xl font-semibold mb-1" id="modal-pack-titulo">Pack</h2>
+        <p class="text-c-soft text-sm mb-5">Acceso inmediato al contenido del pack</p>
+
+        <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-c-soft uppercase tracking-wide">Tu saldo</span>
+                <a href="wallet.html" class="text-xs font-bold text-c-accent hover:underline">+ Recargar</a>
+            </div>
+            <div class="flex items-baseline gap-1.5 mb-2">
+                <span class="font-bold text-2xl text-c-text" id="modal-balance">$0.00</span>
+                <span class="text-sm text-c-soft">USDT</span>
+            </div>
+            <div class="border-t border-c-border pt-2 mt-2 flex justify-between text-sm">
+                <span class="text-c-soft">Precio</span>
+                <span class="font-bold text-c-text" id="modal-precio">$0</span>
+            </div>
+        </div>
+
+        <div id="modal-insuf" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-xs text-red-600 font-semibold">
+            Saldo insuficiente. Te faltan <span id="modal-falta">$0</span> USDT.
+            <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
+        </div>
+
+        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#8B7D77;line-height:1.4;">
+            <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
+        </div>
+        <button onclick="confirmarCompra()" id="btn-confirmar" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
+            Comprar por <span id="modal-costo">$0</span> USDT
+        </button>
+    </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts" class="fixed bottom-24 right-4 z-[200] flex flex-col gap-2 pointer-events-none"></div>
+
+<script src="../js/api.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const enlaceSlug = params.get('p');
+
+let packData = null;
+let userBalance = 0;
+
+function toast(msg, tipo = 'info') {
+    const d = document.createElement('div');
+    const col = tipo === 'success' ? '#22c55e' : tipo === 'error' ? '#ef4444' : '#F4A261';
+    d.className = 'toast pointer-events-auto px-4 py-2.5 rounded-xl text-white text-sm font-semibold shadow-lg max-w-xs';
+    d.style.cssText = `background:${col}`;
+    d.textContent = msg;
+    document.getElementById('toasts').appendChild(d);
+    setTimeout(() => d.remove(), 3500);
+}
+
+function abrirModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function cerrarModal() { document.getElementById('modal-compra').classList.remove('open'); document.body.style.overflow = ''; }
+
+async function init() {
+    if (!enlaceSlug) { mostrarError(); return; }
+
+    try {
+        packData = await candela._req('GET', `/api/packs/teaser/${enlaceSlug}`);
+    } catch(e) {
+        mostrarError();
+        return;
+    }
+
+    document.getElementById('skeleton-wrap').classList.add('hidden');
+    document.getElementById('pack-content').classList.remove('hidden');
+
+    // Meta tags
+    document.title = packData.titulo + ' — Candela';
+    document.getElementById('og-title').content = packData.titulo + ' — Candela';
+    document.getElementById('og-desc').content = packData.descripcion_teaser || 'Pack exclusivo en Candela';
+
+    // Header
+    document.getElementById('pack-titulo').textContent = packData.titulo;
+    if (packData.descripcion) {
+        const descEl = document.getElementById('pack-desc');
+        descEl.textContent = packData.descripcion;
+        descEl.classList.remove('hidden');
+    }
+
+    // Link a creadora
+    if (packData.creadora_slug) {
+        const link = document.getElementById('link-creadora');
+        link.href = `creadora.html?slug=${packData.creadora_slug}`;
+        document.getElementById('creadora-nombre').textContent = packData.creadora_nombre || packData.creadora_slug;
+        if (packData.creadora_avatar) {
+            const img = document.getElementById('avatar-img');
+            img.src = packData.creadora_avatar;
+            img.classList.remove('hidden');
+            document.getElementById('avatar-init').classList.add('hidden');
+        } else {
+            document.getElementById('avatar-init').textContent = (packData.creadora_nombre || 'C')[0].toUpperCase();
+        }
+    }
+
+    // Info
+    const cant = packData.total_archivos || 0;
+    document.getElementById('pack-archivos-count').textContent = `${cant} archivo${cant !== 1 ? 's' : ''}`;
+
+    const modeEl = document.getElementById('pack-modo-badge');
+    if (packData.modo === 'venta') {
+        modeEl.textContent = 'Descargable';
+        modeEl.className = 'text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700';
+    } else {
+        modeEl.textContent = 'PPV — Ver en plataforma';
+        modeEl.className = 'text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-orange-700';
+    }
+
+    // Preview — portada borrosa + placeholders para el resto
+    const grid = document.getElementById('archivos-preview');
+    const logueado = candela.auth.isLoggedIn();
+    const totalCeldas = Math.min(Math.max(cant, 3), 9);
+    grid.innerHTML = Array.from({length: totalCeldas}, (_, i) => {
+        if (i === 0 && packData.portada_url) {
+            return `<div class="relative aspect-square rounded-2xl overflow-hidden bg-gray-100">
+                <img src="${packData.portada_url}" class="w-full h-full object-cover archivo-blur" draggable="false" oncontextmenu="return false">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="ms" style="color:rgba(255,255,255,.9);font-size:32px">lock</span>
+                </div>
+            </div>`;
+        }
+        return `<div class="aspect-square rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,#F2D5C4,#E8A598)">
+            <span class="ms" style="color:rgba(255,255,255,.7);font-size:32px">lock</span>
+        </div>`;
+    }).join('');
+
+    // CTA
+    const precio = packData.precio_fan || 0;
+    document.getElementById('cta-precio').textContent = `$${Number(precio).toFixed(2)} USDT`;
+    document.getElementById('cta-modo').textContent = packData.modo === 'venta'
+        ? 'Incluye descarga permanente'
+        : 'Acceso para ver en la plataforma';
+
+    if (packData.comprado) {
+        const btnCta = document.getElementById('btn-cta');
+        btnCta.textContent = 'Ya tienes este pack';
+        btnCta.disabled = true;
+        btnCta.className = 'bg-green-500 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md';
+    } else if (!logueado) {
+        document.getElementById('btn-cta').textContent = 'Iniciar sesion para comprar';
+    }
+
+    // Balance si logueado
+    if (logueado) {
+        try {
+            const w = await candela.wallet.miSaldo();
+            userBalance = w.balance || 0;
+        } catch(e) {}
+    }
+}
+
+function accionPrincipal() {
+    if (!candela.auth.isLoggedIn()) {
+        window.location.href = '../index.html';
+        return;
+    }
+    const precio = packData.precio_fan || 0;
+    document.getElementById('modal-pack-titulo').textContent = packData.titulo;
+    document.getElementById('modal-balance').textContent = `$${userBalance.toFixed(2)}`;
+    document.getElementById('modal-precio').textContent = `$${Number(precio).toFixed(2)}`;
+    document.getElementById('modal-costo').textContent = `$${Number(precio).toFixed(2)}`;
+    const insuf = userBalance < precio;
+    document.getElementById('modal-insuf').classList.toggle('hidden', !insuf);
+    if (insuf) document.getElementById('modal-falta').textContent = `$${(precio - userBalance).toFixed(2)}`;
+    abrirModal('modal-compra');
+}
+
+async function confirmarCompra() {
+    const btn = document.getElementById('btn-confirmar');
+    btn.disabled = true; btn.textContent = 'Procesando...';
+    try {
+        await candela._req('POST', `/api/packs/${packData.id}/comprar`);
+        cerrarModal();
+        toast('Pack comprado. Busca tus compras en tu cuenta.', 'success');
+        document.getElementById('btn-cta').textContent = 'Pack comprado';
+        document.getElementById('btn-cta').disabled = true;
+    } catch(e) {
+        toast(e.message || 'Error al comprar', 'error');
+        btn.disabled = false;
+        btn.innerHTML = 'Comprar por <span id="modal-costo">$' + (packData.precio_fan||0) + '</span> USDT';
+    }
+}
+
+function mostrarError() {
+    document.getElementById('skeleton-wrap').classList.add('hidden');
+    document.getElementById('error-wrap').classList.remove('hidden');
+}
+
+function compartirPack() {
+    const url = window.location.href;
+    if (navigator.share) {
+        navigator.share({ title: packData?.titulo || 'Pack en Candela', url }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(url).then(() => toast('Link copiado', 'success')).catch(() => {});
+    }
+}
+
+document.addEventListener('contextmenu', e => { if (e.target.matches('img,video')) e.preventDefault(); });
+document.addEventListener('dragstart', e => { if (e.target.matches('img,video')) e.preventDefault(); });
+
+init();
+</script>
+
+<script src="/js/cookie-consent.js"></script>
+</body>
+</html>
