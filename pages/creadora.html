@@ -261,6 +261,12 @@
         <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-3">Packs disponibles</p>
         <div id="packs-list" class="space-y-3"></div>
     </div>
+
+    <!-- Top Fans del mes -->
+    <div id="top-fans-section" class="hidden mt-6 mb-8">
+        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-3">Top fans del mes</p>
+        <div id="top-fans-list" class="space-y-2"></div>
+    </div>
 </div>
 
 <!-- Sticky Subscribe Bar (aparece al hacer scroll) -->
@@ -592,6 +598,7 @@ async function init() {
         cargarContenido();
         renderCarruselPublico();
         cargarPacksPublicos();
+        cargarTopFans();
         initStickyBar();
     } catch(e) {
         toast('No se pudo cargar el perfil', 'error');
@@ -1370,6 +1377,26 @@ function abrirCompraPack(id, titulo, desc, precioBase, modo) {
         ? 'Este pack incluye descarga permanente de todos los archivos.'
         : 'Este pack permite ver el contenido desde la plataforma. No incluye descarga.';
     abrirModal('modal-pack');
+}
+
+// ─── TOP FANS ────────────────────────────────────────────────
+async function cargarTopFans() {
+    try {
+        const fans = await candela._req('GET', `/api/creadoras/${slug}/top-fans`);
+        if (!fans?.length) return;
+        const sec = document.getElementById('top-fans-section');
+        const lista = document.getElementById('top-fans-list');
+        sec.classList.remove('hidden');
+        const medals = ['🥇','🥈','🥉'];
+        lista.innerHTML = fans.map((f, i) => `
+            <div class="flex items-center justify-between bg-white border border-c-border rounded-xl px-4 py-2.5 shadow-sm">
+                <div class="flex items-center gap-2">
+                    <span class="text-base">${medals[i] || (i+1)}</span>
+                    <p class="text-sm font-semibold">${esc(f.nombre)}</p>
+                </div>
+                <p class="text-xs font-bold text-c-accent">$${f.total} USDT</p>
+            </div>`).join('');
+    } catch(e) { /* silencioso */ }
 }
 
 async function confirmarCompraPack() {

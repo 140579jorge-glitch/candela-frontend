@@ -775,6 +775,35 @@
                     <p class="text-center text-c-soft text-sm py-8">Cargando...</p>
                 </div>
             </div>
+
+            <!-- Broadcast masivo -->
+            <div class="mt-8">
+                <h3 class="font-semibold text-base mb-1">Mensaje masivo a fans</h3>
+                <p class="text-c-soft text-xs mb-4">Llega a todos tus suscriptores activos. Puedes cobrar por leer el mensaje.</p>
+                <div class="bg-white border border-c-border rounded-2xl p-5 max-w-lg shadow-sm mb-5">
+                    <textarea id="bc-texto" rows="3" placeholder="Escribe tu mensaje..." maxlength="1000"
+                        class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-c-accent transition-all resize-none mb-3"></textarea>
+                    <div class="flex gap-2 items-center mb-3">
+                        <label class="text-xs text-c-soft shrink-0">Precio (0 = gratis)</label>
+                        <input id="bc-precio" type="number" min="0" max="50" step="0.5" value="0"
+                            class="w-24 border border-c-border rounded-xl px-3 py-1.5 text-sm focus:outline-none focus:border-c-accent">
+                        <span class="text-xs text-c-soft">USDT</span>
+                    </div>
+                    <button onclick="crearBroadcast()" class="c-btn text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm w-full">
+                        Enviar a todos mis fans
+                    </button>
+                </div>
+
+                <!-- Historial broadcasts -->
+                <div class="bg-white border border-c-border rounded-2xl max-w-lg shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-c-border">
+                        <p class="font-semibold text-sm">Mensajes enviados</p>
+                    </div>
+                    <div id="lista-broadcasts">
+                        <p class="text-center text-c-soft text-sm py-6">Cargando...</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- ══ METODOS DE PAGO ══ -->
@@ -1208,6 +1237,9 @@ async function cargarMisPosts() {
                     <button onclick="toggleOcultar('${c.id}',${oculto})" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:${oculto?'rgba(34,197,94,.8)':'rgba(251,191,36,.8)'}">
                         ${oculto ? 'Mostrar' : 'Ocultar'}
                     </button>
+                    ${c.precio === 0 ? `<button onclick="toggleMuestra('${c.id}',${!!c.es_gratis})" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:${c.es_gratis?'rgba(251,191,36,.85)':'rgba(99,102,241,.85)'}">
+                        ${c.es_gratis ? 'Quitar muestra' : 'Muestra gratis'}
+                    </button>` : ''}
                     <button onclick="eliminarPost('${c.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:rgba(239,68,68,.8)">
                         Eliminar
                     </button>
@@ -1422,6 +1454,14 @@ async function toggleOcultar(id, estaOculto) {
     } catch(err) { toast(err.message, 'error'); }
 }
 
+async function toggleMuestra(id, esGratis) {
+    try {
+        const res = await candela._req('PATCH', `/api/contenido/${id}/muestra`);
+        toast(res.es_gratis ? 'Marcado como muestra gratuita' : 'Muestra removida', 'success');
+        cargarMisPosts();
+    } catch(err) { toast(err.message || 'Error', 'error'); }
+}
+
 async function eliminarPost(id) {
     if (!confirm('Eliminar permanentemente esta publicacion? Esta accion no se puede deshacer.')) return;
     try {
@@ -1526,7 +1566,7 @@ function _activarSeccion(sec) {
     if (sec === 'metodos-pago') cargarDatosRetiro();
     if (sec === 'propinas') cargarPropinas();
     if (sec === 'stream') cargarStreamActivo();
-    if (sec === 'mensajes') { cargarMensajes(); if (perfilData) { document.getElementById('toggle-acepta-msg').checked = perfilData.acepta_mensajes; document.getElementById('msg-precio-input').value = perfilData.precio_mensaje || 5; document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${perfilData.precio_mensaje || 5}`; } }
+    if (sec === 'mensajes') { cargarMensajes(); cargarBroadcasts(); if (perfilData) { document.getElementById('toggle-acepta-msg').checked = perfilData.acepta_mensajes; document.getElementById('msg-precio-input').value = perfilData.precio_mensaje || 5; document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${perfilData.precio_mensaje || 5}`; } }
     if (sec === 'chat-sesion') {
         cargarSolicitudesChat();
         if (perfilData) {
@@ -1617,6 +1657,41 @@ async function cargarPropinas() {
     } catch(e) {
         document.getElementById('lista-propinas').innerHTML = '<p class="text-center text-c-soft text-sm py-8">Error al cargar propinas</p>';
     }
+}
+
+// ─── BROADCASTS ──────────────────────────────────────────────
+async function cargarBroadcasts() {
+    try {
+        const lista = await candela._req('GET', '/api/broadcasts/mis-broadcasts');
+        const el = document.getElementById('lista-broadcasts');
+        if (!lista.length) {
+            el.innerHTML = '<p class="text-center text-c-soft text-sm py-6">Aun no has enviado mensajes masivos.</p>';
+            return;
+        }
+        el.innerHTML = lista.map(bc => `
+            <div class="px-5 py-4 border-b border-c-border last:border-0">
+                <div class="flex items-start justify-between gap-3">
+                    <p class="text-sm text-c-text flex-1 leading-snug">${bc.texto}</p>
+                    <span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${bc.precio>0?'bg-green-100 text-green-700':'bg-c-champagne text-c-soft'}">
+                        ${bc.precio>0?'$'+bc.precio+' USDT':'Gratis'}
+                    </span>
+                </div>
+                <p class="text-[10px] text-c-soft mt-1">${bc.total_pagos} pago${bc.total_pagos!==1?'s':''} · ${new Date(bc.creado_en).toLocaleDateString('es')}</p>
+            </div>`).join('');
+    } catch(e) { console.error('cargarBroadcasts:', e); }
+}
+
+async function crearBroadcast() {
+    const texto = document.getElementById('bc-texto').value.trim();
+    const precio = parseFloat(document.getElementById('bc-precio').value) || 0;
+    if (!texto) { toast('Escribe un mensaje primero', 'error'); return; }
+    try {
+        await candela._req('POST', '/api/broadcasts', { texto, precio });
+        toast('Mensaje enviado a todos tus fans', 'success');
+        document.getElementById('bc-texto').value = '';
+        document.getElementById('bc-precio').value = '0';
+        cargarBroadcasts();
+    } catch(err) { toast(err.message || 'Error al enviar', 'error'); }
 }
 
 // ─── MENSAJES ────────────────────────────────────────────────
