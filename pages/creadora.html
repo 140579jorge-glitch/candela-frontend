@@ -635,6 +635,7 @@ let contenidoFiltrado = [];
 let tabActual = 'fotos';
 let contenidoSeleccionado = null;
 let suscritoActualmente = false;
+let trialStatus = null; // { vistas_esta_creadora, total_creadoras, puede_ver }
 
 // ─── INIT ────────────────────────────────────────────────────
 async function init() {
@@ -657,6 +658,9 @@ async function init() {
         try {
             const w = await candela.wallet.miSaldo();
             userBalance = w.balance || 0;
+        } catch(e) {}
+        try {
+            trialStatus = await candela._req('GET', `/api/contenido/trial/estado?slug=${slug}`);
         } catch(e) {}
     }
 }
@@ -772,9 +776,17 @@ function renderGrid() {
     }
     empty.classList.add('hidden');
 
+    // Trial: solo aplica a contenido suscriptores (precio=0, no es_gratis, no desbloqueado)
+    const trialDisponible = trialStatus && trialStatus.puede_ver;
+    const trialRestantes = trialStatus
+        ? Math.max(0, 2 - (trialStatus.vistas_esta_creadora || 0))
+        : 0;
+
     grid.innerHTML = contenidoFiltrado.map(item => {
         const bloqueado = !item.desbloqueado && !item.es_gratis;
         const esPPV = bloqueado && item.precio > 0;
+        const esSoloSubs = bloqueado && item.precio === 0;
+        const puedeTrialEste = esSoloSubs && trialDisponible && candela.auth.isLoggedIn();
 
         return `
         <div class="content-item relative overflow-hidden rounded-lg cursor-pointer"
@@ -797,8 +809,11 @@ function renderGrid() {
                     ${esPPV
                         ? `<span class="ms" style="color:#fff;font-size:28px;">lock</span>
                            <span class="text-white text-xs font-bold bg-black/40 px-2.5 py-1 rounded-full">$${item.precio}</span>`
-                        : `<span class="ms" style="color:#fff;font-size:28px;">lock</span>
-                           <span class="text-white text-[10px] font-semibold">Solo suscriptores</span>`
+                        : puedeTrialEste
+                            ? `<span class="ms" style="color:#fff;font-size:24px;">visibility</span>
+                               <span class="text-white text-[10px] font-bold bg-c-accent/80 px-2 py-0.5 rounded-full">Gratis (${trialRestantes} restantes)</span>`
+                            : `<span class="ms" style="color:#fff;font-size:28px;">lock</span>
+                               <span class="text-white text-[10px] font-semibold">Solo suscriptores</span>`
                     }
                 </div>` : ''}
 
@@ -815,7 +830,7 @@ function renderGrid() {
     aplicarWatermarks();
 }
 
-function clicContenido(id, precio, desbloqueado, esGratis) {
+async function clicContenido(id, precio, desbloqueado, esGratis) {
     if (desbloqueado || esGratis) {
         const item = todoContenido.find(c => c.id == id);
         if (item) abrirVisor(item);
@@ -831,9 +846,42 @@ function clicContenido(id, precio, desbloqueado, esGratis) {
         document.getElementById('compra-saldo-insuf').classList.toggle('hidden', !insuf);
         if (insuf) document.getElementById('compra-falta').textContent = `$${(precio - userBalance).toFixed(2)}`;
         abrirModal('modal-compra');
-    } else {
-        abrirSub();
+        return;
     }
+    // Contenido solo suscriptores — intentar trial
+    if (trialStatus && trialStatus.puede_ver) {
+        try {
+            const res = await candela._req('POST', `/api/contenido/${id}/trial-view`);
+            // Actualizar trialStatus localmente
+            if (trialStatus) {
+                trialStatus.vistas_esta_creadora = (trialStatus.vistas_esta_creadora || 0) + 1;
+                trialStatus.puede_ver = trialStatus.vistas_esta_creadora < 2 &&
+                    (trialStatus.total_creadoras < 2 || trialStatus.vistas_esta_creadora > 0);
+            }
+            const item = todoContenido.find(c => c.id == id);
+            if (item && res.url_archivo) {
+                abrirVisor({ ...item, url_archivo: res.url_archivo, desbloqueado: true });
+                // Refrescar grid para actualizar badge restantes
+                filtrarContenido();
+                if (res.trial_restantes === 0) {
+                    setTimeout(() => toast('Prueba completada. Suscribete para ver mas contenido.', 'info'), 800);
+                }
+            }
+        } catch(e) {
+            // Trial agotado o error
+            _mostrarBloqueTrialAgotado();
+        }
+    } else {
+        _mostrarBloqueTrialAgotado();
+    }
+}
+
+function _mostrarBloqueTrialAgotado() {
+    if (trialStatus && trialStatus.total_creadoras >= 2 && trialStatus.vistas_esta_creadora === 0) {
+        // Limite de creadoras alcanzado
+        toast('Has usado tus pruebas gratuitas. Suscribete para continuar.', 'info');
+    }
+    abrirSub();
 }
 
 // ─── TABS ────────────────────────────────────────────────────
