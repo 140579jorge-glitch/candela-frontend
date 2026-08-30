@@ -85,6 +85,7 @@
         <div class="nav-item" onclick="mostrar('inicio')"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir')"><span class="ms">upload</span>Subir contenido</div>
         <div class="nav-item" onclick="mostrar('packs')"><span class="ms">inventory_2</span>Mis Packs</div>
+        <div class="nav-item" onclick="mostrar('stories')"><span class="ms">auto_stories</span>Stories</div>
         <div class="nav-item" onclick="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
         <div class="nav-item" onclick="mostrar('personalizar')"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion')"><span class="ms">verified_user</span>Verificacion</div>
@@ -109,6 +110,7 @@
         <div class="nav-item active" onclick="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir',this)"><span class="ms">upload</span>Subir contenido</div>
         <div class="nav-item" onclick="mostrar('packs',this)"><span class="ms">inventory_2</span>Mis Packs</div>
+        <div class="nav-item" onclick="mostrar('stories',this)"><span class="ms">auto_stories</span>Stories</div>
         <div class="nav-item" onclick="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
         <div class="nav-item" onclick="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificacion</div>
@@ -336,6 +338,43 @@
                 <h3 class="font-bold text-sm mb-3">Mis packs publicados</h3>
                 <div id="lista-mis-packs">
                     <p class="text-c-soft text-sm py-8 text-center" id="packs-empty-msg">Aun no tienes packs creados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ STORIES ══ -->
+        <section id="sec-stories" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Stories</h2>
+            <p class="text-c-soft text-sm mb-5">Publica fotos o videos que desaparecen en 24 horas. Solo tus suscriptores activos pueden verlos.</p>
+
+            <!-- Subir story -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm mb-6 max-w-lg">
+                <h3 class="font-bold text-sm mb-3">Nueva story</h3>
+                <label id="story-upload-label" class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-c-border rounded-xl p-6 cursor-pointer hover:border-c-accent transition-all text-c-soft text-sm mb-4" for="story-archivo">
+                    <span class="ms text-3xl">add_photo_alternate</span>
+                    <span>Selecciona foto o video (max 50 MB)</span>
+                    <span id="story-file-name" class="text-xs text-c-accent font-semibold hidden"></span>
+                </label>
+                <input type="file" id="story-archivo" accept="image/*,video/*" class="hidden" onchange="previewStory(this)">
+                <div id="story-progress" class="hidden mb-3">
+                    <div class="h-2 bg-c-champagne rounded-full overflow-hidden">
+                        <div id="story-progress-bar" class="h-full bg-c-accent transition-all" style="width:0%"></div>
+                    </div>
+                </div>
+                <button onclick="subirStory()" id="btn-story-subir"
+                    class="c-btn text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm w-full">
+                    Publicar story
+                </button>
+            </div>
+
+            <!-- Stories activas -->
+            <div class="bg-white border border-c-border rounded-2xl shadow-sm max-w-lg overflow-hidden">
+                <div class="px-5 py-4 border-b border-c-border flex items-center justify-between">
+                    <p class="font-semibold text-sm">Stories activas</p>
+                    <span class="text-xs text-c-soft">Duran 24h</span>
+                </div>
+                <div id="lista-mis-stories">
+                    <p class="text-center text-c-soft text-sm py-8">Cargando...</p>
                 </div>
             </div>
         </section>
@@ -1031,6 +1070,9 @@
         <button onclick="mostrar('packs')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">inventory_2</span><span class="text-[10px] font-semibold">Packs</span>
         </button>
+        <button onclick="mostrar('stories')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">auto_stories</span><span class="text-[10px] font-semibold">Stories</span>
+        </button>
         <button onclick="mostrar('ganancias')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">payments</span><span class="text-[10px] font-semibold">Ganancias</span>
         </button>
@@ -1561,6 +1603,7 @@ function _activarSeccion(sec) {
     if (sec === 'ganancias') cargarGanancias();
     if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); cargarScore('inicio'); }
     if (sec === 'packs') cargarMisPacks();
+    if (sec === 'stories') cargarMisStories();
     if (sec === 'personalizar') { cargarScore('personalizar'); renderCarrusel(perfilData?.fotos_carrusel || []); }
     if (sec === 'referidas') cargarReferidas();
     if (sec === 'metodos-pago') cargarDatosRetiro();
@@ -2490,6 +2533,107 @@ async function eliminarPack(id) {
         await candela._req('DELETE', `/api/packs/${id}`);
         toast('Pack eliminado', 'success');
         cargarMisPacks();
+    } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+// ─── STORIES ─────────────────────────────────────────────────
+function previewStory(input) {
+    const label = document.getElementById('story-upload-label');
+    const nameEl = document.getElementById('story-file-name');
+    if (!input.files[0]) return;
+    nameEl.textContent = input.files[0].name;
+    nameEl.classList.remove('hidden');
+    label.querySelector('span.ms').textContent = 'check_circle';
+}
+
+async function subirStory() {
+    const input = document.getElementById('story-archivo');
+    if (!input.files[0]) { toast('Selecciona un archivo primero', 'error'); return; }
+    const btn = document.getElementById('btn-story-subir');
+    const prog = document.getElementById('story-progress');
+    const bar = document.getElementById('story-progress-bar');
+    btn.disabled = true; btn.textContent = 'Subiendo...';
+    prog.classList.remove('hidden');
+
+    const fd = new FormData();
+    fd.append('archivo', input.files[0]);
+
+    await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', API_URL + '/api/stories');
+        xhr.setRequestHeader('Authorization', 'Bearer ' + candela._token());
+        xhr.upload.onprogress = e => { if (e.lengthComputable) bar.style.width = Math.round(e.loaded/e.total*100)+'%'; };
+        xhr.onload = () => { if (xhr.status < 300) resolve(); else reject(new Error(JSON.parse(xhr.responseText).detail || 'Error')); };
+        xhr.onerror = () => reject(new Error('Error de red'));
+        xhr.send(fd);
+    }).then(() => {
+        toast('Story publicada. Dura 24 horas.', 'success');
+        input.value = '';
+        document.getElementById('story-file-name').classList.add('hidden');
+        document.getElementById('story-upload-label').querySelector('span.ms').textContent = 'add_photo_alternate';
+        bar.style.width = '0%';
+        cargarMisStories();
+    }).catch(e => toast(e.message, 'error'));
+
+    btn.disabled = false; btn.textContent = 'Publicar story';
+    prog.classList.add('hidden');
+}
+
+async function cargarMisStories() {
+    try {
+        const lista = await candela._req('GET', '/api/stories/mis-stories');
+        const el = document.getElementById('lista-mis-stories');
+        if (!lista.length) {
+            el.innerHTML = '<p class="text-center text-c-soft text-sm py-8">No tienes stories activas.</p>';
+            return;
+        }
+        el.innerHTML = lista.map(s => {
+            const expira = new Date(s.expira_en);
+            const ahoraMs = Date.now();
+            const diffH = Math.max(0, Math.round((expira - ahoraMs) / 3600000 * 10) / 10);
+            return `
+            <div class="flex items-center gap-3 px-4 py-3 border-b border-c-border last:border-0">
+                <div class="w-12 h-12 rounded-xl overflow-hidden bg-c-champagne shrink-0">
+                    ${s.tipo === 'imagen'
+                        ? `<img src="${s.url}" class="w-full h-full object-cover">`
+                        : `<div class="w-full h-full flex items-center justify-center"><span class="ms text-c-soft">videocam</span></div>`}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold capitalize">${s.tipo}</p>
+                    <p class="text-[11px] text-c-soft">${s.vistas_count} vista${s.vistas_count!==1?'s':''} · expira en ${diffH}h</p>
+                </div>
+                <div class="flex gap-1">
+                    <button onclick="verVistasStory('${s.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-c-champagne text-c-soft hover:bg-orange-100 transition-colors">
+                        Ver vistas
+                    </button>
+                    <button onclick="eliminarStory('${s.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                        Borrar
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch(e) { console.error('cargarMisStories:', e); }
+}
+
+async function verVistasStory(id) {
+    try {
+        const vistas = await candela._req('GET', `/api/stories/${id}/vistas`);
+        if (!vistas.length) { toast('Nadie ha visto esta story aun', 'success'); return; }
+        const lineas = vistas.map((v,i) => {
+            const medal = ['🥇','🥈','🥉'][i] || (i+1)+'.';
+            const aporte = v.aporte_total > 0 ? ` · $${v.aporte_total} aportados` : '';
+            return `${medal} ${v.nombre}${aporte}`;
+        }).join('\n');
+        alert(`Vistas (${vistas.length}):\n\n${lineas}`);
+    } catch(e) { toast('Error al cargar vistas', 'error'); }
+}
+
+async function eliminarStory(id) {
+    if (!confirm('Eliminar esta story?')) return;
+    try {
+        await candela._req('DELETE', `/api/stories/${id}`);
+        toast('Story eliminada', 'success');
+        cargarMisStories();
     } catch(e) { toast(e.message || 'Error', 'error'); }
 }
 
