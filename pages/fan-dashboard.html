@@ -251,17 +251,27 @@ function fmtFecha(iso) {
 }
 
 // ── Navegacion ──
-function mostrar(sec, el) {
+function _activarSeccion(sec) {
     document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('sec-'+sec).classList.add('active');
-    document.querySelectorAll('.nav-item,.bot-nav-item').forEach(n => n.classList.remove('active'));
-    if (el) el.classList.add('active');
+    document.getElementById('sec-'+sec)?.classList.add('active');
+    document.querySelectorAll('.nav-item,.bot-nav-item').forEach(n => {
+        n.classList.toggle('active', !!n.getAttribute('onclick')?.includes("'"+sec+"'"));
+    });
+    window.scrollTo(0,0);
 }
+function mostrar(sec) {
+    history.pushState({section:sec}, '', '#'+sec);
+    _activarSeccion(sec);
+}
+window.addEventListener('popstate', e => _activarSeccion(e.state?.section || 'inicio'));
 
 // ── Carga inicial ──
 let actData = null;
 
 async function cargar() {
+    const secInicial = location.hash.replace('#','') || 'inicio';
+    history.replaceState({section:secInicial}, '', '#'+secInicial);
+    if (secInicial !== 'inicio') _activarSeccion(secInicial);
     // Avatar / nombre
     const av = document.getElementById('topbar-avatar');
     av.textContent = (user.nombre||'F')[0].toUpperCase();

@@ -65,10 +65,37 @@
                 <span class="ms" style="font-size:14px;vertical-align:-2px">open_in_new</span> Ver mi pagina
             </a>
             <div id="topbar-estado" class="hidden px-3 py-1 rounded-full text-xs font-bold"></div>
+            <button id="btn-hamburger" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full text-c-soft hover:bg-c-border transition-colors" onclick="toggleMenuMobile()">
+                <span class="ms" style="font-size:22px">menu</span>
+            </button>
             <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)" id="topbar-avatar" title="Salir">?</button>
         </div>
     </div>
 </header>
+
+<!-- Mobile drawer -->
+<div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-40">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="toggleMenuMobile()"></div>
+    <div class="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-2xl overflow-y-auto pt-4 pb-8">
+        <div class="flex items-center justify-between px-4 mb-4">
+            <span class="font-display text-lg font-semibold logo-text">Candela</span>
+            <button onclick="toggleMenuMobile()" class="text-c-soft p-1"><span class="ms" style="font-size:20px">close</span></button>
+        </div>
+        <div class="nav-item" onclick="mostrar('inicio')"><span class="ms ms-fill">home</span>Inicio</div>
+        <div class="nav-item" onclick="mostrar('subir')"><span class="ms">upload</span>Subir contenido</div>
+        <div class="nav-item" onclick="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
+        <div class="nav-item" onclick="mostrar('personalizar')"><span class="ms">palette</span>Personalizar</div>
+        <div class="nav-item" onclick="mostrar('verificacion')"><span class="ms">verified_user</span>Verificacion</div>
+        <div class="nav-item" onclick="mostrar('propinas')"><span class="ms">volunteer_activism</span>Propinas</div>
+        <div class="nav-item" onclick="mostrar('mensajes')"><span class="ms">chat_bubble</span>Mensajes</div>
+        <div class="nav-item" onclick="mostrar('chat-sesion')"><span class="ms">videocam</span>Chat privado</div>
+        <div class="nav-item" onclick="mostrar('referidas')"><span class="ms">group_add</span>Referidas</div>
+        <div class="nav-item" onclick="mostrar('metodos-pago')"><span class="ms">account_balance_wallet</span>Metodos de pago</div>
+        <div class="nav-item" onclick="mostrar('stream')"><span class="ms">live_tv</span>Stream en vivo</div>
+        <div class="border-t border-c-border my-4 mx-4"></div>
+        <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
+    </div>
+</div>
 
 <div class="flex min-h-screen pt-16">
 
@@ -875,6 +902,9 @@ let perfilData = null;
 // ─── INIT ────────────────────────────────────────────────────
 async function init() {
     if (!requireAuth('creadora')) return;
+    const secInicial = location.hash.replace('#','') || 'inicio';
+    history.replaceState({section: secInicial}, '', '#' + secInicial);
+    if (secInicial !== 'inicio') _activarSeccion(secInicial);
     const user = candela.auth.user();
 
     // Topbar
@@ -1323,13 +1353,13 @@ function seleccionarTema(id, el) {
 }
 
 // ─── NAVIGATION ──────────────────────────────────────────────
-function mostrar(sec, navBtn) {
+function _activarSeccion(sec) {
     document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
     document.getElementById('sec-' + sec)?.classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    navBtn?.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.toggle('active', !!n.getAttribute('onclick')?.includes("'"+sec+"'"));
+    });
     window.scrollTo(0, 0);
-    // Recargar datos al cambiar tab
     if (sec === 'ganancias') cargarGanancias();
     if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); }
     if (sec === 'referidas') cargarReferidas();
@@ -1346,6 +1376,18 @@ function mostrar(sec, navBtn) {
         }
     }
 }
+
+function mostrar(sec) {
+    history.pushState({section: sec}, '', '#' + sec);
+    _activarSeccion(sec);
+    document.getElementById('mobile-menu')?.classList.add('hidden');
+}
+
+function toggleMenuMobile() {
+    document.getElementById('mobile-menu')?.classList.toggle('hidden');
+}
+
+window.addEventListener('popstate', e => _activarSeccion(e.state?.section || 'inicio'));
 
 // ─── REFERIDAS ───────────────────────────────────────────────
 async function cargarReferidas() {
