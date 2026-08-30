@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stream en vivo — Candela</title>
+    <title>Stream en vivo â€” Candela</title>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
@@ -176,7 +176,7 @@ document.addEventListener('fullscreenchange', () => {
 
 const API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
     ? 'http://localhost:8000'
-    : 'https://web-production-73189.up.railway.app';
+    : 'https://api.clubcandela.com';
 const WS = API.replace('https://', 'wss://').replace('http://', 'ws://');
 
 const params = new URLSearchParams(location.search);
@@ -432,7 +432,7 @@ function actualizarBalance(b) {
 
 function mostrarLoginPrompt() {
     document.getElementById('loading').innerHTML = `
-        <div style="font-size:48px;margin-bottom:16px">🔒</div>
+        <div style="font-size:48px;margin-bottom:16px">ðŸ”’</div>
         <p style="color:rgba(255,255,255,.8);font-size:15px;font-weight:700;margin-bottom:4px">Inicia sesion para ver este stream</p>
         <p style="color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px">${streamInfo.precio_entrada > 0 ? 'Este stream tiene precio de entrada' : ''}</p>
         <button onclick="location.href='../index.html?login=1'" style="background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:800;padding:13px 32px;border-radius:20px;font-size:15px;border:none;cursor:pointer;font-family:Nunito,sans-serif">
@@ -446,7 +446,7 @@ function mostrarError(msg) {
     if (hls) { hls.destroy(); hls = null; }
     document.getElementById('loading').style.display = 'flex';
     document.getElementById('loading').innerHTML = `
-        <div style="font-size:48px;margin-bottom:14px">📺</div>
+        <div style="font-size:48px;margin-bottom:14px">ðŸ“º</div>
         <p style="color:rgba(255,255,255,.85);font-size:16px;font-weight:700">${esc(msg)}</p>
         <button onclick="volverAtras()" style="margin-top:22px;color:#F4A261;font-size:14px;background:none;border:none;cursor:pointer;font-family:Nunito,sans-serif">Volver</button>
     `;

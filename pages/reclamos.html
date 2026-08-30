@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reclamos y Disputas — Candela</title>
+<title>Reclamos y Disputas â€” Candela</title>
 <meta name="robots" content="noindex, nofollow">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{"c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947","c-text":"#2D2D2D","c-soft":"#8B7D77","c-border":"#F0E6E1","c-champagne":"#F2D5C4"}}}}</script>
@@ -41,16 +41,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#F4A261;box-sh
 <header class="bg-white border-b border-c-border sticky top-0 z-10">
   <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
     <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
-    <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">← Volver</a>
+    <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">â† Volver</a>
   </div>
 </header>
 
 <main class="max-w-2xl mx-auto px-5 py-10">
   <h1 class="text-3xl font-semibold mb-1" style="font-family:'Playfair Display',serif;">Centro de Reclamos</h1>
-  <p class="text-c-soft text-sm mb-7">¿Tuviste un problema con un cobro, contenido o acceso? Cuéntanos y lo revisamos en 48 horas hábiles.</p>
+  <p class="text-c-soft text-sm mb-7">Â¿Tuviste un problema con un cobro, contenido o acceso? CuÃ©ntanos y lo revisamos en 48 horas hÃ¡biles.</p>
 
   <div class="info-box mb-6">
-    <strong>Antes de reclamar:</strong> Para problemas técnicos menores (video que no carga, error de pantalla) intenta recargar la página o limpiar el caché del navegador. Este formulario es para disputas de pagos y acceso a contenido.
+    <strong>Antes de reclamar:</strong> Para problemas tÃ©cnicos menores (video que no carga, error de pantalla) intenta recargar la pÃ¡gina o limpiar el cachÃ© del navegador. Este formulario es para disputas de pagos y acceso a contenido.
   </div>
 
   <!-- FORMULARIO -->
@@ -61,30 +61,30 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#F4A261;box-sh
         <label>Tipo de reclamo *</label>
         <div class="type-grid" id="tipo-grid">
           <label class="type-opt" onclick="seleccionar('cobro_no_autorizado', this)">
-            <input type="radio" name="tipo" value="cobro_no_autorizado"> 💳 Cobro no autorizado
+            <input type="radio" name="tipo" value="cobro_no_autorizado"> ðŸ’³ Cobro no autorizado
           </label>
           <label class="type-opt" onclick="seleccionar('contenido_no_recibido', this)">
-            <input type="radio" name="tipo" value="contenido_no_recibido"> 📦 Contenido no recibido
+            <input type="radio" name="tipo" value="contenido_no_recibido"> ðŸ“¦ Contenido no recibido
           </label>
           <label class="type-opt" onclick="seleccionar('acceso_denegado', this)">
-            <input type="radio" name="tipo" value="acceso_denegado"> 🔒 Acceso denegado
+            <input type="radio" name="tipo" value="acceso_denegado"> ðŸ”’ Acceso denegado
           </label>
           <label class="type-opt" onclick="seleccionar('stream_problema', this)">
-            <input type="radio" name="tipo" value="stream_problema"> 📡 Problema con stream
+            <input type="radio" name="tipo" value="stream_problema"> ðŸ“¡ Problema con stream
           </label>
           <label class="type-opt" onclick="seleccionar('pago_no_acreditado', this)">
-            <input type="radio" name="tipo" value="pago_no_acreditado"> 💰 Pago no acreditado
+            <input type="radio" name="tipo" value="pago_no_acreditado"> ðŸ’° Pago no acreditado
           </label>
           <label class="type-opt" onclick="seleccionar('otro', this)">
-            <input type="radio" name="tipo" value="otro"> ❓ Otro
+            <input type="radio" name="tipo" value="otro"> â“ Otro
           </label>
         </div>
       </div>
 
       <div>
-        <label for="descripcion">Descripción del problema * <span class="text-c-soft normal-case font-normal">(mín. 20 caracteres)</span></label>
+        <label for="descripcion">DescripciÃ³n del problema * <span class="text-c-soft normal-case font-normal">(mÃ­n. 20 caracteres)</span></label>
         <textarea id="descripcion" name="descripcion" rows="5" maxlength="2000"
-          placeholder="Describe con detalle qué ocurrió, cuándo, y qué esperabas que sucediera..."
+          placeholder="Describe con detalle quÃ© ocurriÃ³, cuÃ¡ndo, y quÃ© esperabas que sucediera..."
           style="resize:vertical;"></textarea>
         <p id="char-count" class="text-c-soft text-xs mt-1 text-right">0 / 2000</p>
       </div>
@@ -92,8 +92,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#F4A261;box-sh
       <div>
         <label for="referencia">ID de referencia (opcional)</label>
         <input type="text" id="referencia" name="referencia" maxlength="200"
-          placeholder="ID de transacción, ID de contenido, fecha del pago, etc.">
-        <p class="text-c-soft text-xs mt-1">Ayuda a acelerar la revisión. Encuéntralo en tu historial de wallet o en la URL del contenido.</p>
+          placeholder="ID de transacciÃ³n, ID de contenido, fecha del pago, etc.">
+        <p class="text-c-soft text-xs mt-1">Ayuda a acelerar la revisiÃ³n. EncuÃ©ntralo en tu historial de wallet o en la URL del contenido.</p>
       </div>
 
       <div id="error-msg" class="text-red-600 text-sm font-semibold hidden"></div>
@@ -103,16 +103,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#F4A261;box-sh
       </button>
 
       <p class="text-c-soft text-xs text-center">
-        Al enviar confirmas que la información es verídica. Reclamos falsos pueden resultar en la suspensión de tu cuenta.
+        Al enviar confirmas que la informaciÃ³n es verÃ­dica. Reclamos falsos pueden resultar en la suspensiÃ³n de tu cuenta.
       </p>
     </form>
   </div>
 
   <!-- SUCCESS -->
   <div class="success-box" id="success-box">
-    <div style="font-size:2.5rem;margin-bottom:.5rem;">✅</div>
+    <div style="font-size:2.5rem;margin-bottom:.5rem;">âœ…</div>
     <h3>Reclamo recibido</h3>
-    <p class="text-c-soft text-sm mb-4">Lo revisamos en un plazo de 48 horas hábiles. Puedes seguir el estado más abajo.</p>
+    <p class="text-c-soft text-sm mb-4">Lo revisamos en un plazo de 48 horas hÃ¡biles. Puedes seguir el estado mÃ¡s abajo.</p>
     <button class="c-btn" onclick="location.reload()">Enviar otro reclamo</button>
   </div>
 
@@ -123,13 +123,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#F4A261;box-sh
   </div>
 
   <div id="login-notice" class="mt-10 card text-center text-c-soft text-sm" style="display:none;">
-    <p class="mb-3">Inicia sesión para enviar un reclamo y ver el historial.</p>
+    <p class="mb-3">Inicia sesiÃ³n para enviar un reclamo y ver el historial.</p>
     <a href="../index.html" class="c-btn inline-block">Ir al inicio</a>
   </div>
 </main>
 
 <script>
-const API = 'https://web-production-73189.up.railway.app';
+const API = 'https://api.clubcandela.com';
 let tipoSeleccionado = '';
 
 function seleccionar(val, el) {
@@ -152,7 +152,7 @@ function badgeClass(estado) {
 }
 
 function labelEstado(estado) {
-  const m = { nuevo: 'Nuevo', en_revision: 'En revisión', resuelto: 'Resuelto', rechazado: 'Rechazado' };
+  const m = { nuevo: 'Nuevo', en_revision: 'En revisiÃ³n', resuelto: 'Resuelto', rechazado: 'Rechazado' };
   return m[estado] || estado;
 }
 
@@ -203,7 +203,7 @@ document.getElementById('reclamo-form').addEventListener('submit', async functio
   if (!token) { document.getElementById('login-notice').style.display = 'block'; return; }
   if (!tipoSeleccionado) { mostrarError('Selecciona el tipo de reclamo.'); return; }
   const desc = document.getElementById('descripcion').value.trim();
-  if (desc.length < 20) { mostrarError('La descripción debe tener al menos 20 caracteres.'); return; }
+  if (desc.length < 20) { mostrarError('La descripciÃ³n debe tener al menos 20 caracteres.'); return; }
   const ref = document.getElementById('referencia').value.trim() || null;
 
   const btn = document.getElementById('submit-btn');

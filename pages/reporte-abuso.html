@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reporte de Abuso — Candela</title>
+<title>Reporte de Abuso â€” Candela</title>
 <meta name="robots" content="index, follow">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{"c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947","c-text":"#2D2D2D","c-soft":"#8B7D77","c-border":"#F0E6E1","c-champagne":"#F2D5C4"}}}}</script>
@@ -37,94 +37,94 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#F4A261;box-sh
 <header class="bg-white border-b border-c-border sticky top-0 z-10">
   <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
     <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
-    <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">← Volver</a>
+    <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">â† Volver</a>
   </div>
 </header>
 
 <main class="max-w-2xl mx-auto px-5 py-10">
   <h1 class="font-display text-3xl font-semibold mb-2">Reporte de Abuso</h1>
-  <p class="text-c-soft text-sm mb-6">Ayúdanos a mantener Candela seguro para todas las personas.</p>
+  <p class="text-c-soft text-sm mb-6">AyÃºdanos a mantener Candela seguro para todas las personas.</p>
 
   <div class="urgent-box">
-    <strong>⚠ Contenido que involucre menores de edad:</strong><br>
-    Si detectas contenido sexual que involucre personas menores de edad, repórtalo de inmediato también a:
+    <strong>âš  Contenido que involucre menores de edad:</strong><br>
+    Si detectas contenido sexual que involucre personas menores de edad, repÃ³rtalo de inmediato tambiÃ©n a:
     <ul style="margin-top:.5rem;list-style:disc;padding-left:1.25rem;">
       <li><a href="https://www.missingkids.org/gethelpnow/cybertipline" target="_blank" rel="noopener">NCMEC CyberTipline</a> (EEUU)</li>
       <li><a href="https://www.iwf.org.uk/report" target="_blank" rel="noopener">Internet Watch Foundation</a> (Internacional)</li>
-      <li>La policía local de tu país</li>
+      <li>La policÃ­a local de tu paÃ­s</li>
     </ul>
   </div>
 
   <form id="abuse-form" style="background:#fff;border:1px solid #F0E6E1;border-radius:20px;padding:1.75rem;display:flex;flex-direction:column;gap:1.25rem;">
 
     <div>
-      <label>Tipo de contenido problemático</label>
+      <label>Tipo de contenido problemÃ¡tico</label>
       <div class="type-grid">
         <label class="type-opt"><input type="radio" name="tipo" value="menor" required> Menor de edad</label>
         <label class="type-opt"><input type="radio" name="tipo" value="no-consensual"> No consensual</label>
         <label class="type-opt"><input type="radio" name="tipo" value="violencia"> Violencia real</label>
         <label class="type-opt"><input type="radio" name="tipo" value="identidad"> Identidad falsa</label>
-        <label class="type-opt"><input type="radio" name="tipo" value="acoso"> Acoso / Extorsión</label>
+        <label class="type-opt"><input type="radio" name="tipo" value="acoso"> Acoso / ExtorsiÃ³n</label>
         <label class="type-opt"><input type="radio" name="tipo" value="otro"> Otro</label>
       </div>
     </div>
 
     <div>
-      <label>URL del contenido problemático</label>
+      <label>URL del contenido problemÃ¡tico</label>
       <input type="url" id="rep-url" placeholder="https://clubcandela.com/pages/creadora.html?slug=..." required>
-      <p style="font-size:.75rem;color:#c9b9b3;margin-top:.3rem;">Copia y pega la URL exacta de la página o perfil donde viste el contenido.</p>
+      <p style="font-size:.75rem;color:#c9b9b3;margin-top:.3rem;">Copia y pega la URL exacta de la pÃ¡gina o perfil donde viste el contenido.</p>
     </div>
 
     <div>
-      <label>Descripción del problema</label>
+      <label>DescripciÃ³n del problema</label>
       <textarea id="rep-desc" rows="4" placeholder="Describe lo que viste con el mayor detalle posible. Incluye hora aproximada si es relevante." required style="resize:vertical;"></textarea>
     </div>
 
     <div>
       <label>Tu email de contacto (opcional)</label>
-      <input type="email" id="rep-email" placeholder="Para que podamos confirmarte la acción tomada">
-      <p style="font-size:.75rem;color:#c9b9b3;margin-top:.3rem;">No es obligatorio. Si lo proporcionas, te notificamos en 48-72 hs hábiles.</p>
+      <input type="email" id="rep-email" placeholder="Para que podamos confirmarte la acciÃ³n tomada">
+      <p style="font-size:.75rem;color:#c9b9b3;margin-top:.3rem;">No es obligatorio. Si lo proporcionas, te notificamos en 48-72 hs hÃ¡biles.</p>
     </div>
 
     <div style="background:#FFF8F5;border-radius:10px;padding:.85rem;font-size:.8rem;color:#8B7D77;">
-      <strong style="color:#2D2D2D;">Nota:</strong> Para reclamaciones de derechos de autor (DMCA), usa la página <a href="/pages/dmca.html" style="color:#F4A261;font-weight:700;">DMCA / Copyright</a> en cambio.
+      <strong style="color:#2D2D2D;">Nota:</strong> Para reclamaciones de derechos de autor (DMCA), usa la pÃ¡gina <a href="/pages/dmca.html" style="color:#F4A261;font-weight:700;">DMCA / Copyright</a> en cambio.
     </div>
 
     <button type="submit" class="c-btn" style="width:fit-content;">Enviar reporte</button>
   </form>
 
   <div class="success-box" id="rep-success">
-    <h3>✓ Reporte recibido</h3>
-    <p style="color:#4CAF50;font-size:.875rem;">Tu reporte fue enviado correctamente. Lo revisamos en un plazo máximo de 48 horas hábiles. Si proporcionaste email, te notificamos la acción tomada.</p>
+    <h3>âœ“ Reporte recibido</h3>
+    <p style="color:#4CAF50;font-size:.875rem;">Tu reporte fue enviado correctamente. Lo revisamos en un plazo mÃ¡ximo de 48 horas hÃ¡biles. Si proporcionaste email, te notificamos la acciÃ³n tomada.</p>
   </div>
 
-  <h2>Cómo procesamos los reportes</h2>
+  <h2>CÃ³mo procesamos los reportes</h2>
   <ul>
     <li>Revisamos cada reporte manualmente.</li>
     <li>Los reportes de contenido que involucre menores de edad son nuestra prioridad absoluta y se procesan de inmediato.</li>
-    <li>El contenido que viola nuestras normas es removido dentro de las 24 horas siguientes a la verificación.</li>
+    <li>El contenido que viola nuestras normas es removido dentro de las 24 horas siguientes a la verificaciÃ³n.</li>
     <li>Las cuentas con violaciones graves son suspendidas permanentemente.</li>
     <li>Cooperamos con autoridades competentes en casos que lo requieran.</li>
   </ul>
 
   <h2>Contacto directo</h2>
   <p>Para urgencias o reportes sensibles: <a href="mailto:legal@clubcandela.com" style="color:#F4A261;font-weight:700;">legal@clubcandela.com</a></p>
-  <p style="font-size:.8rem;color:#c9b9b3;margin-top:.5rem;">Tiempo de respuesta: 24-48 horas hábiles para casos generales. Inmediato para casos de menores de edad.</p>
+  <p style="font-size:.8rem;color:#c9b9b3;margin-top:.5rem;">Tiempo de respuesta: 24-48 horas hÃ¡biles para casos generales. Inmediato para casos de menores de edad.</p>
 </main>
 
 <footer class="border-t border-c-border mt-6 py-8 px-5">
   <div class="max-w-2xl mx-auto">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-xs text-c-soft mb-5">
-      <a href="/pages/terminos.html" class="hover:text-c-accent transition-colors">Términos de Servicio</a>
+      <a href="/pages/terminos.html" class="hover:text-c-accent transition-colors">TÃ©rminos de Servicio</a>
       <a href="/pages/privacidad.html" class="hover:text-c-accent transition-colors">Privacidad</a>
       <a href="/pages/normas.html" class="hover:text-c-accent transition-colors">Normas de Contenido</a>
-      <a href="/pages/cookies.html" class="hover:text-c-accent transition-colors">Política de Cookies</a>
-      <a href="/pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. § 2257</a>
+      <a href="/pages/cookies.html" class="hover:text-c-accent transition-colors">PolÃ­tica de Cookies</a>
+      <a href="/pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. Â§ 2257</a>
       <a href="/pages/dmca.html" class="hover:text-c-accent transition-colors">DMCA / Copyright</a>
       <a href="/pages/reporte-abuso.html" class="hover:text-c-accent transition-colors font-bold text-c-accent">Reporte de Abuso</a>
       <a href="mailto:soporte@clubcandela.com" class="hover:text-c-accent transition-colors">Soporte</a>
     </div>
-    <p class="text-[11px] text-c-soft">© 2026 Candela. Plataforma exclusiva para mayores de 18 años.</p>
+    <p class="text-[11px] text-c-soft">Â© 2026 Candela. Plataforma exclusiva para mayores de 18 aÃ±os.</p>
   </div>
 </footer>
 
@@ -142,7 +142,7 @@ document.getElementById('abuse-form').onsubmit = async function(e) {
 
   try {
     // ponytail: send to backend if /api/reporte endpoint exists, else email fallback
-    var API = window.CANDELA_API || 'https://web-production-73189.up.railway.app';
+    var API = window.CANDELA_API || 'https://api.clubcandela.com';
     var res = await fetch(API + '/api/reporte-abuso', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

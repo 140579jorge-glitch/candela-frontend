@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin — Candela</title>
+    <title>Panel Admin â€” Candela</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -125,7 +125,7 @@
 
     <main class="flex-1 md:ml-56 px-4 md:px-8 py-6">
 
-        <!-- ══ DASHBOARD ══ -->
+        <!-- â•â• DASHBOARD â•â• -->
         <section id="sec-dashboard" class="dash-section active">
             <div class="flex items-center justify-between mb-5">
                 <h1 class="font-display text-2xl font-semibold">Dashboard</h1>
@@ -220,7 +220,7 @@
             </div>
         </section>
 
-        <!-- ══ VERIFICACIONES ══ -->
+        <!-- â•â• VERIFICACIONES â•â• -->
         <section id="sec-verificaciones" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Verificaciones de identidad</h2>
             <div id="lista-verificaciones" class="flex flex-col gap-3">
@@ -228,7 +228,7 @@
             </div>
         </section>
 
-        <!-- ══ RETIROS ══ -->
+        <!-- â•â• RETIROS â•â• -->
         <section id="sec-retiros" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Retiros pendientes</h2>
             <div id="lista-retiros" class="flex flex-col gap-3">
@@ -236,7 +236,7 @@
             </div>
         </section>
 
-        <!-- ══ CREADORAS ══ -->
+        <!-- â•â• CREADORAS â•â• -->
         <section id="sec-creadoras" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Creadoras activas</h2>
             <div id="lista-creadoras" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -250,7 +250,7 @@
             </div>
         </section>
 
-        <!-- ══ COMISIONES ══ -->
+        <!-- â•â• COMISIONES â•â• -->
         <section id="sec-comisiones" class="dash-section">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="font-display text-2xl font-semibold">Comisiones Candela</h2>
@@ -308,7 +308,7 @@
             </div>
         </section>
 
-        <!-- ══ PAGOS PPV ══ -->
+        <!-- â•â• PAGOS PPV â•â• -->
         <section id="sec-pagos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Pagos de contenido PPV</h2>
             <p class="text-c-soft text-sm mb-5">Confirma el pago despues de verificar la transaccion en blockchain.</p>
@@ -317,7 +317,7 @@
             </div>
         </section>
 
-        <!-- ══ DEPOSITOS ══ -->
+        <!-- â•â• DEPOSITOS â•â• -->
         <section id="sec-depositos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Depositos de wallet pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Verifica el hash en blockchain. Al confirmar se acredita el saldo al fan (incluido bonus si aplica).</p>
@@ -326,7 +326,7 @@
             </div>
         </section>
 
-        <!-- ══ PROPINAS ══ -->
+        <!-- â•â• PROPINAS â•â• -->
         <section id="sec-propinas" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Propinas pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Verifica el hash en blockchain antes de confirmar.</p>
@@ -335,7 +335,7 @@
             </div>
         </section>
 
-        <!-- ══ RECLAMOS ══ -->
+        <!-- â•â• RECLAMOS â•â• -->
         <section id="sec-reclamos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-2">Reclamos y Disputas</h2>
             <p class="text-c-soft text-sm mb-5">Gestiona los reclamos enviados por fans y creadoras. Plazo de respuesta: 48 hs habiles.</p>
@@ -350,7 +350,7 @@
             </div>
         </section>
 
-        <!-- ══ MENSAJES ══ -->
+        <!-- â•â• MENSAJES â•â• -->
         <section id="sec-mensajes" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Mensajes directos pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Confirma el pago para que el mensaje se muestre a la creadora.</p>
@@ -517,7 +517,7 @@ async function accionRet(id, accion, btn) {
     } catch(e) { toast(e.message, 'error'); btn.disabled=false; btn.style.opacity='1'; }
 }
 
-const API_BASE = 'https://web-production-73189.up.railway.app';
+const API_BASE = 'https://api.clubcandela.com';
 
 function verImg(url) {
     const src = url.startsWith('http') ? url : API_BASE + url;
@@ -627,7 +627,7 @@ async function cargarPropinas() {
             <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                 <div class="flex items-start justify-between gap-4 mb-3">
                     <div>
-                        <p class="font-bold text-base">${esc(p.remitente_nombre)} <span class="font-normal text-c-soft text-sm">→</span> ${esc(p.creadora_nombre)}</p>
+                        <p class="font-bold text-base">${esc(p.remitente_nombre)} <span class="font-normal text-c-soft text-sm">â†’</span> ${esc(p.creadora_nombre)}</p>
                         <p class="text-xs text-c-soft">${esc(p.remitente_email)}</p>
                         ${p.mensaje ? `<p class="text-sm text-c-text italic mt-1">"${esc(p.mensaje)}"</p>` : ''}
                     </div>
@@ -638,7 +638,7 @@ async function cargarPropinas() {
                 </div>
                 <div class="bg-c-bg rounded-xl px-4 py-2.5 mb-3 flex items-center gap-2">
                     <span class="ms text-c-soft" style="font-size:16px">tag</span>
-                    <span class="font-mono text-xs break-all">${esc(p.referencia_pago || '—')}</span>
+                    <span class="font-mono text-xs break-all">${esc(p.referencia_pago || 'â€”')}</span>
                     <span class="ml-auto bg-c-border rounded px-2 py-0.5 text-[10px] font-bold text-c-soft">${p.metodo_red || 'trc20'}</span>
                 </div>
                 <div class="flex gap-2">
@@ -669,7 +669,7 @@ async function cargarMensajesAdmin() {
             <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                 <div class="flex items-start justify-between gap-4 mb-3">
                     <div>
-                        <p class="font-bold text-base">${esc(m.remitente_nombre)} <span class="font-normal text-c-soft text-sm">→</span> ${esc(m.creadora_nombre)}</p>
+                        <p class="font-bold text-base">${esc(m.remitente_nombre)} <span class="font-normal text-c-soft text-sm">â†’</span> ${esc(m.creadora_nombre)}</p>
                         <p class="text-xs text-c-soft">${esc(m.remitente_email)}</p>
                     </div>
                     <div class="text-right shrink-0">
@@ -678,7 +678,7 @@ async function cargarMensajesAdmin() {
                 </div>
                 <div class="bg-c-bg rounded-xl px-4 py-2.5 mb-2 text-sm text-c-text">${esc(m.contenido_preview)}</div>
                 <div class="bg-c-bg rounded-xl px-4 py-2 mb-3 flex items-center gap-2">
-                    <span class="font-mono text-xs break-all">${esc(m.referencia_pago || '—')}</span>
+                    <span class="font-mono text-xs break-all">${esc(m.referencia_pago || 'â€”')}</span>
                     <span class="ml-auto bg-c-border rounded px-2 py-0.5 text-[10px] font-bold text-c-soft">${m.metodo_red || 'trc20'}</span>
                 </div>
                 <div class="flex gap-2">
@@ -831,7 +831,7 @@ async function _fetchComisiones() {
             pag.classList.remove('hidden');
             const desde = _comOffset + 1;
             const hasta = Math.min(_comOffset + _comLimit, total);
-            document.getElementById('com-pag-info').textContent = `${desde}–${hasta} de ${total}`;
+            document.getElementById('com-pag-info').textContent = `${desde}â€“${hasta} de ${total}`;
             document.getElementById('com-pag-prev').disabled = _comOffset === 0;
             document.getElementById('com-pag-next').disabled = _comOffset + _comLimit >= total;
         } else {
@@ -867,7 +867,7 @@ function toast(msg, tipo='info') {
     setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(100%)'; setTimeout(()=>el.remove(),300); }, 3800);
 }
 
-// ══ RECLAMOS ══
+// â•â• RECLAMOS â•â•
 let _reclamosFiltro = '';
 async function cargarReclamos(filtro) {
     if (filtro !== undefined) _reclamosFiltro = filtro;
@@ -888,7 +888,7 @@ async function cargarReclamos(filtro) {
                             <p class="font-bold text-sm">${esc(r.usuario_email||r.usuario_id)}</p>
                             <span class="badge ${BCLS[r.estado]||'badge-pendiente'}">${esc(r.estado)}</span>
                         </div>
-                        <p class="text-xs text-c-soft mb-1">${LABS[r.tipo_reclamo]||r.tipo_reclamo} ${r.referencia_id ? '— Ref: '+esc(r.referencia_id) : ''}</p>
+                        <p class="text-xs text-c-soft mb-1">${LABS[r.tipo_reclamo]||r.tipo_reclamo} ${r.referencia_id ? 'â€” Ref: '+esc(r.referencia_id) : ''}</p>
                         <p class="text-sm text-c-text leading-relaxed mb-2">${esc(r.descripcion)}</p>
                         ${r.notas_admin ? `<p class="text-xs text-indigo-700 font-semibold">Respuesta admin: ${esc(r.notas_admin)}</p>` : ''}
                         <p class="text-[11px] text-c-soft mt-1">${r.fecha ? new Date(r.fecha).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}) : ''}</p>
