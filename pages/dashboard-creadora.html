@@ -35,6 +35,7 @@
         .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
         .ms-fill { font-variation-settings:'FILL' 1; }
         /* upload zone */
+        img, video { -webkit-user-drag:none;user-select:none;-webkit-user-select:none; }
         .upload-zone { border:2px dashed #F2D5C4;border-radius:1rem;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:rgba(242,213,196,.06); }
         .upload-zone:hover,.upload-zone.drag { border-color:#F4A261;background:rgba(244,162,97,.06); }
         /* tema picker */
@@ -83,6 +84,7 @@
         </div>
         <div class="nav-item" onclick="mostrar('inicio')"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir')"><span class="ms">upload</span>Subir contenido</div>
+        <div class="nav-item" onclick="mostrar('packs')"><span class="ms">inventory_2</span>Mis Packs</div>
         <div class="nav-item" onclick="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
         <div class="nav-item" onclick="mostrar('personalizar')"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion')"><span class="ms">verified_user</span>Verificacion</div>
@@ -106,6 +108,7 @@
         </div>
         <div class="nav-item active" onclick="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir',this)"><span class="ms">upload</span>Subir contenido</div>
+        <div class="nav-item" onclick="mostrar('packs',this)"><span class="ms">inventory_2</span>Mis Packs</div>
         <div class="nav-item" onclick="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
         <div class="nav-item" onclick="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificacion</div>
@@ -132,6 +135,18 @@
 
             <!-- Alerta estado -->
             <div id="alerta-estado" class="hidden rounded-2xl p-4 mb-5 text-sm border"></div>
+
+            <!-- Score de perfil -->
+            <div id="score-bar-inicio" class="hidden bg-white border border-c-border rounded-2xl p-4 mb-5 shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-bold">Completitud de perfil</span>
+                    <span id="score-pct-inicio" class="text-sm font-bold" style="color:#F4A261">0%</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
+                    <div id="score-fill-inicio" class="h-2 rounded-full transition-all duration-500" style="width:0%;background:#F4A261"></div>
+                </div>
+                <p id="score-hint-inicio" class="text-xs text-c-soft"></p>
+            </div>
 
             <!-- Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -258,6 +273,73 @@
             </div>
         </section>
 
+        <!-- ══ PACKS ══ -->
+        <section id="sec-packs" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Mis Packs</h2>
+            <p class="text-c-soft text-sm mb-5">Crea colecciones de fotos o videos que tus fans pueden comprar.</p>
+
+            <!-- Crear pack -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm mb-6">
+                <h3 class="font-bold text-sm mb-4">Crear nuevo pack</h3>
+                <form id="form-pack" onsubmit="crearPack(event)" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo del pack</label>
+                        <input id="pk-titulo" type="text" maxlength="120" placeholder="Ej: Sesion de verano"
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all" required>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Descripcion (opcional)</label>
+                        <textarea id="pk-desc" rows="2" maxlength="500" placeholder="Describe que incluye este pack..."
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio base ($)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
+                                <input id="pk-precio" type="number" min="1" max="999" step="0.5" placeholder="5.00"
+                                    class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Modo</label>
+                            <select id="pk-modo" class="w-full px-3 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all bg-white">
+                                <option value="ppv">Ver (PPV)</option>
+                                <option value="venta">Venta (+20%, descargable)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Archivos (max 10, fotos y videos)</label>
+                        <label class="upload-zone block cursor-pointer" id="pk-upload-zone">
+                            <span class="ms" style="font-size:2.5rem;color:#F2D5C4">add_photo_alternate</span>
+                            <p class="text-sm font-bold text-c-soft mt-2">Arrastra archivos o toca para seleccionar</p>
+                            <p class="text-xs text-c-soft mt-1">JPG, PNG, MP4, MOV — max 200MB cada uno</p>
+                            <input type="file" id="pk-archivos" accept="image/*,video/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
+                        </label>
+                        <div id="pk-preview" class="grid grid-cols-4 gap-2 mt-3 hidden"></div>
+                    </div>
+                    <div id="pk-progress-wrap" class="hidden">
+                        <div class="w-full bg-gray-100 rounded-full h-2">
+                            <div id="pk-progress-bar" class="h-2 rounded-full c-btn transition-all duration-300" style="width:0%"></div>
+                        </div>
+                        <p id="pk-progress-txt" class="text-xs text-c-soft mt-1 text-center">Subiendo...</p>
+                    </div>
+                    <button type="submit" id="btn-crear-pack" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
+                        Crear pack
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista mis packs -->
+            <div>
+                <h3 class="font-bold text-sm mb-3">Mis packs publicados</h3>
+                <div id="lista-mis-packs">
+                    <p class="text-c-soft text-sm py-8 text-center" id="packs-empty-msg">Aun no tienes packs creados.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- ══ GANANCIAS ══ -->
         <section id="sec-ganancias" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Mis ganancias</h2>
@@ -310,6 +392,18 @@
         <section id="sec-personalizar" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Personalizar mi pagina</h2>
             <p class="text-c-soft text-sm mb-5">Esto es lo que ven tus suscriptores cuando visitan tu perfil.</p>
+
+            <!-- Score completitud -->
+            <div id="score-bar-personalizar" class="hidden bg-white border border-c-border rounded-2xl p-4 mb-5 shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-bold">Completitud de perfil</span>
+                    <span id="score-pct-personalizar" class="text-sm font-bold" style="color:#F4A261">0%</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
+                    <div id="score-fill-personalizar" class="h-2 rounded-full transition-all duration-500" style="width:0%;background:#F4A261"></div>
+                </div>
+                <p id="score-faltantes-personalizar" class="text-xs text-c-soft"></p>
+            </div>
 
             <form onsubmit="guardarPerfil(event)" class="max-w-xl space-y-5">
                 <!-- Fotos de perfil -->
@@ -378,6 +472,48 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Datos adicionales de perfil -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-3">Sobre ti</h3>
+                    <div class="flex flex-col gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Rango de edad</label>
+                            <select id="p-rango-edad" class="w-full px-3 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all bg-white">
+                                <option value="">Prefiero no decir</option>
+                                <option value="18-24">18 - 24</option>
+                                <option value="25-30">25 - 30</option>
+                                <option value="31-35">31 - 35</option>
+                                <option value="36-40">36 - 40</option>
+                                <option value="40+">40+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Intereses (separados por coma)</label>
+                            <input id="p-intereses" type="text" maxlength="300" placeholder="Ej: fitness, fotografia, cocina, viajes"
+                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                            <p class="text-[10px] text-c-soft mt-1">Hasta 10 tags. Ayuda a que tus fans te encuentren.</p>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tipo de contenido (separados por coma)</label>
+                            <input id="p-tipos" type="text" maxlength="300" placeholder="Ej: fotos, videos, livestream, packs"
+                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                            <p class="text-[10px] text-c-soft mt-1">Que tipo de contenido produces.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carrusel de presentacion -->
+                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                    <h3 class="font-bold text-sm mb-1">Carrusel de presentacion</h3>
+                    <p class="text-xs text-c-soft mb-3">Fotos que aparecen en tu perfil publico (solo para suscriptores activos). Max 6.</p>
+                    <div id="carrusel-grid" class="grid grid-cols-3 gap-2 mb-3"></div>
+                    <label id="carrusel-add-btn" class="flex items-center justify-center gap-2 border-2 border-dashed border-c-border rounded-xl py-3 cursor-pointer hover:border-c-accent transition-all text-c-soft hover:text-c-accent text-sm font-semibold">
+                        <span class="ms" style="font-size:20px">add_photo_alternate</span>Agregar foto
+                        <input type="file" id="input-carrusel" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
+                    </label>
+                    <p class="text-[10px] text-c-soft mt-2">Los cambios del carrusel se guardan al instante (no necesitas el boton guardar).</p>
                 </div>
 
                 <!-- Tema de color -->
@@ -863,6 +999,9 @@
         <button onclick="mostrar('subir')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">upload</span><span class="text-[10px] font-semibold">Subir</span>
         </button>
+        <button onclick="mostrar('packs')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">inventory_2</span><span class="text-[10px] font-semibold">Packs</span>
+        </button>
         <button onclick="mostrar('ganancias')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">payments</span><span class="text-[10px] font-semibold">Ganancias</span>
         </button>
@@ -920,6 +1059,7 @@ async function init() {
     cargarPerfil();
     cargarGanancias();
     cargarMisPosts();
+    cargarScore('inicio');
     _setupVerifInput('v-doc',     'v-doc-icon',     'v-doc-prev',     'v-doc-txt');
     _setupVerifInput('v-doc-rev', 'v-doc-rev-icon', 'v-doc-rev-prev', 'v-doc-rev-txt');
     _setupSelfieInputs();
@@ -933,6 +1073,12 @@ async function init() {
 
     const bannerInput = document.getElementById('input-banner');
     if (bannerInput) bannerInput.addEventListener('change', function() { subirBanner(this); });
+
+    const carruselInput = document.getElementById('input-carrusel');
+    if (carruselInput) carruselInput.addEventListener('change', function() { subirFotoCarrusel(this); });
+
+    const pkArchivos = document.getElementById('pk-archivos');
+    if (pkArchivos) pkArchivos.addEventListener('change', function() { previewPackArchivos(this); });
 }
 
 // ─── PERFIL ──────────────────────────────────────────────────
@@ -970,6 +1116,10 @@ async function cargarPerfil() {
         document.getElementById('p-precio').value = perfilData.precio_suscripcion || 0;
         if (perfilData.fuente) document.getElementById('p-fuente').value = perfilData.fuente;
         if (perfilData.layout_grid) document.getElementById('p-layout').value = perfilData.layout_grid;
+        if (perfilData.rango_edad) document.getElementById('p-rango-edad').value = perfilData.rango_edad;
+        if (perfilData.intereses?.length) document.getElementById('p-intereses').value = perfilData.intereses.join(', ');
+        if (perfilData.tipos_contenido?.length) document.getElementById('p-tipos').value = perfilData.tipos_contenido.join(', ');
+        renderCarrusel(perfilData.fotos_carrusel || []);
 
         // Mostrar avatar y banner actuales
         if (perfilData.avatar_url) {
@@ -1130,12 +1280,20 @@ async function guardarPerfil(e) {
     txt.textContent = 'Guardando...'; btn.disabled = true;
     try {
         const precio = parseFloat(document.getElementById('p-precio').value);
+        const interesesRaw = document.getElementById('p-intereses').value;
+        const tiposRaw = document.getElementById('p-tipos').value;
+        const intereses = interesesRaw ? interesesRaw.split(',').map(s=>s.trim()).filter(Boolean).slice(0,10) : undefined;
+        const tipos_contenido = tiposRaw ? tiposRaw.split(',').map(s=>s.trim()).filter(Boolean).slice(0,10) : undefined;
+        const rango_edad = document.getElementById('p-rango-edad').value || undefined;
         await candela.creadoras.actualizarPerfil({
             bio: document.getElementById('p-bio').value || undefined,
             precio_suscripcion: isNaN(precio) ? undefined : precio,
             tema_color: document.getElementById('p-tema').value || undefined,
             fuente: document.getElementById('p-fuente').value || undefined,
             layout_grid: document.getElementById('p-layout').value || undefined,
+            rango_edad,
+            intereses,
+            tipos_contenido,
         });
         txt.textContent = 'Guardado!';
         setTimeout(() => { txt.textContent = 'Guardar cambios'; btn.disabled = false; }, 1500);
@@ -1361,7 +1519,9 @@ function _activarSeccion(sec) {
     });
     window.scrollTo(0, 0);
     if (sec === 'ganancias') cargarGanancias();
-    if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); }
+    if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); cargarScore('inicio'); }
+    if (sec === 'packs') cargarMisPacks();
+    if (sec === 'personalizar') { cargarScore('personalizar'); renderCarrusel(perfilData?.fotos_carrusel || []); }
     if (sec === 'referidas') cargarReferidas();
     if (sec === 'metodos-pago') cargarDatosRetiro();
     if (sec === 'propinas') cargarPropinas();
@@ -2063,6 +2223,199 @@ function compartirLink() {
 function copiar(elementId) {
     const texto = document.getElementById(elementId).textContent.trim();
     navigator.clipboard.writeText(texto).then(() => toast('Copiado', 'success')).catch(() => {});
+}
+
+// ─── PROTECCION DE CONTENIDO ──────────────────────────────────
+document.addEventListener('contextmenu', e => { if (e.target.matches('img,video')) e.preventDefault(); });
+document.addEventListener('dragstart', e => { if (e.target.matches('img,video')) e.preventDefault(); });
+
+// ─── SCORE DE COMPLETITUD ─────────────────────────────────────
+async function cargarScore(contexto) {
+    try {
+        const s = await candela._req('GET', '/api/creadoras/mi-perfil/score');
+        const pct = s.score || 0;
+        const color = pct >= 80 ? '#22c55e' : pct >= 50 ? '#F4A261' : '#ef4444';
+
+        const barEl = document.getElementById(`score-bar-${contexto}`);
+        const pctEl = document.getElementById(`score-pct-${contexto}`);
+        const fillEl = document.getElementById(`score-fill-${contexto}`);
+        const hintEl = document.getElementById(`score-hint-${contexto}`) || document.getElementById(`score-faltantes-${contexto}`);
+        if (!barEl) return;
+        barEl.classList.remove('hidden');
+        pctEl.textContent = pct + '%';
+        pctEl.style.color = color;
+        fillEl.style.width = pct + '%';
+        fillEl.style.background = color;
+        if (hintEl) {
+            if (pct < 80 && s.faltantes?.length) {
+                hintEl.textContent = 'Falta: ' + s.faltantes.join(', ');
+            } else if (pct >= 80) {
+                hintEl.textContent = 'Perfil completo. Tus fans te encontraran mas facil.';
+            }
+        }
+    } catch(e) { /* silencioso */ }
+}
+
+// ─── CARRUSEL ─────────────────────────────────────────────────
+function renderCarrusel(fotos) {
+    const grid = document.getElementById('carrusel-grid');
+    const addBtn = document.getElementById('carrusel-add-btn');
+    if (!grid) return;
+    grid.innerHTML = '';
+    fotos.forEach((url, idx) => {
+        const div = document.createElement('div');
+        div.className = 'relative rounded-xl overflow-hidden aspect-square bg-gray-100';
+        div.innerHTML = `
+            <img src="${_url(url)}" class="w-full h-full object-cover">
+            <button onclick="eliminarFotoCarrusel(${idx})" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-red-600 transition-colors" style="font-size:14px">
+                <span class="ms" style="font-size:14px">close</span>
+            </button>`;
+        grid.appendChild(div);
+    });
+    if (addBtn) addBtn.classList.toggle('hidden', fotos.length >= 6);
+}
+
+async function subirFotoCarrusel(input) {
+    if (!input.files[0]) return;
+    const fd = new FormData();
+    fd.append('archivo', input.files[0]);
+    try {
+        toast('Subiendo foto...', 'info');
+        const res = await candela._req('POST', '/api/creadoras/mi-perfil/carrusel', fd, true);
+        perfilData = perfilData || {};
+        perfilData.fotos_carrusel = res.fotos_carrusel;
+        renderCarrusel(res.fotos_carrusel);
+        toast('Foto agregada al carrusel', 'success');
+    } catch(e) { toast(e.message || 'Error al subir', 'error'); }
+    input.value = '';
+}
+
+async function eliminarFotoCarrusel(idx) {
+    try {
+        const res = await candela._req('DELETE', `/api/creadoras/mi-perfil/carrusel/${idx}`);
+        perfilData = perfilData || {};
+        perfilData.fotos_carrusel = res.fotos_carrusel;
+        renderCarrusel(res.fotos_carrusel);
+        toast('Foto eliminada', 'success');
+    } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+// ─── PACKS ────────────────────────────────────────────────────
+function previewPackArchivos(input) {
+    const preview = document.getElementById('pk-preview');
+    if (!input.files.length) { preview.classList.add('hidden'); return; }
+    const files = Array.from(input.files).slice(0, 10);
+    preview.innerHTML = files.map((f, i) => {
+        const isImg = f.type.startsWith('image/');
+        const icon = isImg ? 'image' : 'videocam';
+        return `<div class="rounded-xl bg-gray-100 aspect-square flex flex-col items-center justify-center text-c-soft p-2 overflow-hidden relative">
+            <span class="ms" style="font-size:24px">${icon}</span>
+            <span class="text-[10px] text-center mt-1 truncate w-full text-center">${f.name.slice(0,20)}</span>
+        </div>`;
+    }).join('');
+    preview.classList.remove('hidden');
+}
+
+async function crearPack(e) {
+    e.preventDefault();
+    const archivos = document.getElementById('pk-archivos').files;
+    if (!archivos.length) { toast('Selecciona al menos un archivo', 'error'); return; }
+    if (archivos.length > 10) { toast('Maximo 10 archivos', 'error'); return; }
+
+    const btn = document.getElementById('btn-crear-pack');
+    btn.disabled = true;
+    btn.textContent = 'Creando...';
+    const wrap = document.getElementById('pk-progress-wrap');
+    const bar = document.getElementById('pk-progress-bar');
+    const txt = document.getElementById('pk-progress-txt');
+    wrap.classList.remove('hidden');
+
+    const fd = new FormData();
+    fd.append('titulo', document.getElementById('pk-titulo').value);
+    fd.append('descripcion', document.getElementById('pk-desc').value);
+    fd.append('precio_base', document.getElementById('pk-precio').value);
+    fd.append('modo', document.getElementById('pk-modo').value);
+    Array.from(archivos).forEach(f => fd.append('archivos', f));
+
+    try {
+        // XHR para progreso
+        await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', API_URL + '/api/packs');
+            const tok = candela._token();
+            if (tok) xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+            xhr.upload.onprogress = ev => {
+                if (ev.lengthComputable) {
+                    const pct = Math.round(ev.loaded / ev.total * 100);
+                    bar.style.width = pct + '%';
+                    txt.textContent = `Subiendo... ${pct}%`;
+                }
+            };
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) resolve(JSON.parse(xhr.responseText));
+                else reject(new Error(JSON.parse(xhr.responseText).detail || 'Error'));
+            };
+            xhr.onerror = () => reject(new Error('Error de red'));
+            xhr.send(fd);
+        });
+        toast('Pack creado exitosamente', 'success');
+        document.getElementById('form-pack').reset();
+        document.getElementById('pk-preview').classList.add('hidden');
+        cargarMisPacks();
+    } catch(err) { toast(err.message || 'Error al crear pack', 'error'); }
+    finally {
+        btn.disabled = false;
+        btn.textContent = 'Crear pack';
+        wrap.classList.add('hidden');
+        bar.style.width = '0%';
+    }
+}
+
+async function cargarMisPacks() {
+    const lista = document.getElementById('lista-mis-packs');
+    if (!lista) return;
+    lista.innerHTML = '<p class="text-c-soft text-sm text-center py-4">Cargando...</p>';
+    try {
+        const packs = await candela._req('GET', '/api/packs/mis-packs');
+        if (!packs.length) {
+            lista.innerHTML = '<p class="text-c-soft text-sm text-center py-8" id="packs-empty-msg">Aun no tienes packs creados.</p>';
+            return;
+        }
+        lista.innerHTML = packs.map(pk => {
+            const precio = pk.modo === 'venta' ? (pk.precio_base * 1.20).toFixed(2) : pk.precio_base.toFixed(2);
+            const origen = window.location.origin + window.location.pathname.replace(/\/pages\/.*/, '');
+            const linkPack = `${origen}/pages/pack.html?p=${pk.enlace_slug}`;
+            return `<div class="bg-white border border-c-border rounded-2xl p-4 mb-3 shadow-sm">
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-sm truncate">${pk.titulo}</p>
+                        <p class="text-xs text-c-soft mt-0.5">${pk.archivos?.length || 0} archivo(s) · ${pk.modo === 'venta' ? 'Venta' : 'PPV'} · $${precio}</p>
+                        ${pk.descripcion ? `<p class="text-xs text-c-soft mt-1 line-clamp-2">${pk.descripcion}</p>` : ''}
+                    </div>
+                    <button onclick="eliminarPack(${pk.id})" class="text-c-soft hover:text-red-500 transition-colors shrink-0 p-1">
+                        <span class="ms" style="font-size:18px">delete</span>
+                    </button>
+                </div>
+                <div class="mt-3 flex items-center gap-2">
+                    <input type="text" value="${linkPack}" readonly class="flex-1 text-xs px-3 py-1.5 rounded-lg border border-c-border bg-gray-50 text-c-soft truncate min-w-0">
+                    <button onclick="navigator.clipboard.writeText('${linkPack}').then(()=>toast('Link copiado','success'))" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-lg hover:bg-c-champagne transition-all shrink-0">
+                        Copiar link
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch(e) {
+        lista.innerHTML = '<p class="text-red-500 text-sm text-center py-4">Error cargando packs.</p>';
+    }
+}
+
+async function eliminarPack(id) {
+    if (!confirm('Eliminar este pack? No podra recuperarlo.')) return;
+    try {
+        await candela._req('DELETE', `/api/packs/${id}`);
+        toast('Pack eliminado', 'success');
+        cargarMisPacks();
+    } catch(e) { toast(e.message || 'Error', 'error'); }
 }
 
 </script>
