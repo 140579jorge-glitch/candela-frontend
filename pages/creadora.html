@@ -277,6 +277,12 @@
         <div id="packs-list" class="space-y-3"></div>
     </div>
 
+    <!-- Encuestas -->
+    <div id="encuestas-section" class="hidden mt-6 mb-6">
+        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-3">Encuestas</p>
+        <div id="encuestas-list" class="space-y-4"></div>
+    </div>
+
     <!-- Top Fans del mes -->
     <div id="top-fans-section" class="hidden mt-6 mb-8">
         <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-3">Top fans del mes</p>
@@ -641,6 +647,7 @@ async function init() {
         renderCarruselPublico();
         cargarPacksPublicos();
         cargarTopFans();
+        cargarEncuestas();
         cargarStories();
         initStickyBar();
     } catch(e) {
@@ -1511,6 +1518,85 @@ function retrocederStory(e) {
     e.stopPropagation();
     clearTimeout(storyTimer); clearInterval(storyInterval);
     storyIdx = Math.max(0, storyIdx - 1); _mostrarStory(storyIdx);
+}
+
+// ─── ENCUESTAS ───────────────────────────────────────────────
+async function cargarEncuestas() {
+    try {
+        if (!candela.auth.isLoggedIn()) return;
+        const lista = await candela._req('GET', `/api/encuestas/creadora/${slug}`);
+        if (!lista?.length) return;
+        const sec = document.getElementById('encuestas-section');
+        const cont = document.getElementById('encuestas-list');
+        sec.classList.remove('hidden');
+        renderEncuestas(lista);
+    } catch(e) { /* silencioso si no es suscriptor */ }
+}
+
+function renderEncuestas(lista) {
+    const cont = document.getElementById('encuestas-list');
+    cont.innerHTML = lista.map(e => {
+        const yaVoto = e.mi_voto !== null && e.mi_voto !== undefined;
+        const barras = e.opciones.map((op, i) => {
+            const pct = e.total_votos > 0 ? Math.round((e.conteo[i] / e.total_votos) * 100) : 0;
+            const esElMio = e.mi_voto === i;
+            return `
+            <button onclick="votarEncuesta('${e.id}',${i})" ${yaVoto ? 'disabled' : ''}
+                class="w-full text-left rounded-xl border transition-all mb-2 overflow-hidden ${esElMio ? 'border-c-accent bg-orange-50' : 'border-c-border bg-white hover:border-c-accent'}"
+                style="${yaVoto ? 'cursor:default' : ''}">
+                <div class="px-3 py-2.5 relative">
+                    ${yaVoto ? `<div class="absolute inset-0 rounded-xl bg-c-accent/10" style="width:${pct}%"></div>` : ''}
+                    <div class="relative flex justify-between items-center">
+                        <span class="text-sm ${esElMio ? 'font-bold text-c-accent' : 'text-c-text'}">${esc(op)}</span>
+                        ${yaVoto ? `<span class="text-xs text-c-soft">${pct}%</span>` : ''}
+                    </div>
+                </div>
+            </button>`;
+        }).join('');
+        return `
+        <div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm" data-encuesta-id="${e.id}">
+            <p class="font-semibold text-sm mb-3">${esc(e.pregunta)}</p>
+            <div class="encuesta-opciones">${barras}</div>
+            <p class="text-[10px] text-c-soft mt-1">${e.total_votos} voto${e.total_votos!==1?'s':''}</p>
+        </div>`;
+    }).join('');
+}
+
+async function votarEncuesta(encuestaId, opcionIdx) {
+    try {
+        const result = await candela._req('POST', `/api/encuestas/${encuestaId}/votar?opcion_idx=${opcionIdx}`);
+        // Actualizar solo esa encuesta en el DOM
+        const cont = document.getElementById('encuestas-list');
+        const card = cont.querySelector(`[data-encuesta-id="${encuestaId}"]`);
+        if (card && result) {
+            // Re-render solo esa card actualizando result
+            const tmp = document.createElement('div');
+            tmp.innerHTML = renderEncuestaCard(result);
+            card.replaceWith(tmp.firstElementChild);
+        }
+        toast('Voto registrado', 'success');
+    } catch(e) { toast(e.message || 'Ya votaste', 'error'); }
+}
+
+function renderEncuestaCard(e) {
+    const barras = e.opciones.map((op, i) => {
+        const pct = e.total_votos > 0 ? Math.round((e.conteo[i] / e.total_votos) * 100) : 0;
+        const esElMio = e.mi_voto === i;
+        return `<button disabled class="w-full text-left rounded-xl border mb-2 overflow-hidden ${esElMio ? 'border-c-accent bg-orange-50' : 'border-c-border bg-white'}" style="cursor:default">
+            <div class="px-3 py-2.5 relative">
+                <div class="absolute inset-0 rounded-xl bg-c-accent/10" style="width:${pct}%"></div>
+                <div class="relative flex justify-between items-center">
+                    <span class="text-sm ${esElMio ? 'font-bold text-c-accent' : 'text-c-text'}">${esc(op)}</span>
+                    <span class="text-xs text-c-soft">${pct}%</span>
+                </div>
+            </div>
+        </button>`;
+    }).join('');
+    return `<div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm" data-encuesta-id="${e.id}">
+        <p class="font-semibold text-sm mb-3">${esc(e.pregunta)}</p>
+        <div class="encuesta-opciones">${barras}</div>
+        <p class="text-[10px] text-c-soft mt-1">${e.total_votos} voto${e.total_votos!==1?'s':''}</p>
+    </div>`;
 }
 
 // ─── TOP FANS ────────────────────────────────────────────────
