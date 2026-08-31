@@ -1,0 +1,431 @@
+<title>Cómo recargar</title>
+<style>
+  :root {
+    --bg: #FFF8F5;
+    --bg2: #FEF3EE;
+    --accent: #F4A261;
+    --accent-d: #E08947;
+    --rose: #E8A598;
+    --champagne: #F2D5C4;
+    --text: #2D2D2D;
+    --soft: #8B7D77;
+    --border: #F0E6E1;
+    --white: #FFFFFF;
+    --green: #4CAF80;
+    --step-bg: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1A1210;
+      --bg2: #221815;
+      --text: #F0E8E3;
+      --soft: #B09890;
+      --border: #3A2820;
+      --step-bg: #251A16;
+      --white: #1E1410;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1A1210;
+    --bg2: #221815;
+    --text: #F0E8E3;
+    --soft: #B09890;
+    --border: #3A2820;
+    --step-bg: #251A16;
+    --white: #1E1410;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; line-height: 1.7; }
+
+  /* Topbar */
+  .topbar {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(255,248,245,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .topbar { background: rgba(26,18,16,0.92); }
+  }
+  :root[data-theme="dark"] .topbar { background: rgba(26,18,16,0.92); }
+
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--accent); text-decoration: none; }
+  .topbar-links { display: flex; gap: 1rem; align-items: center; }
+  .btn-sm {
+    padding: .4rem 1rem; border-radius: 99px; font-size: .85rem; font-weight: 700;
+    text-decoration: none; cursor: pointer; border: none; font-family: 'Nunito', sans-serif;
+  }
+  .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-d); }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--champagne) 0%, var(--bg) 60%);
+    padding: 3.5rem 1.5rem 2.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--accent); color: #fff;
+    padding: .3rem .9rem; border-radius: 99px;
+    font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: var(--text); margin-bottom: .75rem; }
+  .hero p { font-size: 1.05rem; color: var(--soft); max-width: 540px; margin: 0 auto 1.5rem; }
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: .35rem .9rem; border-radius: 99px; font-size: .82rem; color: var(--soft);
+  }
+
+  /* Main content */
+  .main { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* Intro notice */
+  .notice {
+    background: var(--bg2); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: .75rem; padding: 1rem 1.25rem; margin-bottom: 2.5rem;
+    font-size: .92rem; color: var(--soft);
+  }
+  .notice strong { color: var(--text); }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 1.5rem; }
+  .step {
+    background: var(--step-bg); border: 1px solid var(--border); border-radius: 1.25rem;
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem; position: relative; overflow: hidden;
+  }
+  .step::before {
+    content: attr(data-n);
+    position: absolute; top: 1.25rem; left: 1.25rem;
+    font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700;
+    color: var(--champagne); line-height: 1; pointer-events: none;
+  }
+  .step-inner { padding-left: 3rem; }
+  .step-tag {
+    display: inline-block; background: var(--champagne); color: var(--accent-d);
+    font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+    padding: .2rem .6rem; border-radius: 99px; margin-bottom: .6rem;
+  }
+  .step h2 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: .5rem; color: var(--text); }
+  .step p { font-size: .93rem; color: var(--soft); margin-bottom: .75rem; }
+  .step p:last-child { margin-bottom: 0; }
+
+  /* Methods grid */
+  .methods { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: .75rem; }
+  @media (max-width: 480px) { .methods { grid-template-columns: 1fr; } }
+  .method-card {
+    border: 1.5px solid var(--border); border-radius: .75rem; padding: .85rem 1rem;
+    cursor: default; transition: border-color .2s;
+  }
+  .method-card:hover { border-color: var(--accent); }
+  .method-card .mc-name { font-weight: 700; font-size: .95rem; color: var(--text); margin-bottom: .2rem; }
+  .method-card .mc-desc { font-size: .8rem; color: var(--soft); }
+  .method-card .mc-flag { font-size: .75rem; font-weight: 700; color: var(--accent); margin-top: .3rem; }
+
+  /* Step CTA */
+  .step-cta {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--accent); color: #fff;
+    padding: .55rem 1.2rem; border-radius: 99px; font-size: .88rem; font-weight: 700;
+    text-decoration: none; margin-top: .75rem; transition: background .2s;
+  }
+  .step-cta:hover { background: var(--accent-d); }
+  .step-cta-outline {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: transparent; color: var(--accent); border: 2px solid var(--accent);
+    padding: .55rem 1.2rem; border-radius: 99px; font-size: .88rem; font-weight: 700;
+    text-decoration: none; margin-top: .75rem; transition: all .2s;
+  }
+  .step-cta-outline:hover { background: var(--accent); color: #fff; }
+
+  /* Network selector visual */
+  .networks { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }
+  .net-pill {
+    padding: .35rem .9rem; border-radius: 99px; font-size: .8rem; font-weight: 700;
+    border: 1.5px solid var(--border); color: var(--soft); cursor: default;
+  }
+  .net-pill.rec { border-color: var(--green); color: var(--green); background: rgba(76,175,128,0.08); }
+
+  /* Tip box */
+  .tip {
+    display: flex; gap: .75rem; align-items: flex-start;
+    background: rgba(244,162,97,0.08); border: 1px solid var(--champagne);
+    border-radius: .75rem; padding: .85rem 1rem; margin-top: .75rem;
+    font-size: .88rem; color: var(--soft);
+  }
+  .tip-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .1rem; }
+
+  /* Confirm step */
+  .confirm-steps { display: flex; flex-direction: column; gap: .5rem; margin-top: .75rem; }
+  .confirm-item { display: flex; gap: .75rem; align-items: center; font-size: .9rem; color: var(--soft); }
+  .confirm-dot {
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    background: var(--champagne); color: var(--accent-d);
+    font-size: .75rem; font-weight: 800; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* FAQ */
+  .faq-section { margin-top: 3rem; }
+  .faq-section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--text); }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-q {
+    width: 100%; background: none; border: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 0; font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700;
+    color: var(--text); text-align: left; gap: 1rem;
+  }
+  .faq-q .arrow { font-size: 1.1rem; color: var(--soft); transition: transform .25s; flex-shrink: 0; }
+  .faq-q[aria-expanded="true"] .arrow { transform: rotate(180deg); }
+  .faq-body { display: none; padding-bottom: 1rem; font-size: .9rem; color: var(--soft); }
+  .faq-body.open { display: block; }
+
+  /* CTA final */
+  .cta-final {
+    margin-top: 3rem; text-align: center;
+    background: linear-gradient(135deg, var(--champagne), var(--bg));
+    border: 1px solid var(--border); border-radius: 1.5rem; padding: 2.5rem 1.5rem;
+  }
+  .cta-final h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: .5rem; color: var(--text); }
+  .cta-final p { color: var(--soft); font-size: .95rem; margin-bottom: 1.5rem; }
+  .btn-big {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--accent); color: #fff; padding: .85rem 2rem;
+    border-radius: 99px; font-size: 1rem; font-weight: 700; text-decoration: none;
+    transition: background .2s;
+  }
+  .btn-big:hover { background: var(--accent-d); }
+
+  /* Footer */
+  .footer { text-align: center; padding: 2rem 1.5rem; border-top: 1px solid var(--border); font-size: .82rem; color: var(--soft); }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  /* Material icons */
+  .ms { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; display: inline-block; vertical-align: -3px; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="../index.html" class="logo">Candela</a>
+  <div class="topbar-links">
+    <a href="wallet.html" class="btn-sm btn-primary"><span class="ms" style="font-size:16px">account_balance_wallet</span> Recargar ahora</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge"><span class="ms" style="font-size:14px">bolt</span> Guia rapida</div>
+  <h1>Como pagar en Candela</h1>
+  <p>Sigue estos 4 pasos simples para tener saldo listo en minutos. No necesitas ser experto en cripto.</p>
+  <div class="time-badge"><span class="ms" style="font-size:15px">schedule</span> Tiempo estimado: 10-20 minutos la primera vez</div>
+</section>
+
+<!-- Main -->
+<main class="main">
+
+  <div class="notice">
+    <strong>Sin tarjeta de credito por ahora.</strong> Candela usa USDT (una criptomoneda estable en dolares) para proteger tu privacidad. Tu banco nunca vera cargos de Candela en tu estado de cuenta.
+  </div>
+
+  <div class="steps">
+
+    <!-- Paso 1 -->
+    <div class="step" data-n="1">
+      <div class="step-inner">
+        <span class="step-tag">Paso 1</span>
+        <h2>Elige donde comprar USDT</h2>
+        <p>USDT es una moneda digital equivalente al dolar americano. Puedes comprarla en varios exchanges disponibles en tu pais.</p>
+        <div class="methods">
+          <div class="method-card">
+            <div class="mc-name">Binance</div>
+            <div class="mc-desc">El exchange mas grande del mundo. Disponible en toda LatAm via P2P (transferencia bancaria local).</div>
+            <div class="mc-flag">Bolivia, Argentina, Colombia, Mexico...</div>
+          </div>
+          <div class="method-card">
+            <div class="mc-name">Meru</div>
+            <div class="mc-desc">App boliviana. Compra USDT con QR o transferencia. La mas facil para Bolivia.</div>
+            <div class="mc-flag">Bolivia</div>
+          </div>
+          <div class="method-card">
+            <div class="mc-name">Bitso</div>
+            <div class="mc-desc">Exchange popular en Mexico y Argentina. Interfaz en espanol, muy facil de usar.</div>
+            <div class="mc-flag">Mexico, Argentina</div>
+          </div>
+          <div class="method-card">
+            <div class="mc-name">Ripio</div>
+            <div class="mc-desc">Exchange argentino con soporte en varios paises. Acepta transferencia bancaria.</div>
+            <div class="mc-flag">Argentina, Brasil, Peru</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paso 2 -->
+    <div class="step" data-n="2">
+      <div class="step-inner">
+        <span class="step-tag">Paso 2</span>
+        <h2>Crea tu cuenta y verifica tu identidad</h2>
+        <p>Los exchanges requieren verificacion de identidad (KYC) por ley. Solo necesitas tu documento de identidad y una foto tipo selfie.</p>
+        <p>Este proceso toma entre 5 y 30 minutos segun la plataforma. Solo se hace una vez.</p>
+        <div class="tip">
+          <span class="tip-icon">💡</span>
+          <span>Si ya tienes cuenta en algun exchange, salta directamente al paso 3.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paso 3 -->
+    <div class="step" data-n="3">
+      <div class="step-inner">
+        <span class="step-tag">Paso 3</span>
+        <h2>Compra USDT y elige la red correcta</h2>
+        <p>Al comprar USDT, el exchange te preguntara en que "red" quieres recibirlo. Elige la que mejor se adapte a tu situacion:</p>
+        <div class="networks">
+          <div class="net-pill rec">TRC20 (TRON) — Recomendado</div>
+          <div class="net-pill">Polygon (MATIC)</div>
+        </div>
+        <div class="tip" style="margin-top:.75rem">
+          <span class="tip-icon">⚡</span>
+          <span><strong>TRC20</strong> tiene comisiones muy bajas (menos de $1) y es la mas popular en LatAm. Candela acepta ambas redes.</span>
+        </div>
+        <p style="margin-top:.75rem">Compra el monto que quieras usar. El deposito minimo en Candela es de <strong>$5 USDT</strong>. Si recargas $20 o mas, recibes un <strong>+10% de bonus</strong> automatico.</p>
+      </div>
+    </div>
+
+    <!-- Paso 4 -->
+    <div class="step" data-n="4">
+      <div class="step-inner">
+        <span class="step-tag">Paso 4</span>
+        <h2>Recarga tu billetera en Candela</h2>
+        <p>Una vez que tienes USDT en tu exchange, ve a tu billetera de Candela y sigue estos pasos:</p>
+        <div class="confirm-steps">
+          <div class="confirm-item"><div class="confirm-dot">A</div><span>Abre <a href="wallet.html" style="color:var(--accent);font-weight:700">Mi billetera</a> en Candela</span></div>
+          <div class="confirm-item"><div class="confirm-dot">B</div><span>Elige el monto y la red (TRC20 o Polygon)</span></div>
+          <div class="confirm-item"><div class="confirm-dot">C</div><span>Candela te genera una direccion unica de deposito</span></div>
+          <div class="confirm-item"><div class="confirm-dot">D</div><span>Copia esa direccion y enviala desde tu exchange</span></div>
+          <div class="confirm-item"><div class="confirm-dot">E</div><span>Tu saldo aparece automaticamente en 1-5 minutos</span></div>
+        </div>
+        <div class="tip" style="margin-top:1rem">
+          <span class="tip-icon">🔒</span>
+          <span>Candela usa NOWPayments para detectar pagos automaticamente. No necesitas enviar ningun comprobante.</span>
+        </div>
+        <a href="wallet.html" class="step-cta"><span class="ms" style="font-size:16px">account_balance_wallet</span> Ir a mi billetera</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Preguntas frecuentes</h2>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <span>Es seguro comprar cripto?</span>
+        <span class="arrow ms">expand_more</span>
+      </button>
+      <div class="faq-body">
+        Si usas exchanges reconocidos como Binance, Meru o Bitso, el proceso es completamente seguro. Estas plataformas estan reguladas y tienen millones de usuarios. Nunca compartas tu contrasena ni tu frase semilla con nadie.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <span>Cuanto tarda en aparecer el saldo?</span>
+        <span class="arrow ms">expand_more</span>
+      </button>
+      <div class="faq-body">
+        Normalmente entre 1 y 5 minutos despues de que el exchange confirma la transaccion. En horas de alto trafico en la red puede tomar hasta 20 minutos. Si pasan 30 minutos sin recibir tu saldo, contacta a soporte.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <span>Puedo perder mi dinero?</span>
+        <span class="arrow ms">expand_more</span>
+      </button>
+      <div class="faq-body">
+        USDT es una "stablecoin" — su valor siempre equivale a $1 USD y no fluctua como otras criptomonedas. El unico riesgo es enviar a una direccion incorrecta, por eso Candela genera la direccion automaticamente para evitar errores de tipeo.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <span>Hay comisiones?</span>
+        <span class="arrow ms">expand_more</span>
+      </button>
+      <div class="faq-body">
+        Candela no cobra comisiones por depositar. El exchange cobra una comision de red al enviar (menos de $1 con TRC20). Lo que depositas es lo que recibes en tu saldo de Candela.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <span>Puedo retirar mi saldo si no lo uso?</span>
+        <span class="arrow ms">expand_more</span>
+      </button>
+      <div class="faq-body">
+        El saldo de tu billetera de Candela es para usar dentro de la plataforma (suscripciones, contenido, propinas). No es posible retirarlo como fan. Te recomendamos recargar lo que vayas a usar en el corto plazo.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <span>Mi informacion es privada?</span>
+        <span class="arrow ms">expand_more</span>
+      </button>
+      <div class="faq-body">
+        Completamente. Tu banco nunca vera cargos de Candela. Tus pagos son anonimos para terceros. Solo Candela sabe que eres suscriptor de una creadora, y esa informacion nunca se comparte.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA final -->
+  <div class="cta-final">
+    <h2>Listo para empezar?</h2>
+    <p>Recarga tu billetera ahora y accede al contenido exclusivo de tus creadoras favoritas.</p>
+    <a href="wallet.html" class="btn-big">
+      <span class="ms" style="font-size:20px">account_balance_wallet</span>
+      Recargar mi billetera
+    </a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p>Candela &copy; 2026 &bull; <a href="privacidad.html">Privacidad</a> &bull; <a href="terminos.html">Terminos</a> &bull; <a href="mailto:legal@clubcandela.com">Contacto</a></p>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  document.querySelectorAll('.faq-q').forEach(b => {
+    b.setAttribute('aria-expanded', 'false');
+    b.nextElementSibling.classList.remove('open');
+  });
+  if (!expanded) {
+    btn.setAttribute('aria-expanded', 'true');
+    btn.nextElementSibling.classList.add('open');
+  }
+}
+</script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HNJ89RN59N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HNJ89RN59N');
+</script>
