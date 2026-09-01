@@ -3,12 +3,13 @@
    Stores confirmed year (not just a flag) in localStorage.
 */
 (function () {
+  // Logged-in users confirmed age at registration
+  if (localStorage.getItem('candela_token')) return;
+
   var stored = localStorage.getItem('candela_18');
   if (stored) {
-    // If old flag ('1') or valid year stored, let through
     var year = parseInt(stored, 10);
     if (stored === '1' || (year > 1900 && (new Date().getFullYear() - year) >= 18)) return;
-    // Otherwise fall through to show gate
     localStorage.removeItem('candela_18');
   }
 
