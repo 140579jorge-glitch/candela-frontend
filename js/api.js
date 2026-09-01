@@ -161,6 +161,16 @@ const candela = {
         movimientos: (limit = 50, offset = 0) => candela._req('GET', `/api/wallet/movimientos?limit=${limit}&offset=${offset}`),
     },
 
+    balance: {
+        cache: (v) => { try { localStorage.setItem('candela_balance', parseFloat(v).toFixed(2)); } catch(e) {} },
+        cached: () => { try { return localStorage.getItem('candela_balance'); } catch(e) { return null; } },
+        showNav: () => {
+            const b = candela.balance.cached();
+            const el = document.getElementById('nav-saldo-label');
+            if (el && b !== null) el.textContent = '$' + b;
+        },
+    },
+
     propinas: {
         enviar: (data) => candela._req('POST', '/api/propinas', data),
         misPropinas: () => candela._req('GET', '/api/propinas/mis-propinas'),

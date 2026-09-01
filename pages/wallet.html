@@ -275,6 +275,7 @@ if (user?.nombre) document.getElementById('nav-nombre').textContent = user.nombr
 async function init() {
     try {
         const w = await candela.wallet.miSaldo();
+        candela.balance.cache(w.balance || 0);
         document.getElementById('balance-disp').textContent = `$${(w.balance||0).toFixed(2)}`;
         if (w.depositos_pendientes > 0) {
             document.getElementById('dep-pendiente-count').textContent = w.depositos_pendientes;

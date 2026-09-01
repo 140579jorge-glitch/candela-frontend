@@ -136,7 +136,7 @@
             <span class="ms">explore</span><span class="text-[10px] font-semibold">Explorar</span>
         </a>
         <a href="wallet.html" class="flex flex-col items-center gap-0.5" style="color:#F4A261">
-            <span class="ms ms-fill">account_balance_wallet</span><span class="text-[10px] font-bold">Wallet</span>
+            <span class="ms ms-fill">account_balance_wallet</span><span class="text-[10px] font-bold" id="nav-saldo-label">Wallet</span>
         </a>
         <a href="fan-dashboard.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">person</span><span class="text-[10px] font-semibold">Mi cuenta</span>
@@ -172,6 +172,7 @@ async function init() {
 
     cargarFeed();
     cargarLives();
+    candela.balance.showNav();
 }
 
 async function cargarLives() {

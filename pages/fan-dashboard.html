@@ -354,6 +354,7 @@ async function cargar() {
 
     try {
         actData = await candela._req('GET', '/api/fans/mi-actividad');
+        candela.balance.cache(actData.balance || 0);
     } catch(e) {
         toast('Error al cargar tu actividad', 'error'); return;
     }

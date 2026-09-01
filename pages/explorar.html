@@ -288,6 +288,7 @@ function renderCards(lista) {
                 '<a href="' + dest + '" class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style="background:linear-gradient(135deg,#F4A261,#E8A598)">' +
                 (u.nombre || 'F')[0].toUpperCase() + '</a>';
             document.getElementById('bottom-nav').classList.remove('hidden');
+            candela.balance.showNav();
         }
     } catch(e) {}
 })();
@@ -308,7 +309,7 @@ cargar();
             <span class="ms ms-fill">explore</span><span class="text-[10px] font-bold">Explorar</span>
         </button>
         <a href="wallet.html" class="flex flex-col items-center text-c-accent gap-0.5">
-            <span class="ms">account_balance_wallet</span><span class="text-[10px] font-bold">Wallet</span>
+            <span class="ms ms-fill">account_balance_wallet</span><span class="text-[10px] font-bold" id="nav-saldo-label">Wallet</span>
         </a>
         <a href="fan-dashboard.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">person</span><span class="text-[10px] font-semibold">Mi cuenta</span>
