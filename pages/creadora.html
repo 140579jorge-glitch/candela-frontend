@@ -681,6 +681,8 @@ async function init() {
         toast('No se pudo cargar el perfil', 'error');
     }
     if (candela.auth.isLoggedIn()) {
+        const _cached = parseFloat(candela.balance.cached() || 0);
+        if (_cached > 0) { userBalance = _cached; candela.balance.showNav(); }
         try {
             const w = await candela.wallet.miSaldo();
             userBalance = w.balance || 0;
