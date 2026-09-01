@@ -1015,8 +1015,8 @@ function renderFeed(lista) {
         <article class="feed-card rounded-2xl overflow-hidden bg-white border border-c-border shadow-sm"
             style="cursor:pointer;" onclick="irACreadora('${c.slug}')">
             <div class="relative overflow-hidden" style="aspect-ratio:4/5">
-                ${c.banner_url
-                    ? `<img src="${c.banner_url}" alt="${c.nombre_artistico}" class="absolute inset-0 w-full h-full object-cover">`
+                ${(c.banner_url || c.card_preview_url)
+                    ? `<img src="${c.banner_url || c.card_preview_url}" alt="${c.nombre_artistico}" class="absolute inset-0 w-full h-full object-cover">`
                     : `<div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,${col1},${col2})">
                             <span class="font-display select-none" style="font-size:5rem;color:rgba(255,255,255,0.22);">${inicial}</span>
                        </div>`}

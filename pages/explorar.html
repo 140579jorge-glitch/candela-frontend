@@ -244,8 +244,8 @@ function renderCards(lista) {
         el.onclick = () => window.location.href = 'creadora.html?slug=' + c.slug;
         el.innerHTML =
             '<div class="card-banner">' +
-                (c.banner_url
-                    ? '<img src="' + c.banner_url + '" alt="' + c.nombre_artistico + '" loading="lazy">'
+                ((c.banner_url || c.card_preview_url)
+                    ? '<img src="' + (c.banner_url || c.card_preview_url) + '" alt="' + c.nombre_artistico + '" loading="lazy">'
                     : '<div class="w-full h-full" style="background:linear-gradient(135deg,' + gr + ')"></div>') +
                 (c.destacada ? '<span class="badge-dest">Destacada</span>' : '') +
             '</div>' +
