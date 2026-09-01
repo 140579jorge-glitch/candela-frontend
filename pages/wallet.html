@@ -163,6 +163,14 @@
 
         <!-- Paso 2: mostrar direccion -->
         <div id="step-direccion" class="hidden">
+            <!-- Alerta de red PROMINENTE -->
+            <div id="alerta-red-activa" style="background:#DC2626;border-radius:14px;padding:.9rem 1rem;margin-bottom:.85rem;display:flex;gap:.6rem;align-items:flex-start">
+                <span class="ms" style="font-size:22px;color:#fff;flex-shrink:0">warning</span>
+                <div>
+                    <p style="font-weight:800;font-size:.85rem;color:#fff;margin-bottom:.2rem">Solo enviar por <span id="red-activa-label">USDT TRC20</span></p>
+                    <p style="font-size:.75rem;color:rgba(255,255,255,.85);line-height:1.4">Si envías por otra red, los fondos se pierden permanentemente. Candela no puede recuperar el dinero.</p>
+                </div>
+            </div>
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-700 flex items-center gap-2">
                 <span class="ms text-amber-500 flex-shrink-0" style="font-size:16px">schedule</span>
                 <span>Envia el pago antes de que expire. <strong id="countdown-label">--:--</strong></span>
@@ -207,6 +215,32 @@
         <div id="mov-empty" class="hidden text-center text-c-soft text-sm py-6">Aun no tienes movimientos.</div>
     </div>
 
+</div>
+
+<!-- Modal confirmación de red -->
+<div id="modal-red" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center" class="hidden">
+    <div style="background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:1.5rem 1.25rem 2rem;position:relative">
+        <!-- Icono alerta -->
+        <div style="width:56px;height:56px;background:#FEF3C7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+            <span class="ms" style="font-size:28px;color:#D97706">warning</span>
+        </div>
+        <h3 style="text-align:center;font-weight:800;font-size:1rem;color:#2D2D2D;margin-bottom:.4rem">Verifica la red antes de enviar</h3>
+        <p style="text-align:center;font-size:.82rem;color:#8B7D77;line-height:1.5;margin-bottom:1rem">
+            Esta dirección solo acepta pagos en la red<br>
+            <strong id="modal-red-nombre" style="color:#2D2D2D;font-size:1rem"></strong>
+        </p>
+        <div id="modal-red-alerta" style="background:#FEF9C3;border:1.5px solid #FDE047;border-radius:14px;padding:.85rem 1rem;margin-bottom:1.25rem;font-size:.78rem;color:#854D0E;line-height:1.5">
+            <strong>Si envías desde otra red, los fondos se perderán permanentemente.</strong><br>
+            Candela no puede recuperar pagos enviados en la red incorrecta.
+        </div>
+        <button onclick="confirmarRedYGenerar()" id="btn-confirmar-red"
+            class="c-btn w-full text-white py-3 rounded-xl font-bold text-sm shadow-md mb-2">
+            Entendido, generar dirección
+        </button>
+        <button onclick="cerrarModalRed()" style="width:100%;padding:.7rem;border-radius:12px;border:2px solid #F0E6E1;background:transparent;color:#8B7D77;font-weight:700;font-size:.85rem;cursor:pointer">
+            Cancelar
+        </button>
+    </div>
 </div>
 
 <script src="../js/api.js"></script>
@@ -299,9 +333,26 @@ function copiarDireccion() {
     toast('Direccion copiada', 'success');
 }
 
-async function generarDireccion() {
+function generarDireccion() {
     const monto = montoActual || parseFloat(document.getElementById('monto-custom').value);
     if (!monto || monto < 20) { toast('El monto mínimo es $20 USD', 'error'); return; }
+    // Mostrar modal de confirmación de red antes de generar
+    const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT Polygon (MATIC)' };
+    document.getElementById('modal-red-nombre').textContent = nombres[redActual] || redActual.toUpperCase();
+    document.getElementById('modal-red').classList.remove('hidden');
+    document.getElementById('modal-red').style.display = 'flex';
+}
+
+function cerrarModalRed() {
+    document.getElementById('modal-red').classList.add('hidden');
+    document.getElementById('modal-red').style.display = 'none';
+}
+
+async function confirmarRedYGenerar() {
+    cerrarModalRed();
+    const monto = montoActual || parseFloat(document.getElementById('monto-custom').value);
+    const btnModal = document.getElementById('btn-confirmar-red');
+    btnModal.disabled = true;
 
     const btn = document.getElementById('btn-generar');
     btn.disabled = true; btn.textContent = 'Generando...';
@@ -313,6 +364,10 @@ async function generarDireccion() {
         document.getElementById('pay-addr-text').textContent  = r.pay_address;
         document.getElementById('pay-amount-label').textContent = `${r.pay_amount} USDT`;
 
+        // Mostrar red activa en el banner rojo
+        const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT Polygon (MATIC)' };
+        document.getElementById('red-activa-label').textContent = nombres[redActual] || redActual.toUpperCase();
+
         document.getElementById('step-generar').classList.add('hidden');
         document.getElementById('panel-usdt').classList.add('hidden');
         document.getElementById('step-direccion').classList.remove('hidden');
@@ -323,6 +378,7 @@ async function generarDireccion() {
         toast(e.message || 'Error al generar pago', 'error');
         btn.disabled = false;
         btn.innerHTML = `Generar direccion de pago — <span id="btn-monto-label">$${monto}</span>`;
+        btnModal.disabled = false;
     }
 }
 
