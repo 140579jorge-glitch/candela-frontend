@@ -608,6 +608,27 @@
     </div>
 </div>
 
+<!-- Bottom nav (solo logueados) -->
+<nav id="bottom-nav" class="glass hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+    <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
+        <a href="../index.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">home</span><span class="text-[10px] font-semibold">Inicio</span>
+        </a>
+        <a href="feed.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">photo_library</span><span class="text-[10px] font-semibold">Feed</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center gap-0.5" style="color:#F4A261">
+            <span class="ms ms-fill">account_balance_wallet</span><span class="text-[10px] font-bold">Wallet</span>
+        </a>
+        <a href="fan-dashboard.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">person</span><span class="text-[10px] font-semibold">Mi cuenta</span>
+        </a>
+        <a href="explorar.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">explore</span><span class="text-[10px] font-semibold">Explorar</span>
+        </a>
+    </div>
+</nav>
+
 <!-- Toasts -->
 <div id="toasts" class="fixed bottom-6 right-4 z-[200] flex flex-col gap-2 pointer-events-none"></div>
 
@@ -675,6 +696,7 @@ async function init() {
             }
         } catch(e) {}
         _renderFollowBtn();
+        document.getElementById('bottom-nav').classList.remove('hidden');
     }
 }
 
@@ -771,8 +793,10 @@ function renderHeader() {
         document.getElementById('precio-val').textContent = `$${c.precio_suscripcion}/mes`;
         document.getElementById('precio-box').classList.remove('hidden');
     } else {
-        document.getElementById('btn-sub-header').textContent = 'Ver perfil';
-        document.getElementById('btn-sub-header').onclick = null;
+        document.getElementById('btn-sub-header').textContent = 'Ver contenido';
+        document.getElementById('btn-sub-header').onclick = () => {
+            document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
+        };
     }
 
     // Boton mensaje directo — solo si la creadora acepta
