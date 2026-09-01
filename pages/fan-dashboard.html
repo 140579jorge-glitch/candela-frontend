@@ -462,20 +462,17 @@ function renderSubs() {
 
 async function cancelarSub(slug, btn) {
     if (!confirm('Cancelar suscripcion? Mantendras acceso hasta la fecha de vencimiento.')) return;
+    btn.disabled = true;
+    btn.textContent = '...';
     try {
-        btn.disabled = true;
-        btn.textContent = '...';
         const res = await candela._req('DELETE', '/api/pagos/suscripciones/' + slug);
-        // Actualizar UI: cambiar badge a "Cancelada - acceso hasta..."
-        const card = document.getElementById('sub-'+slug);
-        if (card) {
-            card.querySelector('.badge-ok').className = 'badge badge-warn block';
-            card.querySelector('.badge-warn').textContent = 'Cancelada';
-            btn.remove();
-        }
-        toast('Suscripcion cancelada. Acceso hasta ' + fmtFecha(res.acceso_hasta), 'success');
+        const hasta = res?.acceso_hasta ? fmtFecha(res.acceso_hasta) : '';
+        toast('Suscripcion cancelada.' + (hasta ? ' Acceso hasta ' + hasta : ''), 'success');
+        // Recargar datos y re-renderizar sección
+        actData = await candela._req('GET', '/api/fans/mi-actividad');
+        renderSubs();
     } catch(e) {
-        toast(e.message||'Error al cancelar', 'error');
+        toast(e.message || 'Error al cancelar', 'error');
         btn.disabled = false;
         btn.textContent = 'Cancelar';
     }
