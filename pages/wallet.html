@@ -209,40 +209,6 @@
         <div id="mov-empty" class="hidden text-center text-c-soft text-sm py-6">Aun no tienes movimientos.</div>
     </div>
 
-    <!-- Cuenta y Seguridad -->
-    <div class="bg-white border border-c-border rounded-2xl p-5">
-        <h2 class="font-bold text-c-text text-base mb-4">Cuenta y Seguridad</h2>
-
-        <details class="group">
-            <summary class="flex items-center justify-between cursor-pointer py-2 text-sm font-semibold text-c-text list-none select-none">
-                <span class="flex items-center gap-2"><span class="ms text-c-soft" style="font-size:18px">lock</span> Cambiar contraseña</span>
-                <span class="ms text-c-soft transition-transform group-open:rotate-180" style="font-size:18px">expand_more</span>
-            </summary>
-            <form id="form-cambiar-pass" onsubmit="cambiarPassword(event)" class="mt-3 space-y-3">
-                <input id="pass-actual" type="password" required placeholder="Contraseña actual" minlength="8"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-colors">
-                <input id="pass-nueva" type="password" required placeholder="Nueva contraseña (mín. 8 caracteres)" minlength="8"
-                    class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-colors">
-                <button type="submit" id="btn-cambiar-pass" class="c-btn text-white py-2.5 px-5 rounded-xl font-bold text-sm">Actualizar contraseña</button>
-            </form>
-        </details>
-
-        <hr class="border-c-border my-2">
-
-        <details class="group">
-            <summary class="flex items-center justify-between cursor-pointer py-2 text-sm font-semibold text-red-500 list-none select-none">
-                <span class="flex items-center gap-2"><span class="ms" style="color:#ef4444;font-size:18px">delete_forever</span> Eliminar mi cuenta</span>
-                <span class="ms text-c-soft transition-transform group-open:rotate-180" style="font-size:18px">expand_more</span>
-            </summary>
-            <div class="mt-3 bg-red-50 border border-red-100 rounded-xl p-4">
-                <p class="text-sm font-semibold text-red-800 mb-1">Esta accion es irreversible</p>
-                <p class="text-xs text-red-600 mb-3 leading-relaxed">Tu cuenta sera anonimizada. Los registros financieros se conservan por cumplimiento legal. Perderás acceso de inmediato.</p>
-                <input id="confirm-eliminar" type="text" placeholder='Escribe ELIMINAR para confirmar'
-                    class="w-full px-3 py-2 rounded-lg border border-red-200 text-sm mb-3 focus:outline-none focus:border-red-400">
-                <button onclick="eliminarCuenta()" class="bg-red-500 hover:bg-red-600 text-white py-2 px-5 rounded-xl font-bold text-sm transition-colors">Eliminar mi cuenta</button>
-            </div>
-        </details>
-    </div>
 </div>
 
 <script src="../js/api.js"></script>
