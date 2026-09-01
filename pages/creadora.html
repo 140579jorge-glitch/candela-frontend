@@ -688,6 +688,17 @@ async function init() {
         try {
             trialStatus = await candela._req('GET', `/api/contenido/trial/estado?slug=${slug}`);
         } catch(e) {}
+        // Estado suscripción
+        try {
+            const subs = await candela._req('GET', '/api/pagos/mis-suscripciones');
+            if (Array.isArray(subs) && subs.some(s => s.creadora_slug === slug)) {
+                suscritoActualmente = true;
+                // Actualizar botón para suscrito (en creadoras gratis decía "Suscribirme gratis")
+                const btnSub = document.getElementById('btn-sub-header');
+                btnSub.textContent = 'Ver contenido';
+                btnSub.onclick = () => document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        } catch(e) {}
         // Estado follow
         try {
             const favIds = await candela._req('GET', '/api/fans/favoritos/ids');
@@ -793,10 +804,10 @@ function renderHeader() {
         document.getElementById('precio-val').textContent = `$${c.precio_suscripcion}/mes`;
         document.getElementById('precio-box').classList.remove('hidden');
     } else {
-        document.getElementById('btn-sub-header').textContent = 'Ver contenido';
-        document.getElementById('btn-sub-header').onclick = () => {
-            document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
-        };
+        // Gratis: mostrar "Suscribirme gratis" por defecto.
+        // Si ya está suscrito, init() lo cambiará a "Ver contenido".
+        document.getElementById('btn-sub-header').textContent = 'Suscribirme gratis';
+        document.getElementById('btn-sub-header').onclick = () => abrirSub();
     }
 
     // Boton mensaje directo — solo si la creadora acepta
