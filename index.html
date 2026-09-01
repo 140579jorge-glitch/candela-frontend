@@ -1140,8 +1140,13 @@ function mostrarFormsFan(tab) {
     document.getElementById('forms-fan').classList.remove('hidden');
     switchTab(tab || 'login');
 }
+let _modalDownOnBg = false;
+document.getElementById('modal-auth').addEventListener('mousedown', e => {
+    _modalDownOnBg = (e.target === e.currentTarget);
+});
 document.getElementById('modal-auth').addEventListener('click', e => {
-    if (e.target === e.currentTarget) cerrarModal();
+    if (_modalDownOnBg && e.target === e.currentTarget) cerrarModal();
+    _modalDownOnBg = false;
 });
 
 function switchTab(tab) {
