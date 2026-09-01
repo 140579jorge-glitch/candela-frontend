@@ -450,11 +450,12 @@ function renderSubs() {
             </div>
             <div class="text-right shrink-0 space-y-1.5">
                 <p class="text-sm font-bold">$${fmt(s.monto)}</p>
-                <span class="badge badge-ok block">Activa</span>
-                <button onclick="cancelarSub('${esc(s.creadora_slug)}',this)"
-                    class="text-[10px] text-c-soft hover:text-red-500 transition-colors block">
-                    Cancelar
-                </button>
+                ${s.estado === 'cancelada'
+                    ? '<span class="badge badge-warn block">Cancelada</span><p class="text-[10px] text-c-soft">Acceso hasta vencimiento</p>'
+                    : `<span class="badge badge-ok block">Activa</span>
+                       <button onclick="cancelarSub('${esc(s.creadora_slug)}',this)"
+                           class="text-[10px] text-c-soft hover:text-red-500 transition-colors block">Cancelar</button>`
+                }
             </div>
         </div>
     `).join('');
@@ -472,9 +473,15 @@ async function cancelarSub(slug, btn) {
         actData = await candela._req('GET', '/api/fans/mi-actividad');
         renderSubs();
     } catch(e) {
-        toast(e.message || 'Error al cancelar', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Cancelar';
+        if (e.message?.includes('404') || e.message?.includes('No tienes')) {
+            // Ya estaba cancelada — solo actualizar la UI
+            actData = await candela._req('GET', '/api/fans/mi-actividad');
+            renderSubs();
+        } else {
+            toast(e.message || 'Error al cancelar', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Cancelar';
+        }
     }
 }
 
