@@ -86,7 +86,8 @@
             box-shadow: 0 0 0 3px #F4A261, 0 0 0 6px white, 0 0 0 9px #F4A261;
         }
         /* Story viewer modal */
-        #modal-story-viewer { position:fixed; inset:0; z-index:9999; background:#000; display:flex; flex-direction:column; }
+        #modal-story-viewer { position:fixed; inset:0; z-index:9999; background:#000; display:none; flex-direction:column; }
+        #modal-story-viewer.open { display:flex; }
         .story-progress-bar { flex:1; height:3px; background:rgba(255,255,255,.3); border-radius:2px; overflow:hidden; }
         .story-progress-bar .fill { height:100%; background:#fff; transition:width linear; }
 
@@ -295,7 +296,7 @@
 </div>
 
 <!-- ══ STORY VIEWER MODAL ══ -->
-<div id="modal-story-viewer" class="hidden">
+<div id="modal-story-viewer">
     <!-- Barra de progreso -->
     <div id="story-progress-bars" class="flex gap-1 px-3 pt-3 pb-1"></div>
     <!-- Header -->
@@ -1560,14 +1561,14 @@ function abrirStories() {
         svAvatar.style.color = '#fff';
         svAvatar.style.fontWeight = 'bold';
     }
-    document.getElementById('modal-story-viewer').classList.remove('hidden');
+    document.getElementById('modal-story-viewer').classList.add('open');
     document.body.style.overflow = 'hidden';
     _mostrarStory(storyIdx);
 }
 
 function cerrarStories() {
     clearTimeout(storyTimer); clearInterval(storyInterval);
-    document.getElementById('modal-story-viewer').classList.add('hidden');
+    document.getElementById('modal-story-viewer').classList.remove('open');
     document.body.style.overflow = '';
     const vid = document.getElementById('sv-video');
     vid.pause(); vid.src = '';
