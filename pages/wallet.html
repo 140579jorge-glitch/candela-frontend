@@ -91,10 +91,10 @@
         <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-2">Elige el monto (USD)</p>
         <p class="text-[11px] text-c-soft mb-2">Mínimo $20 USD por limitaciones de la red cripto.</p>
         <div class="grid grid-cols-4 gap-2 mb-3">
-            <button onclick="elegirMonto(20)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold sel" data-m="20">$20 <span class="text-green-500 text-[10px]">+10%</span></button>
-            <button onclick="elegirMonto(30)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="30">$30 <span class="text-green-500 text-[10px]">+10%</span></button>
+            <button onclick="elegirMonto(20)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold sel" data-m="20">$20 <span class="text-green-500 text-[10px]">+2%</span></button>
+            <button onclick="elegirMonto(30)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="30">$30 <span class="text-green-500 text-[10px]">+5%</span></button>
             <button onclick="elegirMonto(50)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="50">$50 <span class="text-green-500 text-[10px]">+10%</span></button>
-            <button onclick="elegirMonto(100)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="100">$100 <span class="text-green-500 text-[10px]">+10%</span></button>
+            <button onclick="elegirMonto(100)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="100">$100 <span class="text-green-500 text-[10px]">+15%</span></button>
             <button onclick="elegirMonto(0)"   class="monto-btn rounded-xl py-2.5 text-sm font-bold col-span-4" data-m="0">Otro monto (min $20)</button>
         </div>
         <input id="monto-custom" type="number" min="20" step="1" placeholder="Monto en USD (min $20)"
@@ -314,13 +314,17 @@ function elegirMonto(m) {
     actualizarUI();
 }
 
+const BONUS_TABLA = [[100, 0.15], [50, 0.10], [30, 0.05], [20, 0.02]];
+function bonusPct(m) { for (const [min, pct] of BONUS_TABLA) if (m >= min) return pct; return 0; }
+
 function actualizarUI() {
     const m = montoActual || parseFloat(document.getElementById('monto-custom').value) || 0;
     const lbl = document.getElementById('btn-monto-label');
     if (lbl) lbl.textContent = m > 0 ? `$${m}` : '$?';
+    const pct = bonusPct(m);
     const bonusEl = document.getElementById('bonus-notice');
-    if (m >= 20) {
-        document.getElementById('bonus-val').textContent = `$${(m * 0.10).toFixed(2)}`;
+    if (pct > 0) {
+        document.getElementById('bonus-val').textContent = `$${(m * pct).toFixed(2)}`;
         bonusEl.classList.remove('hidden');
     } else {
         bonusEl.classList.add('hidden');
