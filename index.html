@@ -1185,7 +1185,7 @@ async function hacerLogin(e) {
         const u = candela.auth.user();
         if (u?.tipo === 'admin') { window.location.href = 'pages/admin.html'; return; }
         if (u?.tipo === 'creadora') { window.location.href = 'pages/dashboard-creadora.html'; return; }
-        if (u?.tipo === 'suscriptor') { window.location.href = 'pages/feed.html'; return; }
+        if (u?.tipo === 'suscriptor') { window.location.href = 'pages/explorar.html'; return; }
         renderTopbar(); renderNavLinks();
         toast('Bienvenida de nuevo!', 'success');
     } catch(err) {
