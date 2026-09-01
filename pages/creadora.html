@@ -169,7 +169,7 @@
         #visor video { pointer-events: auto; }
     </style>
 </head>
-<body class="bg-c-bg text-c-text antialiased min-h-screen pb-24">
+<body class="bg-c-bg text-c-text antialiased min-h-screen pb-24" style="background-color:#FFF8F5;color:#2D2D2D">
 
 <!-- TopBar -->
 <header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
@@ -632,6 +632,7 @@ const TEMAS = {
     'nube':         ['#FAFAFA','#95A5A6','#AEB6BF','#2D2D2D'],
 };
 
+let userBalance = 0;
 let creadoraData = null;
 let todoContenido = [];
 let contenidoFiltrado = [];
@@ -1618,7 +1619,7 @@ function retrocederStory(e) {
 // ─── ENCUESTAS ───────────────────────────────────────────────
 async function cargarEncuestas() {
     try {
-        if (!candela.auth.isLoggedIn()) return;
+        if (!candela.auth.isLoggedIn() || !suscritoActualmente) return;
         const lista = await candela._req('GET', `/api/encuestas/creadora/${slug}`);
         if (!lista?.length) return;
         const sec = document.getElementById('encuestas-section');
