@@ -1141,7 +1141,7 @@ async function confirmarPropina() {
     } catch (e) {
         toast(e.message || 'Error al enviar propina', 'error');
     } finally {
-        btn.disabled = false; btn.textContent = `Enviar propina de $${monto} USDT`;
+        btn.disabled = false; btn.innerHTML = `Enviar propina de <span id="propina-costo-btn">$${monto}</span> USDT`;
     }
 }
 
