@@ -89,17 +89,15 @@
 
         <!-- Montos -->
         <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-2">Elige el monto (USD)</p>
+        <p class="text-[11px] text-c-soft mb-2">Mínimo $20 USD por limitaciones de la red cripto.</p>
         <div class="grid grid-cols-4 gap-2 mb-3">
-            <button onclick="elegirMonto(5)"   class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="5">$5</button>
-            <button onclick="elegirMonto(10)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="10">$10</button>
-            <button onclick="elegirMonto(15)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="15">$15</button>
-            <button onclick="elegirMonto(20)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="20">$20 <span class="text-green-500 text-[10px]">+10%</span></button>
+            <button onclick="elegirMonto(20)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold sel" data-m="20">$20 <span class="text-green-500 text-[10px]">+10%</span></button>
             <button onclick="elegirMonto(30)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="30">$30 <span class="text-green-500 text-[10px]">+10%</span></button>
             <button onclick="elegirMonto(50)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="50">$50 <span class="text-green-500 text-[10px]">+10%</span></button>
             <button onclick="elegirMonto(100)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="100">$100 <span class="text-green-500 text-[10px]">+10%</span></button>
-            <button onclick="elegirMonto(0)"   class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="0">Otro</button>
+            <button onclick="elegirMonto(0)"   class="monto-btn rounded-xl py-2.5 text-sm font-bold col-span-4" data-m="0">Otro monto (min $20)</button>
         </div>
-        <input id="monto-custom" type="number" min="5" step="1" placeholder="Monto en USD (min $5)"
+        <input id="monto-custom" type="number" min="20" step="1" placeholder="Monto en USD (min $20)"
             class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all mb-3 hidden"
             oninput="montoActual=parseFloat(this.value)||0;actualizarUI()">
 
@@ -158,7 +156,7 @@
             </div>
             <button onclick="generarDireccion()" id="btn-generar"
                 class="c-btn w-full text-white py-3 rounded-xl font-bold text-sm shadow-md">
-                Generar direccion de pago — <span id="btn-monto-label">$5</span>
+                Generar direccion de pago — <span id="btn-monto-label">$20</span>
             </button>
             <p class="text-center text-[11px] text-c-soft mt-2">Se genera una direccion unica para este pago.</p>
         </div>
@@ -214,7 +212,7 @@
 <script src="../js/api.js"></script>
 <script>
 let redActual   = 'trc20';
-let montoActual = 5;
+let montoActual = 20;
 let depositoId  = null;
 let pollTimer   = null;
 let countTimer  = null;
@@ -303,7 +301,7 @@ function copiarDireccion() {
 
 async function generarDireccion() {
     const monto = montoActual || parseFloat(document.getElementById('monto-custom').value);
-    if (!monto || monto < 5) { toast('El monto minimo es $5', 'error'); return; }
+    if (!monto || monto < 20) { toast('El monto mínimo es $20 USD', 'error'); return; }
 
     const btn = document.getElementById('btn-generar');
     btn.disabled = true; btn.textContent = 'Generando...';
