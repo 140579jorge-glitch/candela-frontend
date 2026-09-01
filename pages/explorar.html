@@ -283,16 +283,39 @@ function renderCards(lista) {
     try {
         if (candela.auth.isLoggedIn()) {
             const u = candela.auth.user();
-            const dest = u.tipo === 'creadora' ? 'dashboard-creadora.html' : 'dashboard-fan.html';
+            const dest = u.tipo === 'creadora' ? 'dashboard-creadora.html' : 'fan-dashboard.html';
             document.getElementById('header-auth').innerHTML =
                 '<a href="' + dest + '" class="text-sm font-semibold text-c-soft hover:text-c-accent transition-colors">Mi cuenta</a>' +
-                '<button onclick="candela.auth.logout()" class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style="background:linear-gradient(135deg,#F4A261,#E8A598)">' +
-                (u.nombre || 'F')[0].toUpperCase() + '</button>';
+                '<a href="' + dest + '" class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style="background:linear-gradient(135deg,#F4A261,#E8A598)">' +
+                (u.nombre || 'F')[0].toUpperCase() + '</a>';
+            document.getElementById('bottom-nav').classList.remove('hidden');
         }
     } catch(e) {}
 })();
 
 cargar();
 </script>
+
+<!-- Bottom nav (solo fans logueados) -->
+<nav id="bottom-nav" class="glass hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+    <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
+        <a href="../index.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">home</span><span class="text-[10px] font-semibold">Inicio</span>
+        </a>
+        <a href="feed.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">photo_library</span><span class="text-[10px] font-semibold">Feed</span>
+        </a>
+        <button class="flex flex-col items-center text-c-accent gap-0.5">
+            <span class="ms ms-fill">explore</span><span class="text-[10px] font-bold">Explorar</span>
+        </button>
+        <a href="fan-dashboard.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">person</span><span class="text-[10px] font-semibold">Mi cuenta</span>
+        </a>
+        <button onclick="candela.auth.logout()" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">logout</span><span class="text-[10px] font-semibold">Salir</span>
+        </button>
+    </div>
+</nav>
+
 </body>
 </html>
