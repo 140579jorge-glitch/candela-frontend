@@ -250,17 +250,17 @@
 <!-- ===== MAIN ===== -->
 <main class="pt-16 max-w-7xl mx-auto">
 
-    <!-- Strip streams en vivo (siempre visible) -->
-    <div id="strip-streams" class="mx-4 md:mx-10 mt-3 mb-1 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#1a0a1a,#3d0a2a)">
+    <!-- Strip streams en vivo (solo si hay transmisiones activas) -->
+    <div id="strip-streams" class="hidden mx-4 md:mx-10 mt-3 mb-1 rounded-2xl overflow-hidden" style="background:linear-gradient(150deg,#1A0A06 0%,#2D1410 55%,#3D1A0A 100%)">
         <a href="pages/streams-activos.html" class="flex items-center justify-between gap-3 px-5 py-3">
             <div class="flex items-center gap-3 min-w-0">
                 <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shrink-0"></span>
                 <div class="min-w-0">
-                    <p class="text-white text-xs font-bold leading-tight">Streams en vivo ahora</p>
-                    <p class="text-white/50 text-[11px] mt-0.5">Ve quien esta transmitiendo en este momento</p>
+                    <p class="text-white text-xs font-bold leading-tight"><span id="strip-streams-count">Alguien</span> transmitiendo en vivo</p>
+                    <p class="text-white/55 text-[11px] mt-0.5">Entra a ver ahora</p>
                 </div>
             </div>
-            <span class="shrink-0 text-white/70 text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 whitespace-nowrap">Ver streams</span>
+            <span class="shrink-0 text-[11px] font-extrabold px-3 py-1.5 rounded-full whitespace-nowrap" style="background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff">Ver streams</span>
         </a>
     </div>
 
@@ -758,6 +758,7 @@ function init() {
 
     renderTopbar(isGuest);
     renderNavLinks();
+    verificarStreamsActivos();
 
     if (isGuest) {
         document.getElementById('hero-guest').classList.remove('hidden');
@@ -863,6 +864,21 @@ function initScrollAnimations() {
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.12 });
     document.querySelectorAll('.s-anim').forEach(el => obs.observe(el));
+}
+
+// ─── STREAMS EN VIVO (strip) ─────────────────────────────────────────
+async function verificarStreamsActivos() {
+    try {
+        const base = (window.API_URL || '').replace(/\/$/, '');
+        const resp = await fetch(`${base}/api/streams/activos`);
+        if (!resp.ok) return;
+        const lista = await resp.json();
+        const n = Array.isArray(lista) ? lista.length : 0;
+        if (n < 1) return;
+        const c = document.getElementById('strip-streams-count');
+        if (c) c.textContent = n === 1 ? '1 creadora' : `${n} creadoras`;
+        document.getElementById('strip-streams').classList.remove('hidden');
+    } catch (_) {}
 }
 
 // ─── PUBLIC CREATOR PREVIEW (guests) ─────────────────────────────────

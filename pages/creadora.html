@@ -60,9 +60,36 @@
         /* Overlay imagen */
         .img-overlay { background:linear-gradient(to top,rgba(20,8,2,.85) 0%,rgba(20,8,2,.2) 55%,transparent 100%); }
 
-        /* Blur de contenido bloqueado */
-        .content-blur img { filter:blur(22px); transform:scale(1.05); }
-        .lock-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(45,20,10,.18); gap:.5rem; }
+        /* ── Contenido bloqueado ── */
+        .ct-blur { filter:blur(20px); transform:scale(1.14); }
+        .ct-fallback {
+            width:100%; height:100%;
+            background:
+                radial-gradient(120% 80% at 30% 12%, rgba(255,255,255,.30), transparent 60%),
+                linear-gradient(150deg, var(--t-a,#F4A261), var(--t-b,#E8A598));
+        }
+        .ct-scrim {
+            position:absolute; inset:0; pointer-events:none;
+            background:linear-gradient(180deg, rgba(26,10,6,.10) 0%, rgba(26,10,6,.04) 38%, rgba(26,10,6,.62) 100%);
+        }
+        .ct-lock {
+            position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%;
+            background:rgba(255,248,245,.14); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+            border:1px solid rgba(255,255,255,.22);
+            display:flex; align-items:center; justify-content:center;
+        }
+        .ct-lock svg { width:11px; height:11px; }
+        .ct-cta { position:absolute; left:6px; right:6px; bottom:7px; display:flex; justify-content:center; pointer-events:none; }
+        .ct-chip {
+            display:inline-flex; align-items:center; gap:4px; white-space:nowrap;
+            font-weight:800; font-size:11px; line-height:1;
+            padding:5px 11px; border-radius:999px;
+            transition:filter .2s, transform .2s;
+        }
+        .ct-chip--ppv   { background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff; box-shadow:0 4px 14px rgba(244,162,97,.5); }
+        .ct-chip--subs  { background:rgba(255,248,245,.16); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.28); color:#fff; font-size:10px; letter-spacing:.02em; }
+        .ct-chip--trial { background:rgba(46,204,113,.94); color:#fff; font-size:10px; box-shadow:0 4px 14px rgba(46,204,113,.4); }
+        .content-item:hover .ct-chip--ppv { filter:brightness(1.08); transform:translateY(-1px); }
 
         /* Contenido desbloqueado hover */
         .content-item { transition:transform .2s; }
@@ -187,61 +214,80 @@
 
 <!-- BANNER -->
 <div class="pt-14">
-    <div id="banner-wrap" class="relative w-full overflow-hidden" style="height:260px;background:linear-gradient(135deg,var(--t-bg,#FFF4EE),var(--t-b,#E8A598))">
+    <div id="banner-wrap" class="relative w-full overflow-hidden" style="height:200px;background:linear-gradient(140deg,var(--t-a,#F4A261),var(--t-b,#E8A598))">
+        <div id="banner-monogram" class="absolute inset-0 flex items-center justify-center pointer-events-none select-none font-display font-semibold" style="font-size:9rem;line-height:1;color:rgba(255,255,255,.16)">?</div>
         <img id="banner-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover hidden">
-        <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 40%,rgba(20,8,2,.35) 100%)"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 45%,rgba(20,8,2,.42) 100%)"></div>
     </div>
 </div>
 
 <!-- PERFIL HEADER -->
 <div class="max-w-2xl mx-auto px-4">
     <!-- Avatar -->
-    <div class="relative -mt-14 mb-3 flex items-end justify-between">
+    <div class="relative -mt-12 mb-3">
         <!-- Wrapper: clase "has-story" activa el anillo naranja y hace clickable -->
-        <div id="story-ring-wrap" class="relative" onclick="abrirStories()">
+        <div id="story-ring-wrap" class="relative inline-block" onclick="abrirStories()">
             <div id="avatar-wrap" class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden flex items-center justify-center text-4xl font-bold text-white transition-all"
-                style="background:linear-gradient(135deg,var(--t-bg,#F2D5C4),var(--t-a,#F4A261))">
+                style="background:linear-gradient(135deg,var(--t-b,#F2D5C4),var(--t-a,#F4A261))">
                 <span id="avatar-initial">?</span>
                 <img id="avatar-img" src="" alt="" class="w-full h-full object-cover hidden">
             </div>
         </div>
-        <div class="flex gap-2">
-            <button id="btn-propina" class="c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirPropina()">
-                <span class="ms" style="font-size:16px;vertical-align:-3px">volunteer_activism</span> Propina
-            </button>
-            <button id="btn-chat-sesion" class="hidden c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirChatSesion()">
-                <span class="ms" style="font-size:16px;vertical-align:-3px">videocam</span> Chat privado
-            </button>
-            <button id="btn-msg" class="hidden c-btn-outline px-4 py-2 rounded-full text-sm font-bold" onclick="abrirMensaje()">
-                <span class="ms" style="font-size:16px;vertical-align:-3px">chat_bubble</span> Mensaje
-            </button>
-            <button id="btn-follow" onclick="toggleFollow()" class="hidden px-4 py-2 rounded-full text-sm font-bold border border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-colors">
-                <span class="ms" style="font-size:16px;vertical-align:-3px" id="follow-icon">favorite_border</span>
-                <span id="follow-label">Seguir</span>
-            </button>
-            <button id="btn-sub-header" onclick="abrirSub()" class="c-btn text-white px-5 py-2 rounded-full text-sm font-bold shadow-md">
-                Suscribirme
-            </button>
-        </div>
     </div>
 
     <!-- Info -->
-    <h1 id="creadora-nombre" class="font-display text-2xl font-semibold text-c-text mb-1">Cargando...</h1>
-    <div class="flex items-center gap-3 text-sm text-c-soft mb-2 flex-wrap">
+    <div class="flex items-center gap-1.5 mb-1">
+        <h1 id="creadora-nombre" class="font-display text-2xl font-semibold text-c-text">Cargando...</h1>
+        <span id="badge-verif" class="hidden shrink-0" title="Identidad y edad verificadas por Candela">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" role="img" aria-label="Verificada"><circle cx="12" cy="12" r="10" fill="#F4A261"></circle><path d="M7.5 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </span>
+    </div>
+    <div class="flex items-center gap-x-3 gap-y-1 text-sm text-c-soft mb-2 flex-wrap">
         <span id="creadora-pais" class="hidden">📍 <span></span></span>
-        <span id="creadora-online" class="hidden flex items-center gap-1"><span class="dot-on"></span>En linea</span>
+        <span id="creadora-online" class="hidden flex items-center gap-1"><span class="dot-on"></span>En línea</span>
+        <span id="creadora-posts" class="hidden"><span class="font-bold text-c-text"></span> publicaciones</span>
         <span id="creadora-subs" class="hidden"><span class="font-bold text-c-text"></span> suscriptores</span>
     </div>
+
+    <!-- Acciones -->
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+        <button id="btn-sub-header" onclick="abrirSub()" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md w-full sm:w-auto">
+            Suscribirme
+        </button>
+        <button id="btn-propina" class="c-btn-outline px-4 py-2.5 rounded-full text-sm font-bold" onclick="abrirPropina()">
+            <span class="ms" style="font-size:16px;vertical-align:-3px">volunteer_activism</span> Propina
+        </button>
+        <button id="btn-chat-sesion" class="hidden c-btn-outline px-4 py-2.5 rounded-full text-sm font-bold" onclick="abrirChatSesion()">
+            <span class="ms" style="font-size:16px;vertical-align:-3px">videocam</span> Chat privado
+        </button>
+        <button id="btn-msg" class="hidden c-btn-outline px-4 py-2.5 rounded-full text-sm font-bold" onclick="abrirMensaje()">
+            <span class="ms" style="font-size:16px;vertical-align:-3px">chat_bubble</span> Mensaje
+        </button>
+        <button id="btn-follow" onclick="toggleFollow()" class="hidden px-4 py-2.5 rounded-full text-sm font-bold border border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-colors">
+            <span class="ms" style="font-size:16px;vertical-align:-3px" id="follow-icon">favorite_border</span>
+            <span id="follow-label">Seguir</span>
+        </button>
+    </div>
+
+    <!-- Franja de confianza -->
+    <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-semibold text-c-soft mb-4">
+        <span class="flex items-center gap-1"><span class="ms" style="font-size:14px;color:#F4A261">verified_user</span> Identidad verificada</span>
+        <span class="flex items-center gap-1"><span class="ms" style="font-size:14px">lock</span> Sin rastro bancario</span>
+        <span class="flex items-center gap-1"><span class="ms" style="font-size:14px">account_balance_wallet</span> Pagas con USDT</span>
+    </p>
+
     <p id="creadora-bio" class="text-sm text-c-soft leading-relaxed mb-4 hidden"></p>
 
-    <!-- Precio suscripcion -->
-    <div id="precio-box" class="hidden bg-white border border-c-border rounded-2xl p-4 mb-5 flex items-center justify-between shadow-sm">
-        <div>
-            <div class="text-xs font-bold text-c-soft uppercase tracking-wide mb-0.5">Suscripcion mensual</div>
-            <div id="precio-val" class="text-2xl font-bold text-c-text"></div>
-            <div class="text-xs text-c-soft mt-0.5">Acceso a todo el contenido exclusivo</div>
-        </div>
-        <button onclick="abrirSub()" class="c-btn text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md">Suscribirme</button>
+    <!-- Suscripcion -->
+    <div id="precio-box" class="hidden bg-white border border-c-border rounded-2xl p-5 mb-4 shadow-sm">
+        <div class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-0.5">Suscripción mensual</div>
+        <div id="precio-val" class="text-3xl font-extrabold text-c-text leading-none mb-4"></div>
+        <ul class="text-sm text-c-text space-y-1.5 mb-4">
+            <li class="flex items-center gap-2"><span class="ms" style="font-size:17px;color:#1B7A5A">check_circle</span> Acceso a todo su contenido exclusivo</li>
+            <li class="flex items-center gap-2"><span class="ms" style="font-size:17px;color:#1B7A5A">check_circle</span> Mensajes directos con ella</li>
+            <li class="flex items-center gap-2"><span class="ms" style="font-size:17px;color:#1B7A5A">check_circle</span> Cancela cuando quieras</li>
+        </ul>
+        <button onclick="abrirSub()" class="c-btn text-white w-full py-3 rounded-full text-sm font-bold shadow-md">Suscribirme</button>
     </div>
 
     <!-- Carrusel de presentacion -->
@@ -262,7 +308,7 @@
     </div>
 
     <!-- Grid de contenido -->
-    <div id="content-grid" class="grid grid-cols-3 gap-1 mb-6">
+    <div id="content-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2 mb-6">
         <!-- skeletons -->
         <div class="skeleton" style="aspect-ratio:1"></div>
         <div class="skeleton" style="aspect-ratio:1"></div>
@@ -758,7 +804,7 @@ function aplicarTema(tema) {
     root.style.setProperty('--t-a', a);
     root.style.setProperty('--t-b', b);
     root.style.setProperty('--t-text', text);
-    document.getElementById('banner-wrap').style.background = `linear-gradient(135deg,${bg},${b})`;
+    document.getElementById('banner-wrap').style.background = `linear-gradient(140deg,${a},${b})`;
 }
 
 // ─── HEADER ──────────────────────────────────────────────────
@@ -779,6 +825,7 @@ function renderHeader() {
 
     const inicial = c.nombre_artistico[0].toUpperCase();
     document.getElementById('avatar-initial').textContent = inicial;
+    document.getElementById('banner-monogram').textContent = inicial;
     if (c.avatar_url) {
         const img = document.getElementById('avatar-img');
         img.src = c.avatar_url;
@@ -789,6 +836,7 @@ function renderHeader() {
         const bImg = document.getElementById('banner-img');
         bImg.src = c.banner_url;
         bImg.classList.remove('hidden');
+        document.getElementById('banner-monogram').classList.add('hidden');
     }
 
     const paisEl = document.getElementById('creadora-pais');
@@ -798,6 +846,9 @@ function renderHeader() {
     subsEl.querySelector('span').textContent = c.total_suscriptores;
     subsEl.classList.remove('hidden');
 
+    // Toda creadora publica esta "activa" = admin verifico su identidad y edad
+    document.getElementById('badge-verif').classList.remove('hidden');
+
     if (c.bio) {
         const bioEl = document.getElementById('creadora-bio');
         bioEl.textContent = c.bio;
@@ -805,7 +856,7 @@ function renderHeader() {
     }
 
     if (c.precio_suscripcion > 0) {
-        document.getElementById('precio-val').textContent = `$${c.precio_suscripcion}/mes`;
+        document.getElementById('precio-val').innerHTML = `${Number(c.precio_suscripcion) || 0} <span class="text-lg font-bold text-c-soft">USDT/mes</span>`;
         document.getElementById('precio-box').classList.remove('hidden');
     } else {
         // Gratis: mostrar "Suscribirme gratis" por defecto.
@@ -838,6 +889,11 @@ function renderHeader() {
 async function cargarContenido() {
     try {
         todoContenido = await candela.contenido.listarCreadora(slug);
+        if (todoContenido.length) {
+            const postsEl = document.getElementById('creadora-posts');
+            postsEl.querySelector('span').textContent = todoContenido.length;
+            postsEl.classList.remove('hidden');
+        }
         filtrarContenido();
     } catch(e) {
         document.getElementById('content-grid').innerHTML =
@@ -876,31 +932,31 @@ function renderGrid() {
         const puedeTrialEste = esSoloSubs && trialDisponible && candela.auth.isLoggedIn();
 
         return `
-        <div class="content-item relative overflow-hidden rounded-lg cursor-pointer"
+        <div class="content-item relative overflow-hidden rounded-xl cursor-pointer"
             style="aspect-ratio:1"
             onclick="clicContenido('${item.id}',${item.precio},${item.desbloqueado},${item.es_gratis})">
 
-            <div class="absolute inset-0 ${bloqueado ? 'overflow-hidden' : ''}">
+            <div class="absolute inset-0 overflow-hidden">
                 ${item.preview_url
-                    ? `<img src="${_u(item.preview_url)}" alt="" class="w-full h-full object-cover ${bloqueado ? 'blur-xl scale-110' : ''}" draggable="false" oncontextmenu="return false">`
-                    : `<div class="w-full h-full flex items-center justify-center text-4xl"
-                            style="background:linear-gradient(135deg,var(--t-bg),var(--t-b))">
-                            ${item.tipo === 'video' ? '🎬' : '📸'}
-                       </div>`
+                    ? `<img src="${_u(item.preview_url)}" alt="" class="w-full h-full object-cover ${bloqueado ? 'ct-blur' : ''}" draggable="false" oncontextmenu="return false">`
+                    : `<div class="ct-fallback"></div>`
                 }
             </div>
 
             ${bloqueado ? `
-                <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5"
-                    style="background:rgba(45,20,10,.22)">
+                <div class="ct-scrim"></div>
+                <div class="ct-lock">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round">
+                        <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                        <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+                    </svg>
+                </div>
+                <div class="ct-cta">
                     ${esPPV
-                        ? `<span class="ms" style="color:#fff;font-size:28px;">lock</span>
-                           <span class="text-white text-xs font-bold bg-black/40 px-2.5 py-1 rounded-full">$${item.precio}</span>`
+                        ? `<span class="ct-chip ct-chip--ppv">Ver por $${item.precio}</span>`
                         : puedeTrialEste
-                            ? `<span class="ms" style="color:#fff;font-size:24px;">visibility</span>
-                               <span class="text-white text-[10px] font-bold bg-c-accent/80 px-2 py-0.5 rounded-full">Gratis (${trialRestantes} restantes)</span>`
-                            : `<span class="ms" style="color:#fff;font-size:28px;">lock</span>
-                               <span class="text-white text-[10px] font-semibold">Solo suscriptores</span>`
+                            ? `<span class="ct-chip ct-chip--trial">Ver gratis · ${trialRestantes} ${trialRestantes === 1 ? 'restante' : 'restantes'}</span>`
+                            : `<span class="ct-chip ct-chip--subs">Suscríbete para ver</span>`
                     }
                 </div>` : ''}
 
