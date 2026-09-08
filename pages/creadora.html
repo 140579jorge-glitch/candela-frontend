@@ -934,7 +934,7 @@ function renderGrid() {
         return `
         <div class="content-item relative overflow-hidden rounded-xl cursor-pointer"
             style="aspect-ratio:1"
-            onclick="clicContenido('${item.id}',${item.precio},${item.desbloqueado},${item.es_gratis})">
+            onclick="clicContenido('${String(item.id).replace(/[^a-z0-9-]/gi,'')}',${Number(item.precio)||0},${item.desbloqueado===true},${item.es_gratis===true})">
 
             <div class="absolute inset-0 overflow-hidden">
                 ${item.preview_url
@@ -1559,10 +1559,12 @@ function renderCarruselPublico() {
 
 // ─── PACKS PUBLICOS ──────────────────────────────────────────
 let packSeleccionado = null;
+let packsCreadora = [];
 
 async function cargarPacksPublicos() {
     try {
-        const packs = await candela._req('GET', `/api/packs/creadora/${slug}`);
+        const packs = await candela._req('GET', `/api/packs/creadora/${encodeURIComponent(slug)}`);
+        packsCreadora = packs || [];
         if (!packs?.length) return;
 
         const sec = document.getElementById('packs-section');
@@ -1587,7 +1589,7 @@ async function cargarPacksPublicos() {
                 </div>
                 <div class="shrink-0 text-right">
                     <p class="text-lg font-bold text-c-text mb-1">$${precioFan}</p>
-                    <button onclick="abrirCompraPack(${pk.id},'${esc(pk.titulo)}','${esc(pk.descripcion||'')}',${pk.precio_base},'${pk.modo}')"
+                    <button onclick="abrirCompraPack('${String(pk.id).replace(/[^a-z0-9-]/gi,'')}',${Number(pk.precio_base)||0},'${pk.modo === 'venta' ? 'venta' : 'ppv'}')"
                         class="c-btn text-white px-4 py-1.5 rounded-xl text-xs font-bold shadow-sm">
                         Comprar
                     </button>
@@ -1599,15 +1601,16 @@ async function cargarPacksPublicos() {
     }
 }
 
-function abrirCompraPack(id, titulo, desc, precioBase, modo) {
+function abrirCompraPack(id, precioBase, modo) {
     if (!candela.auth.isLoggedIn()) {
         window.location.href = '../index.html';
         return;
     }
+    const pk = packsCreadora.find(p => p.id === id) || {};
     const precioFan = modo === 'venta' ? precioBase * 1.20 : precioBase;
     packSeleccionado = { id, precioFan };
-    document.getElementById('pack-modal-titulo').textContent = titulo;
-    document.getElementById('pack-modal-desc').textContent = desc || 'Pack exclusivo';
+    document.getElementById('pack-modal-titulo').textContent = pk.titulo || 'Pack';
+    document.getElementById('pack-modal-desc').textContent = pk.descripcion || 'Pack exclusivo';
     document.getElementById('pack-precio-modal').textContent = `$${precioFan.toFixed(2)}`;
     document.getElementById('pack-costo-btn').textContent = `$${precioFan.toFixed(2)}`;
     document.getElementById('pack-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
