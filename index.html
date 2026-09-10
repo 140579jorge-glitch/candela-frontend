@@ -566,7 +566,7 @@
         </a>
         <a id="nav-item3" href="pages/streams-activos.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="material-symbols-outlined nav-icon">play_circle</span>
-            <span class="text-[10px] font-semibold nav-label">Live</span>
+            <span class="text-[10px] font-semibold nav-label">En vivo</span>
         </a>
         <a id="nav-item4" href="pages/mis-suscripciones.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="material-symbols-outlined nav-icon">favorite</span>
@@ -574,7 +574,7 @@
         </a>
         <a id="nav-item5" href="pages/wallet.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="material-symbols-outlined nav-icon">account_balance_wallet</span>
-            <span class="text-[10px] font-semibold nav-label">Wallet</span>
+            <span class="text-[10px] font-semibold nav-label">Billetera</span>
         </a>
     </div>
 </nav>
@@ -978,13 +978,13 @@ function renderNavLinks() {
     if (user?.tipo === 'creadora') {
         setNavItem(i3, 'add_circle', 'Subir', 'pages/dashboard-creadora.html');
         setNavItem(i4, 'dashboard', 'Mi Panel', 'pages/dashboard-creadora.html');
-        setNavItem(i5, 'account_balance_wallet', 'Wallet', 'pages/wallet.html');
+        setNavItem(i5, 'account_balance_wallet', 'Billetera', 'pages/wallet.html');
     } else if (user?.tipo === 'suscriptor') {
-        setNavItem(i3, 'play_circle', 'Live', 'pages/streams-activos.html');
+        setNavItem(i3, 'play_circle', 'En vivo', 'pages/streams-activos.html');
         setNavItem(i4, 'dashboard', 'Mi Panel', 'pages/fan-dashboard.html');
-        setNavItem(i5, 'account_balance_wallet', 'Wallet', 'pages/wallet.html');
+        setNavItem(i5, 'account_balance_wallet', 'Billetera', 'pages/wallet.html');
     } else {
-        setNavItem(i3, 'play_circle', 'Live', 'pages/streams-activos.html');
+        setNavItem(i3, 'play_circle', 'En vivo', 'pages/streams-activos.html');
         setNavItem(i4, 'auto_awesome', 'Creadora', 'pages/gana-con-candela.html');
         setNavItem(i5, 'login', 'Entrar', '#', (e) => { e.preventDefault(); abrirModal('login'); });
     }
@@ -1348,7 +1348,7 @@ async function initGoogleAuth() {
                 ux_mode: 'popup',
             });
             google.accounts.id.renderButton(document.getElementById('google-btn'), {
-                theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', width: 300,
+                theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', width: 300, locale: 'es',
             });
             document.getElementById('google-wrap').classList.remove('hidden');
         } else if (++intentos > 40) {
