@@ -750,28 +750,25 @@ let paisFiltro = '';
 
 // ─── INIT ────────────────────────────────────────────────────────────
 function init() {
-    // Admin ya logueado va directo a su panel
+    // Los logueados NO ven la landing: van directo a su home real.
     const u = candela.auth.user?.() || JSON.parse(localStorage.getItem('candela_user') || 'null');
-    if (u?.tipo === 'admin') { window.location.replace('pages/admin.html'); return; }
+    if (candela.auth.isLoggedIn()) {
+        if (u?.tipo === 'admin')          { window.location.replace('pages/admin.html'); return; }
+        if (u?.tipo === 'creadora')       { window.location.replace('pages/dashboard-creadora.html'); return; }
+        window.location.replace('pages/feed.html'); return;  // fan -> feed de contenido
+    }
 
-    const isGuest = !candela.auth.isLoggedIn();
-
-    renderTopbar(isGuest);
+    renderTopbar(true);
     renderNavLinks();
     verificarStreamsActivos();
 
-    if (isGuest) {
-        document.getElementById('hero-guest').classList.remove('hidden');
-        document.getElementById('stories-section').style.display = 'none';
-        document.getElementById('chips-section').style.display = 'none';
-        document.getElementById('feed-grid').style.display = 'none';
-        cargarPreviewPublico();
-        modoTopbarOscuro();
-        initScrollAnimations();
-    } else {
-        cargarStories();
-        cargarFeed();
-    }
+    document.getElementById('hero-guest').classList.remove('hidden');
+    document.getElementById('stories-section').style.display = 'none';
+    document.getElementById('chips-section').style.display = 'none';
+    document.getElementById('feed-grid').style.display = 'none';
+    cargarPreviewPublico();
+    modoTopbarOscuro();
+    initScrollAnimations();
 
     // DOB max = 18 years ago
     var dob = document.getElementById('r-dob');
@@ -1208,9 +1205,7 @@ async function hacerLogin(e) {
         const u = candela.auth.user();
         if (u?.tipo === 'admin') { window.location.href = 'pages/admin.html'; return; }
         if (u?.tipo === 'creadora') { window.location.href = 'pages/dashboard-creadora.html'; return; }
-        if (u?.tipo === 'suscriptor') { window.location.href = 'pages/explorar.html'; return; }
-        renderTopbar(); renderNavLinks();
-        toast('Bienvenida de nuevo!', 'success');
+        window.location.href = 'pages/feed.html';  // fan -> feed de contenido
     } catch(err) {
         toast(err.message, 'error');
         btn.textContent = 'Entrar'; btn.disabled = false;

@@ -85,6 +85,11 @@
 
 <main class="max-w-2xl mx-auto px-4 py-4">
 
+    <!-- CREADORAS (descubrir) -->
+    <div id="sec-descubrir" class="hidden mb-4">
+        <div id="descubrir-row" class="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1" style="scrollbar-width:none;-ms-overflow-style:none"></div>
+    </div>
+
     <!-- STREAMS EN VIVO -->
     <div id="sec-lives" class="hidden mb-4">
         <div class="flex items-center gap-2 mb-2">
@@ -101,15 +106,16 @@
             <div class="skeleton h-80 rounded-2xl"></div>
         </div>
         <div id="feed-lista" class="hidden flex flex-col gap-4"></div>
-        <div id="feed-empty" class="hidden text-center py-16">
+        <div id="feed-empty" class="hidden text-center py-12">
             <div class="inline-block bg-gradient-to-br from-c-champagne to-c-rose rounded-3xl p-5 mb-4">
                 <span class="ms" style="font-size:3rem;color:#E08947">photo_library</span>
             </div>
-            <h2 class="font-display text-xl font-semibold mb-2">Tu feed esta vacio</h2>
-            <p class="text-c-soft text-sm mb-5">Suscribete a una creadora para ver su contenido aqui.</p>
-            <a href="explorar.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white shadow-md" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+            <h2 class="font-display text-xl font-semibold mb-2">Tu feed est&aacute; vac&iacute;o</h2>
+            <p class="text-c-soft text-sm mb-5">Suscr&iacute;bete a una creadora para ver su contenido aqu&iacute;.</p>
+            <a href="explorar.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-white shadow-md mb-8" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
                 <span class="ms" style="font-size:18px">explore</span> Explorar creadoras
             </a>
+            <div id="empty-sugeridas" class="text-left"></div>
         </div>
     </div>
 
@@ -131,14 +137,14 @@
 <!-- Bottom nav -->
 <nav class="glass fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
-        <a href="../index.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
-            <span class="ms">home</span><span class="text-[10px] font-semibold">Inicio</span>
-        </a>
-        <button class="flex flex-col items-center text-c-accent gap-0.5">
-            <span class="ms ms-fill">photo_library</span><span class="text-[10px] font-bold">Feed</span>
+        <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="flex flex-col items-center text-c-accent gap-0.5">
+            <span class="ms ms-fill">home</span><span class="text-[10px] font-bold">Inicio</span>
         </button>
         <a href="explorar.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">explore</span><span class="text-[10px] font-semibold">Explorar</span>
+        </a>
+        <a href="streams-activos.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+            <span class="ms">live_tv</span><span class="text-[10px] font-semibold">Live</span>
         </a>
         <a href="wallet.html" class="flex flex-col items-center gap-0.5" style="color:#F4A261">
             <span class="ms ms-fill">account_balance_wallet</span><span class="text-[10px] font-bold" id="nav-saldo-label">Wallet</span>
@@ -177,7 +183,62 @@ async function init() {
 
     cargarFeed();
     cargarLives();
+    cargarDescubrir();
     candela.balance.showNav();
+}
+
+const _GRAD = {
+    melocoton:'#FFF4EE,#E8A598','rosa-venecia':'#FFF0F5,#F7B8C8',lavanda:'#F7F2FF,#BBA0E0',
+    'rojo-carmin':'#1A0A0A,#E74C3C',menta:'#F0FAF7,#58D68D',cielo:'#F0F8FF,#85C1E9',
+    dorada:'#FFFBF0,#F1C40F',nude:'#FAF7F4,#D4B896','noche-rosa':'#1A0D1A,#FF6FBF',
+    coral:'#FFF5F2,#FF8E8E',esmeralda:'#0D1F19,#48C9B0',nube:'#FAFAFA,#AEB6BF'
+};
+
+async function cargarDescubrir() {
+    try {
+        const lista = await candela.creadoras.explorar({ limit: 12 });
+        if (!lista || !lista.length) return;
+        const row = document.getElementById('descubrir-row');
+        row.innerHTML = lista.map(c => {
+            const gr = _GRAD[c.tema_color] || '#F4A261,#E8A598';
+            const ini = esc((c.nombre_artistico || 'C')[0].toUpperCase());
+            const inner = c.avatar_url
+                ? `<img src="${esc(c.avatar_url)}" class="w-full h-full object-cover rounded-full" draggable="false">`
+                : `<div class="w-full h-full rounded-full flex items-center justify-center text-white font-bold text-lg" style="background:linear-gradient(135deg,${gr})">${ini}</div>`;
+            return `<a href="creadora.html?slug=${encodeURIComponent(c.slug||'')}" class="flex flex-col items-center gap-1.5 shrink-0" style="width:66px">
+                <div class="p-[2.5px] rounded-full" style="background:linear-gradient(135deg,#F4A261,#E8A598,#D4869D)">
+                    <div class="w-14 h-14 rounded-full border-2 border-white overflow-hidden">${inner}</div>
+                </div>
+                <span class="text-[10px] font-semibold text-c-text text-center w-full truncate">${esc((c.nombre_artistico||'').split(' ')[0])}</span>
+            </a>`;
+        }).join('');
+        document.getElementById('sec-descubrir').classList.remove('hidden');
+    } catch(_) {}
+}
+
+async function cargarSugeridas() {
+    try {
+        const lista = await candela.creadoras.explorar({ limit: 6 });
+        if (!lista || !lista.length) return;
+        const cont = document.getElementById('empty-sugeridas');
+        cont.innerHTML =
+            '<p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-3 text-center">Creadoras para descubrir</p>' +
+            '<div class="grid grid-cols-2 gap-3">' + lista.map(c => {
+                const gr = _GRAD[c.tema_color] || '#F4A261,#E8A598';
+                const ini = esc((c.nombre_artistico || 'C')[0].toUpperCase());
+                const precio = c.precio_suscripcion > 0 ? '$' + Number(c.precio_suscripcion) + '/mes' : 'Gratis';
+                const banner = c.banner_url
+                    ? `<img src="${esc(c.banner_url)}" class="absolute inset-0 w-full h-full object-cover">`
+                    : `<div class="absolute inset-0 flex items-center justify-center font-display text-3xl text-white/25" style="background:linear-gradient(135deg,${gr})">${ini}</div>`;
+                return `<a href="creadora.html?slug=${encodeURIComponent(c.slug||'')}" class="block rounded-2xl overflow-hidden border border-c-border bg-white">
+                    <div class="relative" style="aspect-ratio:16/10">${banner}</div>
+                    <div class="p-2.5">
+                        <p class="font-bold text-sm truncate">${esc(c.nombre_artistico||'Creadora')}</p>
+                        <p class="text-[11px] text-c-accent font-bold">${precio}</p>
+                    </div>
+                </a>`;
+            }).join('') + '</div>';
+    } catch(_) {}
 }
 
 async function cargarLives() {
@@ -207,13 +268,15 @@ async function cargarFeed() {
         const lista = document.getElementById('feed-lista');
         const empty = document.getElementById('feed-empty');
 
-        if (!feedData.length) { empty.classList.remove('hidden'); return; }
+        if (!feedData.length) { empty.classList.remove('hidden'); cargarSugeridas(); return; }
 
         lista.classList.remove('hidden');
         lista.innerHTML = feedData.map(item => renderCard(item)).join('');
+        aplicarWatermarks();
     } catch(e) {
         document.getElementById('feed-skeleton').classList.add('hidden');
         document.getElementById('feed-empty').classList.remove('hidden');
+        cargarSugeridas();
     }
 }
 
