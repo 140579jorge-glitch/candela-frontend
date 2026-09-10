@@ -233,6 +233,7 @@
         .s-anim-delay-3 { transition-delay: .24s; }
         .s-anim-delay-4 { transition-delay: .32s; }
     </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-c-bg text-c-text antialiased min-h-screen pb-20 md:pb-0">
 
@@ -628,6 +629,22 @@
             <div class="flex border-b border-c-border mb-6">
                 <button id="tab-login" onclick="switchTab('login')" class="pb-3 px-4 text-sm font-bold text-c-accent border-b-2 border-c-accent transition-all">Iniciar sesion</button>
                 <button id="tab-reg" onclick="switchTab('registro')" class="pb-3 px-4 text-sm font-semibold text-c-soft border-b-2 border-transparent hover:text-c-accent transition-all">Crear cuenta</button>
+            </div>
+
+            <!-- Google -->
+            <div id="google-wrap" class="hidden mb-5">
+                <div id="google-btn" class="flex justify-center [color-scheme:light]"></div>
+                <p id="google-err" class="hidden text-xs text-red-500 text-center mt-2"></p>
+                <div id="google-dob" class="hidden mt-3">
+                    <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Confirma tu fecha de nacimiento</label>
+                    <input id="g-dob" type="date" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent">
+                    <button onclick="reintentarGoogleConDob()" class="c-btn text-white w-full py-2.5 rounded-xl font-bold text-sm mt-2">Continuar</button>
+                </div>
+                <div class="flex items-center gap-3 my-4">
+                    <div class="flex-1 h-px bg-c-border"></div>
+                    <span class="text-[11px] text-c-soft font-semibold uppercase tracking-wide">o con email</span>
+                    <div class="flex-1 h-px bg-c-border"></div>
+                </div>
             </div>
 
             <!-- Login -->
@@ -1313,7 +1330,67 @@ function toast(msg, tipo = 'info') {
     }, 3800);
 }
 
+// ─── GOOGLE SIGN-IN ──────────────────────────────────────────────────
+let _googleCredential = null;
+
+async function initGoogleAuth() {
+    let cfg;
+    try { cfg = await candela.auth.config(); } catch(_) { return; }
+    if (!cfg || !cfg.google_client_id) return;
+    // Esperar a que cargue el script de Google (async)
+    let intentos = 0;
+    const espera = setInterval(() => {
+        if (window.google && google.accounts && google.accounts.id) {
+            clearInterval(espera);
+            google.accounts.id.initialize({
+                client_id: cfg.google_client_id,
+                callback: onGoogleCredential,
+                ux_mode: 'popup',
+            });
+            google.accounts.id.renderButton(document.getElementById('google-btn'), {
+                theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', width: 300,
+            });
+            document.getElementById('google-wrap').classList.remove('hidden');
+        } else if (++intentos > 40) {
+            clearInterval(espera);
+        }
+    }, 150);
+}
+
+async function onGoogleCredential(resp) {
+    _googleCredential = resp.credential;
+    document.getElementById('google-err').classList.add('hidden');
+    document.getElementById('google-dob').classList.add('hidden');
+    await _enviarGoogle(null);
+}
+
+async function reintentarGoogleConDob() {
+    const dob = document.getElementById('g-dob').value;
+    if (!dob) return;
+    await _enviarGoogle(dob);
+}
+
+async function _enviarGoogle(fecha_nacimiento) {
+    try {
+        const data = await candela.auth.google(_googleCredential, fecha_nacimiento);
+        cerrarModal();
+        const returnUrl = sessionStorage.getItem('candela_return');
+        if (returnUrl) { sessionStorage.removeItem('candela_return'); window.location.href = returnUrl; return; }
+        if (data.tipo_usuario === 'creadora') { window.location.href = 'pages/dashboard-creadora.html'; return; }
+        window.location.href = 'pages/feed.html';
+    } catch(err) {
+        if (err.message === 'dob_required') {
+            document.getElementById('google-dob').classList.remove('hidden');
+            return;
+        }
+        const e = document.getElementById('google-err');
+        e.textContent = err.message || 'No se pudo entrar con Google';
+        e.classList.remove('hidden');
+    }
+}
+
 init();
+if (!candela.auth.isLoggedIn()) initGoogleAuth();
 
 // Auto-open login modal if redirected from gated page
 if (new URLSearchParams(window.location.search).get('login') === '1') {

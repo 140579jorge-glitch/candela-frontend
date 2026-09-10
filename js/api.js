@@ -65,6 +65,16 @@ const candela = {
             }));
             return data;
         },
+        config: () => candela._req('GET', '/api/auth/config'),
+        async google(credential, fecha_nacimiento) {
+            const data = await candela._req('POST', '/api/auth/google', { credential, fecha_nacimiento });
+            localStorage.setItem('candela_token', data.access_token);
+            localStorage.setItem('candela_user', JSON.stringify({
+                tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug,
+                email_verificado: data.email_verificado !== false,
+            }));
+            return data;
+        },
         emailVerificado() {
             return candela.auth.user()?.email_verificado !== false;
         },
