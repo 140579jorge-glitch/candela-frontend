@@ -13,7 +13,7 @@
                     colors: {
                         "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
                         "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
-                        "c-soft":"#8B7D77","c-border":"#F0E6E1","c-surf":"#FFFFFF",
+                        "c-soft":"#6E625C","c-border":"#F0E6E1","c-surf":"#FFFFFF",
                         "c-surface":"#FFFBF9"
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
@@ -32,7 +32,7 @@
         .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
         .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
         .c-btn:active { transform:scale(.97); }
-        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#8B7D77;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
+        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#6E625C;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
         .nav-item:hover,.nav-item.active { color:#F4A261;background:rgba(244,162,97,.08);border-left-color:#F4A261; }
         .dash-section { display:none; }
         .dash-section.active { display:block; }
@@ -48,7 +48,7 @@
         .mov-ico { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
         @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
         .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
-        .bot-nav-item { display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.625rem;font-weight:600;color:#8B7D77;cursor:pointer;transition:color .15s;padding:.4rem .5rem; }
+        .bot-nav-item { display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.625rem;font-weight:600;color:#6E625C;cursor:pointer;transition:color .15s;padding:.4rem .5rem; }
         .bot-nav-item.active,.bot-nav-item:hover { color:#F4A261; }
         #toast-cnt { position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none; }
         .toast-msg { padding:.6rem 1.2rem;border-radius:12px;font-size:.875rem;font-weight:700;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.18);opacity:0;transition:opacity .3s; }
@@ -569,7 +569,7 @@ function renderMovs(elId, movs) {
         retiro:    ['send','#F3E5F5','#9C27B0'],
     };
     el.innerHTML = movs.map(m => {
-        const [icon, bg, color] = ico[m.tipo] || ['payments','#F5F5F5','#8B7D77'];
+        const [icon, bg, color] = ico[m.tipo] || ['payments','#F5F5F5','#6E625C'];
         const signo = m.monto < 0 ? '' : '+';
         return `<div class="mov-row">
             <div class="mov-ico" style="background:${bg}"><span class="ms ms-fill" style="font-size:18px;color:${color}">${icon}</span></div>

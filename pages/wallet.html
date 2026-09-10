@@ -12,7 +12,7 @@
                 extend: {
                     colors: {
                         "c-bg":"#FFF8F5","c-accent":"#F4A261","c-rose":"#E8A598",
-                        "c-champagne":"#F2D5C4","c-text":"#2D2D2D","c-soft":"#8B7D77","c-border":"#F0E6E1"
+                        "c-champagne":"#F2D5C4","c-text":"#2D2D2D","c-soft":"#6E625C","c-border":"#F0E6E1"
                     }
                 }
             }
@@ -26,7 +26,7 @@
         .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .15s,transform .1s; }
         .c-btn:hover { filter:brightness(1.05); }
         .c-btn:active { transform:scale(.98); }
-        .monto-btn { border:2px solid #F0E6E1; color:#8B7D77; transition:all .15s; cursor:pointer; }
+        .monto-btn { border:2px solid #F0E6E1; color:#6E625C; transition:all .15s; cursor:pointer; }
         .monto-btn.sel { border-color:#F4A261; background:#FFF4EE; color:#F4A261; font-weight:800; }
         .monto-btn:hover:not(.sel) { border-color:#F4A261; color:#F4A261; }
         .metodo-card { border:2px solid #F0E6E1; border-radius:16px; padding:14px 16px; cursor:pointer; transition:all .15s; }
@@ -36,7 +36,7 @@
         .mov-icon { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
         @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
         .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
-        .pais-btn { border:2px solid #F0E6E1; color:#8B7D77; border-radius:12px; padding:8px 12px; font-size:13px; font-weight:700; cursor:pointer; transition:all .15s; }
+        .pais-btn { border:2px solid #F0E6E1; color:#6E625C; border-radius:12px; padding:8px 12px; font-size:13px; font-weight:700; cursor:pointer; transition:all .15s; }
         .pais-btn.sel { border-color:#F4A261; background:#FFF4EE; color:#F4A261; }
     </style>
 </head>
@@ -57,7 +57,7 @@
         <span style="font-size:1.3rem;line-height:1;flex-shrink:0">💡</span>
         <div>
             <p class="font-bold text-sm" id="banner-titulo" style="color:#2D2D2D;margin-bottom:.2rem"></p>
-            <p class="text-xs" id="banner-msg" style="color:#8B7D77;line-height:1.5"></p>
+            <p class="text-xs" id="banner-msg" style="color:#6E625C;line-height:1.5"></p>
             <a id="banner-return" href="#" class="text-xs font-bold mt-1.5 inline-block" style="color:#F4A261">← Volver a suscribirme</a>
         </div>
     </div>
@@ -151,7 +151,7 @@
 
         <!-- Paso 1: boton generar -->
         <div id="step-generar">
-            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#8B7D77;line-height:1.4;">
+            <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
                 <strong style="color:#2D2D2D">Aviso importante.</strong> Los pagos en USDT son irreversibles. Envia solo desde billeteras de tu propiedad. Candela no puede reembolsar pagos ya enviados.
             </div>
             <button onclick="generarDireccion()" id="btn-generar"
@@ -225,7 +225,7 @@
             <span class="ms" style="font-size:28px;color:#D97706">warning</span>
         </div>
         <h3 style="text-align:center;font-weight:800;font-size:1rem;color:#2D2D2D;margin-bottom:.4rem">Verifica la red antes de enviar</h3>
-        <p style="text-align:center;font-size:.82rem;color:#8B7D77;line-height:1.5;margin-bottom:1rem">
+        <p style="text-align:center;font-size:.82rem;color:#6E625C;line-height:1.5;margin-bottom:1rem">
             Esta dirección solo acepta pagos en la red<br>
             <strong id="modal-red-nombre" style="color:#2D2D2D;font-size:1rem"></strong>
         </p>
@@ -237,7 +237,7 @@
             class="c-btn w-full text-white py-3 rounded-xl font-bold text-sm shadow-md mb-2">
             Entendido, generar dirección
         </button>
-        <button onclick="cerrarModalRed()" style="width:100%;padding:.7rem;border-radius:12px;border:2px solid #F0E6E1;background:transparent;color:#8B7D77;font-weight:700;font-size:.85rem;cursor:pointer">
+        <button onclick="cerrarModalRed()" style="width:100%;padding:.7rem;border-radius:12px;border:2px solid #F0E6E1;background:transparent;color:#6E625C;font-weight:700;font-size:.85rem;cursor:pointer">
             Cancelar
         </button>
     </div>
