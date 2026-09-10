@@ -1388,6 +1388,7 @@ async function confirmarMensaje() {
         userBalance = r.nuevo_balance || Math.max(0, userBalance - precio);
         cerrarModal('modal-dm');
         toast(`Mensaje enviado a ${creadoraData.nombre_artistico}`, 'success');
+        setTimeout(() => { window.location.href = 'mensajes.html?con=' + encodeURIComponent(creadoraData.id); }, 900);
     } catch (e) {
         toast(e.message || 'Error al enviar mensaje', 'error');
     } finally {

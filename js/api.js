@@ -190,6 +190,9 @@ const candela = {
         enviar: (data) => candela._req('POST', '/api/mensajes', data),
         miBandeja: () => candela._req('GET', '/api/mensajes/mi-bandeja'),
         marcarLeido: (id) => candela._req('PATCH', `/api/mensajes/${id}/leer`),
+        conversaciones: () => candela._req('GET', '/api/mensajes/conversaciones'),
+        hilo: (otroId) => candela._req('GET', `/api/mensajes/hilo/${encodeURIComponent(otroId)}`),
+        responder: (fanId, contenido) => candela._req('POST', '/api/mensajes/responder', { fan_id: fanId, contenido }),
     },
 
     chatSesion: {

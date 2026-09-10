@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes — Candela</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
+                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
+                        "c-soft":"#6E625C","c-border":"#F0E6E1"
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; background:#FFF8F5; color:#2D2D2D; }
+        .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
+        .skeleton { background:linear-gradient(90deg,#F0E6E1 25%,#FFF8F5 50%,#F0E6E1 75%); background-size:300% 100%; animation:shimmer 1.4s infinite; border-radius:12px; }
+        .conv-row { display:flex; gap:.75rem; align-items:center; padding:.8rem .9rem; border-radius:1rem; cursor:pointer; transition:background .15s; }
+        .conv-row:hover { background:#FFFBF9; }
+        .conv-row.active { background:#F2D5C4; }
+        .avatar { width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.95rem;overflow:hidden; }
+        .bubble { max-width:76%; padding:.6rem .85rem; border-radius:1.1rem; font-size:.9rem; line-height:1.4; word-wrap:break-word; white-space:pre-wrap; }
+        .bubble.mine { background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff; border-bottom-right-radius:.3rem; margin-left:auto; }
+        .bubble.theirs { background:#fff; border:1px solid #F0E6E1; color:#2D2D2D; border-bottom-left-radius:.3rem; }
+        .thread-scroll { overflow-y:auto; scroll-behavior:smooth; }
+        /* mobile: paneles deslizables */
+        @media (max-width: 1023px) {
+            #panel-hilo { position:fixed; inset:0; z-index:60; transform:translateX(100%); transition:transform .25s ease; background:#FFF8F5; }
+            #panel-hilo.open { transform:translateX(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- TOPBAR -->
+<header class="glass sticky top-0 z-40 border-b border-c-border">
+    <div class="flex items-center gap-3 px-4 h-14 max-w-5xl mx-auto">
+        <a href="../index.html" class="p-1.5 rounded-full hover:bg-c-border transition-colors">
+            <span class="material-symbols-outlined text-c-soft" style="font-size:22px">arrow_back</span>
+        </a>
+        <h1 class="font-display text-lg font-semibold text-c-text flex-1">Mensajes</h1>
+        <a href="../index.html" class="logo-text font-display font-semibold text-lg">Candela</a>
+    </div>
+</header>
+
+<main class="max-w-5xl mx-auto lg:flex lg:gap-4 lg:px-4 lg:py-4" style="min-height:calc(100vh - 3.5rem)">
+
+    <!-- LISTA DE CONVERSACIONES -->
+    <section id="panel-lista" class="lg:w-[340px] lg:shrink-0 lg:border lg:border-c-border lg:rounded-2xl lg:bg-white lg:overflow-hidden">
+        <div id="conv-skel" class="p-3 space-y-2">
+            <div class="skeleton h-16"></div><div class="skeleton h-16"></div><div class="skeleton h-16"></div>
+        </div>
+        <div id="conv-lista" class="p-2 hidden"></div>
+        <div id="conv-vacio" class="hidden text-center px-6 py-16">
+            <div class="w-16 h-16 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-c-rose" style="font-size:32px">forum</span>
+            </div>
+            <p class="font-semibold text-c-text mb-1">Sin mensajes todavía</p>
+            <p id="conv-vacio-txt" class="text-sm text-c-soft mb-5"></p>
+            <a id="conv-vacio-cta" href="explorar.html" class="hidden inline-flex items-center gap-2 bg-c-accent text-white font-bold px-5 py-2.5 rounded-full text-sm hover:bg-c-accent-d transition-colors">
+                <span class="material-symbols-outlined" style="font-size:18px">explore</span> Explorar creadoras
+            </a>
+        </div>
+    </section>
+
+    <!-- HILO -->
+    <section id="panel-hilo" class="flex-1 lg:border lg:border-c-border lg:rounded-2xl lg:bg-white lg:flex lg:flex-col">
+        <!-- placeholder desktop -->
+        <div id="hilo-placeholder" class="hidden lg:flex flex-1 items-center justify-center text-center px-8">
+            <div>
+                <div class="w-16 h-16 rounded-full bg-c-champagne flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-c-rose" style="font-size:32px">chat</span>
+                </div>
+                <p class="text-c-soft text-sm">Elige una conversación</p>
+            </div>
+        </div>
+
+        <!-- hilo activo -->
+        <div id="hilo-activo" class="hidden flex flex-col" style="height:calc(100vh - 3.5rem)">
+            <!-- header hilo -->
+            <div class="flex items-center gap-3 px-4 h-14 border-b border-c-border shrink-0 bg-c-bg">
+                <button onclick="cerrarHilo()" class="lg:hidden p-1.5 -ml-1.5 rounded-full hover:bg-c-border">
+                    <span class="material-symbols-outlined text-c-soft" style="font-size:22px">arrow_back</span>
+                </button>
+                <div id="hilo-avatar" class="avatar" style="width:36px;height:36px;font-size:.8rem"></div>
+                <div class="min-w-0 flex-1">
+                    <p id="hilo-nombre" class="font-bold text-c-text text-sm truncate"></p>
+                    <a id="hilo-perfil-link" href="#" class="text-[11px] text-c-accent font-semibold hidden">Ver perfil</a>
+                </div>
+            </div>
+
+            <!-- mensajes -->
+            <div id="hilo-msgs" class="thread-scroll flex-1 px-4 py-4 space-y-2 bg-c-bg"></div>
+
+            <!-- composer -->
+            <div class="border-t border-c-border p-3 shrink-0 bg-c-bg">
+                <p id="hilo-costo" class="text-[11px] text-c-soft mb-2 hidden"></p>
+                <div id="hilo-saldo-insuf" class="hidden bg-red-50 border border-red-200 rounded-xl p-2.5 mb-2 text-xs text-red-600 font-semibold"></div>
+                <form onsubmit="enviar(event)" class="flex items-end gap-2">
+                    <textarea id="hilo-inp" rows="1" maxlength="2000" placeholder="Escribe un mensaje…"
+                        class="flex-1 resize-none border border-c-border rounded-2xl px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-c-accent max-h-32"></textarea>
+                    <button type="submit" id="hilo-send"
+                        class="shrink-0 w-11 h-11 rounded-full bg-c-accent text-white flex items-center justify-center hover:bg-c-accent-d transition-colors disabled:opacity-40">
+                        <span class="material-symbols-outlined" style="font-size:20px">send</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="../js/api.js"></script>
+<script>
+const GRAD = {
+    naranja:['#F4A261','#E08947'], melocoton:['#F4A261','#E08947'], rosa:['#E8A598','#D4869D'],
+    dorado:['#F2D5C4','#E8A598'], champagne:['#F9EBE0','#E8C9B5'], coral:['#FF6B6B','#E8A598'],
+    lavanda:['#B8A4D4','#E8A598'], menta:['#8FD4C0','#E8A598'], default:['#F2D5C4','#E8A598'],
+};
+let ROL = null;           // 'fan' | 'creadora'
+let HILO_ACTUAL = null;   // otro_id abierto
+let CABECERA = null;
+let pollTimer = null;
+
+function hace(iso) {
+    if (!iso) return '';
+    const d = new Date(iso), ahora = new Date();
+    const seg = (ahora - d) / 1000;
+    if (seg < 60) return 'ahora';
+    if (seg < 3600) return `hace ${Math.floor(seg/60)} min`;
+    if (seg < 86400) return `hace ${Math.floor(seg/3600)} h`;
+    if (seg < 604800) return `hace ${Math.floor(seg/86400)} d`;
+    return d.toLocaleDateString('es', { day:'numeric', month:'short' });
+}
+
+function monograma(nombre) { return (nombre || '?').trim()[0].toUpperCase(); }
+
+function avatarHtml(nombre, avatarUrl, temaColor) {
+    const [c1, c2] = GRAD[temaColor] || GRAD.default;
+    if (avatarUrl) return `<img src="${esc(avatarUrl)}" class="w-full h-full object-cover" alt="">`;
+    return `<span>${esc(monograma(nombre))}</span>`;
+}
+function avatarBg(temaColor) {
+    const [c1, c2] = GRAD[temaColor] || GRAD.default;
+    return `background:linear-gradient(135deg,${c1},${c2})`;
+}
+
+async function cargarLista(silencioso) {
+    try {
+        const data = await candela.mensajes.conversaciones();
+        ROL = data.rol;
+        document.getElementById('conv-skel').classList.add('hidden');
+        const lista = document.getElementById('conv-lista');
+        const vacio = document.getElementById('conv-vacio');
+
+        if (!data.conversaciones.length) {
+            lista.classList.add('hidden');
+            vacio.classList.remove('hidden');
+            document.getElementById('conv-vacio-txt').textContent = ROL === 'creadora'
+                ? 'Cuando un fan te escriba, la conversación aparece aquí. Puedes responder gratis.'
+                : 'Escribe a una creadora desde su perfil para empezar una conversación.';
+            const cta = document.getElementById('conv-vacio-cta');
+            if (ROL !== 'creadora') cta.classList.remove('hidden');
+            return;
+        }
+        vacio.classList.add('hidden');
+        lista.classList.remove('hidden');
+        lista.innerHTML = data.conversaciones.map(c => {
+            const activo = c.otro_id === HILO_ACTUAL ? ' active' : '';
+            const preview = (c.ultimo_emisor === (ROL === 'creadora' ? 'creadora' : 'fan') ? 'Tú: ' : '') + c.ultimo_mensaje;
+            return `
+            <div class="conv-row${activo}" onclick="abrirHilo('${esc(c.otro_id)}')">
+                <div class="avatar" style="${avatarBg(c.tema_color)}">${avatarHtml(c.nombre, c.avatar_url, c.tema_color)}</div>
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-baseline gap-2">
+                        <p class="font-bold text-c-text text-sm truncate flex-1">${esc(c.nombre)}</p>
+                        <span class="text-[10px] text-c-soft shrink-0">${hace(c.fecha)}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-c-soft truncate flex-1">${esc(preview)}</p>
+                        ${c.no_leidos ? `<span class="shrink-0 min-w-[18px] h-[18px] px-1 rounded-full bg-c-accent text-white text-[10px] font-bold flex items-center justify-center">${c.no_leidos}</span>` : ''}
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (err) {
+        if (!silencioso) {
+            document.getElementById('conv-skel').classList.add('hidden');
+            document.getElementById('conv-vacio').classList.remove('hidden');
+            document.getElementById('conv-vacio-txt').textContent = 'No se pudieron cargar los mensajes.';
+        }
+    }
+}
+
+async function abrirHilo(otroId) {
+    HILO_ACTUAL = otroId;
+    document.querySelectorAll('.conv-row').forEach(r => r.classList.remove('active'));
+    document.getElementById('hilo-placeholder').classList.add('hidden');
+    document.getElementById('hilo-activo').classList.remove('hidden');
+    document.getElementById('panel-hilo').classList.add('open');
+    document.getElementById('hilo-msgs').innerHTML = '<p class="text-center text-xs text-c-soft py-4">Cargando…</p>';
+    await refrescarHilo();
+    cargarLista(true);
+    clearInterval(pollTimer);
+    pollTimer = setInterval(() => { refrescarHilo(true); cargarLista(true); }, 15000);
+}
+
+function cerrarHilo() {
+    HILO_ACTUAL = null;
+    clearInterval(pollTimer);
+    document.getElementById('panel-hilo').classList.remove('open');
+    document.getElementById('hilo-activo').classList.add('hidden');
+    document.getElementById('hilo-placeholder').classList.remove('hidden');
+    cargarLista(true);
+}
+
+async function refrescarHilo(silencioso) {
+    if (!HILO_ACTUAL) return;
+    try {
+        const data = await candela.mensajes.hilo(HILO_ACTUAL);
+        CABECERA = data.cabecera;
+        ROL = data.rol;
+
+        document.getElementById('hilo-nombre').textContent = data.cabecera.nombre;
+        const av = document.getElementById('hilo-avatar');
+        av.style.cssText = 'width:36px;height:36px;font-size:.8rem;' + avatarBg(data.cabecera.tema_color);
+        av.innerHTML = avatarHtml(data.cabecera.nombre, data.cabecera.avatar_url, data.cabecera.tema_color);
+
+        const link = document.getElementById('hilo-perfil-link');
+        if (data.cabecera.slug) {
+            link.href = 'creadora.html?slug=' + encodeURIComponent(data.cabecera.slug);
+            link.classList.remove('hidden');
+        } else {
+            link.classList.add('hidden');
+        }
+
+        // composer: costo para fan
+        const costoEl = document.getElementById('hilo-costo');
+        if (ROL === 'fan') {
+            const precio = Number(data.cabecera.precio_mensaje) || 0;
+            if (data.cabecera.acepta_mensajes === false) {
+                costoEl.textContent = 'Esta creadora tiene los mensajes desactivados por ahora.';
+                costoEl.classList.remove('hidden');
+                document.getElementById('hilo-inp').disabled = true;
+                document.getElementById('hilo-send').disabled = true;
+            } else {
+                costoEl.textContent = precio > 0
+                    ? `Cada mensaje que envías cuesta $${precio} USDT.`
+                    : 'Mensajes gratis con esta creadora.';
+                costoEl.classList.remove('hidden');
+            }
+        } else {
+            costoEl.classList.add('hidden');
+        }
+
+        const cont = document.getElementById('hilo-msgs');
+        const alFinal = cont.scrollHeight - cont.scrollTop - cont.clientHeight < 80;
+        cont.innerHTML = data.mensajes.map(m => {
+            const cls = m.mio ? 'mine' : 'theirs';
+            const pago = (m.emisor === 'fan' && Number(m.monto) > 0)
+                ? `<span class="block text-[10px] mt-1 ${m.mio ? 'text-white/70' : 'text-c-soft'}">$${Number(m.monto)} USDT</span>` : '';
+            return `<div><div class="bubble ${cls}">${esc(m.contenido)}${pago}</div>
+                <div class="text-[10px] text-c-soft mt-0.5 ${m.mio ? 'text-right' : ''}">${hace(m.fecha)}</div></div>`;
+        }).join('');
+        if (alFinal || !silencioso) cont.scrollTop = cont.scrollHeight;
+    } catch (err) {
+        if (!silencioso) {
+            document.getElementById('hilo-msgs').innerHTML =
+                '<p class="text-center text-xs text-red-500 py-4">No se pudo cargar la conversación.</p>';
+        }
+    }
+}
+
+async function enviar(e) {
+    e.preventDefault();
+    const inp = document.getElementById('hilo-inp');
+    const txt = inp.value.trim();
+    if (!txt || !HILO_ACTUAL) return;
+    const btn = document.getElementById('hilo-send');
+    btn.disabled = true;
+    document.getElementById('hilo-saldo-insuf').classList.add('hidden');
+    try {
+        if (ROL === 'creadora') {
+            await candela.mensajes.responder(HILO_ACTUAL, txt);
+        } else {
+            if (txt.length < 5) { toast('El mensaje debe tener al menos 5 caracteres', 'error'); btn.disabled = false; return; }
+            if (!CABECERA?.slug) { toast('No se pudo identificar la creadora', 'error'); btn.disabled = false; return; }
+            await candela.mensajes.enviar({ creadora_slug: CABECERA.slug, contenido: txt });
+        }
+        inp.value = '';
+        inp.style.height = 'auto';
+        await refrescarHilo();
+        cargarLista(true);
+    } catch (err) {
+        const msg = err?.message || 'No se pudo enviar el mensaje';
+        if (/saldo insuficiente/i.test(msg)) {
+            const box = document.getElementById('hilo-saldo-insuf');
+            box.innerHTML = esc(msg) + ' <a href="wallet.html" class="underline">Recargar</a>';
+            box.classList.remove('hidden');
+        } else {
+            toast(msg, 'error');
+        }
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+// textarea auto-grow
+document.getElementById('hilo-inp').addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 128) + 'px';
+});
+document.getElementById('hilo-inp').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(new Event('submit')); }
+});
+
+function init() {
+    if (!candela.auth.isLoggedIn()) { window.location.href = '/index.html'; return; }
+    const t = candela.auth.user()?.tipo;
+    if (t !== 'suscriptor' && t !== 'creadora') { window.location.href = '/index.html'; return; }
+    cargarLista();
+    // abrir hilo directo por ?con=<id>
+    const con = new URLSearchParams(location.search).get('con');
+    if (con) abrirHilo(con);
+}
+init();
+</script>
+</body>
+</html>
