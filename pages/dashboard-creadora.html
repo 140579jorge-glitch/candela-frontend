@@ -63,7 +63,7 @@
         <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
         <div class="flex items-center gap-3">
             <a id="link-ver-pagina" href="#" class="hidden text-xs font-bold text-c-accent border border-c-accent px-3 py-1.5 rounded-full hover:bg-c-accent hover:text-white transition-all" target="_blank">
-                <span class="ms" style="font-size:14px;vertical-align:-2px">open_in_new</span> Ver mi pagina
+                <span class="ms" style="font-size:14px;vertical-align:-2px">open_in_new</span> Ver mi página
             </a>
             <div id="topbar-estado" class="hidden px-3 py-1 rounded-full text-xs font-bold"></div>
             <button id="btn-hamburger" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full text-c-soft hover:bg-c-border transition-colors" onclick="toggleMenuMobile()">
@@ -106,12 +106,12 @@
         <div class="nav-item" onclick="mostrar('encuestas')"><span class="ms">poll</span>Encuestas</div>
         <div class="nav-item" onclick="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
         <div class="nav-item" onclick="mostrar('personalizar')"><span class="ms">palette</span>Personalizar</div>
-        <div class="nav-item" onclick="mostrar('verificacion')"><span class="ms">verified_user</span>Verificacion</div>
+        <div class="nav-item" onclick="mostrar('verificacion')"><span class="ms">verified_user</span>Verificación</div>
         <div class="nav-item" onclick="mostrar('propinas')"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" onclick="mostrar('mensajes')"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" onclick="mostrar('chat-sesion')"><span class="ms">videocam</span>Chat privado</div>
         <div class="nav-item" onclick="mostrar('referidas')"><span class="ms">group_add</span>Referidas</div>
-        <div class="nav-item" onclick="mostrar('metodos-pago')"><span class="ms">account_balance_wallet</span>Metodos de pago</div>
+        <div class="nav-item" onclick="mostrar('metodos-pago')"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
         <div class="nav-item" onclick="mostrar('stream')"><span class="ms">live_tv</span>Stream en vivo</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
@@ -132,16 +132,16 @@
         <div class="nav-item" onclick="mostrar('encuestas',this)"><span class="ms">poll</span>Encuestas</div>
         <div class="nav-item" onclick="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
         <div class="nav-item" onclick="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
-        <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificacion</div>
+        <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificación</div>
         <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" onclick="mostrar('chat-sesion',this)"><span class="ms">videocam</span>Chat privado</div>
         <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
-        <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Metodos de pago</div>
+        <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
         <div class="nav-item" onclick="mostrar('stream',this)"><span class="ms">live_tv</span>Stream en vivo</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="px-4 mb-2">
-            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Configuracion</p>
+            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Configuración</p>
         </div>
         <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
     </aside>
@@ -269,12 +269,12 @@
                                 <input type="radio" name="acceso" value="subs" checked class="accent-orange-400">
                                 <div>
                                     <span class="font-semibold">Solo suscriptores</span>
-                                    <span class="text-c-soft text-xs ml-1">(incluido en la suscripcion mensual)</span>
+                                    <span class="text-c-soft text-xs ml-1">(incluido en la suscripción mensual)</span>
                                 </div>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer text-sm">
                                 <input type="radio" name="acceso" value="ppv" class="accent-orange-400" onclick="togglePrecio(true)">
-                                <span class="font-semibold">Pago unico (PPV)</span>
+                                <span class="font-semibold">Pago único (PPV)</span>
                             </label>
                             <div id="precio-ppv" class="hidden pl-6">
                                 <input id="sub-precio" type="number" min="1" max="500" step="0.5" placeholder="Precio en $"
@@ -283,7 +283,7 @@
                             <label class="flex items-center gap-2 cursor-pointer text-sm">
                                 <input type="radio" name="acceso" value="gratis" class="accent-orange-400" onclick="togglePrecio(false)">
                                 <span class="font-semibold">Gratis para todos</span>
-                                <span class="text-c-soft text-xs">(preview publico)</span>
+                                <span class="text-c-soft text-xs">(preview público)</span>
                             </label>
                         </div>
                     </div>
@@ -305,7 +305,7 @@
                 <form id="form-pack" onsubmit="crearPack(event)" class="flex flex-col gap-4">
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo del pack</label>
-                        <input id="pk-titulo" type="text" maxlength="120" placeholder="Ej: Sesion de verano"
+                        <input id="pk-titulo" type="text" maxlength="120" placeholder="Ej: Sesión de verano"
                             class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all" required>
                     </div>
                     <div>
@@ -409,13 +409,13 @@
                 <input id="enc-pregunta" type="text" maxlength="200" placeholder="Escribe tu pregunta..."
                     class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-c-accent transition-all mb-3">
                 <div id="enc-opciones" class="flex flex-col gap-2 mb-3">
-                    <input type="text" class="enc-opcion border border-c-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-c-accent transition-all" placeholder="Opcion 1" maxlength="100">
-                    <input type="text" class="enc-opcion border border-c-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-c-accent transition-all" placeholder="Opcion 2" maxlength="100">
+                    <input type="text" class="enc-opcion border border-c-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-c-accent transition-all" placeholder="Opción 1" maxlength="100">
+                    <input type="text" class="enc-opcion border border-c-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-c-accent transition-all" placeholder="Opción 2" maxlength="100">
                 </div>
                 <div class="flex gap-2 mb-3">
                     <button onclick="agregarOpcion()" id="btn-add-opcion"
                         class="text-xs font-semibold text-c-accent border border-c-accent px-3 py-1.5 rounded-xl hover:bg-orange-50 transition-colors">
-                        + Agregar opcion
+                        + Agregar opción
                     </button>
                     <span class="text-xs text-c-soft self-center">(max 4)</span>
                 </div>
@@ -459,33 +459,33 @@
             <!-- Solicitar retiro -->
             <div class="bg-white border border-c-border rounded-2xl p-5 max-w-md shadow-sm">
                 <h3 class="font-bold text-base mb-1">Solicitar retiro</h3>
-                <p class="text-xs text-c-soft mb-4">Se procesan cada lunes. Minimo $20 USDT.</p>
+                <p class="text-xs text-c-soft mb-4">Se procesan cada lunes. Mínimo $20 USDT.</p>
                 <!-- Sin metodo configurado -->
                 <div id="retiro-sin-metodo" class="hidden text-center py-4">
                     <span class="ms text-c-accent block mb-2" style="font-size:36px">account_balance_wallet</span>
-                    <p class="text-c-soft text-sm mb-3">Primero configura tu metodo de pago</p>
+                    <p class="text-c-soft text-sm mb-3">Primero configura tu método de pago</p>
                     <button onclick="mostrar('metodos-pago')" class="c-btn text-white px-5 py-2 rounded-full text-sm font-bold shadow-sm">Configurar ahora</button>
                 </div>
                 <!-- Con metodo configurado -->
                 <div id="retiro-form" class="flex flex-col gap-3">
                     <div class="bg-c-bg border border-c-border rounded-xl px-4 py-3">
-                        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-0.5">Metodo configurado</p>
+                        <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-0.5">Método configurado</p>
                         <p id="ret-metodo-desc" class="font-semibold text-sm text-c-text">—</p>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Monto a retirar ($)</label>
-                        <input id="ret-monto" type="number" min="20" step="1" placeholder="Minimo $20"
+                        <input id="ret-monto" type="number" min="20" step="1" placeholder="Mínimo $20"
                             class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
                     </div>
                     <button onclick="solicitarRetiro()" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Solicitar retiro</button>
-                    <button type="button" onclick="mostrar('metodos-pago')" class="text-xs text-c-accent font-semibold text-center hover:text-c-accent-d transition-colors">Cambiar metodo de pago →</button>
+                    <button type="button" onclick="mostrar('metodos-pago')" class="text-xs text-c-accent font-semibold text-center hover:text-c-accent-d transition-colors">Cambiar método de pago →</button>
                 </div>
             </div>
         </section>
 
         <!-- ══ PERSONALIZAR ══ -->
         <section id="sec-personalizar" class="dash-section">
-            <h2 class="font-display text-2xl font-semibold mb-1">Personalizar mi pagina</h2>
+            <h2 class="font-display text-2xl font-semibold mb-1">Personalizar mi página</h2>
             <p class="text-c-soft text-sm mb-5">Esto es lo que ven tus suscriptores cuando visitan tu perfil.</p>
 
             <!-- Score completitud -->
@@ -524,7 +524,7 @@
                         </div>
                         <!-- Banner -->
                         <div>
-                            <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Banner (cabecera de tu pagina)</p>
+                            <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Banner (cabecera de tu página)</p>
                             <div id="prev-banner" class="w-full rounded-xl overflow-hidden mb-3" style="height:72px;background:linear-gradient(135deg,#FFF4EE,#F2D5C4)">
                                 <img id="prev-banner-img" src="" alt="" class="hidden w-full h-full object-cover">
                             </div>
@@ -532,7 +532,7 @@
                             <canvas id="banner-canvas" width="1200" height="300" style="display:none"></canvas>
                             <div class="flex flex-col gap-2">
                                 <button type="button" onclick="generarBannerAuto()" class="flex items-center justify-center gap-2 text-xs font-bold text-white py-2 px-3 rounded-xl shadow-sm" style="background:linear-gradient(90deg,#F4A261,#D4869D)">
-                                    <span class="ms" style="font-size:16px">auto_awesome</span>Generar banner automaticamente
+                                    <span class="ms" style="font-size:16px">auto_awesome</span>Generar banner automáticamente
                                 </button>
                                 <div class="flex items-center gap-2">
                                     <div class="flex-1 h-px bg-c-border"></div>
@@ -543,7 +543,7 @@
                                     <span class="ms" style="font-size:14px;vertical-align:middle">upload</span> Subir tu propio diseno
                                     <input type="file" id="input-banner" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                                 </label>
-                                <p class="text-[10px] text-c-soft">Cualquier tamano — se ajusta a 1200×300 px automaticamente.</p>
+                                <p class="text-[10px] text-c-soft">Cualquier tamano — se ajusta a 1200×300 px automáticamente.</p>
                             </div>
                         </div>
                     </div>
@@ -551,7 +551,7 @@
 
                 <!-- Bio -->
                 <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-sm mb-3">Informacion publica</h3>
+                    <h3 class="font-bold text-sm mb-3">Información pública</h3>
                     <div class="flex flex-col gap-3">
                         <div>
                             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Bio</label>
@@ -559,10 +559,10 @@
                                 class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio suscripcion mensual ($)</label>
+                            <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio suscripción mensual ($)</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
-                                <input id="p-precio" type="number" min="0" max="100" step="0.5" placeholder="0 = sin suscripcion"
+                                <input id="p-precio" type="number" min="0" max="100" step="0.5" placeholder="0 = sin suscripción"
                                     class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
                             </div>
                         </div>
@@ -586,7 +586,7 @@
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Intereses (separados por coma)</label>
-                            <input id="p-intereses" type="text" maxlength="300" placeholder="Ej: fitness, fotografia, cocina, viajes"
+                            <input id="p-intereses" type="text" maxlength="300" placeholder="Ej: fitness, fotografía, cocina, viajes"
                                 class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
                             <p class="text-[10px] text-c-soft mt-1">Hasta 10 tags. Ayuda a que tus fans te encuentren.</p>
                         </div>
@@ -602,13 +602,13 @@
                 <!-- Carrusel de presentacion -->
                 <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                     <h3 class="font-bold text-sm mb-1">Carrusel de presentacion</h3>
-                    <p class="text-xs text-c-soft mb-3">Fotos que aparecen en tu perfil publico (solo para suscriptores activos). Max 6.</p>
+                    <p class="text-xs text-c-soft mb-3">Fotos que aparecen en tu perfil público (solo para suscriptores activos). Max 6.</p>
                     <div id="carrusel-grid" class="grid grid-cols-3 gap-2 mb-3"></div>
                     <label id="carrusel-add-btn" class="flex items-center justify-center gap-2 border-2 border-dashed border-c-border rounded-xl py-3 cursor-pointer hover:border-c-accent transition-all text-c-soft hover:text-c-accent text-sm font-semibold">
                         <span class="ms" style="font-size:20px">add_photo_alternate</span>Agregar foto
                         <input type="file" id="input-carrusel" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                     </label>
-                    <p class="text-[10px] text-c-soft mt-2">Los cambios del carrusel se guardan al instante (no necesitas el boton guardar).</p>
+                    <p class="text-[10px] text-c-soft mt-2">Los cambios del carrusel se guardan al instante (no necesitas el botón guardar).</p>
                 </div>
 
                 <!-- Tema de color -->
@@ -657,8 +657,8 @@
 
         <!-- ══ VERIFICACION ══ -->
         <section id="sec-verificacion" class="dash-section">
-            <h2 class="font-display text-2xl font-semibold mb-1">Verificacion de edad</h2>
-            <p class="text-c-soft text-sm mb-5">Requerida para activar tu cuenta. Solo para mayores de 18 anos.</p>
+            <h2 class="font-display text-2xl font-semibold mb-1">Verificación de edad</h2>
+            <p class="text-c-soft text-sm mb-5">Requerida para activar tu cuenta. Solo para mayores de 18 años.</p>
 
             <div id="ver-estado-box" class="hidden rounded-2xl p-4 mb-5 border text-sm"></div>
 
@@ -720,7 +720,7 @@
         <!-- ══ CHAT PRIVADO POR SESION ══ -->
         <section id="sec-chat-sesion" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Chat privado</h2>
-            <p class="text-c-soft text-sm mb-5">Ofrece sesiones de chat exclusivas a tus fans por minuto. Ganas el 84% de cada sesion.</p>
+            <p class="text-c-soft text-sm mb-5">Ofrece sesiones de chat exclusivas a tus fans por minuto. Ganas el 84% de cada sesión.</p>
 
             <!-- Config -->
             <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm mb-6">
@@ -764,7 +764,7 @@
                         <button onclick="chatCrEnviar()" class="c-btn text-white px-4 py-2 rounded-xl text-sm font-bold">Enviar</button>
                     </div>
                 </div>
-                <button onclick="terminarChatCr()" class="mt-3 c-btn-outline px-4 py-2 rounded-full text-sm font-bold text-red-500 border-red-300">Terminar sesion</button>
+                <button onclick="terminarChatCr()" class="mt-3 c-btn-outline px-4 py-2 rounded-full text-sm font-bold text-red-500 border-red-300">Terminar sesión</button>
             </div>
         </section>
 
@@ -903,7 +903,7 @@
 
         <!-- ══ METODOS DE PAGO ══ -->
         <section id="sec-metodos-pago" class="dash-section">
-            <h2 class="font-display text-2xl font-semibold mb-1">Metodos de pago</h2>
+            <h2 class="font-display text-2xl font-semibold mb-1">Métodos de pago</h2>
             <p class="text-c-soft text-sm mb-5">Configura como quieres recibir tus retiros. Solo procesamos <strong>USDT</strong>.</p>
 
             <!-- Disclaimer -->
@@ -912,7 +912,7 @@
                 <div>
                     <p class="font-bold text-red-700 text-sm mb-1">Tu responsabilidad — lee antes de guardar</p>
                     <p class="text-red-600 text-xs leading-relaxed">
-                        Candela <strong>solo procesa retiros en USDT</strong>. Si ingresas una billetera incorrecta, de otra red o de otra criptomoneda, los fondos se perderan de forma <strong>irreversible</strong>. Verifica cada direccion caracter por caracter. Candela no se hace responsable por errores en las direcciones ingresadas ni por fondos enviados a billeteras equivocadas.
+                        Candela <strong>solo procesa retiros en USDT</strong>. Si ingresas una billetera incorrecta, de otra red o de otra criptomoneda, los fondos se perderan de forma <strong>irreversible</strong>. Verifica cada dirección caracter por caracter. Candela no se hace responsable por errores en las direcciones ingresadas ni por fondos enviados a billeteras equivocadas.
                     </p>
                 </div>
             </div>
@@ -921,7 +921,7 @@
 
                 <!-- Metodo preferido -->
                 <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-sm mb-3">Metodo preferido</h3>
+                    <h3 class="font-bold text-sm mb-3">Método preferido</h3>
                     <div class="grid grid-cols-3 gap-2">
                         <label>
                             <input type="radio" name="metodo_retiro" value="trc20" class="sr-only" onchange="actualizarMetodoOpt()">
@@ -960,14 +960,14 @@
 
 
                 <button type="submit" id="btn-guardar-pago" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
-                    Guardar metodos de pago
+                    Guardar métodos de pago
                 </button>
             </form>
 
             <!-- Zona de peligro -->
             <div class="max-w-xl mt-10 border border-red-300 rounded-2xl p-5 bg-red-50">
                 <h3 class="font-bold text-red-700 text-sm mb-1">Zona de peligro</h3>
-                <p class="text-xs text-red-600 mb-4">Eliminar tu cuenta es permanente. Tus datos personales se borran en 30 dias. Si tienes balance disponible debes retirarlo primero.</p>
+                <p class="text-xs text-red-600 mb-4">Eliminar tu cuenta es permanente. Tus datos personales se borran en 30 días. Si tienes balance disponible debes retirarlo primero.</p>
                 <button onclick="eliminarCuentaCreadora()" class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2 px-5 rounded-xl transition-colors">
                     Eliminar mi cuenta
                 </button>
@@ -977,7 +977,7 @@
         <!-- ══ LIVE ══ -->
         <section id="sec-stream" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">En vivo</h2>
-            <p class="text-c-soft text-sm mb-5">Transmite en vivo desde tu camara. Tus fans te veran en tiempo real.</p>
+            <p class="text-c-soft text-sm mb-5">Transmite en vivo desde tu cámara. Tus fans te verán en tiempo real.</p>
 
             <!-- Estado: sin stream activo -->
             <div id="stream-sin-activo">
@@ -1003,7 +1003,7 @@
                     <details class="text-xs text-c-soft border-t border-c-border pt-3">
                         <summary class="cursor-pointer select-none font-semibold text-c-soft hover:text-c-text">Usar OBS / Streamlabs en su lugar</summary>
                         <div class="mt-2 space-y-2">
-                            <p>Crea el stream primero y luego copia los datos de conexion para tu app.</p>
+                            <p>Crea el stream primero y luego copia los datos de conexión para tu app.</p>
                             <button onclick="crearStreamExterno()" class="w-full py-2 rounded-xl border border-c-border text-c-text font-semibold hover:bg-c-bg transition-colors">
                                 Crear stream (modo externo)
                             </button>
@@ -1037,7 +1037,7 @@
                         <span class="bg-c-accent/90 text-white text-xs font-bold px-2 py-1 rounded-lg" id="stream-activo-ingresos">$0.00</span>
                     </div>
                     <div id="monitor-connecting" class="absolute inset-0 flex items-center justify-center bg-black/70">
-                        <p class="text-white text-sm font-semibold">Conectando camara...</p>
+                        <p class="text-white text-sm font-semibold">Conectando cámara...</p>
                     </div>
                 </div>
 
@@ -1077,7 +1077,7 @@
 
                 <!-- Link y datos externos -->
                 <details class="bg-c-bg border border-c-border rounded-2xl p-4 text-sm">
-                    <summary class="font-semibold text-c-text cursor-pointer select-none">Link y datos de conexion</summary>
+                    <summary class="font-semibold text-c-text cursor-pointer select-none">Link y datos de conexión</summary>
                     <div class="mt-3 space-y-3">
                         <div>
                             <p class="text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1">Link para fans</p>

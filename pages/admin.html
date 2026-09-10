@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin â€” Candela</title>
+    <title>Panel Admin — Candela</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -71,7 +71,7 @@
     <div class="absolute inset-0 bg-black/50" onclick="toggleMenuMobile()"></div>
     <nav class="absolute top-16 left-0 bottom-0 w-64 bg-white overflow-y-auto pt-4 pb-8 shadow-xl flex flex-col">
         <div class="px-4 mb-3">
-            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Gestion</p>
+            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Gestión</p>
         </div>
         <div class="nav-item active" onclick="mostrar('dashboard',this)"><span class="ms ms-fill">dashboard</span>Panel</div>
         <div class="nav-item" onclick="mostrar('verificaciones',this)"><span class="ms">verified_user</span>Verificaciones</div>
@@ -79,7 +79,7 @@
         <div class="nav-item" onclick="mostrar('creadoras',this)"><span class="ms">people</span>Creadoras</div>
         <div class="nav-item" onclick="mostrar('pagos',this)"><span class="ms">receipt_long</span>Pagos PPV</div>
         <div class="nav-item" onclick="mostrar('comisiones',this)"><span class="ms">monitoring</span>Comisiones</div>
-        <div class="nav-item" onclick="mostrar('depositos',this)"><span class="ms">account_balance_wallet</span>Depositos</div>
+        <div class="nav-item" onclick="mostrar('depositos',this)"><span class="ms">account_balance_wallet</span>Depósitos</div>
         <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">flag</span>Reclamos</div>
@@ -93,7 +93,7 @@
     <!-- Sidebar -->
     <aside class="sidebar hidden md:flex flex-col w-56 shrink-0 fixed top-16 left-0 bottom-0 bg-white border-r border-c-border overflow-y-auto pt-4 pb-8">
         <div class="px-4 mb-4">
-            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Gestion</p>
+            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Gestión</p>
         </div>
         <div class="nav-item active" onclick="mostrar('dashboard',this)"><span class="ms ms-fill">dashboard</span>Panel</div>
         <div class="nav-item" onclick="mostrar('verificaciones',this)"><span class="ms">verified_user</span>Verificaciones
@@ -107,7 +107,7 @@
             <span class="ml-auto bg-red-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-pagos">0</span>
         </div>
         <div class="nav-item" onclick="mostrar('comisiones',this)"><span class="ms">monitoring</span>Comisiones</div>
-        <div class="nav-item" onclick="mostrar('depositos',this)"><span class="ms">account_balance_wallet</span>Depositos
+        <div class="nav-item" onclick="mostrar('depositos',this)"><span class="ms">account_balance_wallet</span>Depósitos
             <span class="ml-auto bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-dep">0</span>
         </div>
         <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas
@@ -162,7 +162,7 @@
                     <p class="text-2xl font-bold text-c-text" id="d-pagos">-</p>
                 </div>
                 <div class="stat-card border-l-4" style="border-left-color:#16a34a">
-                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Depositos pend.</p>
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Depósitos pend.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-depositos">-</p>
                 </div>
                 <div class="stat-card border-l-4" style="border-left-color:#2980B9">
@@ -212,8 +212,8 @@
                         <span class="ms" style="color:#6b7280">schedule</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="font-bold text-sm">Comision inactividad</p>
-                        <p class="text-xs text-c-soft">0.5%/mes a creadoras sin retiro en 90+ dias</p>
+                        <p class="font-bold text-sm">Comisión inactividad</p>
+                        <p class="text-xs text-c-soft">0.5%/mes a creadoras sin retiro en 90+ días</p>
                     </div>
                     <button onclick="ejecutarMantenimiento()" class="shrink-0 text-xs font-bold px-3 py-2 rounded-xl border border-c-border text-c-soft hover:border-c-accent hover:text-c-accent transition-all">Ejecutar</button>
                 </div>
@@ -311,7 +311,7 @@
         <!-- â•â• PAGOS PPV â•â• -->
         <section id="sec-pagos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Pagos de contenido PPV</h2>
-            <p class="text-c-soft text-sm mb-5">Confirma el pago despues de verificar la transaccion en blockchain.</p>
+            <p class="text-c-soft text-sm mb-5">Confirma el pago después de verificar la transacción en blockchain.</p>
             <div id="lista-pagos" class="flex flex-col gap-3">
                 <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
             </div>
@@ -319,7 +319,7 @@
 
         <!-- â•â• DEPOSITOS â•â• -->
         <section id="sec-depositos" class="dash-section">
-            <h2 class="font-display text-2xl font-semibold mb-5">Depositos de wallet pendientes</h2>
+            <h2 class="font-display text-2xl font-semibold mb-5">Depósitos de wallet pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Verifica el hash en blockchain. Al confirmar se acredita el saldo al fan (incluido bonus si aplica).</p>
             <div id="lista-depositos" class="flex flex-col gap-3">
                 <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
@@ -638,7 +638,7 @@ async function cargarPropinas() {
                 </div>
                 <div class="bg-c-bg rounded-xl px-4 py-2.5 mb-3 flex items-center gap-2">
                     <span class="ms text-c-soft" style="font-size:16px">tag</span>
-                    <span class="font-mono text-xs break-all">${esc(p.referencia_pago || 'â€”')}</span>
+                    <span class="font-mono text-xs break-all">${esc(p.referencia_pago || '—')}</span>
                     <span class="ml-auto bg-c-border rounded px-2 py-0.5 text-[10px] font-bold text-c-soft">${p.metodo_red || 'trc20'}</span>
                 </div>
                 <div class="flex gap-2">
@@ -678,7 +678,7 @@ async function cargarMensajesAdmin() {
                 </div>
                 <div class="bg-c-bg rounded-xl px-4 py-2.5 mb-2 text-sm text-c-text">${esc(m.contenido_preview)}</div>
                 <div class="bg-c-bg rounded-xl px-4 py-2 mb-3 flex items-center gap-2">
-                    <span class="font-mono text-xs break-all">${esc(m.referencia_pago || 'â€”')}</span>
+                    <span class="font-mono text-xs break-all">${esc(m.referencia_pago || '—')}</span>
                     <span class="ml-auto bg-c-border rounded px-2 py-0.5 text-[10px] font-bold text-c-soft">${m.metodo_red || 'trc20'}</span>
                 </div>
                 <div class="flex gap-2">
@@ -831,7 +831,7 @@ async function _fetchComisiones() {
             pag.classList.remove('hidden');
             const desde = _comOffset + 1;
             const hasta = Math.min(_comOffset + _comLimit, total);
-            document.getElementById('com-pag-info').textContent = `${desde}â€“${hasta} de ${total}`;
+            document.getElementById('com-pag-info').textContent = `${desde}–${hasta} de ${total}`;
             document.getElementById('com-pag-prev').disabled = _comOffset === 0;
             document.getElementById('com-pag-next').disabled = _comOffset + _comLimit >= total;
         } else {
@@ -888,7 +888,7 @@ async function cargarReclamos(filtro) {
                             <p class="font-bold text-sm">${esc(r.usuario_email||r.usuario_id)}</p>
                             <span class="badge ${BCLS[r.estado]||'badge-pendiente'}">${esc(r.estado)}</span>
                         </div>
-                        <p class="text-xs text-c-soft mb-1">${LABS[r.tipo_reclamo]||r.tipo_reclamo} ${r.referencia_id ? 'â€” Ref: '+esc(r.referencia_id) : ''}</p>
+                        <p class="text-xs text-c-soft mb-1">${LABS[r.tipo_reclamo]||r.tipo_reclamo} ${r.referencia_id ? '— Ref: '+esc(r.referencia_id) : ''}</p>
                         <p class="text-sm text-c-text leading-relaxed mb-2">${esc(r.descripcion)}</p>
                         ${r.notas_admin ? `<p class="text-xs text-indigo-700 font-semibold">Respuesta admin: ${esc(r.notas_admin)}</p>` : ''}
                         <p class="text-[11px] text-c-soft mt-1">${r.fecha ? new Date(r.fecha).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}) : ''}</p>
