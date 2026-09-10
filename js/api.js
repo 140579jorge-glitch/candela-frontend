@@ -160,6 +160,7 @@ const candela = {
     pagos: {
         instrucciones: (slug) => candela._req('GET', `/api/pagos/instrucciones-pago/${slug}`),
         confirmarSuscripcion: (data) => candela._req('POST', '/api/pagos/confirmar-suscripcion', data),
+        planes: (slug) => candela._req('GET', `/api/pagos/planes/${encodeURIComponent(slug)}`),
         solicitarRetiro: (monto, wallet, metodoRed = 'trc20') => candela._req('POST', '/api/pagos/solicitar-retiro', { monto, wallet_destino: wallet, metodo_red: metodoRed, metodo: 'usdt' }),
         misSuscripciones: () => candela._req('GET', '/api/pagos/mis-suscripciones'),
     },
@@ -193,6 +194,15 @@ const candela = {
         conversaciones: () => candela._req('GET', '/api/mensajes/conversaciones'),
         hilo: (otroId) => candela._req('GET', `/api/mensajes/hilo/${encodeURIComponent(otroId)}`),
         responder: (fanId, contenido) => candela._req('POST', '/api/mensajes/responder', { fan_id: fanId, contenido }),
+        async responderMedia(fanId, archivo, precio, contenido) {
+            const fd = new FormData();
+            fd.append('fan_id', fanId);
+            fd.append('precio', precio || 0);
+            if (contenido) fd.append('contenido', contenido);
+            fd.append('archivo', archivo);
+            return candela._req('POST', '/api/mensajes/responder-media', fd, true);
+        },
+        desbloquear: (mensajeId) => candela._req('POST', `/api/mensajes/${encodeURIComponent(mensajeId)}/desbloquear`),
     },
 
     chatSesion: {

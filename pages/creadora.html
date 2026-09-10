@@ -101,6 +101,13 @@
         .modal-box { background:#fff; border-radius:1.5rem; padding:2rem; width:100%; max-width:460px; box-shadow:0 28px 64px rgba(0,0,0,.13); transform:translateY(18px); transition:transform .22s; }
         .modal-bg.open .modal-box { transform:translateY(0); }
 
+        .plan-opt { position:relative; border:1.5px solid #F0E6E1; border-radius:.85rem; padding:.6rem .5rem; text-align:center; cursor:pointer; transition:border-color .15s, background .15s; }
+        .plan-opt:hover { border-color:#E8A598; }
+        .plan-opt.sel { border-color:#F4A261; background:rgba(244,162,97,.07); }
+        .plan-opt .pm { font-weight:800; font-size:.95rem; color:#2D2D2D; }
+        .plan-opt .pt { font-size:.68rem; color:#6E625C; margin-top:.1rem; }
+        .plan-opt .pd { position:absolute; top:-8px; right:-6px; background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff; font-size:.58rem; font-weight:800; padding:.1rem .4rem; border-radius:99px; }
+
         /* No scrollbar */
         .no-scroll::-webkit-scrollbar { display:none; }
         .no-scroll { -ms-overflow-style:none; scrollbar-width:none; }
@@ -386,7 +393,9 @@
     <div class="modal-box relative">
         <button onclick="cerrarModal('modal-sub')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-c-border hover:bg-c-champagne transition-colors text-c-soft text-lg flex items-center justify-center font-bold">×</button>
         <h2 class="font-display text-xl font-semibold mb-1" id="sub-titulo">Suscribirte</h2>
-        <p class="text-c-soft text-sm mb-5" id="sub-desc">Accede a todo el contenido exclusivo</p>
+        <p class="text-c-soft text-sm mb-4" id="sub-desc">Accede a todo el contenido exclusivo</p>
+
+        <div id="sub-planes" class="grid grid-cols-2 gap-2 mb-4"></div>
 
         <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-5">
             <div class="flex justify-between items-center mb-1">
@@ -1036,44 +1045,77 @@ function switchTab(tab, btn) {
 }
 
 // ─── SUSCRIPCION ─────────────────────────────────────────────
-function abrirSub() {
+let _planes = [];
+let _planSel = 1;      // meses elegidos
+let _planCosto = 0;    // costo total del plan elegido
+
+async function abrirSub() {
     if (!candela.auth.isLoggedIn()) {
         sessionStorage.setItem('candela_return', location.href);
         window.location.href = '../index.html?login=1';
         return;
     }
-    const precio = creadoraData.precio_suscripcion;
-    if (precio > 0 && userBalance < precio) {
-        const falta = (precio - userBalance).toFixed(2);
-        sessionStorage.setItem('candela_return', location.href);
-        sessionStorage.setItem('candela_recarga_ctx', JSON.stringify({
-            nombre: creadoraData.nombre_artistico,
-            precio: precio,
-            falta: parseFloat(falta),
-        }));
-        toast(`Para suscribirte a ${esc(creadoraData.nombre_artistico)} necesitas $${falta} USDT más. Tu saldo: $${userBalance.toFixed(2)}. Redirigiendo a tu wallet...`, 'info');
-        setTimeout(() => { window.location.href = 'wallet.html'; }, 3000);
-        return;
+    // cargar planes (1/3/6/12 con descuento)
+    try {
+        const data = await candela.pagos.planes(slug);
+        _planes = data.planes || [];
+    } catch(_) {
+        _planes = [{ meses: 1, total: creadoraData.precio_suscripcion || 0, descuento: 0, precio_mes: creadoraData.precio_suscripcion || 0, ahorro: 0 }];
     }
+    _planSel = 1;
+    renderPlanes();
     document.getElementById('sub-balance-disp').textContent = `$${userBalance.toFixed(2)}`;
-    document.getElementById('sub-saldo-insuf').classList.add('hidden');
     abrirModal('modal-sub');
 }
 
+function renderPlanes() {
+    const cont = document.getElementById('sub-planes');
+    if (_planes.length <= 1) { cont.classList.add('hidden'); }
+    else { cont.classList.remove('hidden'); }
+    cont.innerHTML = _planes.map(p => `
+        <div class="plan-opt ${p.meses === _planSel ? 'sel' : ''}" onclick="seleccionarPlan(${p.meses})">
+            ${p.descuento > 0 ? `<span class="pd">-${p.descuento}%</span>` : ''}
+            <div class="pm">${p.meses === 1 ? '1 mes' : p.meses + ' meses'}</div>
+            <div class="pt">$${Number(p.precio_mes).toFixed(2)}/mes${p.meses > 1 ? ` · $${Number(p.total).toFixed(0)} total` : ''}</div>
+        </div>`).join('');
+    seleccionarPlan(_planSel, true);
+}
+
+function seleccionarPlan(meses, soloActualizar) {
+    _planSel = meses;
+    const p = _planes.find(x => x.meses === meses) || _planes[0];
+    _planCosto = Number(p.total) || 0;
+    if (!soloActualizar) {
+        document.querySelectorAll('#sub-planes .plan-opt').forEach((el, i) => {
+            el.classList.toggle('sel', _planes[i] && _planes[i].meses === meses);
+        });
+    }
+    document.getElementById('sub-precio-modal').textContent = `$${_planCosto.toFixed(2)}`;
+    document.getElementById('sub-costo-btn').textContent = `$${_planCosto.toFixed(2)}`;
+    const insuf = userBalance < _planCosto;
+    const box = document.getElementById('sub-saldo-insuf');
+    box.classList.toggle('hidden', !insuf);
+    if (insuf) document.getElementById('sub-falta').textContent = `$${(_planCosto - userBalance).toFixed(2)}`;
+    document.getElementById('btn-confirmar-sub').disabled = insuf;
+}
+
 async function confirmarSub() {
-    const precio = creadoraData.precio_suscripcion;
-    if (userBalance < precio) { window.location.href = 'wallet.html'; return; }
+    if (userBalance < _planCosto) {
+        sessionStorage.setItem('candela_return', location.href);
+        window.location.href = 'wallet.html';
+        return;
+    }
     const btn = document.getElementById('btn-confirmar-sub');
     btn.textContent = 'Procesando...'; btn.disabled = true;
     try {
-        const r = await candela.pagos.confirmarSuscripcion({ creadora_slug: slug, meses: 1 });
-        userBalance = r.nuevo_balance || Math.max(0, userBalance - precio);
+        const r = await candela.pagos.confirmarSuscripcion({ creadora_slug: slug, meses: _planSel });
+        userBalance = r.nuevo_balance != null ? r.nuevo_balance : Math.max(0, userBalance - _planCosto);
         cerrarModal('modal-sub');
         toast(r.mensaje || 'Suscripcion activada', 'success');
         setTimeout(() => location.reload(), 2000);
     } catch(err) {
         toast(err.message, 'error');
-        btn.textContent = `Suscribirme por $${precio} USDT`; btn.disabled = false;
+        btn.textContent = `Suscribirme por $${_planCosto.toFixed(2)} USDT`; btn.disabled = false;
     }
 }
 
