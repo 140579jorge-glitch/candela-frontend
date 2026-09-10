@@ -1957,7 +1957,8 @@ function _abrirChatCr(sesionId, fanNombre, expiresAt) {
 
     const token = localStorage.getItem('candela_token') || '';
     const wsBase = candela._wsBase();
-    _chatCrWs = new WebSocket(`${wsBase}/api/chat-sesion/${sesionId}/ws?token=${encodeURIComponent(token)}`);
+    _chatCrWs = new WebSocket(`${wsBase}/api/chat-sesion/${encodeURIComponent(sesionId)}/ws`);
+    _chatCrWs.onopen = () => _chatCrWs.send(JSON.stringify({ tipo: 'auth', token }));
 
     _chatCrWs.onmessage = e => {
         const d = JSON.parse(e.data);
@@ -2296,7 +2297,8 @@ function conectarMonitorWs(streamId) {
     if (_monitorWs) { try { _monitorWs.close(); } catch(_) {} }
     const token = localStorage.getItem('candela_token') || '';
     const wsBase = API_URL.replace('https://', 'wss://').replace('http://', 'ws://');
-    _monitorWs = new WebSocket(`${wsBase}/api/streams/${streamId}/ws${token ? '?token=' + encodeURIComponent(token) : ''}`);
+    _monitorWs = new WebSocket(`${wsBase}/api/streams/${encodeURIComponent(streamId)}/ws`);
+    _monitorWs.onopen = () => _monitorWs.send(JSON.stringify({ tipo: 'auth', token }));
     _monitorWs.onmessage = e => {
         const d = JSON.parse(e.data);
         const chat = document.getElementById('monitor-chat');

@@ -1279,8 +1279,8 @@ function _abrirVentanaChat(sesionId, sesionInfo) {
     document.getElementById('modal-chat-activo').style.display = 'flex';
 
     const token = candela.auth.getToken ? candela.auth.getToken() : (localStorage.getItem('candela_token') || '');
-    const wsUrl = `${candela._wsBase()}/api/chat-sesion/${sesionId}/ws?token=${encodeURIComponent(token)}`;
-    _chatSesionWs = new WebSocket(wsUrl);
+    _chatSesionWs = new WebSocket(`${candela._wsBase()}/api/chat-sesion/${encodeURIComponent(sesionId)}/ws`);
+    _chatSesionWs.onopen = () => _chatSesionWs.send(JSON.stringify({ tipo: 'auth', token }));
 
     _chatSesionWs.onmessage = e => {
         const d = JSON.parse(e.data);
