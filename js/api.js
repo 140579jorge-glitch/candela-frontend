@@ -93,7 +93,7 @@ const candela = {
         user() {
             try { return JSON.parse(localStorage.getItem('candela_user')); } catch { return null; }
         },
-        isLoggedIn: () => !!localStorage.getItem('candela_token'),
+        isLoggedIn: () => !!localStorage.getItem('candela_token') && !!localStorage.getItem('candela_user'),
     },
 
     creadoras: {

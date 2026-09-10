@@ -883,7 +883,7 @@ function initScrollAnimations() {
 // ─── STREAMS EN VIVO (strip) ─────────────────────────────────────────
 async function verificarStreamsActivos() {
     try {
-        const base = (window.API_URL || '').replace(/\/$/, '');
+        const base = (typeof API_URL !== 'undefined' ? API_URL : '').replace(/\/$/, '');
         const resp = await fetch(`${base}/api/streams/activos`);
         if (!resp.ok) return;
         const lista = await resp.json();
@@ -898,7 +898,7 @@ async function verificarStreamsActivos() {
 // ─── PUBLIC CREATOR PREVIEW (guests) ─────────────────────────────────
 async function cargarPreviewPublico() {
     try {
-        const base = (window.API_URL || '').replace(/\/$/, '');
+        const base = (typeof API_URL !== 'undefined' ? API_URL : '').replace(/\/$/, '');
         const resp = await fetch(`${base}/api/creadoras/explorar?limit=6`);
         if (!resp.ok) throw new Error('no data');
         const lista = await resp.json();

@@ -88,7 +88,7 @@
         </div>
 
         <!-- hilo activo -->
-        <div id="hilo-activo" class="hidden flex flex-col" style="height:calc(100vh - 3.5rem)">
+        <div id="hilo-activo" class="flex-col" hidden style="display:none;height:calc(100vh - 3.5rem)">
             <!-- header hilo -->
             <div class="flex items-center gap-3 px-4 h-14 border-b border-c-border shrink-0 bg-c-bg">
                 <button onclick="cerrarHilo()" class="lg:hidden p-1.5 -ml-1.5 rounded-full hover:bg-c-border">
@@ -211,20 +211,24 @@ async function abrirHilo(otroId) {
     HILO_ACTUAL = otroId;
     document.querySelectorAll('.conv-row').forEach(r => r.classList.remove('active'));
     document.getElementById('hilo-placeholder').classList.add('hidden');
-    document.getElementById('hilo-activo').classList.remove('hidden');
+    const ha = document.getElementById('hilo-activo');
+    ha.hidden = false; ha.style.display = 'flex';
     document.getElementById('panel-hilo').classList.add('open');
     document.getElementById('hilo-msgs').innerHTML = '<p class="text-center text-xs text-c-soft py-4">Cargando…</p>';
     await refrescarHilo();
     cargarLista(true);
     clearInterval(pollTimer);
-    pollTimer = setInterval(() => { refrescarHilo(true); cargarLista(true); }, 15000);
+    pollTimer = setInterval(() => {
+        if (document.visibilityState === 'visible' && HILO_ACTUAL) { refrescarHilo(true); cargarLista(true); }
+    }, 15000);
 }
 
 function cerrarHilo() {
     HILO_ACTUAL = null;
     clearInterval(pollTimer);
     document.getElementById('panel-hilo').classList.remove('open');
-    document.getElementById('hilo-activo').classList.add('hidden');
+    const ha = document.getElementById('hilo-activo');
+    ha.hidden = true; ha.style.display = 'none';
     document.getElementById('hilo-placeholder').classList.remove('hidden');
     cargarLista(true);
 }
