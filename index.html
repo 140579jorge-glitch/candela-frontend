@@ -933,7 +933,7 @@ async function cargarPreviewPublico() {
                     <div style="color:rgba(255,255,255,.52);font-size:.7rem;margin-bottom:.5rem">${flag} ${esc(c.pais || 'Latam')}</div>
                     <div style="display:flex;justify-content:space-between;align-items:center">
                         <span style="color:#F4A261;font-size:.74rem;font-weight:700">${esc(precio)}</span>
-                        <span style="font-size:.62rem;color:rgba(255,255,255,.38)">${subs} subs</span>
+                        <span style="font-size:.62rem;color:rgba(255,255,255,.38)">${subs} ${subs === 1 ? 'fan' : 'fans'}</span>
                     </div>
                 </div>
                 <div class="pcard-hover">
