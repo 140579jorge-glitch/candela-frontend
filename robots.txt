@@ -3,6 +3,13 @@ Disallow: /pages/admin.html
 Disallow: /pages/dashboard-creadora.html
 Disallow: /pages/feed.html
 Disallow: /pages/resetear-password.html
+Disallow: /pages/wallet.html
+Disallow: /pages/mensajes.html
+Disallow: /pages/fan-dashboard.html
+Disallow: /pages/mis-favoritos.html
+Disallow: /pages/mis-suscripciones.html
+Disallow: /pages/verificar-email.html
+Disallow: /pages/verificacion-edad.html
 Allow: /
 
 Sitemap: https://clubcandela.com/sitemap.xml
