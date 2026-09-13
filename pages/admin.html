@@ -125,7 +125,7 @@
 
     <main class="flex-1 md:ml-56 px-4 md:px-8 py-6">
 
-        <!-- â•â• DASHBOARD â•â• -->
+        <!-- DASHBOARD -->
         <section id="sec-dashboard" class="dash-section active">
             <div class="flex items-center justify-between mb-5">
                 <h1 class="font-display text-2xl font-semibold">Panel</h1>
@@ -220,7 +220,7 @@
             </div>
         </section>
 
-        <!-- â•â• VERIFICACIONES â•â• -->
+        <!-- VERIFICACIONES -->
         <section id="sec-verificaciones" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Verificaciones de identidad</h2>
             <div id="lista-verificaciones" class="flex flex-col gap-3">
@@ -228,7 +228,7 @@
             </div>
         </section>
 
-        <!-- â•â• RETIROS â•â• -->
+        <!-- RETIROS -->
         <section id="sec-retiros" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Retiros pendientes</h2>
             <div id="lista-retiros" class="flex flex-col gap-3">
@@ -236,7 +236,7 @@
             </div>
         </section>
 
-        <!-- â•â• CREADORAS â•â• -->
+        <!-- CREADORAS -->
         <section id="sec-creadoras" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Creadoras activas</h2>
             <div id="lista-creadoras" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -250,7 +250,7 @@
             </div>
         </section>
 
-        <!-- â•â• COMISIONES â•â• -->
+        <!-- COMISIONES -->
         <section id="sec-comisiones" class="dash-section">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="font-display text-2xl font-semibold">Comisiones Candela</h2>
@@ -308,7 +308,7 @@
             </div>
         </section>
 
-        <!-- â•â• PAGOS PPV â•â• -->
+        <!-- PAGOS PPV -->
         <section id="sec-pagos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Pagos de contenido PPV</h2>
             <p class="text-c-soft text-sm mb-5">Confirma el pago después de verificar la transacción en blockchain.</p>
@@ -317,7 +317,7 @@
             </div>
         </section>
 
-        <!-- â•â• DEPOSITOS â•â• -->
+        <!-- DEPOSITOS -->
         <section id="sec-depositos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Depósitos de wallet pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Verifica el hash en blockchain. Al confirmar se acredita el saldo al fan (incluido bonus si aplica).</p>
@@ -326,7 +326,7 @@
             </div>
         </section>
 
-        <!-- â•â• PROPINAS â•â• -->
+        <!-- PROPINAS -->
         <section id="sec-propinas" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Propinas pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Verifica el hash en blockchain antes de confirmar.</p>
@@ -335,7 +335,7 @@
             </div>
         </section>
 
-        <!-- â•â• RECLAMOS â•â• -->
+        <!-- RECLAMOS -->
         <section id="sec-reclamos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-2">Reclamos y Disputas</h2>
             <p class="text-c-soft text-sm mb-5">Gestiona los reclamos enviados por fans y creadoras. Plazo de respuesta: 48 hs habiles.</p>
@@ -350,7 +350,7 @@
             </div>
         </section>
 
-        <!-- â•â• MENSAJES â•â• -->
+        <!-- MENSAJES -->
         <section id="sec-mensajes" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Mensajes directos pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Confirma el pago para que el mensaje se muestre a la creadora.</p>
@@ -379,7 +379,7 @@
 async function init() {
     const user = candela.auth.user();
     if (!user || user.tipo !== 'admin') { window.location.href = '../index.html'; return; }
-    document.getElementById('admin-email').textContent = user.email || 'Admin';
+    document.getElementById('admin-email').textContent = user.nombre || user.email || 'Admin';
     // Registrar estado inicial en history para que "atras" no salga del panel
     const secInicial = location.hash.replace('#', '') || 'dashboard';
     history.replaceState({section: secInicial}, '', '#' + secInicial);
@@ -417,7 +417,7 @@ async function cargarDashboard() {
         document.getElementById('badge-ver').textContent = d.verificaciones_pendientes ?? 0;
         document.getElementById('badge-ret').textContent = d.retiros_pendientes ?? 0;
         document.getElementById('badge-dep').textContent = d.depositos_pendientes ?? 0;
-    } catch(e) {}
+    } catch(e) { toast('Error al cargar dashboard: ' + (e.message || 'Error'), 'error'); }
 }
 
 async function cargarVerificaciones() {
@@ -627,7 +627,7 @@ async function cargarPropinas() {
             <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                 <div class="flex items-start justify-between gap-4 mb-3">
                     <div>
-                        <p class="font-bold text-base">${esc(p.remitente_nombre)} <span class="font-normal text-c-soft text-sm">â†’</span> ${esc(p.creadora_nombre)}</p>
+                        <p class="font-bold text-base">${esc(p.remitente_nombre)} <span class="font-normal text-c-soft text-sm">&rarr;</span> ${esc(p.creadora_nombre)}</p>
                         <p class="text-xs text-c-soft">${esc(p.remitente_email)}</p>
                         ${p.mensaje ? `<p class="text-sm text-c-text italic mt-1">"${esc(p.mensaje)}"</p>` : ''}
                     </div>
@@ -669,7 +669,7 @@ async function cargarMensajesAdmin() {
             <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                 <div class="flex items-start justify-between gap-4 mb-3">
                     <div>
-                        <p class="font-bold text-base">${esc(m.remitente_nombre)} <span class="font-normal text-c-soft text-sm">â†’</span> ${esc(m.creadora_nombre)}</p>
+                        <p class="font-bold text-base">${esc(m.remitente_nombre)} <span class="font-normal text-c-soft text-sm">&rarr;</span> ${esc(m.creadora_nombre)}</p>
                         <p class="text-xs text-c-soft">${esc(m.remitente_email)}</p>
                     </div>
                     <div class="text-right shrink-0">
@@ -723,7 +723,7 @@ async function cargarCreadoras() {
                     </a>
                 </div>
             </div>`).join('');
-    } catch(e) {}
+    } catch(e) { cont.innerHTML = '<p class="col-span-3 text-red-400 text-sm text-center py-8">Error al cargar creadoras</p>'; }
 
     // Creadoras pendientes
     const pendCont = document.getElementById('lista-creadoras-pendientes');
@@ -741,7 +741,7 @@ async function cargarCreadoras() {
                 </div>
                 <span class="badge badge-${c.estado}">${c.estado}</span>
             </div>`).join('');
-    } catch(e) {}
+    } catch(e) { pendCont.innerHTML = '<p class="text-red-400 text-sm text-center py-4">Error al cargar pendientes</p>'; }
 }
 
 async function cargarPagosPPV() {
@@ -867,7 +867,7 @@ function toast(msg, tipo='info') {
     setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(100%)'; setTimeout(()=>el.remove(),300); }, 3800);
 }
 
-// â•â• RECLAMOS â•â•
+// RECLAMOS
 let _reclamosFiltro = '';
 async function cargarReclamos(filtro) {
     if (filtro !== undefined) _reclamosFiltro = filtro;
