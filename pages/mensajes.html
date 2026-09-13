@@ -239,7 +239,7 @@ async function cargarLista(silencioso) {
 async function abrirHilo(otroId) {
     HILO_ACTUAL = otroId;
     document.querySelectorAll('.conv-row').forEach(r => r.classList.remove('active'));
-    document.getElementById('hilo-placeholder').classList.add('hidden');
+    document.getElementById('hilo-placeholder').style.display = 'none';
     const ha = document.getElementById('hilo-activo');
     ha.hidden = false; ha.style.display = 'flex';
     document.getElementById('panel-hilo').classList.add('open');
@@ -258,7 +258,7 @@ function cerrarHilo() {
     document.getElementById('panel-hilo').classList.remove('open');
     const ha = document.getElementById('hilo-activo');
     ha.hidden = true; ha.style.display = 'none';
-    document.getElementById('hilo-placeholder').classList.remove('hidden');
+    document.getElementById('hilo-placeholder').style.display = '';
     cargarLista(true);
 }
 
