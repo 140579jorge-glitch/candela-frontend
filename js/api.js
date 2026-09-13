@@ -42,6 +42,7 @@ const candela = {
                     tipo: data.tipo_usuario,
                     nombre: data.nombre,
                     slug: data.creadora_slug,
+                    email: data.email,
                     email_verificado: data.email_verificado !== false,
                 }));
             }
@@ -52,6 +53,7 @@ const candela = {
             localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre,
+                email: data.email,
                 email_verificado: data.email_verificado !== false,
             }));
             return data;
@@ -61,6 +63,7 @@ const candela = {
             localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug,
+                email: data.email,
                 email_verificado: data.email_verificado !== false,
             }));
             return data;
@@ -71,6 +74,7 @@ const candela = {
             localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug,
+                email: data.email,
                 email_verificado: data.email_verificado !== false,
             }));
             return data;
