@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 
@@ -1749,7 +1749,7 @@ window.addEventListener('popstate', e => _activarSeccion(e.state?.section || 'in
 async function cargarReferidas() {
     try {
         const data = await candela.creadoras.misReferidas();
-        const baseUrl = window.location.origin + window.location.pathname.replace('dashboard-creadora.html','') + '../pages/registro-creadora.html';
+        const baseUrl = window.location.origin + window.location.pathname.replace('dashboard-creadora.html', 'registro-creadora.html');
         document.getElementById('link-ref').value = `${baseUrl}?ref=${data.codigo_referido}`;
         document.getElementById('ref-total').textContent = data.total_referidas;
         const activas = data.referidas.filter(r => r.estado === 'activa').length;
