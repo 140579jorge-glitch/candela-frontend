@@ -353,14 +353,14 @@ async function cargar() {
     document.getElementById('topbar-avatar').textContent = (user.nombre||'F')[0].toUpperCase();
     cargarNotif();
 
+    document.getElementById('bienvenida-sub').textContent = `Hola, ${user.nombre||'Fan'}! Todo tu historial en un lugar.`;
+
     try {
         actData = await candela._req('GET', '/api/fans/mi-actividad');
         candela.balance.cache(actData.balance || 0);
     } catch(e) {
         toast('Error al cargar tu actividad', 'error'); return;
     }
-
-    document.getElementById('bienvenida-sub').textContent = `Hola, ${user.nombre||'Fan'}! Todo tu historial en un lugar.`;
     document.getElementById('st-balance').textContent = '$' + fmt(actData.balance);
     document.getElementById('st-subs').textContent = actData.suscripciones_activas.filter(s => s.estado === 'activa').length;
     document.getElementById('st-compras').textContent = actData.compras_recientes.length;
