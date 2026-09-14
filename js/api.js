@@ -28,6 +28,14 @@ const candela = {
         if (body) opts.body = form ? body : JSON.stringify(body);
         const res = await fetch(`${API_URL}${path}`, opts);
         const data = await res.json().catch(() => ({}));
+        if (res.status === 401 && this._token()) {
+            // Token expirado o invalido — limpiar sesion y redirigir al login
+            localStorage.removeItem('candela_token');
+            localStorage.removeItem('candela_user');
+            const inPages = location.pathname.includes('/pages/');
+            window.location.href = inPages ? '../index.html' : '/index.html';
+            throw new Error('Sesion expirada');
+        }
         if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);
         return data;
     },
@@ -234,6 +242,8 @@ const candela = {
         procesarPropina: (id, accion) => candela._req('POST', `/api/admin/propinas/${id}`, { accion }),
         mensajesPendientes: () => candela._req('GET', '/api/admin/mensajes-pendientes'),
         procesarMensaje: (id, accion) => candela._req('POST', `/api/admin/mensajes/${id}`, { accion }),
+        reclamosPendientes: () => candela._req('GET', '/api/admin/reclamos-pendientes'),
+        actualizarReclamo: (id, estado, notas) => candela._req('POST', `/api/admin/reclamos/${id}`, { estado, notas }),
         comisiones: (params = {}) => {
             const q = new URLSearchParams(params).toString();
             return candela._req('GET', `/api/admin/comisiones${q ? '?' + q : ''}`);
