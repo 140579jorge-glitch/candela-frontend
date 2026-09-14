@@ -622,7 +622,7 @@ async function cargarPropinas() {
     try {
         const propinas = await candela.admin.propinasPendientes();
         document.getElementById('badge-prop').textContent = propinas.length;
-        if (!propinas.length) { lista.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Sin propinas pendientes</p>'; return; }
+        if (!propinas.length) { lista.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Sin propinas registradas</p>'; return; }
         lista.innerHTML = propinas.map(p => `
             <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                 <div class="flex items-start justify-between gap-4 mb-3">
@@ -641,30 +641,23 @@ async function cargarPropinas() {
                     <span class="font-mono text-xs break-all">${esc(p.referencia_pago || '—')}</span>
                     <span class="ml-auto bg-c-border rounded px-2 py-0.5 text-[10px] font-bold text-c-soft">${p.metodo_red || 'trc20'}</span>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="accionPropina('${p.propina_id}','confirmar',this)" class="flex-1 c-btn text-white py-2.5 rounded-xl text-sm font-bold shadow-sm">Confirmar</button>
-                    <button onclick="accionPropina('${p.propina_id}','rechazar',this)" class="flex-1 py-2.5 rounded-xl text-sm font-bold border-2 border-red-300 text-red-500 hover:bg-red-50 transition-colors">Rechazar</button>
+                <div class="flex items-center gap-2 pt-1">
+                    <span class="ms text-green-500" style="font-size:16px">check_circle</span>
+                    <span class="text-xs text-green-600 font-semibold">Procesada automaticamente</span>
+                    <span class="ml-auto text-xs text-c-soft">${p.fecha ? new Date(p.fecha).toLocaleDateString('es-BO') : ''}</span>
                 </div>
             </div>
         `).join('');
     } catch(e) { lista.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Error al cargar</p>'; }
 }
 
-async function accionPropina(id, accion, btn) {
-    btn.disabled = true; btn.textContent = accion === 'confirmar' ? 'Confirmando...' : 'Rechazando...';
-    try {
-        await candela.admin.procesarPropina(id, accion);
-        toast(accion === 'confirmar' ? 'Propina confirmada' : 'Propina rechazada', accion === 'confirmar' ? 'success' : 'info');
-        cargarPropinas();
-    } catch(e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.textContent = accion; }
-}
 
 async function cargarMensajesAdmin() {
     const lista = document.getElementById('lista-mensajes');
     try {
         const mensajes = await candela.admin.mensajesPendientes();
         document.getElementById('badge-msg').textContent = mensajes.length;
-        if (!mensajes.length) { lista.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Sin mensajes pendientes</p>'; return; }
+        if (!mensajes.length) { lista.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Sin mensajes registrados</p>'; return; }
         lista.innerHTML = mensajes.map(m => `
             <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
                 <div class="flex items-start justify-between gap-4 mb-3">
@@ -681,23 +674,16 @@ async function cargarMensajesAdmin() {
                     <span class="font-mono text-xs break-all">${esc(m.referencia_pago || '—')}</span>
                     <span class="ml-auto bg-c-border rounded px-2 py-0.5 text-[10px] font-bold text-c-soft">${m.metodo_red || 'trc20'}</span>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="accionMensaje('${m.mensaje_id}','confirmar',this)" class="flex-1 c-btn text-white py-2.5 rounded-xl text-sm font-bold shadow-sm">Confirmar</button>
-                    <button onclick="accionMensaje('${m.mensaje_id}','rechazar',this)" class="flex-1 py-2.5 rounded-xl text-sm font-bold border-2 border-red-300 text-red-500 hover:bg-red-50 transition-colors">Rechazar</button>
+                <div class="flex items-center gap-2 pt-1">
+                    <span class="ms text-green-500" style="font-size:16px">check_circle</span>
+                    <span class="text-xs text-green-600 font-semibold">Procesado automaticamente</span>
+                    <span class="ml-auto text-xs text-c-soft">${m.fecha ? new Date(m.fecha).toLocaleDateString('es-BO') : ''}</span>
                 </div>
             </div>
         `).join('');
     } catch(e) { lista.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Error al cargar</p>'; }
 }
 
-async function accionMensaje(id, accion, btn) {
-    btn.disabled = true; btn.textContent = accion === 'confirmar' ? 'Confirmando...' : 'Rechazando...';
-    try {
-        await candela.admin.procesarMensaje(id, accion);
-        toast(accion === 'confirmar' ? 'Mensaje confirmado y visible para la creadora' : 'Mensaje rechazado', accion === 'confirmar' ? 'success' : 'info');
-        cargarMensajesAdmin();
-    } catch(e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.textContent = accion; }
-}
 
 async function cargarCreadoras() {
     const cont = document.getElementById('lista-creadoras');
@@ -927,7 +913,7 @@ async function actualizarReclamo(id, btn) {
     const estado = document.getElementById('sel-est-'+id).value;
     const notas = document.getElementById('nota-'+id).value.trim();
     try {
-        await candela._req('POST', `/api/admin/reclamos/${id}`, { estado, notas_admin: notas || null });
+        await candela._req('POST', `/api/admin/reclamos/${id}`, { estado, notas: notas || null });
         toast('Reclamo actualizado', 'success');
         cargarReclamos();
     } catch(e) { toast(e.message||'Error', 'error'); btn.disabled=false; btn.textContent='Guardar'; }
