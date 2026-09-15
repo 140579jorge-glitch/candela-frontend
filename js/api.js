@@ -93,7 +93,8 @@ const candela = {
         reenviarVerificacion: (email) => candela._req('POST', '/api/auth/reenviar-verificacion', { email }),
         eliminarCuenta: () => candela._req('DELETE', '/api/auth/cuenta'),
         cambiarPassword: (password_actual, nueva_password) => candela._req('POST', '/api/auth/cambiar-password', { password_actual, nueva_password }),
-        logout() {
+        async logout() {
+            try { await candela._req('POST', '/api/auth/logout'); } catch (_) {}
             localStorage.removeItem('candela_token');
             localStorage.removeItem('candela_user');
             const isFile = location.protocol === 'file:';
