@@ -243,7 +243,7 @@ const candela = {
         procesarPropina: (id, accion) => candela._req('POST', `/api/admin/propinas/${id}`, { accion }),
         mensajesPendientes: () => candela._req('GET', '/api/admin/mensajes-pendientes'),
         procesarMensaje: (id, accion) => candela._req('POST', `/api/admin/mensajes/${id}`, { accion }),
-        reclamosPendientes: () => candela._req('GET', '/api/admin/reclamos-pendientes'),
+        reclamosPendientes: () => candela._req('GET', '/api/admin/reclamos'),
         actualizarReclamo: (id, estado, notas) => candela._req('POST', `/api/admin/reclamos/${id}`, { estado, notas }),
         comisiones: (params = {}) => {
             const q = new URLSearchParams(params).toString();
