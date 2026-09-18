@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,9 +10,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
-                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
-                        "c-soft":"#6E625C","c-border":"#F0E6E1"
+                        "c-bg":"#FDF8F5","c-accent":"#B5445C","c-accent-d":"#CF6278",
+                        "c-rose":"#F2B8C8","c-champagne":"#FAF2F5","c-text":"#2D2D2D",
+                        "c-soft":"#7B4D5E","c-border":"#F5E8EF"
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
                 }
@@ -24,16 +24,16 @@
     <style>
         body { font-family:'Nunito',sans-serif; }
         .glass { background:rgba(255,248,245,.9); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
         .ms-fill { font-variation-settings:'FILL' 1; }
-        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .2s,transform .15s; }
         .c-btn:hover { filter:brightness(1.06); }
-        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#6E625C;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
-        .nav-item:hover,.nav-item.active { color:#F4A261;background:rgba(244,162,97,.08);border-left-color:#F4A261; }
-        .stat-card { background:#fff;border:1px solid #F0E6E1;border-radius:1rem;padding:1.25rem; }
+        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#7B4D5E;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
+        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(244,162,97,.08);border-left-color:#B5445C; }
+        .stat-card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem;padding:1.25rem; }
         .badge { display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:100px;font-size:.7rem;font-weight:700; }
-        .badge-pendiente { background:rgba(244,162,97,.12);color:#E08947;border:1px solid rgba(244,162,97,.3); }
+        .badge-pendiente { background:rgba(244,162,97,.12);color:#CF6278;border:1px solid rgba(244,162,97,.3); }
         .badge-activa { background:rgba(46,204,113,.1);color:#27ae60;border:1px solid rgba(46,204,113,.3); }
         .badge-rechazada { background:rgba(231,76,60,.1);color:#e74c3c;border:1px solid rgba(231,76,60,.3); }
         .badge-aprobada { background:rgba(46,204,113,.1);color:#27ae60;border:1px solid rgba(46,204,113,.3); }
@@ -41,7 +41,7 @@
         .dash-section.active { display:block; }
         .sidebar::-webkit-scrollbar { display:none; }
         .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
-        .ver-card { background:#fff;border:1px solid #F0E6E1;border-radius:1rem;padding:1.25rem;transition:box-shadow .2s; }
+        .ver-card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem;padding:1.25rem;transition:box-shadow .2s; }
         .ver-card:hover { box-shadow:0 4px 20px rgba(244,162,97,.1); }
     </style>
 </head>
@@ -59,7 +59,7 @@
         </div>
         <div class="flex items-center gap-3">
             <span class="text-xs text-c-soft hidden sm:block" id="admin-email"></span>
-            <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)" title="Salir">
+            <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-white shadow-sm" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)" title="Salir">
                 <span class="ms" style="font-size:18px">logout</span>
             </button>
         </div>
@@ -135,11 +135,11 @@
             </div>
 
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
-                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Creadoras activas</p>
                     <p class="text-2xl font-bold text-c-accent" id="d-activas">-</p>
                 </div>
-                <div class="stat-card border-l-4" style="border-left-color:#E8A598">
+                <div class="stat-card border-l-4" style="border-left-color:#F2B8C8">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Pendientes aprob.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-pendientes">-</p>
                 </div>
@@ -153,7 +153,7 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Verificaciones CI</p>
                     <p class="text-2xl font-bold text-c-text" id="d-verificaciones">-</p>
                 </div>
@@ -175,7 +175,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="bg-white border border-c-border rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-c-accent transition-all" onclick="mostrar('verificaciones')">
                     <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(244,162,97,.1)">
-                        <span class="ms" style="color:#F4A261">verified_user</span>
+                        <span class="ms" style="color:#B5445C">verified_user</span>
                     </div>
                     <div>
                         <p class="font-bold text-sm">Verificaciones CI</p>
@@ -270,7 +270,7 @@
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Ingreso total Candela</p>
                     <p class="text-2xl font-bold" style="color:#9B72CF" id="com-total-ingreso">-</p>
                 </div>
-                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Total registros</p>
                     <p class="text-2xl font-bold text-c-accent" id="com-total">-</p>
                 </div>
@@ -295,7 +295,7 @@
                     </table>
                 </div>
                 <div id="com-vacio" class="hidden py-12 text-center">
-                    <span class="ms" style="font-size:3rem;color:#F2D5C4">bar_chart</span>
+                    <span class="ms" style="font-size:3rem;color:#FAF2F5">bar_chart</span>
                     <p class="text-c-soft mt-2 text-sm">Sin comisiones registradas aun</p>
                 </div>
                 <div id="com-paginacion" class="hidden px-4 py-3 border-t border-c-border flex items-center justify-between">
@@ -426,7 +426,7 @@ async function cargarVerificaciones() {
     try {
         const lista = await candela.admin.verificacionesPendientes();
         if (!lista.length) {
-            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#F2D5C4">check_circle</span><p class="text-c-soft mt-2">Sin verificaciones pendientes</p></div>';
+            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#FAF2F5">check_circle</span><p class="text-c-soft mt-2">Sin verificaciones pendientes</p></div>';
             return;
         }
         cont.innerHTML = lista.map(v => `
@@ -464,7 +464,7 @@ async function cargarRetiros() {
     try {
         const lista = await candela.admin.retirosPendientes();
         if (!lista.length) {
-            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#F2D5C4">check_circle</span><p class="text-c-soft mt-2">Sin retiros pendientes</p></div>';
+            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#FAF2F5">check_circle</span><p class="text-c-soft mt-2">Sin retiros pendientes</p></div>';
             return;
         }
         cont.innerHTML = lista.map(r => `
@@ -573,7 +573,7 @@ async function cargarDepositos() {
     try {
         const lista = await candela.admin.depositosPendientes();
         if (!lista.length) {
-            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#F2D5C4">check_circle</span><p class="text-c-soft mt-2">Sin depositos pendientes</p></div>';
+            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#FAF2F5">check_circle</span><p class="text-c-soft mt-2">Sin depositos pendientes</p></div>';
             return;
         }
         cont.innerHTML = lista.map(d => `
@@ -694,7 +694,7 @@ async function cargarCreadoras() {
         cont.innerHTML = lista.map(c => `
             <div class="bg-white border border-c-border rounded-2xl p-4">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                         ${(c.nombre_artistico||'?')[0].toUpperCase()}
                     </div>
                     <div class="min-w-0">
@@ -737,7 +737,7 @@ async function cargarPagosPPV() {
         const lista = await candela.admin.comprasPendientes();
         document.getElementById('badge-pagos').textContent = lista.length;
         if (!lista.length) {
-            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#F2D5C4">check_circle</span><p class="text-c-soft mt-2">Sin pagos PPV pendientes</p></div>';
+            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#FAF2F5">check_circle</span><p class="text-c-soft mt-2">Sin pagos PPV pendientes</p></div>';
             return;
         }
         cont.innerHTML = lista.map(p => `
@@ -844,9 +844,9 @@ function fmt_fecha(iso) {
 
 function toast(msg, tipo='info') {
     const c = document.getElementById('toasts');
-    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#B5445C' };
     const el = document.createElement('div');
-    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:300px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.style.cssText = `background:#fff;border:1px solid #F5E8EF;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:300px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
     el.textContent = msg;
     c.appendChild(el);
     requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });

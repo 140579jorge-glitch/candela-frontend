@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -39,16 +39,16 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":        "#FFF8F5",
+                        "c-bg":        "#FDF8F5",
                         "c-white":     "#FFFFFF",
-                        "c-accent":    "#F4A261",
-                        "c-accent-d":  "#E08947",
-                        "c-rose":      "#E8A598",
-                        "c-champagne": "#F2D5C4",
+                        "c-accent":    "#B5445C",
+                        "c-accent-d":  "#CF6278",
+                        "c-rose":      "#F2B8C8",
+                        "c-champagne": "#FAF2F5",
                         "c-text":      "#2D2D2D",
-                        "c-soft":      "#6E625C",
-                        "c-border":    "#F0E6E1",
-                        "c-surf":      "#FFFBF9",
+                        "c-soft":      "#7B4D5E",
+                        "c-border":    "#F5E8EF",
+                        "c-surf":      "#FDF8F5",
                     },
                     fontFamily: {
                         display: ["Playfair Display", "serif"],
@@ -90,7 +90,7 @@
 
         /* Logo gradient */
         .logo-text {
-            background: linear-gradient(90deg, #F4A261 0%, #E8A598 60%, #D4869D 100%);
+            background: linear-gradient(90deg, #B5445C 0%, #F2B8C8 60%, #D4869D 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -98,12 +98,12 @@
 
         /* Story ring */
         .story-ring-active {
-            background: linear-gradient(135deg, #F4A261, #E8A598, #D4869D);
+            background: linear-gradient(135deg, #B5445C, #F2B8C8, #D4869D);
         }
 
         /* Gradient button */
         .c-btn {
-            background: linear-gradient(135deg, #F4A261, #E8A598);
+            background: linear-gradient(135deg, #B5445C, #F2B8C8);
             transition: filter .3s cubic-bezier(.32,.72,0,1), transform .3s cubic-bezier(.32,.72,0,1);
         }
         .c-btn:hover { filter: brightness(1.07); }
@@ -123,7 +123,7 @@
         /* Tip / sub button */
         .sub-btn {
             width: 38px; height: 38px; border-radius: 50%;
-            background: linear-gradient(135deg, #F4A261, #E8A598); color: #fff;
+            background: linear-gradient(135deg, #B5445C, #F2B8C8); color: #fff;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s;
             box-shadow: 0 4px 14px rgba(244,162,97,0.45);
@@ -143,7 +143,7 @@
             100% { background-position:  300% 0; }
         }
         .skeleton {
-            background: linear-gradient(90deg, #F2D5C4 25%, #FFF0EA 50%, #F2D5C4 75%);
+            background: linear-gradient(90deg, #FAF2F5 25%, #FFF0EA 50%, #FAF2F5 75%);
             background-size: 300% 100%;
             animation: shimmer 1.6s infinite;
             border-radius: 10px;
@@ -174,7 +174,7 @@
         .no-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Active chip */
-        .chip.active { background: linear-gradient(135deg, #F4A261, #E8A598); color: #fff; border-color: transparent; }
+        .chip.active { background: linear-gradient(135deg, #B5445C, #F2B8C8); color: #fff; border-color: transparent; }
 
         /* Material icons */
         .material-symbols-outlined {
@@ -183,7 +183,25 @@
         }
         .ms-fill { font-variation-settings: 'FILL' 1; }
 
-        /* ─── DARK HERO ─────────────────────────────── */
+        /* ─── HERO CANVAS & RESPONSIVE ─────────────── */
+        @keyframes heroBlink {
+            0%,100%{opacity:1;transform:scale(1);}
+            50%{opacity:.5;transform:scale(.7);}
+        }
+        #hero-darkbg {
+            display:grid;
+            grid-template-columns:55% 1fr;
+            align-items:center;
+            gap:40px;
+        }
+        @media(max-width:940px){
+            #hero-darkbg {
+                grid-template-columns:1fr;
+                padding:7rem 1.5rem 4rem !important;
+            }
+            #hero-mosaic-wrap { display:none; }
+        }
+        /* ─── LEGACY (kept for possible future reuse) ── */
         @keyframes ambientDrift1 {
             0%,100% { transform: translate(0,0) scale(1); opacity: 1; }
             33%      { transform: translate(-22px,-16px) scale(1.1); opacity: .78; }
@@ -261,7 +279,7 @@
                     <p class="text-white/55 text-[11px] mt-0.5">Entra a ver ahora</p>
                 </div>
             </div>
-            <span class="shrink-0 text-[11px] font-extrabold px-3 py-1.5 rounded-full whitespace-nowrap" style="background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff">Ver streams</span>
+            <span class="shrink-0 text-[11px] font-extrabold px-3 py-1.5 rounded-full whitespace-nowrap" style="background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff">Ver streams</span>
         </a>
     </div>
 
@@ -270,93 +288,129 @@
     ══════════════════════════════════════════════ -->
     <div id="hero-guest" class="hidden">
 
-        <!-- ── Dark atmospheric hero ── -->
-        <div id="hero-darkbg" style="background:linear-gradient(160deg,#110805 0%,#1F0B05 45%,#110805 100%);min-height:92dvh;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 1.5rem 4rem">
-            <div class="hero-glow-1"></div>
-            <div class="hero-glow-2"></div>
+        <!-- ── Light editorial hero ── -->
+        <div id="hero-darkbg" style="background:#FDF8F5;min-height:92dvh;position:relative;overflow:hidden;padding:7rem clamp(20px,6.5vw,96px) 5rem">
+            <canvas id="hero-cvs" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
 
-            <div style="position:relative;z-index:2;text-align:center;max-width:680px;width:100%">
-
-                <!-- Eyebrow badge -->
-                <span style="display:inline-block;padding:.38rem 1.1rem;border-radius:99px;background:rgba(244,162,97,.12);border:1px solid rgba(244,162,97,.28);color:#F4A261;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.75rem">
+            <!-- LEFT: text + CTAs -->
+            <div style="position:relative;z-index:2">
+                <span style="display:inline-flex;align-items:center;gap:8px;background:rgba(181,68,92,.07);border:1px solid rgba(181,68,92,.18);border-radius:99px;padding:5px 14px 5px 10px;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#B5445C;margin-bottom:2rem">
+                    <span style="width:6px;height:6px;background:#B5445C;border-radius:50%;animation:heroBlink 2.5s ease infinite;flex-shrink:0"></span>
                     Solo mayores de 18 · Plataforma latina exclusiva
                 </span>
 
-                <!-- H1 -->
-                <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.1rem,5.5vw,3.75rem);color:#FFF8F5;line-height:1.1;margin-bottom:1.25rem;text-wrap:balance">
+                <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5.2vw,4.5rem);color:#1E0A12;line-height:1.05;letter-spacing:-.02em;margin-bottom:1.25rem;text-wrap:balance">
                     Las mejores creadoras<br>de Latinoamérica.<br>
-                    <em style="color:#F4A261;font-style:italic">Solo para ti.</em>
+                    <em style="color:#B5445C;font-style:italic">Solo para ti.</em>
                 </h1>
 
-                <!-- Subtext — psychological framing -->
-                <p style="color:rgba(255,248,245,.6);font-size:1.05rem;margin-bottom:.55rem;line-height:1.6">
-                    Contenido exclusivo en español.
-                </p>
-                <p style="color:rgba(255,248,245,.38);font-size:.9rem;margin-bottom:2.25rem;font-style:italic">
-                    Tu banco no lo va a ver. Tú decides.
+                <p style="color:#7B4D5E;font-size:1.05rem;max-width:420px;line-height:1.6;margin-bottom:2rem">
+                    Contenido exclusivo en español. Tu banco no lo va a ver. Tú decides.
                 </p>
 
-                <!-- Benefit chips (reframed as emotional benefits) -->
-                <div style="display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:2.4rem">
-                    <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:rgba(255,248,245,.72);border:1px solid rgba(255,248,245,.13);background:rgba(255,255,255,.05);padding:.4rem .95rem;border-radius:99px">🔒 Sin rastro bancario</span>
-                    <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:rgba(255,248,245,.72);border:1px solid rgba(255,248,245,.13);background:rgba(255,255,255,.05);padding:.4rem .95rem;border-radius:99px">✅ Gratis para registrarse</span>
-                    <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:rgba(255,248,245,.72);border:1px solid rgba(255,248,245,.13);background:rgba(255,255,255,.05);padding:.4rem .95rem;border-radius:99px">🌎 Colombia · México · Argentina · Perú</span>
-                </div>
-
-                <!-- Dual role CTAs — Fan vs Creadora -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;max-width:420px;margin:0 auto 1rem">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem;max-width:380px;margin-bottom:1.4rem">
                     <button onclick="abrirModal('fan')"
-                        style="background:linear-gradient(135deg,#F4A261,#E8A598);border:none;border-radius:20px;padding:1.25rem .75rem;cursor:pointer;text-align:center;box-shadow:0 10px 32px rgba(244,162,97,.38);transition:transform .35s cubic-bezier(.32,.72,0,1),filter .3s"
-                        onmouseover="this.style.filter='brightness(1.08)';this.style.transform='translateY(-3px)'"
-                        onmouseout="this.style.filter='';this.style.transform=''">
-                        <div style="font-size:1.75rem;line-height:1;margin-bottom:.4rem">🔥</div>
-                        <div style="font-weight:800;font-size:.9rem;color:#fff;letter-spacing:.01em">Soy Fan</div>
-                        <div style="font-size:.65rem;color:rgba(255,255,255,.72);margin-top:.2rem">Ver creadoras gratis</div>
+                        style="background:linear-gradient(135deg,#B5445C,#F2B8C8);border:none;border-radius:20px;padding:1.1rem .75rem;cursor:pointer;text-align:center;box-shadow:0 10px 32px rgba(181,68,92,.25);transition:transform .35s cubic-bezier(.32,.72,0,1),filter .3s"
+                        onmouseover="this.style.transform='translateY(-3px)';this.style.filter='brightness(1.07)'"
+                        onmouseout="this.style.transform='';this.style.filter=''">
+                        <div style="font-size:1.5rem;line-height:1;margin-bottom:.3rem">🔥</div>
+                        <div style="font-weight:800;font-size:.88rem;color:#fff">Soy Fan</div>
+                        <div style="font-size:.62rem;color:rgba(255,255,255,.72);margin-top:.15rem">Ver creadoras gratis</div>
                     </button>
                     <a href="pages/gana-con-candela.html"
-                        style="background:rgba(244,162,97,.1);border:1.5px solid rgba(244,162,97,.4);border-radius:20px;padding:1.25rem .75rem;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:transform .35s cubic-bezier(.32,.72,0,1),background .3s,border-color .3s"
-                        onmouseover="this.style.background='rgba(244,162,97,.18)';this.style.borderColor='rgba(244,162,97,.72)';this.style.transform='translateY(-3px)'"
-                        onmouseout="this.style.background='rgba(244,162,97,.1)';this.style.borderColor='rgba(244,162,97,.4)';this.style.transform=''">
-                        <div style="font-size:1.75rem;line-height:1;margin-bottom:.4rem">✨</div>
-                        <div style="font-weight:800;font-size:.9rem;color:#F4A261;letter-spacing:.01em">Soy Creadora</div>
-                        <div style="font-size:.65rem;color:rgba(244,162,97,.6);margin-top:.2rem">Ganar el 84%</div>
+                        style="background:rgba(181,68,92,.07);border:1.5px solid rgba(181,68,92,.25);border-radius:20px;padding:1.1rem .75rem;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:transform .35s cubic-bezier(.32,.72,0,1),background .3s,border-color .3s"
+                        onmouseover="this.style.background='rgba(181,68,92,.14)';this.style.borderColor='rgba(181,68,92,.5)';this.style.transform='translateY(-3px)'"
+                        onmouseout="this.style.background='rgba(181,68,92,.07)';this.style.borderColor='rgba(181,68,92,.25)';this.style.transform=''">
+                        <div style="font-size:1.5rem;line-height:1;margin-bottom:.3rem">✨</div>
+                        <div style="font-weight:800;font-size:.88rem;color:#B5445C">Soy Creadora</div>
+                        <div style="font-size:.62rem;color:#7B4D5E;margin-top:.15rem">Ganar el 84%</div>
                     </a>
                 </div>
-                <p style="text-align:center;margin-bottom:2.75rem">
+                <p style="margin-bottom:1.5rem">
                     <button onclick="abrirModal('login')"
-                        style="background:none;border:none;cursor:pointer;font-size:.76rem;color:rgba(255,248,245,.38);font-family:'Nunito',sans-serif;transition:color .2s"
-                        onmouseover="this.style.color='rgba(244,162,97,.75)'"
-                        onmouseout="this.style.color='rgba(255,248,245,.38)'">
+                        style="background:none;border:none;cursor:pointer;font-size:.76rem;color:#7B4D5E;font-family:'Nunito',sans-serif;transition:color .2s;padding:0"
+                        onmouseover="this.style.color='#B5445C'" onmouseout="this.style.color='#7B4D5E'">
                         ¿Ya tienes cuenta? Entrar aquí →
                     </button>
                 </p>
 
-                <!-- Animated stats counter -->
-                <div style="display:flex;gap:2.5rem;justify-content:center;padding-top:1.75rem;border-top:1px solid rgba(255,248,245,.08)">
-                    <div style="text-align:center">
-                        <div id="stat-creadoras" style="font-family:'Playfair Display',serif;font-size:1.95rem;color:#F4A261;font-weight:600;line-height:1;min-width:3ch">···</div>
-                        <div style="font-size:.63rem;color:rgba(255,248,245,.38);text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Creadoras</div>
+                <div style="display:flex;gap:2rem;padding-top:1.5rem;border-top:1px solid rgba(30,10,18,.07)">
+                    <div>
+                        <div id="stat-creadoras" style="font-family:'Playfair Display',serif;font-size:1.75rem;color:#B5445C;font-weight:700;line-height:1;min-width:3ch">···</div>
+                        <div style="font-size:.6rem;color:#7B4D5E;text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Creadoras</div>
                     </div>
-                    <div style="width:1px;background:rgba(255,248,245,.1)"></div>
-                    <div style="text-align:center">
-                        <div id="stat-paises" style="font-family:'Playfair Display',serif;font-size:1.95rem;color:#F4A261;font-weight:600;line-height:1">7</div>
-                        <div style="font-size:.63rem;color:rgba(255,248,245,.38);text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Países</div>
+                    <div style="width:1px;background:rgba(30,10,18,.07)"></div>
+                    <div>
+                        <div id="stat-paises" style="font-family:'Playfair Display',serif;font-size:1.75rem;color:#B5445C;font-weight:700;line-height:1">7</div>
+                        <div style="font-size:.6rem;color:#7B4D5E;text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Países</div>
                     </div>
-                    <div style="width:1px;background:rgba(255,248,245,.1)"></div>
-                    <div style="text-align:center">
-                        <div style="font-family:'Playfair Display',serif;font-size:1.95rem;color:#F4A261;font-weight:600;line-height:1">84%</div>
-                        <div style="font-size:.63rem;color:rgba(255,248,245,.38);text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Para creadoras</div>
+                    <div style="width:1px;background:rgba(30,10,18,.07)"></div>
+                    <div>
+                        <div style="font-family:'Playfair Display',serif;font-size:1.75rem;color:#B5445C;font-weight:700;line-height:1">84%</div>
+                        <div style="font-size:.6rem;color:#7B4D5E;text-transform:uppercase;letter-spacing:.13em;margin-top:.25rem">Para creadoras</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: creator mosaic (desktop only) -->
+            <div id="hero-mosaic-wrap" style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(-1.5deg);box-shadow:0 4px 24px rgba(30,10,18,.06)">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
+                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:radial-gradient(circle at 40% 30%,#fde0e8,#f0a0b8,#c87090)"></div>
+                        </div>
+                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Valentina</div><div style="font-size:11px;color:#7B4D5E">Lifestyle · Colombia</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
+                        <span style="font-size:11px;color:#7B4D5E">Fans: <strong style="color:#B5445C;font-size:12px;font-weight:600">24.8K</strong></span>
+                        <span style="background:rgba(181,68,92,.08);color:#B5445C;border:1px solid rgba(181,68,92,.2);font-size:11px;font-weight:500;border-radius:99px;padding:4px 12px">Seguir</span>
+                    </div>
+                </div>
+                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(1deg);margin-top:22px;box-shadow:0 4px 24px rgba(30,10,18,.06)">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
+                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:radial-gradient(circle at 45% 32%,#fdecd8,#f0c090,#d08850)"></div>
+                        </div>
+                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Camila</div><div style="font-size:11px;color:#7B4D5E">Fitness · México</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
+                        <span style="font-size:11px;color:#7B4D5E">Fans: <strong style="color:#B5445C;font-size:12px;font-weight:600">38.2K</strong></span>
+                        <span style="background:rgba(181,68,92,.08);color:#B5445C;border:1px solid rgba(181,68,92,.2);font-size:11px;font-weight:500;border-radius:99px;padding:4px 12px">Seguir</span>
+                    </div>
+                </div>
+                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(.5deg);box-shadow:0 4px 24px rgba(30,10,18,.06)">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
+                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:radial-gradient(circle at 38% 28%,#ead8f8,#c0a0e0,#9070c0)"></div>
+                        </div>
+                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Isabela</div><div style="font-size:11px;color:#7B4D5E">Arte · Argentina</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
+                        <span style="font-size:11px;color:#7B4D5E">Fans: <strong style="color:#B5445C;font-size:12px;font-weight:600">19.1K</strong></span>
+                        <span style="background:rgba(181,68,92,.08);color:#B5445C;border:1px solid rgba(181,68,92,.2);font-size:11px;font-weight:500;border-radius:99px;padding:4px 12px">Seguir</span>
+                    </div>
+                </div>
+                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(-1.2deg);margin-top:-14px;box-shadow:0 4px 24px rgba(30,10,18,.06)">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
+                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:radial-gradient(circle at 42% 30%,#d8f0e8,#90c8b0,#509080)"></div>
+                        </div>
+                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Sofía</div><div style="font-size:11px;color:#7B4D5E">Wellness · Venezuela</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
+                        <span style="font-size:11px;color:#7B4D5E">Fans: <strong style="color:#B5445C;font-size:12px;font-weight:600">31.5K</strong></span>
+                        <span style="background:rgba(181,68,92,.08);color:#B5445C;border:1px solid rgba(181,68,92,.2);font-size:11px;font-weight:500;border-radius:99px;padding:4px 12px">Seguir</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- ── Creator preview section ── -->
-        <div style="background:#FFF8F5;padding:3.5rem 1.5rem 1.5rem" class="md:px-10">
+        <div style="background:#FDF8F5;padding:3.5rem 1.5rem 1.5rem" class="md:px-10">
             <div class="max-w-4xl mx-auto">
-                <p style="text-align:center;font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6E625C;margin-bottom:.5rem">Creadoras activas en este momento</p>
+                <p style="text-align:center;font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7B4D5E;margin-bottom:.5rem">Creadoras activas en este momento</p>
                 <h2 class="font-display text-2xl text-center text-c-text font-semibold mb-2">Descubre quién te está esperando</h2>
-                <p style="text-align:center;font-size:.85rem;color:#6E625C;margin-bottom:2rem">Regístrate gratis para ver todo su contenido exclusivo</p>
+                <p style="text-align:center;font-size:.85rem;color:#7B4D5E;margin-bottom:2rem">Regístrate gratis para ver todo su contenido exclusivo</p>
 
                 <!-- Grid filled by cargarPreviewPublico() -->
                 <div id="preview-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-2">
@@ -367,7 +421,7 @@
 
                 <!-- Login wall CTA -->
                 <div class="text-center py-8 px-4">
-                    <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                         <span class="material-symbols-outlined text-white" style="font-size:26px">lock</span>
                     </div>
                     <h3 class="font-display text-lg font-semibold mb-1.5">Contenido exclusivo esperándote</h3>
@@ -387,15 +441,15 @@
         </div>
 
         <!-- ── Por qué Candela ── -->
-        <div id="por-que-candela" style="background:#FFFBF9;padding:3rem 1.5rem" class="md:px-10 border-t border-c-border">
+        <div id="por-que-candela" style="background:#FDF8F5;padding:3rem 1.5rem" class="md:px-10 border-t border-c-border">
             <div class="max-w-4xl mx-auto">
-                <p style="text-align:center;font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6E625C;margin-bottom:.5rem">Por qué Candela</p>
+                <p style="text-align:center;font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7B4D5E;margin-bottom:.5rem">Por qué Candela</p>
                 <h2 class="font-display text-2xl text-center text-c-text font-semibold mb-8">Construida para Latinoamérica</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="s-anim" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
                         <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                                 <span class="material-symbols-outlined text-white" style="font-size:22px">lock</span>
                             </div>
                             <h3 class="font-bold text-c-text text-sm mb-1.5">Tu banco no lo va a ver</h3>
@@ -404,7 +458,7 @@
                     </div>
                     <div class="s-anim s-anim-delay-1" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
                         <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                                 <span class="material-symbols-outlined text-white" style="font-size:22px">language</span>
                             </div>
                             <h3 class="font-bold text-c-text text-sm mb-1.5">En español. Para ti.</h3>
@@ -413,7 +467,7 @@
                     </div>
                     <div class="s-anim s-anim-delay-2" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
                         <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                                 <span class="material-symbols-outlined text-white" style="font-size:22px">credit_card_off</span>
                             </div>
                             <h3 class="font-bold text-c-text text-sm mb-1.5">Sin tarjeta internacional</h3>
@@ -422,7 +476,7 @@
                     </div>
                     <div class="s-anim s-anim-delay-3" style="background:rgba(242,213,196,.22);border:1px solid rgba(240,230,225,.9);border-radius:2rem;padding:6px">
                         <div style="background:#fff;border-radius:calc(2rem - 6px);padding:1.5rem;box-shadow:inset 0 1px 1px rgba(255,255,255,.95)">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                                 <span class="material-symbols-outlined text-white" style="font-size:22px">diversity_3</span>
                             </div>
                             <h3 class="font-bold text-c-text text-sm mb-1.5">Creadoras que te entienden</h3>
@@ -439,7 +493,7 @@
                 <div class="text-center md:text-left">
                     <p class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-1">¿Eres creadora?</p>
                     <h3 class="text-white font-display text-xl font-semibold mb-1">
-                        Gana el <span style="color:#F4A261">84%</span> de cada suscripción
+                        Gana el <span style="color:#B5445C">84%</span> de cada suscripción
                     </h3>
                     <p class="text-white/45 text-xs">OnlyFans paga 80%. Aquí ganas más, desde el primer día. Sin trámites.</p>
                 </div>
@@ -706,7 +760,7 @@
                     <p class="text-[10px] text-c-soft mt-1">Debes tener al menos 18 años. Requerido para cumplimiento legal.</p>
                 </div>
                 <label class="flex items-start gap-2.5 cursor-pointer">
-                    <input id="r-terms" type="checkbox" required class="mt-0.5 shrink-0" style="accent-color:#F4A261;width:16px;height:16px;">
+                    <input id="r-terms" type="checkbox" required class="mt-0.5 shrink-0" style="accent-color:#B5445C;width:16px;height:16px;">
                     <span class="text-xs text-c-soft leading-relaxed">Confirmo que tengo <strong class="text-c-text">18 años o más</strong> y acepto los <a href="pages/terminos.html" class="text-c-accent font-bold">Términos de Servicio</a> y la <a href="pages/privacidad.html" class="text-c-accent font-bold">Política de Privacidad</a>.</span>
                 </label>
                 <button type="submit" id="btn-reg" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md mt-1">Crear cuenta gratis</button>
@@ -726,7 +780,7 @@
 <script src="/js/cookie-consent.js"></script>
 <script>
 const GRADIENTES = {
-    'melocoton':    ['#FFF4EE','#F4A261'],
+    'melocoton':    ['#FFF4EE','#B5445C'],
     'rosa-venecia': ['#FFF0F5','#D4869D'],
     'lavanda':      ['#F7F2FF','#9B72CF'],
     'rojo-carmin':  ['#3D0A0A','#C0392B'],
@@ -742,7 +796,7 @@ const GRADIENTES = {
 
 // Darker gradients for preview cards (visible on light bg with depth)
 const PREVIEW_GRAD = {
-    'melocoton':    ['#2A1208','#F4A261'],
+    'melocoton':    ['#2A1208','#B5445C'],
     'rosa-venecia': ['#2A0A1A','#D4869D'],
     'lavanda':      ['#16082A','#9B72CF'],
     'rojo-carmin':  ['#2A0808','#C0392B'],
@@ -775,7 +829,7 @@ function init() {
         window.location.replace('pages/feed.html'); return;  // fan -> feed de contenido
     }
 
-    renderTopbar(true);
+    renderTopbar(false);
     renderNavLinks();
     verificarStreamsActivos();
 
@@ -784,8 +838,8 @@ function init() {
     document.getElementById('chips-section').style.display = 'none';
     document.getElementById('feed-grid').style.display = 'none';
     cargarPreviewPublico();
-    modoTopbarOscuro();
     initScrollAnimations();
+    initHeroCanvas();
 
     // DOB max = 18 years ago
     var dob = document.getElementById('r-dob');
@@ -838,38 +892,40 @@ function renderTopbar(isDark = false) {
     }
 }
 
-function modoTopbarOscuro() {
-    const header = document.getElementById('main-header');
-    const heroSection = document.getElementById('hero-darkbg');
-    if (!header || !heroSection) return;
-
-    const setDark = () => {
-        header.style.background = 'rgba(17,8,5,.88)';
-        header.style.borderBottomColor = 'rgba(244,162,97,.14)';
-        header.style.boxShadow = 'none';
-    };
-    const setLight = () => {
-        header.style.background = '';
-        header.style.borderBottomColor = '';
-        header.style.boxShadow = '';
-        renderTopbar(false);
-    };
-
-    setDark();
-
-    let heroH = heroSection.offsetHeight;
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > heroH * 0.85) {
-            setLight();
-        } else {
-            setDark();
-            // restore dark topbar buttons if they were replaced
-            const reg = document.querySelector('#topbar-right button');
-            if (reg && reg.textContent.trim() === 'Entrar') {
-                renderTopbar(true);
+// ─── HERO CANVAS (silk waves) ────────────────────────────────────────
+function initHeroCanvas() {
+    const canvas = document.getElementById('hero-cvs');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, t = 0;
+    function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+    const layers = [
+        {amp:55,freq:.0045,speed:.28,phase:0,r:242,g:176,b:200,alpha:.09},
+        {amp:75,freq:.0035,speed:.2,phase:2.1,r:252,g:210,b:225,alpha:.07},
+        {amp:45,freq:.006,speed:.4,phase:4.2,r:225,g:155,b:185,alpha:.07},
+        {amp:65,freq:.003,speed:.16,phase:1.4,r:255,g:230,b:240,alpha:.06},
+        {amp:40,freq:.007,speed:.35,phase:3.5,r:235,g:180,b:210,alpha:.05}
+    ];
+    function frame() {
+        ctx.clearRect(0, 0, W, H);
+        t += .003;
+        layers.forEach(l => {
+            ctx.beginPath();
+            const mid = H * .5;
+            for (let x = 0; x <= W; x += 6) {
+                const y = mid + Math.sin(x * l.freq + t * l.speed + l.phase) * l.amp
+                              + Math.cos(x * l.freq * 1.8 + t * l.speed * .9) * l.amp * .35;
+                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
-        }
-    }, { passive: true });
+            ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+            ctx.fillStyle = `rgba(${l.r},${l.g},${l.b},${l.alpha})`;
+            ctx.fill();
+        });
+        requestAnimationFrame(frame);
+    }
+    frame();
 }
 
 // ─── SCROLL ANIMATIONS ───────────────────────────────────────────────
@@ -916,7 +972,7 @@ async function cargarPreviewPublico() {
         if (!grid) return;
 
         grid.innerHTML = lista.slice(0, 6).map(c => {
-            const [c1, c2] = PREVIEW_GRAD[c.tema_color] || ['#1A0D08', '#F4A261'];
+            const [c1, c2] = PREVIEW_GRAD[c.tema_color] || ['#1A0D08', '#B5445C'];
             const flag = FLAGS[c.pais] || '🌎';
             const inicial = (c.nombre_artistico || '?')[0].toUpperCase();
             const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
@@ -932,12 +988,12 @@ async function cargarPreviewPublico() {
                     <div style="color:#fff;font-weight:700;font-size:.88rem;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.nombre_artistico)}</div>
                     <div style="color:rgba(255,255,255,.52);font-size:.7rem;margin-bottom:.5rem">${flag} ${esc(c.pais || 'Latam')}</div>
                     <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="color:#F4A261;font-size:.74rem;font-weight:700">${esc(precio)}</span>
+                        <span style="color:#B5445C;font-size:.74rem;font-weight:700">${esc(precio)}</span>
                         <span style="font-size:.62rem;color:rgba(255,255,255,.38)">${subs} ${subs === 1 ? 'fan' : 'fans'}</span>
                     </div>
                 </div>
                 <div class="pcard-hover">
-                    <div style="background:linear-gradient(135deg,#F4A261,#E8A598);border-radius:50%;width:46px;height:46px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(244,162,97,.5)">
+                    <div style="background:linear-gradient(135deg,#B5445C,#F2B8C8);border-radius:50%;width:46px;height:46px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(244,162,97,.5)">
                         <span class="material-symbols-outlined" style="color:#fff;font-size:20px">lock</span>
                     </div>
                 </div>
@@ -997,7 +1053,7 @@ async function cargarStories() {
         const row = document.getElementById('stories-row');
         if (!lista.length) { row.innerHTML = ''; return; }
         row.innerHTML = lista.map((c, i) => {
-            const [c1, c2] = GRADIENTES[c.tema_color] || ['#F2D5C4','#E8A598'];
+            const [c1, c2] = GRADIENTES[c.tema_color] || ['#FAF2F5','#F2B8C8'];
             const ring = i < 5 ? 'story-ring-active' : 'bg-c-border';
             const nombre = esc(c.nombre_artistico || 'Creadora');
             const inicial = esc((c.nombre_artistico || 'C')[0].toUpperCase());
@@ -1039,7 +1095,7 @@ function renderFeed(lista) {
     empty.classList.add('hidden');
 
     grid.innerHTML = lista.map(c => {
-        const [col1, col2] = GRADIENTES[c.tema_color] || ['#F2D5C4','#E8A598'];
+        const [col1, col2] = GRADIENTES[c.tema_color] || ['#FAF2F5','#F2B8C8'];
         const nombre = esc(c.nombre_artistico || 'Creadora');
         const inicial = esc((c.nombre_artistico || 'C')[0].toUpperCase());
         const pais = esc(c.pais || 'Latam');
@@ -1059,7 +1115,7 @@ function renderFeed(lista) {
                 ${c.destacada ? `
                     <div class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold text-white border border-white/25"
                         style="background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);">✨ Destacada</div>` : ''}
-                <svg class="absolute top-3 right-3" viewBox="0 0 24 24" width="20" height="20" fill="none" role="img" aria-label="Verificada" style="filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))"><circle cx="12" cy="12" r="10" fill="#F4A261"></circle><path d="M7.5 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <svg class="absolute top-3 right-3" viewBox="0 0 24 24" width="20" height="20" fill="none" role="img" aria-label="Verificada" style="filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))"><circle cx="12" cy="12" r="10" fill="#B5445C"></circle><path d="M7.5 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 <div class="card-overlay absolute inset-0 flex flex-col justify-end p-4">
                     <div class="flex justify-between items-end gap-3">
                         <div class="flex-1 min-w-0">
@@ -1134,7 +1190,7 @@ async function toggleLike(e, id) {
     const wasLiked = btn.classList.contains('liked');
     btn.classList.toggle('liked');
     icon.style.fontVariationSettings = wasLiked ? "'FILL' 0" : "'FILL' 1";
-    icon.style.color = wasLiked ? '' : '#F4A261';
+    icon.style.color = wasLiked ? '' : '#B5445C';
     try {
         if (wasLiked) await candela.fans.quitarFavorito(id);
         else await candela.fans.agregarFavorito(id);
@@ -1142,7 +1198,7 @@ async function toggleLike(e, id) {
         // revert on error
         btn.classList.toggle('liked');
         icon.style.fontVariationSettings = wasLiked ? "'FILL' 1" : "'FILL' 0";
-        icon.style.color = wasLiked ? '#F4A261' : '';
+        icon.style.color = wasLiked ? '#B5445C' : '';
     }
 }
 
@@ -1309,10 +1365,10 @@ async function hacerRegistro(e) {
 // ─── TOAST ───────────────────────────────────────────────────────────
 function toast(msg, tipo = 'info') {
     const c = document.getElementById('toasts');
-    const colores = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const colores = { error:'#e74c3c', success:'#2ecc71', info:'#B5445C' };
     const el = document.createElement('div');
     el.style.cssText = `
-        background:#fff; border:1px solid #F0E6E1;
+        background:#fff; border:1px solid #F5E8EF;
         border-left:4px solid ${colores[tipo]||colores.info};
         padding:0.85rem 1.1rem; border-radius:12px;
         box-shadow:0 6px 20px rgba(0,0,0,0.09);

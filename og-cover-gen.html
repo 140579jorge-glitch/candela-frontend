@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +9,7 @@
            align-items:center; justify-content:center; min-height:100vh;
            gap:16px; font-family:Nunito,sans-serif; }
     canvas { max-width:100%; border-radius:8px; }
-    button { background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff;
+    button { background:linear-gradient(135deg,#B5445C,#F2B8C8); color:#fff;
              border:none; padding:12px 32px; border-radius:24px; font-size:1rem;
              font-weight:700; cursor:pointer; font-family:inherit; }
     p { color:#888; font-size:.85rem; max-width:600px; text-align:center; margin:0; }
@@ -18,7 +18,7 @@
 <body>
 <canvas id="c" width="1200" height="630"></canvas>
 <button onclick="download()">Descargar og-cover.jpg</button>
-<p>Mueve el archivo descargado a <code style="color:#F4A261">C:\Candela\frontend\img\og-cover.jpg</code> y luego haz git commit + push.</p>
+<p>Mueve el archivo descargado a <code style="color:#B5445C">C:\Candela\frontend\img\og-cover.jpg</code> y luego haz git commit + push.</p>
 
 <script>
 const c = document.getElementById('c');
@@ -51,7 +51,7 @@ function draw() {
     // Glow circles right side
     ctx.save();
     ctx.globalAlpha = 0.09;
-    ctx.fillStyle = '#F4A261';
+    ctx.fillStyle = '#B5445C';
     ctx.beginPath(); ctx.arc(960, 220, 300, 0, Math.PI * 2); ctx.fill();
     ctx.globalAlpha = 0.05;
     ctx.beginPath(); ctx.arc(1080, 500, 180, 0, Math.PI * 2); ctx.fill();
@@ -59,7 +59,7 @@ function draw() {
 
     // Left accent bar
     const barGrd = ctx.createLinearGradient(0, 90, 0, 520);
-    barGrd.addColorStop(0, '#F4A261');
+    barGrd.addColorStop(0, '#B5445C');
     barGrd.addColorStop(1, '#D4869D');
     ctx.fillStyle = barGrd;
     ctx.fillRect(62, 90, 5, 450);
@@ -67,8 +67,8 @@ function draw() {
     // Logo "Candela"
     ctx.font = 'italic 700 114px "Playfair Display", Georgia, serif';
     const logoGrd = ctx.createLinearGradient(85, 0, 580, 0);
-    logoGrd.addColorStop(0, '#F4A261');
-    logoGrd.addColorStop(0.55, '#E8A598');
+    logoGrd.addColorStop(0, '#B5445C');
+    logoGrd.addColorStop(0.55, '#F2B8C8');
     logoGrd.addColorStop(1, '#D4869D');
     ctx.fillStyle = logoGrd;
     ctx.fillText('Candela', 85, 210);
@@ -104,7 +104,7 @@ function draw() {
         ctx.strokeStyle = 'rgba(244,162,97,0.28)';
         ctx.lineWidth = 1;
         roundRect(cx, cy, pw, ph, 19); ctx.stroke();
-        ctx.fillStyle = '#F4A261';
+        ctx.fillStyle = '#B5445C';
         ctx.fillText(text, cx + 18, cy + 26);
         cx += pw + 12;
     });
@@ -118,7 +118,7 @@ function draw() {
     var sy = 120, sx = 820;
     stats.forEach(function(st) {
         ctx.font = 'italic 700 54px "Playfair Display", Georgia, serif';
-        ctx.fillStyle = '#F4A261';
+        ctx.fillStyle = '#B5445C';
         ctx.fillText(st[0], sx, sy + 46);
         ctx.font = '600 17px "Nunito", Arial, sans-serif';
         ctx.fillStyle = 'rgba(255,255,255,0.45)';
@@ -138,7 +138,7 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(0, 569); ctx.lineTo(W, 569); ctx.stroke();
 
     ctx.font = '700 20px "Nunito", Arial, sans-serif';
-    ctx.fillStyle = '#F4A261';
+    ctx.fillStyle = '#B5445C';
     ctx.textAlign = 'left';
     ctx.fillText('clubcandela.com', 85, 606);
 

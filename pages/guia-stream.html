@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -11,8 +11,8 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-rose":"#E8A598",
-                        "c-champagne":"#F2D5C4","c-text":"#2D2D2D","c-soft":"#6E625C","c-border":"#F0E6E1",
+                        "c-bg":"#FDF8F5","c-accent":"#B5445C","c-rose":"#F2B8C8",
+                        "c-champagne":"#FAF2F5","c-text":"#2D2D2D","c-soft":"#7B4D5E","c-border":"#F5E8EF",
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
                 }
@@ -23,23 +23,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box}
-        body{font-family:'Nunito',sans-serif;background:#FFF8F5;color:#2D2D2D;margin:0}
+        body{font-family:'Nunito',sans-serif;background:#FDF8F5;color:#2D2D2D;margin:0}
         .ms{font-family:'Material Symbols Outlined';font-style:normal;line-height:1;user-select:none}
-        .logo-text{background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .logo-text{background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .glass{background:rgba(255,248,245,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-        .c-btn{background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:800;border:none;cursor:pointer;font-family:'Nunito',sans-serif;transition:filter .15s,transform .12s}
+        .c-btn{background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;font-weight:800;border:none;cursor:pointer;font-family:'Nunito',sans-serif;transition:filter .15s,transform .12s}
         .c-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
 
         /* Hero */
-        .hero-gradient{background:linear-gradient(135deg,#FFF0E8 0%,#FFF8F5 60%,#FFF0EC 100%)}
+        .hero-gradient{background:linear-gradient(135deg,#FFF0E8 0%,#FDF8F5 60%,#FFF0EC 100%)}
 
         /* Step cards */
-        .step-card{background:#fff;border:1px solid #F0E6E1;border-radius:24px;padding:32px;box-shadow:0 4px 24px rgba(244,162,97,.07);position:relative;overflow:hidden}
-        .step-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#F4A261,#E8A598)}
-        .step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(244,162,97,.35)}
+        .step-card{background:#fff;border:1px solid #F5E8EF;border-radius:24px;padding:32px;box-shadow:0 4px 24px rgba(244,162,97,.07);position:relative;overflow:hidden}
+        .step-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#B5445C,#F2B8C8)}
+        .step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(244,162,97,.35)}
         .step-title{font-weight:800;font-size:18px;color:#2D2D2D;margin-bottom:4px}
-        .step-desc{font-size:14px;color:#6E625C;line-height:1.65}
-        .step-connector{width:2px;height:28px;background:linear-gradient(180deg,#F4A261,#F2D5C4);margin:0 auto;margin-left:19px}
+        .step-desc{font-size:14px;color:#7B4D5E;line-height:1.65}
+        .step-connector{width:2px;height:28px;background:linear-gradient(180deg,#B5445C,#FAF2F5);margin:0 auto;margin-left:19px}
 
         /* Phone mockup */
         .phone{width:160px;height:300px;border-radius:28px;background:#111;border:5px solid #222;position:relative;flex-shrink:0;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.28)}
@@ -47,14 +47,14 @@
         .phone-bar{position:absolute;top:0;left:50%;transform:translateX(-50%);width:48px;height:14px;background:#111;border-radius:0 0 10px 10px;z-index:10}
 
         /* Dashboard mockup screens */
-        .dash-bg{background:#FFF8F5;width:100%;height:100%;display:flex;flex-direction:column}
-        .dash-nav{background:#fff;border-bottom:1px solid #F0E6E1;padding:8px 10px;display:flex;align-items:center;justify-content:space-between}
-        .dash-nav-logo{font-size:13px;font-weight:800;background:linear-gradient(90deg,#F4A261,#E8A598);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .dash-bg{background:#FDF8F5;width:100%;height:100%;display:flex;flex-direction:column}
+        .dash-nav{background:#fff;border-bottom:1px solid #F5E8EF;padding:8px 10px;display:flex;align-items:center;justify-content:space-between}
+        .dash-nav-logo{font-size:13px;font-weight:800;background:linear-gradient(90deg,#B5445C,#F2B8C8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .dash-body{padding:12px;flex:1;overflow:hidden}
-        .dash-field{background:#fff;border:1px solid #F0E6E1;border-radius:10px;padding:8px 10px;margin-bottom:6px}
-        .dash-field .lbl{font-size:8px;color:#6E625C;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+        .dash-field{background:#fff;border:1px solid #F5E8EF;border-radius:10px;padding:8px 10px;margin-bottom:6px}
+        .dash-field .lbl{font-size:8px;color:#7B4D5E;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
         .dash-field .val{font-size:10px;color:#2D2D2D;font-weight:600;margin-top:2px}
-        .dash-live-btn{background:linear-gradient(135deg,#F4A261,#E8A598);border-radius:10px;padding:9px;text-align:center;color:#fff;font-size:10px;font-weight:900;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:4px}
+        .dash-live-btn{background:linear-gradient(135deg,#B5445C,#F2B8C8);border-radius:10px;padding:9px;text-align:center;color:#fff;font-size:10px;font-weight:900;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:4px}
         .dash-live-btn .dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.2s ease-in-out infinite}
         @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
 
@@ -67,14 +67,14 @@
         .live-badge .dot{width:5px;height:5px;border-radius:50%;background:#fff;animation:pulse 1.2s ease-in-out infinite}
         .live-viewers{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;font-size:8px;font-weight:700;padding:3px 7px;border-radius:10px}
         .live-chat-msg{position:absolute;bottom:55px;left:8px;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border-radius:12px;padding:5px 9px;font-size:8px;color:#fff;max-width:100px}
-        .live-chat-user{color:#F4A261;font-weight:800}
+        .live-chat-user{color:#B5445C;font-weight:800}
         .live-gift-float{position:absolute;bottom:60px;right:8px;font-size:20px;animation:giftUp 2.5s ease-out infinite}
         @keyframes giftUp{0%{opacity:1;transform:translateY(0)}80%{opacity:.6;transform:translateY(-50px)}100%{opacity:0;transform:translateY(-60px)}}
         .live-input{position:absolute;bottom:8px;left:8px;right:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:6px 10px;font-size:8px;color:rgba(255,255,255,.7)}
 
         /* Permisos mockup */
         .perm-bg{background:#fff;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:12px}
-        .perm-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598);display:flex;align-items:center;justify-content:center;font-size:24px}
+        .perm-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#B5445C,#F2B8C8);display:flex;align-items:center;justify-content:center;font-size:24px}
         .perm-title{font-size:11px;font-weight:800;color:#1c1c1e;text-align:center}
         .perm-sub{font-size:8px;color:#8e8e93;text-align:center;line-height:1.4}
         .perm-btn{width:100%;background:#007AFF;color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:7px;text-align:center}
@@ -85,14 +85,14 @@
         .tip-green{background:rgba(52,199,89,.07);border-color:rgba(52,199,89,.25)}
 
         /* Feature pills */
-        .feat-pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #F0E6E1;border-radius:30px;padding:8px 14px;font-size:13px;font-weight:600;color:#2D2D2D;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-        .feat-pill .ms{font-size:18px;color:#F4A261}
+        .feat-pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #F5E8EF;border-radius:30px;padding:8px 14px;font-size:13px;font-weight:600;color:#2D2D2D;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+        .feat-pill .ms{font-size:18px;color:#B5445C}
 
         /* Gift grid */
-        .gift-item{background:#fff;border:1px solid #F0E6E1;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px}
+        .gift-item{background:#fff;border:1px solid #F5E8EF;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px}
         .gift-item .emoji{font-size:28px;line-height:1}
         .gift-item .name{font-weight:800;font-size:14px}
-        .gift-item .price{font-size:11px;color:#6E625C;margin-top:1px}
+        .gift-item .price{font-size:11px;color:#7B4D5E;margin-top:1px}
         .gift-item .earn{font-size:11px;color:#34C759;font-weight:700}
 
         /* FAQ */
@@ -148,14 +148,14 @@
                     <div class="dash-bg">
                         <div class="dash-nav">
                             <div class="dash-nav-logo">Candela</div>
-                            <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598)"></div>
+                            <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#B5445C,#F2B8C8)"></div>
                         </div>
                         <div style="display:flex;height:100%">
-                            <div style="width:48px;background:#fff;border-right:1px solid #F0E6E1;display:flex;flex-direction:column;align-items:center;padding-top:14px;gap:14px">
-                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#6E625C">home</span>
-                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#6E625C">person</span>
-                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#F4A261;background:rgba(244,162,97,.1);border-radius:8px;padding:4px">live_tv</span>
-                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#6E625C">account_balance_wallet</span>
+                            <div style="width:48px;background:#fff;border-right:1px solid #F5E8EF;display:flex;flex-direction:column;align-items:center;padding-top:14px;gap:14px">
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#7B4D5E">home</span>
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#7B4D5E">person</span>
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#B5445C;background:rgba(244,162,97,.1);border-radius:8px;padding:4px">live_tv</span>
+                                <span style="font-family:'Material Symbols Outlined';font-size:16px;color:#7B4D5E">account_balance_wallet</span>
                             </div>
                             <div class="dash-body">
                                 <div style="font-size:9px;font-weight:800;color:#2D2D2D;margin-bottom:8px">En vivo</div>
@@ -258,7 +258,7 @@
                 <div class="phone-screen">
                     <div class="live-bg">
                         <div class="live-cam">
-                            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F4A261,#E8A598);opacity:.35"></div>
+                            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#B5445C,#F2B8C8);opacity:.35"></div>
                         </div>
                         <div class="live-grad-top"></div>
                         <div class="live-grad-bot"></div>
@@ -450,7 +450,7 @@
     <!-- CTA -->
     <div class="text-center py-6">
         <p class="text-c-soft text-sm mb-4">Lista para tu primer live?</p>
-        <a href="dashboard-creadora.html" class="c-btn inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white font-extrabold text-sm shadow-lg" style="background:linear-gradient(135deg,#F4A261,#E8A598);text-decoration:none">
+        <a href="dashboard-creadora.html" class="c-btn inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white font-extrabold text-sm shadow-lg" style="background:linear-gradient(135deg,#B5445C,#F2B8C8);text-decoration:none">
             <span class="ms" style="font-size:20px">live_tv</span>
             Ir en vivo ahora
         </a>

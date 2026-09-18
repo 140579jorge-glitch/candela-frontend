@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -6,24 +6,24 @@
 <title>Política de Cookies — Candela</title>
 <meta name="robots" content="index, follow">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{"c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947","c-text":"#2D2D2D","c-soft":"#6E625C","c-border":"#F0E6E1","c-champagne":"#F2D5C4"}}}}</script>
+<script>tailwind.config={theme:{extend:{colors:{"c-bg":"#FDF8F5","c-accent":"#B5445C","c-accent-d":"#CF6278","c-text":"#2D2D2D","c-soft":"#7B4D5E","c-border":"#F5E8EF","c-champagne":"#FAF2F5"}}}}</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 body{font-family:'Nunito',sans-serif;}
-.logo-text{background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-text{background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 h2{font-size:1.05rem;font-weight:700;margin-top:2rem;margin-bottom:.5rem;color:#2D2D2D;}
-p,li{color:#6E625C;line-height:1.7;font-size:.925rem;}
+p,li{color:#7B4D5E;line-height:1.7;font-size:.925rem;}
 ul{list-style:disc;padding-left:1.5rem;margin:.5rem 0;}
 strong{color:#2D2D2D;}
-.notice{background:#FFF8F5;border:1px solid #F0E6E1;border-left:4px solid #F4A261;padding:.85rem 1.1rem;border-radius:8px;font-size:.875rem;color:#6E625C;margin:1.5rem 0;}
+.notice{background:#FDF8F5;border:1px solid #F5E8EF;border-left:4px solid #B5445C;padding:.85rem 1.1rem;border-radius:8px;font-size:.875rem;color:#7B4D5E;margin:1.5rem 0;}
 .cookie-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem;}
-.cookie-table th{text-align:left;padding:.6rem .75rem;border-bottom:2px solid #F0E6E1;color:#2D2D2D;font-weight:700;}
-.cookie-table td{padding:.6rem .75rem;border-bottom:1px solid #F0E6E1;color:#6E625C;vertical-align:top;}
+.cookie-table th{text-align:left;padding:.6rem .75rem;border-bottom:2px solid #F5E8EF;color:#2D2D2D;font-weight:700;}
+.cookie-table td{padding:.6rem .75rem;border-bottom:1px solid #F5E8EF;color:#7B4D5E;vertical-align:top;}
 .cookie-table tr:last-child td{border-bottom:none;}
 .badge-essential{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;background:#E8F5E9;color:#2E7D32;}
 .badge-analytics{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;background:#FFF8E1;color:#F57F17;}
 .badge-prefs{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700;background:#E3F2FD;color:#1565C0;}
-.revoke-btn{background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;border:none;padding:.6rem 1.5rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;transition:filter .2s;}
+.revoke-btn{background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;border:none;padding:.6rem 1.5rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;transition:filter .2s;}
 .revoke-btn:hover{filter:brightness(1.07);}
 </style>
 </head>
@@ -94,16 +94,16 @@ strong{color:#2D2D2D;}
 
   <h2>4. Cookies analíticas — requieren consentimiento</h2>
   <p>Google Analytics (<code>_ga</code>) se carga <strong>únicamente</strong> cuando aceptas las cookies en el banner que aparece en tu primera visita. Si rechazas, no se carga ningún script de seguimiento. Google Analytics tiene activada la opción de <strong>anonimización de IP</strong> en nuestra configuración.</p>
-  <p style="margin-top:.75rem;">Puedes consultar la política de privacidad de Google Analytics en: <a href="https://policies.google.com/privacy" style="color:#F4A261;" target="_blank" rel="noopener">policies.google.com/privacy</a></p>
+  <p style="margin-top:.75rem;">Puedes consultar la política de privacidad de Google Analytics en: <a href="https://policies.google.com/privacy" style="color:#B5445C;" target="_blank" rel="noopener">policies.google.com/privacy</a></p>
 
   <h2>5. Gestionar tus preferencias</h2>
   <p>Puedes cambiar tu decisión sobre cookies analíticas en cualquier momento desde aquí:</p>
 
-  <div style="background:#fff;border:1px solid #F0E6E1;border-radius:16px;padding:1.25rem 1.5rem;margin:1rem 0;">
+  <div style="background:#fff;border:1px solid #F5E8EF;border-radius:16px;padding:1.25rem 1.5rem;margin:1rem 0;">
     <p id="consent-status" style="font-size:.875rem;margin-bottom:1rem;"></p>
     <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
       <button class="revoke-btn" onclick="setConsent('1')">Aceptar cookies analíticas</button>
-      <button style="background:#fff;border:2px solid #F4A261;color:#F4A261;padding:.55rem 1.25rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;" onclick="setConsent('0')">Rechazar cookies analíticas</button>
+      <button style="background:#fff;border:2px solid #B5445C;color:#B5445C;padding:.55rem 1.25rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;" onclick="setConsent('0')">Rechazar cookies analíticas</button>
     </div>
   </div>
 
@@ -119,7 +119,7 @@ strong{color:#2D2D2D;}
   <p>Además de Google Analytics (solo con consentimiento), Candela no instala cookies de terceros. No hay píxeles de Facebook, Twitter ni redes publicitarias.</p>
 
   <h2>8. Contacto</h2>
-  <p>Consultas sobre esta política: <a href="mailto:privacidad@clubcandela.com" style="color:#F4A261;font-weight:700;">privacidad@clubcandela.com</a></p>
+  <p>Consultas sobre esta política: <a href="mailto:privacidad@clubcandela.com" style="color:#B5445C;font-weight:700;">privacidad@clubcandela.com</a></p>
 </main>
 
 <footer class="border-t border-c-border mt-6 py-8 px-5">

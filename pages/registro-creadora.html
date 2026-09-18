@@ -25,9 +25,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
-                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
-                        "c-soft":"#6E625C","c-border":"#F0E6E1"
+                        "c-bg":"#FDF8F5","c-accent":"#B5445C","c-accent-d":"#CF6278",
+                        "c-rose":"#F2B8C8","c-champagne":"#FAF2F5","c-text":"#2D2D2D",
+                        "c-soft":"#7B4D5E","c-border":"#F5E8EF"
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
                 }
@@ -46,21 +46,21 @@
             background-size:256px 256px;
         }
 
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .3s cubic-bezier(.32,.72,0,1),transform .3s cubic-bezier(.32,.72,0,1); }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .3s cubic-bezier(.32,.72,0,1),transform .3s cubic-bezier(.32,.72,0,1); }
         .c-btn:hover { filter:brightness(1.07); }
         .c-btn:active { transform:scale(.97); }
         .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
         .step-dot { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;transition:all .4s cubic-bezier(.32,.72,0,1); }
-        .step-dot.done { background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff; }
-        .step-dot.active { background:#fff;color:#F4A261;border:2px solid #F4A261; }
-        .step-dot.idle { background:#F0E6E1;color:#6E625C; }
+        .step-dot.done { background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff; }
+        .step-dot.active { background:#fff;color:#B5445C;border:2px solid #B5445C; }
+        .step-dot.idle { background:#F5E8EF;color:#7B4D5E; }
         .step-line { flex:1;height:2px;transition:background .4s cubic-bezier(.32,.72,0,1); }
-        .step-line.done { background:linear-gradient(90deg,#F4A261,#E8A598); }
-        .step-line.idle { background:#F0E6E1; }
+        .step-line.done { background:linear-gradient(90deg,#B5445C,#F2B8C8); }
+        .step-line.idle { background:#F5E8EF; }
         .pais-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem; }
-        .pais-opt { padding:.55rem;border-radius:.75rem;border:1.5px solid #F0E6E1;font-size:.8rem;font-weight:600;text-align:center;cursor:pointer;transition:all .3s cubic-bezier(.32,.72,0,1); }
-        .pais-opt.selected { border-color:#F4A261;background:rgba(244,162,97,.08);color:#E08947; }
+        .pais-opt { padding:.55rem;border-radius:.75rem;border:1.5px solid #F5E8EF;font-size:.8rem;font-weight:600;text-align:center;cursor:pointer;transition:all .3s cubic-bezier(.32,.72,0,1); }
+        .pais-opt.selected { border-color:#B5445C;background:rgba(244,162,97,.08);color:#CF6278; }
 
         /* Floating pill nav */
         .glass { background:rgba(255,248,245,.90);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px); }
@@ -85,7 +85,7 @@
     <!-- Hero -->
     <div class="text-center mb-6">
         <div class="inline-block bg-gradient-to-br from-c-champagne to-c-rose rounded-2xl p-3 mb-3">
-            <span class="ms" style="font-size:2rem;color:#E08947">auto_awesome</span>
+            <span class="ms" style="font-size:2rem;color:#CF6278">auto_awesome</span>
         </div>
         <h1 class="font-display text-2xl font-semibold mb-1">Convierte tu contenido en ingresos</h1>
         <p class="text-c-soft text-sm">Solo te llevara 2 minutos. Empieza hoy.</p>
@@ -215,7 +215,7 @@
 
         <div class="bg-c-bg rounded-xl p-4 border border-c-border text-sm mb-4">
             <div class="flex items-start gap-2">
-                <span class="ms" style="font-size:18px;color:#F4A261;margin-top:1px">info</span>
+                <span class="ms" style="font-size:18px;color:#B5445C;margin-top:1px">info</span>
                 <div>
                     <p class="font-bold mb-1">Que pasa después del registro:</p>
                     <ul class="text-c-soft space-y-1 text-xs">
@@ -266,7 +266,7 @@
     <!-- EXITO -->
     <div id="exito" class="hidden text-center py-10">
         <div class="inline-block bg-gradient-to-br from-orange-100 to-rose-100 rounded-3xl p-5 mb-5">
-            <span class="ms" style="font-size:3rem;color:#F4A261">celebration</span>
+            <span class="ms" style="font-size:3rem;color:#B5445C">celebration</span>
         </div>
         <h2 class="font-display text-2xl font-semibold mb-2">Bienvenida a Candela!</h2>
         <p class="text-c-soft mb-5 text-sm max-w-xs mx-auto">Tu cuenta fue creada. Sube tu verificación de CI para activarla.</p>
@@ -383,9 +383,9 @@ async function registrar() {
 
 function toast(msg, tipo='info') {
     const c = document.getElementById('toasts');
-    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#B5445C' };
     const el = document.createElement('div');
-    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:300px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.style.cssText = `background:#fff;border:1px solid #F5E8EF;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:300px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
     el.textContent = msg;
     c.appendChild(el);
     requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });

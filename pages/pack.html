@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -16,9 +16,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg": "#FFF8F5", "c-accent": "#F4A261", "c-rose": "#E8A598",
-                        "c-champagne": "#F2D5C4", "c-text": "#2D2D2D", "c-soft": "#6E625C",
-                        "c-border": "#F0E6E1",
+                        "c-bg": "#FDF8F5", "c-accent": "#B5445C", "c-rose": "#F2B8C8",
+                        "c-champagne": "#FAF2F5", "c-text": "#2D2D2D", "c-soft": "#7B4D5E",
+                        "c-border": "#F5E8EF",
                     },
                     fontFamily: { display: ["Playfair Display","serif"], body: ["Nunito","sans-serif"] }
                 }
@@ -30,12 +30,12 @@
     <style>
         body { font-family:'Nunito',sans-serif; }
         .glass { background:rgba(255,248,245,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .2s,transform .15s; }
         .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
         .c-btn:active { transform:scale(0.97); }
-        .c-btn-outline { border:2px solid #F4A261; color:#F4A261; transition:all .2s; }
-        .c-btn-outline:hover { background:#F4A261; color:#fff; }
+        .c-btn-outline { border:2px solid #B5445C; color:#B5445C; transition:all .2s; }
+        .c-btn-outline:hover { background:#B5445C; color:#fff; }
         .ms { font-family:'Material Symbols Outlined'; font-style:normal; font-size:22px; line-height:1; user-select:none; }
         .modal-bg { position:fixed; inset:0; z-index:100; background:rgba(45,20,10,.42); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; visibility:hidden; transition:all .22s; }
         .modal-bg.open { opacity:1; visibility:visible; }
@@ -66,12 +66,12 @@
 
     <!-- Skeleton de carga -->
     <div id="skeleton-wrap" class="py-10">
-        <div class="h-8 rounded-xl mb-3 w-3/4" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
-        <div class="h-4 rounded-xl mb-5 w-1/2" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+        <div class="h-8 rounded-xl mb-3 w-3/4" style="background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+        <div class="h-4 rounded-xl mb-5 w-1/2" style="background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
         <div class="grid grid-cols-3 gap-2">
-            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
-            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
-            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
+            <div class="aspect-square rounded-2xl" style="background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;"></div>
         </div>
         <style>@keyframes shimmer{0%{background-position:-300% 0}100%{background-position:300% 0}}</style>
     </div>
@@ -83,7 +83,7 @@
         <div class="mb-5">
             <a id="link-creadora" href="#" class="flex items-center gap-2 mb-3 group w-fit">
                 <div id="avatar-creadora" class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-white font-bold text-sm shrink-0"
-                    style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                    style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                     <span id="avatar-init">?</span>
                     <img id="avatar-img" src="" alt="" class="w-full h-full object-cover hidden">
                 </div>
@@ -157,7 +157,7 @@
             <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
 
-        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
+        <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
         <button onclick="confirmarCompra()" id="btn-confirmar" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
@@ -179,7 +179,7 @@ let userBalance = 0;
 
 function toast(msg, tipo = 'info') {
     const d = document.createElement('div');
-    const col = tipo === 'success' ? '#22c55e' : tipo === 'error' ? '#ef4444' : '#F4A261';
+    const col = tipo === 'success' ? '#22c55e' : tipo === 'error' ? '#ef4444' : '#B5445C';
     d.className = 'toast pointer-events-auto px-4 py-2.5 rounded-xl text-white text-sm font-semibold shadow-lg max-w-xs';
     d.style.cssText = `background:${col}`;
     d.textContent = msg;
@@ -257,7 +257,7 @@ async function init() {
                 </div>
             </div>`;
         }
-        return `<div class="aspect-square rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,#F2D5C4,#E8A598)">
+        return `<div class="aspect-square rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,#FAF2F5,#F2B8C8)">
             <span class="ms" style="color:rgba(255,255,255,.7);font-size:32px">lock</span>
         </div>`;
     }).join('');

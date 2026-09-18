@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 
@@ -23,13 +23,13 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":       "#FFF8F5",
-                        "c-accent":   "#F4A261",
-                        "c-rose":     "#E8A598",
-                        "c-champagne":"#F2D5C4",
+                        "c-bg":       "#FDF8F5",
+                        "c-accent":   "#B5445C",
+                        "c-rose":     "#F2B8C8",
+                        "c-champagne":"#FAF2F5",
                         "c-text":     "#2D2D2D",
-                        "c-soft":     "#6E625C",
-                        "c-border":   "#F0E6E1",
+                        "c-soft":     "#7B4D5E",
+                        "c-border":   "#F5E8EF",
                     },
                     fontFamily: {
                         display: ["Playfair Display","serif"],
@@ -44,16 +44,16 @@
     <style>
         body { font-family:'Nunito',sans-serif; }
         .glass { background:rgba(255,248,245,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .2s,transform .15s; }
         .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
         .c-btn:active { transform:scale(0.97); }
-        .c-btn-outline { border:2px solid #F4A261; color:#F4A261; transition:all .2s; }
-        .c-btn-outline:hover { background:#F4A261; color:#fff; }
+        .c-btn-outline { border:2px solid #B5445C; color:#B5445C; transition:all .2s; }
+        .c-btn-outline:hover { background:#B5445C; color:#fff; }
 
         /* Temas de color de creadoras */
         :root {
-            --t-bg:#FFF4EE; --t-a:#F4A261; --t-b:#E8A598; --t-text:#2D2D2D;
+            --t-bg:#FFF4EE; --t-a:#B5445C; --t-b:#F2B8C8; --t-text:#2D2D2D;
         }
         .tema-bg { background-color:var(--t-bg); }
 
@@ -66,7 +66,7 @@
             width:100%; height:100%;
             background:
                 radial-gradient(120% 80% at 30% 12%, rgba(255,255,255,.30), transparent 60%),
-                linear-gradient(150deg, var(--t-a,#F4A261), var(--t-b,#E8A598));
+                linear-gradient(150deg, var(--t-a,#B5445C), var(--t-b,#F2B8C8));
         }
         .ct-scrim {
             position:absolute; inset:0; pointer-events:none;
@@ -86,7 +86,7 @@
             padding:5px 11px; border-radius:999px;
             transition:filter .2s, transform .2s;
         }
-        .ct-chip--ppv   { background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff; box-shadow:0 4px 14px rgba(244,162,97,.5); }
+        .ct-chip--ppv   { background:linear-gradient(135deg,#B5445C,#F2B8C8); color:#fff; box-shadow:0 4px 14px rgba(181,68,92,.5); }
         .ct-chip--subs  { background:rgba(255,248,245,.16); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.28); color:#fff; font-size:10px; letter-spacing:.02em; }
         .ct-chip--trial { background:rgba(46,204,113,.94); color:#fff; font-size:10px; box-shadow:0 4px 14px rgba(46,204,113,.4); }
         .content-item:hover .ct-chip--ppv { filter:brightness(1.08); transform:translateY(-1px); }
@@ -101,12 +101,12 @@
         .modal-box { background:#fff; border-radius:1.5rem; padding:2rem; width:100%; max-width:460px; box-shadow:0 28px 64px rgba(0,0,0,.13); transform:translateY(18px); transition:transform .22s; }
         .modal-bg.open .modal-box { transform:translateY(0); }
 
-        .plan-opt { position:relative; border:1.5px solid #F0E6E1; border-radius:.85rem; padding:.6rem .5rem; text-align:center; cursor:pointer; transition:border-color .15s, background .15s; }
-        .plan-opt:hover { border-color:#E8A598; }
-        .plan-opt.sel { border-color:#F4A261; background:rgba(244,162,97,.07); }
+        .plan-opt { position:relative; border:1.5px solid #F5E8EF; border-radius:.85rem; padding:.6rem .5rem; text-align:center; cursor:pointer; transition:border-color .15s, background .15s; }
+        .plan-opt:hover { border-color:#F2B8C8; }
+        .plan-opt.sel { border-color:#B5445C; background:rgba(181,68,92,.07); }
         .plan-opt .pm { font-weight:800; font-size:.95rem; color:#2D2D2D; }
-        .plan-opt .pt { font-size:.68rem; color:#6E625C; margin-top:.1rem; }
-        .plan-opt .pd { position:absolute; top:-8px; right:-6px; background:linear-gradient(135deg,#F4A261,#E8A598); color:#fff; font-size:.58rem; font-weight:800; padding:.1rem .4rem; border-radius:99px; }
+        .plan-opt .pt { font-size:.68rem; color:#7B4D5E; margin-top:.1rem; }
+        .plan-opt .pd { position:absolute; top:-8px; right:-6px; background:linear-gradient(135deg,#B5445C,#F2B8C8); color:#fff; font-size:.58rem; font-weight:800; padding:.1rem .4rem; border-radius:99px; }
 
         /* No scrollbar */
         .no-scroll::-webkit-scrollbar { display:none; }
@@ -117,7 +117,7 @@
         #story-ring-wrap.has-story #avatar-wrap {
             outline: 3px solid transparent;
             outline-offset: 3px;
-            box-shadow: 0 0 0 3px #F4A261, 0 0 0 6px white, 0 0 0 9px #F4A261;
+            box-shadow: 0 0 0 3px #B5445C, 0 0 0 6px white, 0 0 0 9px #B5445C;
         }
         /* Story viewer modal */
         #modal-story-viewer { position:fixed; inset:0; z-index:9999; background:#000; display:none; flex-direction:column; }
@@ -132,14 +132,14 @@
         .dot-on { width:9px;height:9px;border-radius:50%;background:#2ecc71;box-shadow:0 0 7px rgba(46,204,113,.7);display:inline-block; }
 
         /* Tab activo */
-        .tab.active { border-bottom:2px solid var(--t-a,#F4A261); color:var(--t-a,#F4A261); font-weight:700; }
+        .tab.active { border-bottom:2px solid var(--t-a,#B5445C); color:var(--t-a,#B5445C); font-weight:700; }
 
         /* Skeleton */
         @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
-        .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%); background-size:300% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
+        .skeleton { background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%); background-size:300% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
 
         /* Sticky subscribe bar */
-        .sub-bar { position:fixed; bottom:0; left:0; right:0; z-index:50; background:rgba(255,248,245,.95); backdrop-filter:blur(16px); border-top:1px solid #F0E6E1; padding:1rem 1.5rem; transform:translateY(100%); transition:transform .3s ease; }
+        .sub-bar { position:fixed; bottom:0; left:0; right:0; z-index:50; background:rgba(255,248,245,.95); backdrop-filter:blur(16px); border-top:1px solid #F5E8EF; padding:1rem 1.5rem; transform:translateY(100%); transition:transform .3s ease; }
         .sub-bar.visible { transform:translateY(0); }
 
         /* ── PROTECCION DE CONTENIDO ── */
@@ -204,10 +204,10 @@
         #visor video { pointer-events: auto; }
     </style>
 </head>
-<body class="bg-c-bg text-c-text antialiased min-h-screen pb-24" style="background-color:#FFF8F5;color:#2D2D2D">
+<body class="bg-c-bg text-c-text antialiased min-h-screen pb-24" style="background-color:#FDF8F5;color:#2D2D2D">
 
 <!-- TopBar -->
-<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(181,68,92,.07)">
     <div class="flex items-center justify-between h-14 px-4 max-w-4xl mx-auto">
         <a href="../index.html" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft">
             <span class="ms">arrow_back</span>
@@ -221,7 +221,7 @@
 
 <!-- BANNER -->
 <div class="pt-14">
-    <div id="banner-wrap" class="relative w-full overflow-hidden" style="height:200px;background:linear-gradient(140deg,var(--t-a,#F4A261),var(--t-b,#E8A598))">
+    <div id="banner-wrap" class="relative w-full overflow-hidden" style="height:200px;background:linear-gradient(140deg,var(--t-a,#B5445C),var(--t-b,#F2B8C8))">
         <div id="banner-monogram" class="absolute inset-0 flex items-center justify-center pointer-events-none select-none font-display font-semibold" style="font-size:9rem;line-height:1;color:rgba(255,255,255,.16)">?</div>
         <img id="banner-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover hidden">
         <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 45%,rgba(20,8,2,.42) 100%)"></div>
@@ -235,7 +235,7 @@
         <!-- Wrapper: clase "has-story" activa el anillo naranja y hace clickable -->
         <div id="story-ring-wrap" class="relative inline-block" onclick="abrirStories()">
             <div id="avatar-wrap" class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden flex items-center justify-center text-4xl font-bold text-white transition-all"
-                style="background:linear-gradient(135deg,var(--t-b,#F2D5C4),var(--t-a,#F4A261))">
+                style="background:linear-gradient(135deg,var(--t-b,#FAF2F5),var(--t-a,#B5445C))">
                 <span id="avatar-initial">?</span>
                 <img id="avatar-img" src="" alt="" class="w-full h-full object-cover hidden">
             </div>
@@ -246,7 +246,7 @@
     <div class="flex items-center gap-1.5 mb-1">
         <h1 id="creadora-nombre" class="font-display text-2xl font-semibold text-c-text">Cargando...</h1>
         <span id="badge-verif" class="hidden shrink-0" title="Identidad y edad verificadas por Candela">
-            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" role="img" aria-label="Verificada"><circle cx="12" cy="12" r="10" fill="#F4A261"></circle><path d="M7.5 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" role="img" aria-label="Verificada"><circle cx="12" cy="12" r="10" fill="#B5445C"></circle><path d="M7.5 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </span>
     </div>
     <div class="flex items-center gap-x-3 gap-y-1 text-sm text-c-soft mb-2 flex-wrap">
@@ -278,7 +278,7 @@
 
     <!-- Franja de confianza -->
     <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-semibold text-c-soft mb-4">
-        <span class="flex items-center gap-1"><span class="ms" style="font-size:14px;color:#F4A261">verified_user</span> Identidad verificada</span>
+        <span class="flex items-center gap-1"><span class="ms" style="font-size:14px;color:#B5445C">verified_user</span> Identidad verificada</span>
         <span class="flex items-center gap-1"><span class="ms" style="font-size:14px">lock</span> Sin rastro bancario</span>
         <span class="flex items-center gap-1"><span class="ms" style="font-size:14px">account_balance_wallet</span> Pagas con USDT</span>
     </p>
@@ -382,7 +382,7 @@
             <p class="font-bold text-sm" id="sticky-nombre">Creadora</p>
             <p class="text-xs text-c-soft" id="sticky-precio">Suscribete para ver contenido exclusivo</p>
         </div>
-        <button id="btn-sub-sticky" onclick="abrirSub()" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md shrink-0">
+        <button onclick="abrirSub()" class="c-btn text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md shrink-0">
             Suscribirme
         </button>
     </div>
@@ -417,7 +417,7 @@
             <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
 
-        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
+        <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
         <button onclick="confirmarSub()" id="btn-confirmar-sub" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
@@ -453,7 +453,7 @@
             <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
 
-        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
+        <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
         <button onclick="confirmarCompra()" id="btn-confirmar-compra" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
@@ -485,7 +485,7 @@
         <div class="flex items-center justify-between mb-2">
             <span class="text-sm text-c-soft">Tu saldo: <strong id="chat-sesion-balance"></strong></span>
         </div>
-        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
+        <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
         <button onclick="confirmarChatSesion()" class="c-btn text-white w-full py-3 rounded-full font-bold text-sm">Solicitar sesión</button>
@@ -541,7 +541,7 @@
 
         <div id="pack-modo-info" class="bg-c-bg border border-c-border rounded-xl p-3 mb-4 text-xs text-c-soft"></div>
 
-        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
+        <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
         <button onclick="confirmarCompraPack()" id="btn-confirmar-pack" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
@@ -598,7 +598,7 @@
             <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
 
-        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
+        <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
         <button onclick="confirmarPropina()" id="btn-confirmar-propina" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
@@ -641,7 +641,7 @@
             <a href="wallet.html" class="underline ml-1">Recargar ahora</a>
         </div>
 
-        <div style="background:#FFF8F5;border:1px solid #F0E6E1;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#6E625C;line-height:1.4;">
+        <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
         <button onclick="confirmarMensaje()" id="btn-confirmar-dm" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md w-full">
@@ -664,7 +664,7 @@
 </div>
 
 <!-- Bottom nav (solo logueados) -->
-<nav id="bottom-nav" class="glass hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+<nav id="bottom-nav" class="glass hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(181,68,92,.1)">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
         <a href="../index.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">home</span><span class="text-[10px] font-semibold">Inicio</span>
@@ -672,7 +672,7 @@
         <a href="feed.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">photo_library</span><span class="text-[10px] font-semibold">Feed</span>
         </a>
-        <a href="wallet.html" class="flex flex-col items-center gap-0.5" style="color:#F4A261">
+        <a href="wallet.html" class="flex flex-col items-center gap-0.5" style="color:#B5445C">
             <span class="ms ms-fill">account_balance_wallet</span><span class="text-[10px] font-bold" id="nav-saldo-label">Billetera</span>
         </a>
         <a href="fan-dashboard.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
@@ -694,7 +694,7 @@ const API_BASE = 'https://api.clubcandela.com';
 const _u = u => (!u ? '' : u.startsWith('http') ? u : API_BASE + u);
 
 const TEMAS = {
-    'melocoton':    ['#FFF4EE','#F4A261','#E8A598','#2D2D2D'],
+    'melocoton':    ['#FFF4EE','#B5445C','#F2B8C8','#2D2D2D'],
     'rosa-venecia': ['#FFF0F5','#D4869D','#F7B8C8','#2D1530'],
     'lavanda':      ['#F7F2FF','#9B72CF','#BBA0E0','#1A0D3D'],
     'rojo-carmin':  ['#1A0A0A','#C0392B','#E74C3C','#F5E6E6'],
@@ -715,14 +715,6 @@ let contenidoFiltrado = [];
 let tabActual = 'fotos';
 let contenidoSeleccionado = null;
 let suscritoActualmente = false;
-
-function _actualizarUIPostSuscripcion() {
-    const scrollToContent = () => document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
-    const btnHeader = document.getElementById('btn-sub-header');
-    const btnSticky = document.getElementById('btn-sub-sticky');
-    if (btnHeader) { btnHeader.textContent = 'Ver contenido'; btnHeader.onclick = scrollToContent; }
-    if (btnSticky) { btnSticky.textContent = 'Ver contenido'; btnSticky.onclick = scrollToContent; }
-}
 let trialStatus = null; // { vistas_esta_creadora, total_creadoras, puede_ver }
 let siguiendoActualmente = false;
 
@@ -760,7 +752,10 @@ async function init() {
             const subs = await candela._req('GET', '/api/pagos/mis-suscripciones');
             if (Array.isArray(subs) && subs.some(s => s.creadora_slug === slug)) {
                 suscritoActualmente = true;
-                _actualizarUIPostSuscripcion();
+                // Actualizar botón para suscrito (en creadoras gratis decía "Suscribirme gratis")
+                const btnSub = document.getElementById('btn-sub-header');
+                btnSub.textContent = 'Ver contenido';
+                btnSub.onclick = () => document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
             }
         } catch(e) {}
         // Estado follow
@@ -1115,10 +1110,8 @@ async function confirmarSub() {
     try {
         const r = await candela.pagos.confirmarSuscripcion({ creadora_slug: slug, meses: _planSel });
         userBalance = r.nuevo_balance != null ? r.nuevo_balance : Math.max(0, userBalance - _planCosto);
-        suscritoActualmente = true;
-        _actualizarUIPostSuscripcion();
         cerrarModal('modal-sub');
-        toast(r.mensaje || '¡Suscripción activada!', 'success');
+        toast(r.mensaje || 'Suscripcion activada', 'success');
         setTimeout(() => location.reload(), 2000);
     } catch(err) {
         toast(err.message, 'error');
@@ -1447,9 +1440,9 @@ async function confirmarMensaje() {
 
 function toast(msg, tipo = 'info') {
     const c = document.getElementById('toasts');
-    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#B5445C' };
     const el = document.createElement('div');
-    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.style.cssText = `background:#fff;border:1px solid #F5E8EF;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
     el.textContent = msg;
     c.appendChild(el);
     requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });
@@ -1702,7 +1695,7 @@ function abrirStories() {
         svAvatar.innerHTML = `<img src="${creadoraData.avatar_url}" class="w-full h-full object-cover">`;
     } else {
         svAvatar.textContent = (creadoraData?.nombre_artistico || '?')[0].toUpperCase();
-        svAvatar.style.background = 'linear-gradient(135deg,#F2D5C4,#F4A261)';
+        svAvatar.style.background = 'linear-gradient(135deg,#FAF2F5,#B5445C)';
         svAvatar.style.display = 'flex';
         svAvatar.style.alignItems = 'center';
         svAvatar.style.justifyContent = 'center';

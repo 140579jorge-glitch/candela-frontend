@@ -11,9 +11,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
-                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
-                        "c-soft":"#6E625C","c-border":"#F0E6E1","c-surf":"#FFFFFF",
+                        "c-bg":"#FDF8F5","c-accent":"#B5445C","c-accent-d":"#CF6278",
+                        "c-rose":"#F2B8C8","c-champagne":"#FAF2F5","c-text":"#2D2D2D",
+                        "c-soft":"#7B4D5E","c-border":"#F5E8EF","c-surf":"#FFFFFF",
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
                 }
@@ -25,26 +25,26 @@
     <style>
         body { font-family:'Nunito',sans-serif; }
         .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .2s,transform .15s; }
         .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
         .c-btn:active { transform:scale(.97); }
-        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#6E625C;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
-        .nav-item:hover,.nav-item.active { color:#F4A261;background:rgba(244,162,97,.08);border-left-color:#F4A261; }
-        .stat-card { background:#fff;border:1px solid #F0E6E1;border-radius:1rem;padding:1.25rem; }
+        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#7B4D5E;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
+        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(181,68,92,.08);border-left-color:#B5445C; }
+        .stat-card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem;padding:1.25rem; }
         .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
         .ms-fill { font-variation-settings:'FILL' 1; }
         /* upload zone */
         img, video { -webkit-user-drag:none;user-select:none;-webkit-user-select:none; }
-        .upload-zone { border:2px dashed #F2D5C4;border-radius:1rem;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:rgba(242,213,196,.06); }
-        .upload-zone:hover,.upload-zone.drag { border-color:#F4A261;background:rgba(244,162,97,.06); }
+        .upload-zone { border:2px dashed #FAF2F5;border-radius:1rem;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:rgba(242,213,196,.06); }
+        .upload-zone:hover,.upload-zone.drag { border-color:#B5445C;background:rgba(181,68,92,.06); }
         /* tema picker */
         .tema-opt { height:44px;border-radius:.75rem;cursor:pointer;border:3px solid transparent;transition:all .2s;position:relative; }
         .tema-opt.selected { border-color:#2D2D2D;box-shadow:0 0 0 2px #2D2D2D; }
         /* tabs */
-        .panel-tab.active { color:#F4A261;border-bottom-color:#F4A261;font-weight:700; }
+        .panel-tab.active { color:#B5445C;border-bottom-color:#B5445C;font-weight:700; }
         /* badge estado */
-        .badge-pendiente { background:rgba(244,162,97,.12);color:#E08947;border:1px solid rgba(244,162,97,.3); }
+        .badge-pendiente { background:rgba(181,68,92,.12);color:#CF6278;border:1px solid rgba(181,68,92,.3); }
         .badge-activa { background:rgba(46,204,113,.1);color:#27ae60;border:1px solid rgba(46,204,113,.3); }
         .badge-rechazada { background:rgba(231,76,60,.1);color:#e74c3c;border:1px solid rgba(231,76,60,.3); }
         /* section oculta */
@@ -58,7 +58,7 @@
 <body class="bg-c-bg text-c-text antialiased">
 
 <!-- TopBar -->
-<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(181,68,92,.07)">
     <div class="flex items-center justify-between h-16 px-4 md:px-6">
         <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
         <div class="flex items-center gap-3">
@@ -86,7 +86,7 @@
                     </div>
                 </div>
             </div>
-            <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)" id="topbar-avatar" title="Salir">?</button>
+            <button onclick="candela.auth.logout()" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)" id="topbar-avatar" title="Salir">?</button>
         </div>
     </div>
 </header>
@@ -161,10 +161,10 @@
             <div id="score-bar-inicio" class="hidden bg-white border border-c-border rounded-2xl p-4 mb-5 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-sm font-bold">Completitud de perfil</span>
-                    <span id="score-pct-inicio" class="text-sm font-bold" style="color:#F4A261">0%</span>
+                    <span id="score-pct-inicio" class="text-sm font-bold" style="color:#B5445C">0%</span>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
-                    <div id="score-fill-inicio" class="h-2 rounded-full transition-all duration-500" style="width:0%;background:#F4A261"></div>
+                    <div id="score-fill-inicio" class="h-2 rounded-full transition-all duration-500" style="width:0%;background:#B5445C"></div>
                 </div>
                 <p id="score-hint-inicio" class="text-xs text-c-soft"></p>
             </div>
@@ -238,7 +238,7 @@
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Archivo</label>
                         <label class="upload-zone block cursor-pointer" id="upload-zone">
-                            <span class="ms" id="upload-icon" style="font-size:2.5rem;color:#F2D5C4">upload_file</span>
+                            <span class="ms" id="upload-icon" style="font-size:2.5rem;color:#FAF2F5">upload_file</span>
                             <img id="upload-preview" src="" alt="" style="display:none;max-height:140px;border-radius:10px;margin:4px auto 0;object-fit:cover;max-width:100%">
                             <p class="text-sm text-c-soft mt-2" id="archivo-nombre">Haz clic para seleccionar archivo</p>
                             <p class="text-xs text-c-border mt-1" id="upload-hint">JPG, PNG, MP4, MOV — max 500MB</p>
@@ -246,8 +246,8 @@
                         </label>
                         <!-- Barra de progreso -->
                         <div id="upload-progress" style="display:none" class="mt-3">
-                            <div class="h-2 rounded-full overflow-hidden" style="background:#F2D5C4">
-                                <div id="upload-progress-bar" style="height:100%;width:0%;background:#F4A261;border-radius:9999px;transition:width .3s ease"></div>
+                            <div class="h-2 rounded-full overflow-hidden" style="background:#FAF2F5">
+                                <div id="upload-progress-bar" style="height:100%;width:0%;background:#B5445C;border-radius:9999px;transition:width .3s ease"></div>
                             </div>
                             <p class="text-xs text-c-soft mt-1.5 text-center" id="upload-progress-txt">Preparando...</p>
                         </div>
@@ -333,7 +333,7 @@
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Archivos (max 10, fotos y videos)</label>
                         <label class="upload-zone block cursor-pointer" id="pk-upload-zone">
-                            <span class="ms" style="font-size:2.5rem;color:#F2D5C4">add_photo_alternate</span>
+                            <span class="ms" style="font-size:2.5rem;color:#FAF2F5">add_photo_alternate</span>
                             <p class="text-sm font-bold text-c-soft mt-2">Arrastra archivos o toca para seleccionar</p>
                             <p class="text-xs text-c-soft mt-1">JPG, PNG, MP4, MOV — max 200MB cada uno</p>
                             <input type="file" id="pk-archivos" accept="image/*,video/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
@@ -440,7 +440,7 @@
             <h2 class="font-display text-2xl font-semibold mb-5">Mis ganancias</h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Balance disponible</p>
                     <p class="text-2xl font-bold text-c-accent" id="g-balance">$0.00</p>
                     <p class="text-xs text-c-soft mt-0.5">listo para retirar</p>
@@ -492,10 +492,10 @@
             <div id="score-bar-personalizar" class="hidden bg-white border border-c-border rounded-2xl p-4 mb-5 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-sm font-bold">Completitud de perfil</span>
-                    <span id="score-pct-personalizar" class="text-sm font-bold" style="color:#F4A261">0%</span>
+                    <span id="score-pct-personalizar" class="text-sm font-bold" style="color:#B5445C">0%</span>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
-                    <div id="score-fill-personalizar" class="h-2 rounded-full transition-all duration-500" style="width:0%;background:#F4A261"></div>
+                    <div id="score-fill-personalizar" class="h-2 rounded-full transition-all duration-500" style="width:0%;background:#B5445C"></div>
                 </div>
                 <p id="score-faltantes-personalizar" class="text-xs text-c-soft"></p>
             </div>
@@ -509,7 +509,7 @@
                         <div>
                             <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Foto de perfil</p>
                             <div class="flex items-center gap-3">
-                                <div id="prev-avatar" class="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                                <div id="prev-avatar" class="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                                     <span id="prev-avatar-init">?</span>
                                     <img id="prev-avatar-img" src="" alt="" class="hidden w-full h-full object-cover">
                                 </div>
@@ -525,13 +525,13 @@
                         <!-- Banner -->
                         <div>
                             <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-2">Banner (cabecera de tu página)</p>
-                            <div id="prev-banner" class="w-full rounded-xl overflow-hidden mb-3" style="height:72px;background:linear-gradient(135deg,#FFF4EE,#F2D5C4)">
+                            <div id="prev-banner" class="w-full rounded-xl overflow-hidden mb-3" style="height:72px;background:linear-gradient(135deg,#FFF4EE,#FAF2F5)">
                                 <img id="prev-banner-img" src="" alt="" class="hidden w-full h-full object-cover">
                             </div>
                             <!-- Canvas oculto para auto-generacion -->
                             <canvas id="banner-canvas" width="1200" height="300" style="display:none"></canvas>
                             <div class="flex flex-col gap-2">
-                                <button type="button" onclick="generarBannerAuto()" class="flex items-center justify-center gap-2 text-xs font-bold text-white py-2 px-3 rounded-xl shadow-sm" style="background:linear-gradient(90deg,#F4A261,#D4869D)">
+                                <button type="button" onclick="generarBannerAuto()" class="flex items-center justify-center gap-2 text-xs font-bold text-white py-2 px-3 rounded-xl shadow-sm" style="background:linear-gradient(90deg,#B5445C,#D4869D)">
                                     <span class="ms" style="font-size:16px">auto_awesome</span>Generar banner automáticamente
                                 </button>
                                 <div class="flex items-center gap-2">
@@ -617,7 +617,7 @@
                     <div class="grid grid-cols-4 gap-2 mb-3" id="tema-grid">
                         <!-- generado por JS -->
                     </div>
-                    <div id="color-preview-bar" style="height:8px;border-radius:6px;background:linear-gradient(135deg,#FFF4EE,#F4A261);transition:background .35s ease"></div>
+                    <div id="color-preview-bar" style="height:8px;border-radius:6px;background:linear-gradient(135deg,#FFF4EE,#B5445C);transition:background .35s ease"></div>
                     <input type="hidden" id="p-tema" value="melocoton">
                 </div>
 
@@ -675,7 +675,7 @@
                     <div>
                         <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Documento — Anverso (frente)</p>
                         <label for="v-doc" class="upload-zone block cursor-pointer" id="lbl-zone-doc">
-                            <span class="ms" id="v-doc-icon" style="font-size:2rem;color:#F2D5C4">badge</span>
+                            <span class="ms" id="v-doc-icon" style="font-size:2rem;color:#FAF2F5">badge</span>
                             <img id="v-doc-prev" src="" alt="" style="display:none;max-height:120px;margin:0 auto;border-radius:8px;object-fit:cover;">
                             <p id="v-doc-txt" class="text-sm text-c-soft mt-1">Foto del frente de tu CI / DNI</p>
                         </label>
@@ -684,7 +684,7 @@
                     <div>
                         <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Documento — Reverso (dorso)</p>
                         <label for="v-doc-rev" class="upload-zone block cursor-pointer" id="lbl-zone-doc-rev">
-                            <span class="ms" id="v-doc-rev-icon" style="font-size:2rem;color:#F2D5C4">badge</span>
+                            <span class="ms" id="v-doc-rev-icon" style="font-size:2rem;color:#FAF2F5">badge</span>
                             <img id="v-doc-rev-prev" src="" alt="" style="display:none;max-height:120px;margin:0 auto;border-radius:8px;object-fit:cover;">
                             <p id="v-doc-rev-txt" class="text-sm text-c-soft mt-1">Foto del dorso de tu CI / DNI</p>
                         </label>
@@ -693,14 +693,14 @@
                     <div>
                         <p class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Selfie sosteniendo el documento</p>
                         <div class="upload-zone" id="lbl-zone-selfie">
-                            <span class="ms" id="v-selfie-icon" style="font-size:2rem;color:#F2D5C4">selfie</span>
+                            <span class="ms" id="v-selfie-icon" style="font-size:2rem;color:#FAF2F5">selfie</span>
                             <img id="v-selfie-prev" src="" alt="" style="display:none;max-height:120px;margin:0 auto;border-radius:8px;object-fit:cover;">
                             <p id="v-selfie-txt" class="text-sm text-c-soft mt-1 mb-3">Tu cara + el documento visibles</p>
                             <div class="flex gap-2 justify-center">
-                                <label for="v-selfie-cam" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer" style="background:rgba(244,162,97,.15);color:#E08947;border:1px solid #F4A261;">
+                                <label for="v-selfie-cam" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer" style="background:rgba(181,68,92,.15);color:#CF6278;border:1px solid #B5445C;">
                                     <span class="ms" style="font-size:16px">photo_camera</span>Tomar foto
                                 </label>
-                                <label for="v-selfie-gal" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer" style="background:rgba(244,162,97,.08);color:#888;border:1px solid #F2D5C4;">
+                                <label for="v-selfie-gal" class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer" style="background:rgba(181,68,92,.08);color:#888;border:1px solid #FAF2F5;">
                                     <span class="ms" style="font-size:16px">photo_library</span>Desde galeria
                                 </label>
                             </div>
@@ -815,7 +815,7 @@
             <h2 class="font-display text-2xl font-semibold mb-1">Propinas recibidas</h2>
             <p class="text-c-soft text-sm mb-5">Las propinas son apoyos directos que tus fans te envian.</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 max-w-lg">
-                <div class="stat-card border-l-4" style="border-left-color:#F4A261">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Total recibido</p>
                     <p class="text-2xl font-bold text-c-accent" id="prop-total">$0.00</p>
                     <p class="text-xs text-c-soft mt-0.5">en propinas confirmadas</p>
@@ -1120,7 +1120,7 @@
 </div>
 
 <!-- Bottom nav mobile -->
-<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(181,68,92,.1)">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
         <button onclick="mostrar('inicio')" class="flex flex-col items-center text-c-accent gap-0.5">
             <span class="ms ms-fill">home</span><span class="text-[10px] font-bold">Inicio</span>
@@ -1157,7 +1157,7 @@
 <script src="../js/api.js"></script>
 <script>
 const TEMAS_DEF = [
-    { id:'melocoton',    label:'Melocoton',   g:'linear-gradient(135deg,#FFF4EE,#F4A261)' },
+    { id:'melocoton',    label:'Melocoton',   g:'linear-gradient(135deg,#FFF4EE,#B5445C)' },
     { id:'rosa-venecia', label:'Rosa Venecia', g:'linear-gradient(135deg,#FFF0F5,#D4869D)' },
     { id:'lavanda',      label:'Lavanda',      g:'linear-gradient(135deg,#F7F2FF,#9B72CF)' },
     { id:'rojo-carmin',  label:'Carmin',       g:'linear-gradient(135deg,#3D0A0A,#C0392B)' },
@@ -1334,7 +1334,7 @@ async function cargarMisPosts() {
             const tipoIcon = c.tipo === 'video' ? '🎬' : '📸';
             const accesoLabel = c.precio > 0 ? `$${c.precio}` : c.es_gratis ? 'Gratis' : 'Subs';
             return `
-            <div class="relative rounded-xl overflow-hidden group" style="aspect-ratio:1;background:#F2D5C4${oculto?';opacity:.5':''}">
+            <div class="relative rounded-xl overflow-hidden group" style="aspect-ratio:1;background:#FAF2F5${oculto?';opacity:.5':''}">
                 ${c.preview_url
                     ? `<img src="${c.preview_url}" alt="" class="w-full h-full object-cover">`
                     : `<div class="w-full h-full flex items-center justify-center text-3xl">${tipoIcon}</div>`}
@@ -1587,7 +1587,7 @@ async function generarBannerAuto() {
     const tema = TEMAS_DEF.find(t => t.id === temaId) || TEMAS_DEF[0];
 
     // Fondo con gradiente del tema
-    const [c1, c2] = tema.g.match(/#[0-9a-fA-F]{6}/g) || ['#FFF4EE', '#F4A261'];
+    const [c1, c2] = tema.g.match(/#[0-9a-fA-F]{6}/g) || ['#FFF4EE', '#B5445C'];
     const grad = ctx.createLinearGradient(0, 0, 1200, 300);
     grad.addColorStop(0, c1);
     grad.addColorStop(1, c2);
@@ -1749,7 +1749,7 @@ window.addEventListener('popstate', e => _activarSeccion(e.state?.section || 'in
 async function cargarReferidas() {
     try {
         const data = await candela.creadoras.misReferidas();
-        const baseUrl = window.location.origin + window.location.pathname.replace('dashboard-creadora.html', 'registro-creadora.html');
+        const baseUrl = window.location.origin + window.location.pathname.replace('dashboard-creadora.html','') + '../pages/registro-creadora.html';
         document.getElementById('link-ref').value = `${baseUrl}?ref=${data.codigo_referido}`;
         document.getElementById('ref-total').textContent = data.total_referidas;
         const activas = data.referidas.filter(r => r.estado === 'activa').length;
@@ -2140,9 +2140,9 @@ async function subirBanner(input) {
 
 function toast(msg, tipo = 'info') {
     const c = document.getElementById('toasts');
-    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#B5445C' };
     const el = document.createElement('div');
-    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.style.cssText = `background:#fff;border:1px solid #F5E8EF;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
     el.textContent = msg;
     c.appendChild(el);
     requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });
@@ -2467,7 +2467,7 @@ async function cargarScore(contexto) {
     try {
         const s = await candela._req('GET', '/api/creadoras/mi-perfil/score');
         const pct = s.score || 0;
-        const color = pct >= 80 ? '#22c55e' : pct >= 50 ? '#F4A261' : '#ef4444';
+        const color = pct >= 80 ? '#22c55e' : pct >= 50 ? '#B5445C' : '#ef4444';
 
         const barEl = document.getElementById(`score-bar-${contexto}`);
         const pctEl = document.getElementById(`score-pct-${contexto}`);
@@ -2481,7 +2481,7 @@ async function cargarScore(contexto) {
         fillEl.style.background = color;
         if (hintEl) {
             if (pct < 80 && s.faltantes?.length) {
-                hintEl.textContent = 'Falta: ' + s.faltantes.map(f => f.label || f).join(', ');
+                hintEl.textContent = 'Falta: ' + s.faltantes.join(', ');
             } else if (pct >= 80) {
                 hintEl.textContent = 'Perfil completo. Tus fans te encontraran mas facil.';
             }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -11,10 +11,10 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
-                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
-                        "c-soft":"#6E625C","c-border":"#F0E6E1","c-surf":"#FFFFFF",
-                        "c-surface":"#FFFBF9"
+                        "c-bg":"#FDF8F5","c-accent":"#B5445C","c-accent-d":"#CF6278",
+                        "c-rose":"#F2B8C8","c-champagne":"#FAF2F5","c-text":"#2D2D2D",
+                        "c-soft":"#7B4D5E","c-border":"#F5E8EF","c-surf":"#FFFFFF",
+                        "c-surface":"#FDF8F5"
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
                 }
@@ -28,36 +28,36 @@
         .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
         .ms-fill { font-variation-settings:'FILL' 1; }
         .glass { background:rgba(255,248,245,.9); backdrop-filter:blur(20px); }
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .c-btn { background:linear-gradient(135deg,#F4A261,#E8A598); transition:filter .2s,transform .15s; }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .2s,transform .15s; }
         .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
         .c-btn:active { transform:scale(.97); }
-        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#6E625C;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
-        .nav-item:hover,.nav-item.active { color:#F4A261;background:rgba(244,162,97,.08);border-left-color:#F4A261; }
+        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#7B4D5E;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
+        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(244,162,97,.08);border-left-color:#B5445C; }
         .dash-section { display:none; }
         .dash-section.active { display:block; }
         .sidebar::-webkit-scrollbar { display:none; }
         .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
-        .card { background:#fff;border:1px solid #F0E6E1;border-radius:1rem; }
+        .card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem; }
         .badge { display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em; }
         .badge-ok { background:rgba(46,204,113,.1);color:#27ae60; }
-        .badge-warn { background:rgba(244,162,97,.12);color:#E08947; }
+        .badge-warn { background:rgba(244,162,97,.12);color:#CF6278; }
         .badge-red { background:rgba(231,76,60,.1);color:#e74c3c; }
-        .mov-row { display:flex;align-items:center;gap:.85rem;padding:.7rem 0;border-bottom:1px solid #F0E6E1; }
+        .mov-row { display:flex;align-items:center;gap:.85rem;padding:.7rem 0;border-bottom:1px solid #F5E8EF; }
         .mov-row:last-child { border-bottom:none; }
         .mov-ico { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
         @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
-        .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
-        .bot-nav-item { display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.625rem;font-weight:600;color:#6E625C;cursor:pointer;transition:color .15s;padding:.4rem .5rem; }
-        .bot-nav-item.active,.bot-nav-item:hover { color:#F4A261; }
+        .skeleton { background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
+        .bot-nav-item { display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.625rem;font-weight:600;color:#7B4D5E;cursor:pointer;transition:color .15s;padding:.4rem .5rem; }
+        .bot-nav-item.active,.bot-nav-item:hover { color:#B5445C; }
         #toast-cnt { position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none; }
         .toast-msg { padding:.6rem 1.2rem;border-radius:12px;font-size:.875rem;font-weight:700;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.18);opacity:0;transition:opacity .3s; }
         .toast-msg.show { opacity:1; }
         .sub-card { transition:border-color .2s; }
-        .sub-card:hover { border-color:#F4A261; }
-        .compra-thumb { width:56px;height:56px;border-radius:10px;object-fit:cover;background:#F0E6E1;flex-shrink:0; }
-        .follow-card { display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 12px;background:#fff;border:1px solid #F0E6E1;border-radius:14px;cursor:pointer;transition:border-color .2s,transform .2s; text-align:center; }
-        .follow-card:hover { border-color:#F4A261;transform:translateY(-2px); }
+        .sub-card:hover { border-color:#B5445C; }
+        .compra-thumb { width:56px;height:56px;border-radius:10px;object-fit:cover;background:#F5E8EF;flex-shrink:0; }
+        .follow-card { display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 12px;background:#fff;border:1px solid #F5E8EF;border-radius:14px;cursor:pointer;transition:border-color .2s,transform .2s; text-align:center; }
+        .follow-card:hover { border-color:#B5445C;transform:translateY(-2px); }
     </style>
 </head>
 <body class="bg-c-bg text-c-text antialiased">
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <button onclick="mostrar('cuenta')" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)" id="topbar-avatar">?</button>
+            <button onclick="mostrar('cuenta')" class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)" id="topbar-avatar">?</button>
         </div>
     </div>
 </header>
@@ -271,7 +271,7 @@ function toast(msg, tipo='info') {
     const c = document.getElementById('toast-cnt');
     const el = document.createElement('div');
     el.className = 'toast-msg';
-    el.style.background = tipo==='success'?'#27ae60':tipo==='error'?'#e74c3c':'#F4A261';
+    el.style.background = tipo==='success'?'#27ae60':tipo==='error'?'#e74c3c':'#B5445C';
     el.textContent = msg;
     c.appendChild(el);
     requestAnimationFrame(() => el.classList.add('show'));
@@ -397,7 +397,7 @@ function renderSiguiendo() {
             <div class="w-14 h-14 rounded-full overflow-hidden bg-c-champagne flex-shrink-0">
                 ${f.creadora_avatar
                     ? `<img src="${esc(f.creadora_avatar)}" alt="${esc(f.creadora_nombre)}" class="w-full h-full object-cover">`
-                    : `<div class="w-full h-full flex items-center justify-center text-white font-bold text-xl" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${(f.creadora_nombre||'C')[0]}</div>`
+                    : `<div class="w-full h-full flex items-center justify-center text-white font-bold text-xl" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">${(f.creadora_nombre||'C')[0]}</div>`
                 }
             </div>
             <p class="font-bold text-sm leading-snug truncate w-full">${esc(f.creadora_nombre)}</p>
@@ -443,7 +443,7 @@ function renderSubs() {
             <div class="w-12 h-12 rounded-full overflow-hidden bg-c-champagne flex-shrink-0">
                 ${s.creadora_avatar
                     ? `<img src="${esc(s.creadora_avatar)}" class="w-full h-full object-cover">`
-                    : `<div class="w-full h-full flex items-center justify-center text-white font-bold" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${(s.creadora_nombre||'?')[0]}</div>`
+                    : `<div class="w-full h-full flex items-center justify-center text-white font-bold" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">${(s.creadora_nombre||'?')[0]}</div>`
                 }
             </div>
             <div class="flex-1 min-w-0">
@@ -562,15 +562,15 @@ function renderMovs(elId, movs) {
     if (!movs || !movs.length) { el.innerHTML = '<p class="text-sm text-c-soft py-2 text-center">Sin movimientos.</p>'; return; }
     const ico = {
         deposito:  ['savings','#E8F5E9','#27ae60'],
-        suscripcion:['favorite','#FFF0EA','#E8A598'],
-        compra:    ['shopping_bag','#FFF4EE','#F4A261'],
-        propina:   ['volunteer_activism','#FFF0F0','#E8A598'],
+        suscripcion:['favorite','#FFF0EA','#F2B8C8'],
+        compra:    ['shopping_bag','#FFF4EE','#B5445C'],
+        propina:   ['volunteer_activism','#FFF0F0','#F2B8C8'],
         mensaje:   ['chat','#F0F4FF','#5B8DEF'],
-        bonus:     ['star','#FFFDE7','#F4A261'],
+        bonus:     ['star','#FFFDE7','#B5445C'],
         retiro:    ['send','#F3E5F5','#9C27B0'],
     };
     el.innerHTML = movs.map(m => {
-        const [icon, bg, color] = ico[m.tipo] || ['payments','#F5F5F5','#6E625C'];
+        const [icon, bg, color] = ico[m.tipo] || ['payments','#F5F5F5','#7B4D5E'];
         const signo = m.monto < 0 ? '' : '+';
         return `<div class="mov-row">
             <div class="mov-ico" style="background:${bg}"><span class="ms ms-fill" style="font-size:18px;color:${color}">${icon}</span></div>

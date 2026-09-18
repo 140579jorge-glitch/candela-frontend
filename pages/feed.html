@@ -11,9 +11,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "c-bg":"#FFF8F5","c-accent":"#F4A261","c-accent-d":"#E08947",
-                        "c-rose":"#E8A598","c-champagne":"#F2D5C4","c-text":"#2D2D2D",
-                        "c-soft":"#6E625C","c-border":"#F0E6E1"
+                        "c-bg":"#FDF8F5","c-accent":"#B5445C","c-accent-d":"#CF6278",
+                        "c-rose":"#F2B8C8","c-champagne":"#FAF2F5","c-text":"#2D2D2D",
+                        "c-soft":"#7B4D5E","c-border":"#F5E8EF"
                     },
                     fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
                 }
@@ -25,14 +25,14 @@
     <style>
         body { font-family:'Nunito',sans-serif; }
         .glass { background:rgba(255,248,245,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
-        .logo-text { background:linear-gradient(90deg,#F4A261,#E8A598,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
         .ms-fill { font-variation-settings:'FILL' 1; }
         /* Feed card */
-        .feed-card { background:#fff;border:1px solid #F0E6E1;border-radius:1.25rem;overflow:hidden;transition:box-shadow .2s; }
+        .feed-card { background:#fff;border:1px solid #F5E8EF;border-radius:1.25rem;overflow:hidden;transition:box-shadow .2s; }
         .feed-card:hover { box-shadow:0 8px 32px rgba(244,162,97,.12); }
         /* Media protegida */
-        .media-wrap { position:relative;overflow:hidden;background:#F2D5C4; }
+        .media-wrap { position:relative;overflow:hidden;background:#FAF2F5; }
         .media-wrap img, .media-wrap video {
             width:100%;display:block;
             pointer-events:none;
@@ -49,11 +49,11 @@
         /* Contenido bloqueado */
         .locked-blur { filter:blur(22px); transform:scale(1.12); }
         .locked-scrim { position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;background:linear-gradient(180deg,rgba(26,10,6,.12) 0%,rgba(26,10,6,.5) 100%); }
-        .locked-chip { font-weight:800;font-size:13px;padding:8px 16px;border-radius:999px;background:linear-gradient(135deg,#F4A261,#E8A598);color:#fff;box-shadow:0 4px 16px rgba(244,162,97,.5); }
+        .locked-chip { font-weight:800;font-size:13px;padding:8px 16px;border-radius:999px;background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;box-shadow:0 4px 16px rgba(244,162,97,.5); }
         .locked-chip--subs { background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3); }
         /* Skeleton */
         @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
-        .skeleton { background:linear-gradient(90deg,#F2D5C4 25%,#FFF0EA 50%,#F2D5C4 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:12px; }
+        .skeleton { background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:12px; }
     </style>
 </head>
 <body class="bg-c-bg text-c-text antialiased min-h-screen pb-24">
@@ -63,7 +63,7 @@
     <div class="flex items-center justify-between h-14 px-4 max-w-2xl mx-auto">
         <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
         <div class="flex items-center gap-2">
-            <button id="btn-avatar" onclick="candela.auth.logout()" title="Salir" class="w-9 h-9 rounded-full text-white text-sm font-bold flex items-center justify-center shadow-sm" style="background:linear-gradient(135deg,#F4A261,#E8A598)">?</button>
+            <button id="btn-avatar" onclick="candela.auth.logout()" title="Salir" class="w-9 h-9 rounded-full text-white text-sm font-bold flex items-center justify-center shadow-sm" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">?</button>
         </div>
     </div>
 </header>
@@ -109,11 +109,11 @@
         <div id="feed-lista" class="hidden flex flex-col gap-4"></div>
         <div id="feed-empty" class="hidden text-center py-12">
             <div class="inline-block bg-gradient-to-br from-c-champagne to-c-rose rounded-3xl p-5 mb-4">
-                <span class="ms" style="font-size:3rem;color:#E08947">photo_library</span>
+                <span class="ms" style="font-size:3rem;color:#CF6278">photo_library</span>
             </div>
             <h2 class="font-display text-xl font-semibold mb-2">Tu feed est&aacute; vac&iacute;o</h2>
             <p class="text-c-soft text-sm mb-5">Suscr&iacute;bete a una creadora para ver su contenido aqu&iacute;.</p>
-            <a href="explorar.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-white shadow-md mb-8" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+            <a href="explorar.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-white shadow-md mb-8" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                 <span class="ms" style="font-size:18px">explore</span> Explorar creadoras
             </a>
             <div id="empty-sugeridas" class="text-left"></div>
@@ -170,7 +170,7 @@
         <a href="mensajes.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">forum</span><span class="text-[10px] font-semibold">Mensajes</span>
         </a>
-        <a href="wallet.html" class="flex flex-col items-center gap-0.5" style="color:#F4A261">
+        <a href="wallet.html" class="flex flex-col items-center gap-0.5" style="color:#B5445C">
             <span class="ms ms-fill">account_balance_wallet</span><span class="text-[10px] font-bold" id="nav-saldo-label">Billetera</span>
         </a>
         <a href="fan-dashboard.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
@@ -227,7 +227,7 @@ async function cargarRailSaldo() {
 }
 
 const _GRAD = {
-    melocoton:'#FFF4EE,#E8A598','rosa-venecia':'#FFF0F5,#F7B8C8',lavanda:'#F7F2FF,#BBA0E0',
+    melocoton:'#FFF4EE,#F2B8C8','rosa-venecia':'#FFF0F5,#F7B8C8',lavanda:'#F7F2FF,#BBA0E0',
     'rojo-carmin':'#1A0A0A,#E74C3C',menta:'#F0FAF7,#58D68D',cielo:'#F0F8FF,#85C1E9',
     dorada:'#FFFBF0,#F1C40F',nude:'#FAF7F4,#D4B896','noche-rosa':'#1A0D1A,#FF6FBF',
     coral:'#FFF5F2,#FF8E8E',esmeralda:'#0D1F19,#48C9B0',nube:'#FAFAFA,#AEB6BF'
@@ -239,13 +239,13 @@ async function cargarDescubrir() {
         if (!lista || !lista.length) return;
         const row = document.getElementById('descubrir-row');
         row.innerHTML = lista.map(c => {
-            const gr = _GRAD[c.tema_color] || '#F4A261,#E8A598';
+            const gr = _GRAD[c.tema_color] || '#B5445C,#F2B8C8';
             const ini = esc((c.nombre_artistico || 'C')[0].toUpperCase());
             const inner = c.avatar_url
                 ? `<img src="${esc(c.avatar_url)}" class="w-full h-full object-cover rounded-full" draggable="false">`
                 : `<div class="w-full h-full rounded-full flex items-center justify-center text-white font-bold text-lg" style="background:linear-gradient(135deg,${gr})">${ini}</div>`;
             return `<a href="creadora.html?slug=${encodeURIComponent(c.slug||'')}" class="flex flex-col items-center gap-1.5 shrink-0" style="width:66px">
-                <div class="p-[2.5px] rounded-full" style="background:linear-gradient(135deg,#F4A261,#E8A598,#D4869D)">
+                <div class="p-[2.5px] rounded-full" style="background:linear-gradient(135deg,#B5445C,#F2B8C8,#D4869D)">
                     <div class="w-14 h-14 rounded-full border-2 border-white overflow-hidden">${inner}</div>
                 </div>
                 <span class="text-[10px] font-semibold text-c-text text-center w-full truncate">${esc((c.nombre_artistico||'').split(' ')[0])}</span>
@@ -257,7 +257,7 @@ async function cargarDescubrir() {
         const rail = document.getElementById('rail-sugeridas');
         if (rail) {
             rail.innerHTML = lista.slice(0, 5).map(c => {
-                const gr = _GRAD[c.tema_color] || '#F4A261,#E8A598';
+                const gr = _GRAD[c.tema_color] || '#B5445C,#F2B8C8';
                 const ini = esc((c.nombre_artistico || 'C')[0].toUpperCase());
                 const av = c.avatar_url
                     ? `<img src="${esc(c.avatar_url)}" class="w-10 h-10 rounded-full object-cover shrink-0">`
@@ -283,7 +283,7 @@ async function cargarSugeridas() {
         cont.innerHTML =
             '<p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-3 text-center">Creadoras para descubrir</p>' +
             '<div class="grid grid-cols-2 gap-3">' + lista.map(c => {
-                const gr = _GRAD[c.tema_color] || '#F4A261,#E8A598';
+                const gr = _GRAD[c.tema_color] || '#B5445C,#F2B8C8';
                 const ini = esc((c.nombre_artistico || 'C')[0].toUpperCase());
                 const precio = c.precio_suscripcion > 0 ? '$' + Number(c.precio_suscripcion) + '/mes' : 'Gratis';
                 const banner = c.banner_url
@@ -310,7 +310,7 @@ async function cargarLives() {
         row.innerHTML = lives.map(s => {
             const avatar = s.creadora_avatar
                 ? `<img src="${s.creadora_avatar}" class="w-14 h-14 rounded-full object-cover border-2 border-red-500 shrink-0">`
-                : `<div class="w-14 h-14 rounded-full border-2 border-red-500 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:linear-gradient(135deg,#F4A261,#E8A598)">${esc((s.creadora_nombre||'C')[0])}</div>`;
+                : `<div class="w-14 h-14 rounded-full border-2 border-red-500 flex items-center justify-center text-white font-bold text-lg shrink-0" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">${esc((s.creadora_nombre||'C')[0])}</div>`;
             return `<a href="stream.html?id=${esc(s.id)}" class="flex flex-col items-center gap-1 shrink-0" style="min-width:64px">
                 <div class="relative">${avatar}<span class="absolute bottom-0 right-0 bg-red-500 text-white text-[8px] font-bold px-1 rounded">EN VIVO</span></div>
                 <span class="text-[10px] font-semibold text-c-text text-center leading-tight max-w-[60px] truncate">${esc(s.creadora_nombre||'Creadora')}</span>
@@ -358,7 +358,7 @@ function renderCard(item) {
     <div class="feed-card">
         <!-- Header -->
         <div class="flex items-center gap-3 px-4 pt-4 pb-3">
-            <a href="creadora.html?slug=${slug}" class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+            <a href="creadora.html?slug=${slug}" class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                 ${inicial}
             </a>
             <div class="flex-1 min-w-0">
@@ -372,7 +372,7 @@ function renderCard(item) {
         <div class="media-wrap" style="aspect-ratio:4/5;cursor:pointer;" ${clickAttr}>
             ${previewUrl
                 ? `<img src="${esc(previewUrl)}" alt="${esc(item.titulo||'')}" class="${bloqueado ? 'locked-blur' : ''}" style="width:100%;height:100%;object-fit:cover;" draggable="false" oncontextmenu="return false">`
-                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#FFF4EE,#F2D5C4);font-size:3rem;">${esVideo ? '🎬' : '📸'}</div>`
+                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#FFF4EE,#FAF2F5);font-size:3rem;">${esVideo ? '🎬' : '📸'}</div>`
             }
             ${bloqueado
                 ? `<div class="locked-scrim">
@@ -422,7 +422,7 @@ async function cargarSuscripciones() {
         empty.classList.add('hidden');
         lista.innerHTML = subs.map(s => `
             <div class="bg-white border border-c-border rounded-xl p-4 flex items-center gap-3">
-                <a href="creadora.html?slug=${encodeURIComponent(s.creadora_slug||'')}" class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0" style="background:linear-gradient(135deg,#F4A261,#E8A598)">
+                <a href="creadora.html?slug=${encodeURIComponent(s.creadora_slug||'')}" class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                     ${esc((s.creadora_nombre||'?')[0].toUpperCase())}
                 </a>
                 <div class="flex-1 min-w-0">
@@ -522,9 +522,9 @@ function fmtFecha(iso) {
 
 function toast(msg, tipo='info') {
     const c = document.getElementById('toasts');
-    const col = { error:'#e74c3c', success:'#2ecc71', info:'#F4A261' };
+    const col = { error:'#e74c3c', success:'#2ecc71', info:'#B5445C' };
     const el = document.createElement('div');
-    el.style.cssText = `background:#fff;border:1px solid #F0E6E1;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
+    el.style.cssText = `background:#fff;border:1px solid #F5E8EF;border-left:4px solid ${col[tipo]||col.info};padding:.8rem 1rem;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.09);font-size:.85rem;max-width:280px;pointer-events:auto;opacity:0;transform:translateX(100%);transition:all .25s ease;`;
     el.textContent = msg;
     c.appendChild(el);
     requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateX(0)'; });
