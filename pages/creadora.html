@@ -274,6 +274,9 @@
             <span class="ms" style="font-size:16px;vertical-align:-3px" id="follow-icon">favorite_border</span>
             <span id="follow-label">Seguir</span>
         </button>
+        <button id="btn-bloquear" class="hidden px-3 py-2.5 rounded-full text-sm border border-c-border text-c-soft hover:border-red-400 hover:text-red-500 transition-colors" onclick="toggleBloqueo()" title="Bloquear creadora">
+            <span class="ms" style="font-size:16px;vertical-align:-3px" id="bloquear-icon">block</span>
+        </button>
     </div>
 
     <!-- Franja de confianza -->
@@ -304,13 +307,19 @@
         </div>
     </div>
 
-    <!-- Tabs: Fotos / Videos -->
+    <!-- Tabs: Fotos / Videos / Medios -->
     <div class="flex border-b border-c-border mb-4 gap-0">
         <button class="tab active pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" onclick="switchTab('fotos',this)">
             <span class="ms ms-fill" style="font-size:16px;vertical-align:-3px;">photo_camera</span> Fotos
+            <span id="tab-count-fotos" class="ml-1 text-xs opacity-60"></span>
         </button>
         <button class="tab pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" onclick="switchTab('videos',this)">
             <span class="ms" style="font-size:16px;vertical-align:-3px;">videocam</span> Videos
+            <span id="tab-count-videos" class="ml-1 text-xs opacity-60"></span>
+        </button>
+        <button class="tab pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" onclick="switchTab('medios',this)">
+            <span class="ms" style="font-size:16px;vertical-align:-3px;">grid_view</span> Medios
+            <span id="tab-count-medios" class="ml-1 text-xs opacity-60"></span>
         </button>
     </div>
 
@@ -717,6 +726,7 @@ let contenidoSeleccionado = null;
 let suscritoActualmente = false;
 let trialStatus = null; // { vistas_esta_creadora, total_creadoras, puede_ver }
 let siguiendoActualmente = false;
+let bloqueoActual = false;
 
 // ─── INIT ────────────────────────────────────────────────────
 async function init() {
@@ -766,6 +776,12 @@ async function init() {
             }
         } catch(e) {}
         _renderFollowBtn();
+        // Estado bloqueo
+        try {
+            const bloqueados = await candela._req('GET', '/api/fans/bloqueados');
+            bloqueoActual = Array.isArray(bloqueados) && bloqueados.includes(creadoraData?.id);
+        } catch(e) { bloqueoActual = false; }
+        _renderBloqueoBtn();
         document.getElementById('bottom-nav').classList.remove('hidden');
     }
 }
@@ -802,6 +818,43 @@ async function toggleFollow() {
             toast('Ahora sigues a ' + creadoraData.nombre_artistico + '. Te avisaremos cuando publique.', 'success');
         }
         _renderFollowBtn();
+    } catch(e) { toast('Error al cambiar estado', 'error'); }
+}
+
+function _renderBloqueoBtn() {
+    const btn = document.getElementById('btn-bloquear');
+    if (!candela.auth.isLoggedIn() || !creadoraData) return;
+    btn.classList.remove('hidden');
+    const icon = document.getElementById('bloquear-icon');
+    if (bloqueoActual) {
+        btn.classList.add('border-red-400','text-red-500');
+        btn.classList.remove('border-c-border','text-c-soft');
+        btn.title = 'Desbloquear creadora';
+        icon.textContent = 'block';
+    } else {
+        btn.classList.remove('border-red-400','text-red-500');
+        btn.classList.add('border-c-border','text-c-soft');
+        btn.title = 'Bloquear creadora';
+        icon.textContent = 'block';
+    }
+}
+
+async function toggleBloqueo() {
+    if (!candela.auth.isLoggedIn()) { window.location.href = '../index.html'; return; }
+    const cid = creadoraData?.id;
+    if (!cid) return;
+    if (!bloqueoActual && !confirm('¿Bloquear a ' + creadoraData.nombre_artistico + '? No podrás ver su contenido ni recibirá notificaciones tuyas.')) return;
+    try {
+        if (bloqueoActual) {
+            await candela._req('DELETE', '/api/fans/bloquear/' + cid);
+            bloqueoActual = false;
+            toast('Desbloqueaste a ' + creadoraData.nombre_artistico);
+        } else {
+            await candela._req('POST', '/api/fans/bloquear/' + cid);
+            bloqueoActual = true;
+            toast('Bloqueaste a ' + creadoraData.nombre_artistico, 'success');
+        }
+        _renderBloqueoBtn();
     } catch(e) { toast('Error al cambiar estado', 'error'); }
 }
 
@@ -911,9 +964,16 @@ async function cargarContenido() {
 }
 
 function filtrarContenido() {
-    contenidoFiltrado = tabActual === 'fotos'
-        ? todoContenido.filter(c => c.tipo === 'foto')
-        : todoContenido.filter(c => c.tipo === 'video');
+    if (tabActual === 'fotos') contenidoFiltrado = todoContenido.filter(c => c.tipo === 'foto');
+    else if (tabActual === 'videos') contenidoFiltrado = todoContenido.filter(c => c.tipo === 'video');
+    else contenidoFiltrado = [...todoContenido];
+    // update count badges
+    const nFotos = todoContenido.filter(c => c.tipo === 'foto').length;
+    const nVideos = todoContenido.filter(c => c.tipo === 'video').length;
+    const el = (id, n) => { const e = document.getElementById(id); if (e) e.textContent = n ? n : ''; };
+    el('tab-count-fotos', nFotos);
+    el('tab-count-videos', nVideos);
+    el('tab-count-medios', todoContenido.length);
     renderGrid();
 }
 

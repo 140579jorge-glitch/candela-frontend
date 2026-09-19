@@ -119,6 +119,7 @@ const candela = {
         miPerfil: () => candela._req('GET', '/api/creadoras/mi-perfil/datos'),
         actualizarPerfil: (data) => candela._req('PATCH', '/api/creadoras/mi-perfil', data),
         ganancias: () => candela._req('GET', '/api/creadoras/mi-perfil/ganancias'),
+        analitica: () => candela._req('GET', '/api/creadoras/mi-perfil/analitica'),
         async subirAvatar(file) {
             const fd = new FormData(); fd.append('imagen', file);
             return candela._req('POST', '/api/creadoras/mi-perfil/avatar', fd, true);

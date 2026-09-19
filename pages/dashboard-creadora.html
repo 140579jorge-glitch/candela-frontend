@@ -105,6 +105,8 @@
         <div class="nav-item" onclick="mostrar('stories')"><span class="ms">auto_stories</span>Stories</div>
         <div class="nav-item" onclick="mostrar('encuestas')"><span class="ms">poll</span>Encuestas</div>
         <div class="nav-item" onclick="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
+        <div class="nav-item" onclick="mostrar('analitica')"><span class="ms">bar_chart</span>Analítica</div>
+        <div class="nav-item" onclick="mostrar('medios')"><span class="ms">perm_media</span>Mis medios</div>
         <div class="nav-item" onclick="mostrar('personalizar')"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion')"><span class="ms">verified_user</span>Verificación</div>
         <div class="nav-item" onclick="mostrar('propinas')"><span class="ms">volunteer_activism</span>Propinas</div>
@@ -131,6 +133,8 @@
         <div class="nav-item" onclick="mostrar('stories',this)"><span class="ms">auto_stories</span>Stories</div>
         <div class="nav-item" onclick="mostrar('encuestas',this)"><span class="ms">poll</span>Encuestas</div>
         <div class="nav-item" onclick="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
+        <div class="nav-item" onclick="mostrar('analitica',this)"><span class="ms">bar_chart</span>Analítica</div>
+        <div class="nav-item" onclick="mostrar('medios',this)"><span class="ms">perm_media</span>Mis medios</div>
         <div class="nav-item" onclick="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
         <div class="nav-item" onclick="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificación</div>
         <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
@@ -480,6 +484,50 @@
                     <button onclick="solicitarRetiro()" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Solicitar retiro</button>
                     <button type="button" onclick="mostrar('metodos-pago')" class="text-xs text-c-accent font-semibold text-center hover:text-c-accent-d transition-colors">Cambiar método de pago →</button>
                 </div>
+            </div>
+        </section>
+
+        <!-- ══ ANALITICA ══ -->
+        <section id="sec-analitica" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-5">Analítica</h2>
+            <!-- KPIs del mes -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Ingresos este mes</p>
+                    <p class="text-2xl font-bold text-c-accent" id="an-mes">$0.00</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Suscripciones nuevas</p>
+                    <p class="text-2xl font-bold text-c-text" id="an-subs-mes">0</p>
+                </div>
+            </div>
+            <!-- Grafico de ingresos por dia -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 mb-5 shadow-sm">
+                <h3 class="font-bold text-sm text-c-text mb-4">Ingresos diarios — últimos 30 días</h3>
+                <div class="overflow-x-auto">
+                    <canvas id="an-chart" height="120" style="width:100%;min-width:300px;max-width:100%"></canvas>
+                </div>
+                <p id="an-chart-empty" class="hidden text-center text-c-soft text-sm py-6">Sin datos aún. Los ingresos aparecerán aquí.</p>
+            </div>
+            <!-- Top fans -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-sm text-c-text mb-4">Top fans del mes</h3>
+                <div id="an-top-fans">
+                    <p class="text-c-soft text-sm text-center py-4">Cargando...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ MIS MEDIOS ══ -->
+        <section id="sec-medios" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Mis medios</h2>
+            <p class="text-sm text-c-soft mb-5">Todo tu contenido subido. Haz clic en cualquier elemento para copiar su URL de vista previa.</p>
+            <div id="medios-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                <p class="col-span-4 text-center text-c-soft text-sm py-8">Cargando...</p>
+            </div>
+            <div id="medios-empty" class="hidden text-center py-10">
+                <span class="ms text-c-soft block mb-2" style="font-size:40px">perm_media</span>
+                <p class="text-c-soft text-sm">Aún no tienes contenido subido.</p>
             </div>
         </section>
 
@@ -1675,6 +1723,8 @@ function _activarSeccion(sec) {
     if (sec === 'metodos-pago') cargarDatosRetiro();
     if (sec === 'propinas') cargarPropinas();
     if (sec === 'stream') cargarStreamActivo();
+    if (sec === 'analitica') cargarAnalitica();
+    if (sec === 'medios') cargarMisMedios();
     if (sec === 'mensajes') { cargarMensajes(); cargarBroadcasts(); if (perfilData) { document.getElementById('toggle-acepta-msg').checked = perfilData.acepta_mensajes; document.getElementById('msg-precio-input').value = perfilData.precio_mensaje || 5; document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${perfilData.precio_mensaje || 5}`; } }
     if (sec === 'chat-sesion') {
         cargarSolicitudesChat();
@@ -2825,6 +2875,124 @@ async function eliminarStory(id) {
         toast('Story eliminada', 'success');
         cargarMisStories();
     } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+// ─── ANALITICA ───────────────────────────────────────────────
+async function cargarAnalitica() {
+    try {
+        const data = await candela.creadoras.analitica();
+        document.getElementById('an-mes').textContent = '$' + (data.ingresos_mes || 0).toFixed(2);
+        document.getElementById('an-subs-mes').textContent = data.subs_nuevas_mes || 0;
+        _renderChartBarras(data.ingresos_por_dia || []);
+        _renderTopFans(data.top_fans || []);
+    } catch(e) {
+        document.getElementById('an-chart-empty').classList.remove('hidden');
+    }
+}
+
+function _renderChartBarras(dias) {
+    const canvas = document.getElementById('an-chart');
+    if (!canvas) return;
+    if (!dias.length) {
+        canvas.classList.add('hidden');
+        document.getElementById('an-chart-empty').classList.remove('hidden');
+        return;
+    }
+    const ctx = canvas.getContext('2d');
+    const W = canvas.parentElement.offsetWidth || 500;
+    canvas.width = W; canvas.height = 120;
+    const max = Math.max(...dias.map(d => d.total), 0.01);
+    const N = dias.length;
+    const barW = Math.max(4, Math.floor((W - 20) / N) - 2);
+    const gap = Math.floor((W - 20) / N);
+    ctx.clearRect(0, 0, W, 120);
+    dias.forEach((d, i) => {
+        const h = Math.max(3, Math.round((d.total / max) * 90));
+        const x = 10 + i * gap;
+        const y = 110 - h;
+        // bar
+        ctx.fillStyle = '#B5445C';
+        ctx.beginPath();
+        ctx.roundRect ? ctx.roundRect(x, y, barW, h, 3) : ctx.rect(x, y, barW, h);
+        ctx.fill();
+        // value label on tallest bar
+        if (d.total === max && max > 0) {
+            ctx.fillStyle = '#B5445C';
+            ctx.font = '10px DM Sans, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('$' + d.total.toFixed(0), x + barW / 2, y - 4);
+        }
+    });
+    // x-axis dates (first and last)
+    ctx.fillStyle = '#9B8E8A';
+    ctx.font = '10px DM Sans, sans-serif';
+    ctx.textAlign = 'left';
+    if (dias[0]) ctx.fillText(dias[0].dia.slice(5), 10, 118);
+    if (dias[dias.length-1]) {
+        ctx.textAlign = 'right';
+        ctx.fillText(dias[dias.length-1].dia.slice(5), W - 10, 118);
+    }
+}
+
+function _renderTopFans(fans) {
+    const el = document.getElementById('an-top-fans');
+    if (!fans.length) { el.innerHTML = '<p class="text-c-soft text-sm text-center py-4">Sin datos todavía.</p>'; return; }
+    const max = fans[0].total;
+    el.innerHTML = fans.map((f, i) => `
+        <div class="flex items-center gap-3 py-2 ${i < fans.length-1 ? 'border-b border-c-border' : ''}">
+            <span class="text-c-soft text-xs w-5 text-right">${i+1}</span>
+            <div class="flex-1">
+                <div class="text-sm font-semibold text-c-text">${esc(f.nombre)}</div>
+                <div class="h-1.5 bg-c-bg rounded-full mt-1 overflow-hidden">
+                    <div class="h-full rounded-full" style="width:${Math.round(f.total/max*100)}%;background:#B5445C"></div>
+                </div>
+            </div>
+            <span class="text-sm font-bold text-c-accent">$${f.total.toFixed(2)}</span>
+        </div>
+    `).join('');
+}
+
+// ─── MIS MEDIOS ──────────────────────────────────────────────
+async function cargarMisMedios() {
+    const grid = document.getElementById('medios-grid');
+    const empty = document.getElementById('medios-empty');
+    try {
+        const data = await candela._req('GET', '/api/contenido/mis-contenidos');
+        const items = Array.isArray(data) ? data : (data.contenido || []);
+        if (!items.length) {
+            grid.innerHTML = '';
+            empty.classList.remove('hidden');
+            return;
+        }
+        empty.classList.add('hidden');
+        grid.innerHTML = items.map(item => `
+            <div class="relative rounded-xl overflow-hidden cursor-pointer group" style="aspect-ratio:1"
+                onclick="copiarUrlMedio('${String(item.id).replace(/[^a-z0-9-]/gi,'')}','${_u(item.preview_url||'')}')"
+                title="Clic para copiar URL">
+                ${item.preview_url
+                    ? `<img src="${_u(item.preview_url)}" alt="" class="w-full h-full object-cover" draggable="false" oncontextmenu="return false">`
+                    : `<div class="w-full h-full bg-c-bg flex items-center justify-center"><span class="ms text-c-soft" style="font-size:28px">${item.tipo==='video'?'videocam':'photo_camera'}</span></div>`
+                }
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
+                    <span class="ms text-white opacity-0 group-hover:opacity-100 transition-opacity" style="font-size:22px">content_copy</span>
+                </div>
+                ${item.tipo==='video'?`<span class="absolute top-1.5 right-1.5 bg-black/60 rounded px-1 py-0.5"><span class="ms text-white" style="font-size:12px">videocam</span></span>`:''}
+                ${item.precio>0?`<span class="absolute bottom-1.5 left-1.5 bg-c-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded">$${item.precio}</span>`:''}
+            </div>
+        `).join('');
+    } catch(e) {
+        grid.innerHTML = '<p class="col-span-4 text-center text-c-soft text-sm py-8">No se pudo cargar el contenido.</p>';
+    }
+}
+
+function copiarUrlMedio(id, previewUrl) {
+    const url = previewUrl || '';
+    if (!url) { toast('Este elemento no tiene URL de vista previa', 'error'); return; }
+    navigator.clipboard.writeText(url).then(() => {
+        toast('URL copiada al portapapeles', 'success');
+    }).catch(() => {
+        toast('No se pudo copiar: ' + url);
+    });
 }
 
 </script>
