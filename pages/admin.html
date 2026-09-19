@@ -83,6 +83,8 @@
         <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" onclick="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">flag</span>Reclamos</div>
+        <div class="nav-item" onclick="mostrar('recargadores',this)"><span class="ms">bolt</span>Recargadores</div>
+        <div class="nav-item" onclick="mostrar('deposito-manual',this)"><span class="ms">qr_code</span>Deposito QR</div>
         <div class="mt-auto px-4 pt-4 border-t border-c-border">
             <a href="../index.html" class="nav-item"><span class="ms">home</span>Ver sitio</a>
         </div>
@@ -119,6 +121,8 @@
         <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">flag</span>Reclamos
             <span class="ml-auto bg-orange-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-rec">0</span>
         </div>
+        <div class="nav-item" onclick="mostrar('recargadores',this)"><span class="ms">bolt</span>Recargadores</div>
+        <div class="nav-item" onclick="mostrar('deposito-manual',this)"><span class="ms">qr_code</span>Deposito QR</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <a href="../index.html" class="nav-item"><span class="ms">home</span>Ver sitio</a>
     </aside>
@@ -350,6 +354,51 @@
             </div>
         </section>
 
+        <!-- RECARGADORES -->
+        <section id="sec-recargadores" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Recargadores Autorizados</h2>
+            <p class="text-c-soft text-sm mb-5">Usuarios con acceso al panel de recargador. Gestiona aprobaciones y balances.</p>
+            <div class="flex gap-3 mb-5">
+                <button onclick="cargarRecargadores()" class="c-btn text-white text-xs font-bold px-4 py-2 rounded-xl">Actualizar lista</button>
+            </div>
+            <div class="mb-6 card p-5 max-w-md">
+                <p class="text-sm font-bold text-c-text mb-3">Aprobar nuevo recargador por email</p>
+                <div class="flex gap-2">
+                    <input id="rec-email-new" type="email" placeholder="email@usuario.com" class="flex-1 border border-c-border rounded-xl px-3 py-2 text-sm outline-none focus:border-c-accent font-body">
+                    <button onclick="aprobarRecargador()" class="c-btn text-white text-xs font-bold px-4 py-2 rounded-xl whitespace-nowrap">Aprobar</button>
+                </div>
+            </div>
+            <div id="lista-recargadores" class="flex flex-col gap-3">
+                <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
+            </div>
+        </section>
+
+        <!-- DEPOSITO MANUAL QR -->
+        <section id="sec-deposito-manual" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Deposito Manual / QR</h2>
+            <p class="text-c-soft text-sm mb-6">Acredita credito a un fan que pago via QR/Wasap. Ingresa el monto YA descontado el fee (lo que el fan recibe).</p>
+            <div class="card p-6 max-w-md">
+                <div class="mb-4">
+                    <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Email del usuario</label>
+                    <input id="dm-email" type="email" placeholder="fan@ejemplo.com" class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-c-accent font-body">
+                </div>
+                <div class="mb-4">
+                    <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Credito a acreditar (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-c-soft font-bold text-sm">$</span>
+                        <input id="dm-monto" type="number" min="1" step="0.01" placeholder="9.00" class="w-full border border-c-border rounded-xl pl-7 pr-3 py-2.5 text-sm outline-none focus:border-c-accent font-body">
+                    </div>
+                    <p class="text-xs text-c-soft mt-1">Ejemplo: fan pago $10 local con 10% fee → ingresa $9</p>
+                </div>
+                <div class="mb-5">
+                    <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Nota (opcional)</label>
+                    <input id="dm-nota" type="text" placeholder="Takenos, WhatsApp, referencia..." class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-c-accent font-body">
+                </div>
+                <button onclick="procesarDepositoManual()" id="btn-dm" class="c-btn w-full py-3 rounded-xl font-bold text-sm text-white">Acreditar Credito</button>
+                <div id="dm-resultado" class="hidden mt-4 p-4 rounded-xl bg-green-50 border border-green-200 text-sm text-green-800"></div>
+            </div>
+        </section>
+
         <!-- MENSAJES -->
         <section id="sec-mensajes" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Mensajes directos pendientes</h2>
@@ -550,6 +599,7 @@ function _activarSeccion(sec) {
     if (sec === 'propinas') cargarPropinas();
     if (sec === 'mensajes') cargarMensajesAdmin();
     if (sec === 'reclamos') cargarReclamos();
+    if (sec === 'recargadores') cargarRecargadores();
 }
 
 function mostrar(sec, navBtn) {
@@ -925,6 +975,71 @@ async function ejecutarMantenimiento() {
         const r = await candela._req('POST', '/api/admin/run-maintenance', {});
         toast(`Mantenimiento: ${r.creadoras_cobradas} creadoras, $${(r.total_fee_cobrado||0).toFixed(2)} cobrado`, 'success');
     } catch(e) { toast(e.message||'Error en mantenimiento', 'error'); }
+}
+
+async function cargarRecargadores() {
+    const c = document.getElementById('lista-recargadores');
+    c.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Cargando...</p>';
+    try {
+        const lista = await candela.admin.listarRecargadores();
+        if (!lista.length) { c.innerHTML = '<p class="text-c-soft text-sm text-center py-8">No hay recargadores registrados.</p>'; return; }
+        c.innerHTML = lista.map(r => `
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-c-champagne flex items-center justify-center shrink-0">
+                    <span class="ms text-base text-c-accent">bolt</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-bold text-c-text text-sm">${esc(r.nombre || r.email)}</p>
+                    <p class="text-xs text-c-soft">${esc(r.email)}</p>
+                    <div class="flex gap-4 mt-1">
+                        <span class="text-xs text-c-soft">Recargador: <strong class="text-c-accent">$${r.balance_recargador.toFixed(2)}</strong></span>
+                        <span class="text-xs text-c-soft">Consumo: <strong>$${r.balance_consumo.toFixed(2)}</strong></span>
+                    </div>
+                </div>
+                <button onclick="revocarRecargador('${r.id}','${esc(r.email)}')" class="text-xs text-red-400 hover:text-red-600 font-bold border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-xl transition-all">Revocar</button>
+            </div>`).join('');
+    } catch(e) { c.innerHTML = `<p class="text-red-400 text-sm text-center py-8">${e.message}</p>`; }
+}
+
+async function aprobarRecargador() {
+    const email = document.getElementById('rec-email-new').value.trim();
+    if (!email) { toast('Ingresa un email', 'error'); return; }
+    try {
+        await candela._req('POST', '/api/admin/recargadores/por-email', { email, es_recargador: true });
+        toast(`${email} aprobado como recargador`, 'success');
+        document.getElementById('rec-email-new').value = '';
+        cargarRecargadores();
+    } catch(e) { toast(e.message || 'Error al aprobar', 'error'); }
+}
+
+async function revocarRecargador(id, email) {
+    if (!confirm(`Revocar acceso de recargador a ${email}?`)) return;
+    try {
+        await candela.admin.toggleRecargador(id, false);
+        toast(`Acceso revocado para ${email}`, 'success');
+        cargarRecargadores();
+    } catch(e) { toast(e.message || 'Error', 'error'); }
+}
+
+async function procesarDepositoManual() {
+    const email = document.getElementById('dm-email').value.trim();
+    const monto = parseFloat(document.getElementById('dm-monto').value);
+    const nota = document.getElementById('dm-nota').value.trim();
+    if (!email || !monto || monto <= 0) { toast('Completa email y monto', 'error'); return; }
+    if (!confirm(`Acreditar $${monto.toFixed(2)} a ${email}?`)) return;
+    const btn = document.getElementById('btn-dm');
+    btn.disabled = true; btn.textContent = 'Procesando...';
+    try {
+        const r = await candela.admin.depositoManual(email, monto, nota || null);
+        document.getElementById('dm-resultado').classList.remove('hidden');
+        document.getElementById('dm-resultado').textContent =
+            `✓ Acreditado $${r.monto_acreditado.toFixed(2)} a ${r.email}. Balance nuevo: $${r.balance_nuevo.toFixed(2)}`;
+        document.getElementById('dm-email').value = '';
+        document.getElementById('dm-monto').value = '';
+        document.getElementById('dm-nota').value = '';
+        toast('Credito acreditado correctamente', 'success');
+    } catch(e) { toast(e.message || 'Error al acreditar', 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Acreditar Credito'; }
 }
 
 init();

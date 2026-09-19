@@ -246,10 +246,20 @@ const candela = {
         procesarMensaje: (id, accion) => candela._req('POST', `/api/admin/mensajes/${id}`, { accion }),
         reclamosPendientes: () => candela._req('GET', '/api/admin/reclamos'),
         actualizarReclamo: (id, estado, notas) => candela._req('POST', `/api/admin/reclamos/${id}`, { estado, notas }),
+        depositoManual: (email_usuario, monto, nota) => candela._req('POST', '/api/admin/deposito-manual', { email_usuario, monto, nota }),
+        listarRecargadores: () => candela._req('GET', '/api/admin/recargadores'),
+        toggleRecargador: (id, es_recargador) => candela._req('PATCH', `/api/admin/recargadores/${id}`, { es_recargador }),
+        aprobarRecargadorEmail: (email, es_recargador) => candela._req('POST', '/api/admin/recargadores/por-email', { email, es_recargador }),
         comisiones: (params = {}) => {
             const q = new URLSearchParams(params).toString();
             return candela._req('GET', `/api/admin/comisiones${q ? '?' + q : ''}`);
         },
+    },
+
+    recargadores: {
+        miBalance:            () => candela._req('GET', '/api/recargadores/mi-balance'),
+        transferirAFan:       (email_fan, monto) => candela._req('POST', '/api/recargadores/transferir', { email_fan, monto }),
+        transferirAMiCuenta:  (monto) => candela._req('POST', '/api/recargadores/transferir-a-mi-cuenta', { monto }),
     },
 
     fans: {

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Recargador — Candela</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg":"#FDF8F5","c-accent":"#B5445C","c-accent-d":"#CF6278",
+                        "c-rose":"#F2B8C8","c-champagne":"#FAF2F5","c-text":"#2D2D2D",
+                        "c-soft":"#7B4D5E","c-border":"#F5E8EF","c-surf":"#FFFFFF"
+                    },
+                    fontFamily:{ display:["Playfair Display","serif"], body:["Nunito","sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        body { font-family:'Nunito',sans-serif; background:#FDF8F5; }
+        .ms { font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;user-select:none; }
+        .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+        .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;transition:filter .2s,transform .15s; }
+        .c-btn:hover { filter:brightness(1.06);transform:translateY(-1px); }
+        .c-btn:active { transform:scale(.97); }
+        .c-btn:disabled { opacity:.5;cursor:not-allowed;transform:none; }
+        .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#7B4D5E;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
+        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(181,68,92,.08);border-left-color:#B5445C; }
+        .dash-section { display:none; }
+        .dash-section.active { display:block; }
+        .sidebar::-webkit-scrollbar { display:none; }
+        .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
+        .card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem; }
+        .mov-row { display:flex;align-items:center;gap:.85rem;padding:.7rem 0;border-bottom:1px solid #F5E8EF; }
+        .mov-row:last-child { border-bottom:none; }
+        .mov-ico { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+        .input-field { width:100%;border:1.5px solid #F5E8EF;border-radius:.75rem;padding:.65rem 1rem;font-size:.9rem;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s; }
+        .input-field:focus { border-color:#B5445C; }
+        .bot-nav-item { display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.625rem;font-weight:600;color:#7B4D5E;cursor:pointer;transition:color .15s;padding:.4rem .5rem; }
+        .bot-nav-item.active,.bot-nav-item:hover { color:#B5445C; }
+        #toast-cnt { position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none; }
+        .toast-msg { padding:.6rem 1.2rem;border-radius:12px;font-size:.875rem;font-weight:700;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.18);opacity:0;transition:opacity .3s; }
+        .toast-msg.show { opacity:1; }
+        @keyframes shimmer { 0%{background-position:-300% 0}100%{background-position:300% 0} }
+        .skeleton { background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- NAV DESKTOP -->
+<nav class="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-c-border sticky top-0 z-30">
+    <a href="../index.html" class="logo-text font-display text-2xl font-semibold">Candela</a>
+    <div class="flex items-center gap-3">
+        <span id="nav-nombre" class="text-sm text-c-soft font-medium"></span>
+        <button onclick="candela.auth.logout()" class="text-sm text-c-soft hover:text-c-accent transition-colors">Salir</button>
+    </div>
+</nav>
+
+<div class="flex max-w-6xl mx-auto w-full">
+    <!-- SIDEBAR DESKTOP -->
+    <aside class="sidebar hidden md:flex flex-col w-56 min-h-[calc(100vh-56px)] sticky top-14 pt-6 pb-10 shrink-0">
+        <p class="px-5 text-xs font-700 uppercase tracking-widest text-c-rose mb-3">Recargador</p>
+        <div class="nav-item active" onclick="ir('balance',this)">
+            <span class="ms">account_balance_wallet</span> Mi Balance
+        </div>
+        <div class="nav-item" onclick="ir('transferir',this)">
+            <span class="ms">send</span> Transferir a Fan
+        </div>
+        <div class="nav-item" onclick="ir('consumo',this)">
+            <span class="ms">person</span> Cargar a mi Cuenta
+        </div>
+        <div class="nav-item" onclick="ir('ayuda',this)">
+            <span class="ms">help_outline</span> Como Funciona
+        </div>
+        <div class="mt-auto px-4 pt-6">
+            <button onclick="candela.auth.logout()" class="w-full text-sm text-c-soft hover:text-c-accent transition-colors flex items-center gap-2">
+                <span class="ms text-base">logout</span> Cerrar sesion
+            </button>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO -->
+    <main class="flex-1 p-4 md:p-8 pb-24 md:pb-10">
+
+        <!-- BALANCE -->
+        <section id="sec-balance" class="dash-section active">
+            <h2 class="text-xl font-bold text-c-text mb-5">Mi Balance</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div class="card p-5">
+                    <p class="text-xs text-c-soft uppercase tracking-wider mb-1">Balance Recargador</p>
+                    <p id="bal-recargador" class="text-3xl font-bold text-c-accent skeleton h-9 w-28"></p>
+                    <p class="text-xs text-c-soft mt-1">Disponible para transferir a fans</p>
+                </div>
+                <div class="card p-5">
+                    <p class="text-xs text-c-soft uppercase tracking-wider mb-1">Balance Consumo</p>
+                    <p id="bal-consumo" class="text-3xl font-bold text-c-text skeleton h-9 w-28"></p>
+                    <p class="text-xs text-c-soft mt-1">Para suscripciones y contenido</p>
+                </div>
+            </div>
+
+            <!-- Info recarga -->
+            <div class="card p-5 mb-6 border-c-rose bg-pink-50">
+                <p class="text-sm font-bold text-c-accent mb-2 flex items-center gap-2">
+                    <span class="ms text-base">info</span> Como recargar tu balance
+                </p>
+                <p class="text-sm text-c-soft">Usa la billetera normal de Candela para depositar via NowPayments. Como recargador aprobado, cada deposito se acredita a tu <strong>balance recargador con +10% de bonus</strong> automaticamente.</p>
+                <a href="wallet.html" class="inline-flex items-center gap-1 mt-3 text-sm font-bold text-c-accent hover:underline">
+                    <span class="ms text-base">open_in_new</span> Ir a Billetera
+                </a>
+            </div>
+
+            <!-- Movimientos -->
+            <div class="card p-5">
+                <p class="text-sm font-bold text-c-text mb-4">Ultimos movimientos</p>
+                <div id="mov-lista">
+                    <div class="skeleton h-10 w-full mb-2 rounded-lg"></div>
+                    <div class="skeleton h-10 w-full mb-2 rounded-lg"></div>
+                    <div class="skeleton h-10 w-full rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANSFERIR A FAN -->
+        <section id="sec-transferir" class="dash-section">
+            <h2 class="text-xl font-bold text-c-text mb-2">Transferir a Fan</h2>
+            <p class="text-sm text-c-soft mb-6">Ingresa el email del fan y el monto a acreditar en su wallet.</p>
+
+            <div class="card p-6 max-w-md">
+                <div class="mb-4">
+                    <label class="text-xs font-700 text-c-soft uppercase tracking-wider mb-1.5 block">Email del Fan</label>
+                    <input id="fan-email" type="email" placeholder="fan@ejemplo.com" class="input-field">
+                </div>
+                <div class="mb-5">
+                    <label class="text-xs font-700 text-c-soft uppercase tracking-wider mb-1.5 block">Monto a transferir (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
+                        <input id="fan-monto" type="number" min="1" step="0.01" placeholder="5.00" class="input-field pl-7">
+                    </div>
+                    <p class="text-xs text-c-soft mt-1">Minimo $1. Se debita de tu balance recargador.</p>
+                </div>
+
+                <div id="transfer-preview" class="hidden bg-pink-50 border border-c-rose rounded-xl p-4 mb-5 text-sm">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-c-soft">Debita de tu balance:</span>
+                        <span id="tp-debito" class="font-bold text-c-accent"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-c-soft">Fan recibe:</span>
+                        <span id="tp-credito" class="font-bold text-green-600"></span>
+                    </div>
+                </div>
+
+                <button id="btn-transferir" onclick="transferirAFan()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                    <span class="ms text-base">send</span> Transferir
+                </button>
+            </div>
+        </section>
+
+        <!-- CONSUMO PERSONAL -->
+        <section id="sec-consumo" class="dash-section">
+            <h2 class="text-xl font-bold text-c-text mb-2">Cargar a mi Cuenta</h2>
+            <p class="text-sm text-c-soft mb-2">Pasa credito de tu balance recargador a tu balance personal para ver contenido.</p>
+            <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 mb-6">
+                <span class="ms text-base text-amber-600">warning</span>
+                <p class="text-xs text-amber-700 font-600">Se aplica un fee del <strong>10%</strong> sobre el monto transferido.</p>
+            </div>
+
+            <div class="card p-6 max-w-md">
+                <div class="mb-5">
+                    <label class="text-xs font-700 text-c-soft uppercase tracking-wider mb-1.5 block">Monto a convertir (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
+                        <input id="consumo-monto" type="number" min="1" step="0.01" placeholder="10.00" class="input-field pl-7" oninput="actualizarPreviewConsumo()">
+                    </div>
+                </div>
+
+                <div id="consumo-preview" class="hidden bg-pink-50 border border-c-rose rounded-xl p-4 mb-5 text-sm">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-c-soft">Debita de balance recargador:</span>
+                        <span id="cp-debito" class="font-bold text-c-accent"></span>
+                    </div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-c-soft">Fee Candela (10%):</span>
+                        <span id="cp-fee" class="font-bold text-amber-600"></span>
+                    </div>
+                    <div class="flex justify-between font-bold">
+                        <span class="text-c-text">Recibes en balance consumo:</span>
+                        <span id="cp-neto" class="text-green-600"></span>
+                    </div>
+                </div>
+
+                <button id="btn-consumo" onclick="transferirAMiCuenta()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                    <span class="ms text-base">swap_horiz</span> Convertir
+                </button>
+            </div>
+        </section>
+
+        <!-- AYUDA -->
+        <section id="sec-ayuda" class="dash-section">
+            <h2 class="text-xl font-bold text-c-text mb-5">Como Funciona</h2>
+            <div class="space-y-4 max-w-2xl">
+                <div class="card p-5">
+                    <p class="font-bold text-c-accent mb-1">1. Deposita via NowPayments</p>
+                    <p class="text-sm text-c-soft">Usa la <a href="wallet.html" class="text-c-accent font-bold hover:underline">Billetera</a> para depositar USDT. Como recargador aprobado, recibes <strong>+10% de bonus</strong> que va directamente a tu balance recargador.</p>
+                </div>
+                <div class="card p-5">
+                    <p class="font-bold text-c-accent mb-1">2. Vende recargas localmente</p>
+                    <p class="text-sm text-c-soft">Acepta pagos locales (Takenos, Meru, transferencia, efectivo) y usa el panel "Transferir a Fan" para acreditar el monto en la cuenta del fan. Solo necesitas su email registrado en Candela.</p>
+                </div>
+                <div class="card p-5">
+                    <p class="font-bold text-c-accent mb-1">3. Ganancia automatica</p>
+                    <p class="text-sm text-c-soft">Tu ganancia es el spread: depositas $100 USDT y recibes $110 en balance recargador. Vendes $110 en porciones ($5/$10/$20) al precio que quieras localmente.</p>
+                </div>
+                <div class="card p-5">
+                    <p class="font-bold text-c-accent mb-1">4. Consumir contenido</p>
+                    <p class="text-sm text-c-soft">Si quieres ver contenido de creadoras, usa "Cargar a mi Cuenta" para convertir balance recargador a balance consumo. Se aplica un fee del 10% en esa conversion.</p>
+                </div>
+                <div class="card p-5 border-red-100 bg-red-50">
+                    <p class="font-bold text-red-600 mb-1">Reglas importantes</p>
+                    <ul class="text-sm text-c-soft list-disc list-inside space-y-1">
+                        <li>El credito recargador no es retirable — solo transferible a fans o convertible a consumo.</li>
+                        <li>Estafar a fans (cobrar sin acreditar) resulta en suspension inmediata.</li>
+                        <li>No puedes transferirte directamente sin el fee del 10%.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- BOTTOM NAV MOVIL -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-c-border z-30 flex justify-around py-2">
+    <div class="bot-nav-item active" onclick="ir('balance',this,'bot')">
+        <span class="ms text-xl">account_balance_wallet</span>
+        <span>Balance</span>
+    </div>
+    <div class="bot-nav-item" onclick="ir('transferir',this,'bot')">
+        <span class="ms text-xl">send</span>
+        <span>Transferir</span>
+    </div>
+    <div class="bot-nav-item" onclick="ir('consumo',this,'bot')">
+        <span class="ms text-xl">person</span>
+        <span>Mi Cuenta</span>
+    </div>
+    <div class="bot-nav-item" onclick="ir('ayuda',this,'bot')">
+        <span class="ms text-xl">help_outline</span>
+        <span>Ayuda</span>
+    </div>
+</nav>
+
+<div id="toast-cnt"></div>
+
+<script src="../js/api.js"></script>
+<script>
+if (!requireAuth()) { /* redirige */ }
+
+let _secActual = 'balance';
+let _datosBalance = null;
+
+function ir(sec, el, tipo) {
+    _secActual = sec;
+    document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + sec).classList.add('active');
+    if (tipo === 'bot') {
+        document.querySelectorAll('.bot-nav-item').forEach(n => n.classList.remove('active'));
+    } else {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    }
+    el.classList.add('active');
+    if (sec === 'balance') cargarBalance();
+}
+
+function showToast(msg, tipo = 'ok') {
+    const c = document.getElementById('toast-cnt');
+    const el = document.createElement('div');
+    el.className = 'toast-msg';
+    el.style.background = tipo === 'ok' ? '#B5445C' : tipo === 'warn' ? '#CF6278' : '#2D2D2D';
+    el.textContent = msg;
+    c.appendChild(el);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { el.classList.add('show'); }); });
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 3500);
+}
+
+async function cargarBalance() {
+    try {
+        const d = await candela.recargadores.miBalance();
+        _datosBalance = d;
+        document.getElementById('bal-recargador').textContent = '$' + d.balance_recargador.toFixed(2);
+        document.getElementById('bal-consumo').textContent = '$' + d.balance_consumo.toFixed(2);
+        _renderMovimientos(d.movimientos || []);
+    } catch (e) {
+        document.getElementById('bal-recargador').textContent = '$0.00';
+        document.getElementById('bal-consumo').textContent = '$0.00';
+        document.getElementById('mov-lista').innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aun.</p>';
+    }
+}
+
+function _renderMovimientos(movs) {
+    const c = document.getElementById('mov-lista');
+    if (!movs.length) { c.innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aun.</p>'; return; }
+    const iconos = { deposito:'add_circle', recarga_transferencia:'send', recarga_consumo:'swap_horiz', bonus:'star' };
+    const colores = { deposito:'#27ae60', recarga_transferencia:'#B5445C', recarga_consumo:'#e67e22', bonus:'#8e44ad' };
+    c.innerHTML = movs.map(m => {
+        const ico = iconos[m.tipo] || 'circle';
+        const col = colores[m.tipo] || '#7B4D5E';
+        const signo = m.monto >= 0 ? '+' : '';
+        const fecha = m.fecha ? new Date(m.fecha).toLocaleDateString('es', { day:'2-digit', month:'short' }) : '';
+        return `<div class="mov-row">
+            <div class="mov-ico" style="background:${col}18">
+                <span class="ms text-base" style="color:${col}">${ico}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-600 text-c-text truncate">${esc(m.descripcion || m.tipo)}</p>
+                <p class="text-xs text-c-soft">${fecha}</p>
+            </div>
+            <p class="text-sm font-bold" style="color:${m.monto >= 0 ? '#27ae60' : '#B5445C'}">${signo}$${Math.abs(m.monto).toFixed(2)}</p>
+        </div>`;
+    }).join('');
+}
+
+// Preview transferencia fan
+document.getElementById('fan-monto')?.addEventListener('input', () => {
+    const monto = parseFloat(document.getElementById('fan-monto').value) || 0;
+    const prev = document.getElementById('transfer-preview');
+    if (monto >= 1) {
+        prev.classList.remove('hidden');
+        document.getElementById('tp-debito').textContent = '$' + monto.toFixed(2);
+        document.getElementById('tp-credito').textContent = '$' + monto.toFixed(2);
+    } else {
+        prev.classList.add('hidden');
+    }
+});
+
+function actualizarPreviewConsumo() {
+    const monto = parseFloat(document.getElementById('consumo-monto').value) || 0;
+    const prev = document.getElementById('consumo-preview');
+    if (monto >= 1) {
+        const fee = monto * 0.10;
+        const neto = monto - fee;
+        prev.classList.remove('hidden');
+        document.getElementById('cp-debito').textContent = '$' + monto.toFixed(2);
+        document.getElementById('cp-fee').textContent = '-$' + fee.toFixed(2);
+        document.getElementById('cp-neto').textContent = '$' + neto.toFixed(2);
+    } else {
+        prev.classList.add('hidden');
+    }
+}
+
+async function transferirAFan() {
+    const email = document.getElementById('fan-email').value.trim();
+    const monto = parseFloat(document.getElementById('fan-monto').value);
+    if (!email || !monto || monto < 1) { showToast('Completa todos los campos', 'err'); return; }
+    const btn = document.getElementById('btn-transferir');
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try {
+        const r = await candela.recargadores.transferirAFan(email, monto);
+        showToast(`✓ $${r.transferido.toFixed(2)} acreditado a ${r.fan}`, 'ok');
+        document.getElementById('fan-email').value = '';
+        document.getElementById('fan-monto').value = '';
+        document.getElementById('transfer-preview').classList.add('hidden');
+        await cargarBalance();
+    } catch (e) {
+        showToast(e.message || 'Error al transferir', 'err');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Transferir';
+    }
+}
+
+async function transferirAMiCuenta() {
+    const monto = parseFloat(document.getElementById('consumo-monto').value);
+    if (!monto || monto < 1) { showToast('Ingresa un monto valido', 'err'); return; }
+    const btn = document.getElementById('btn-consumo');
+    btn.disabled = true; btn.textContent = 'Procesando...';
+    try {
+        const r = await candela.recargadores.transferirAMiCuenta(monto);
+        showToast(`✓ $${r.credito_consumo_acreditado.toFixed(2)} cargados a tu cuenta`, 'ok');
+        document.getElementById('consumo-monto').value = '';
+        document.getElementById('consumo-preview').classList.add('hidden');
+        await cargarBalance();
+    } catch (e) {
+        showToast(e.message || 'Error al convertir', 'err');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Convertir';
+    }
+}
+
+// Init
+(async () => {
+    const user = candela.auth.user();
+    if (user?.nombre) document.getElementById('nav-nombre').textContent = user.nombre;
+    await cargarBalance();
+})();
+</script>
+</body>
+</html>
