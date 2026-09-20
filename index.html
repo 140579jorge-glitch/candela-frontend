@@ -326,13 +326,19 @@
                         <div style="font-size:.62rem;color:#7B4D5E;margin-top:.15rem">Ganar el 84%</div>
                     </a>
                 </div>
-                <p style="margin-bottom:1.5rem">
+                <div style="display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;align-items:center;margin-bottom:1.5rem">
                     <button onclick="abrirModal('login')"
                         style="background:none;border:none;cursor:pointer;font-size:.76rem;color:#7B4D5E;font-family:'Nunito',sans-serif;transition:color .2s;padding:0"
                         onmouseover="this.style.color='#B5445C'" onmouseout="this.style.color='#7B4D5E'">
                         ¿Ya tienes cuenta? Entrar aquí →
                     </button>
-                </p>
+                    <span style="color:rgba(123,77,94,.3);font-size:.76rem">|</span>
+                    <a href="pages/recargador.html"
+                        style="background:none;border:none;cursor:pointer;font-size:.76rem;color:#7B4D5E;font-family:'Nunito',sans-serif;transition:color .2s;text-decoration:none"
+                        onmouseover="this.style.color='#2D8A5E'" onmouseout="this.style.color='#7B4D5E'">
+                        ¿Quieres ganar distribuyendo créditos? Ser Agente →
+                    </a>
+                </div>
 
                 <div style="display:flex;gap:2rem;padding-top:1.5rem;border-top:1px solid rgba(30,10,18,.07)">
                     <div>
@@ -502,6 +508,25 @@
                         Empieza gratis
                     </a>
                     <p class="text-white/35 text-[10px]">Gratis · Sin compromiso · Cobras desde el día 1</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Strip captación agentes ── -->
+        <div class="mx-4 md:mx-10 my-4 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#062414,#0B3D26)">
+            <div class="px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-center md:text-left">
+                    <p class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-1">¿Tienes contactos en tu zona?</p>
+                    <h3 class="text-white font-display text-xl font-semibold mb-1">
+                        Gana distribuyendo créditos <span style="color:#4ADE80">Candela</span>
+                    </h3>
+                    <p class="text-white/45 text-xs">Compra créditos al por mayor con <strong class="text-white/70">+10% de bonus</strong> y véndelos localmente. Tú defines el precio.</p>
+                </div>
+                <div class="flex flex-col items-center gap-2 shrink-0">
+                    <a href="pages/recargador.html" class="text-white text-sm font-bold px-6 py-2.5 rounded-full shadow-lg whitespace-nowrap" style="background:linear-gradient(135deg,#2D8A5E,#4ADE80);box-shadow:0 8px 24px rgba(74,222,128,.25)">
+                        Ser Agente Candela
+                    </a>
+                    <p class="text-white/35 text-[10px]">Sin costo de entrada · +10% bonus automático</p>
                 </div>
             </div>
         </div>
