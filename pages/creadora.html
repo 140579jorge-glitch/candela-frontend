@@ -46,8 +46,9 @@
         .glass { background:rgba(255,248,245,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
         .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
         .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .2s,transform .15s; }
-        .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
-        .c-btn:active { transform:scale(0.97); }
+        .c-btn:hover:not(:disabled) { filter:brightness(1.06); transform:translateY(-1px); }
+        .c-btn:active:not(:disabled) { transform:scale(0.97); }
+        .c-btn:disabled { opacity:0.45; cursor:not-allowed; filter:none; transform:none; }
         .c-btn-outline { border:2px solid #B5445C; color:#B5445C; transition:all .2s; }
         .c-btn-outline:hover { background:#B5445C; color:#fff; }
 

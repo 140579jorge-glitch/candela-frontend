@@ -296,6 +296,10 @@ async function cargarBalance() {
         document.getElementById('bal-consumo').textContent = '$' + d.balance_consumo.toFixed(2);
         _renderMovimientos(d.movimientos || []);
     } catch (e) {
+        if (e.message && (e.message.includes('403') || e.message.toLowerCase().includes('autorizado') || e.message.toLowerCase().includes('recargador'))) {
+            window.location.href = '../pages/fan-dashboard.html';
+            return;
+        }
         document.getElementById('bal-recargador').textContent = '$0.00';
         document.getElementById('bal-consumo').textContent = '$0.00';
         document.getElementById('mov-lista').innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aun.</p>';

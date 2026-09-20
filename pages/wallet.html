@@ -24,8 +24,9 @@
         body { font-family:'Nunito',sans-serif; background:#FDF8F5; }
         .ms { font-family:'Material Symbols Outlined'; font-style:normal; line-height:1; user-select:none; }
         .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .15s,transform .1s; }
-        .c-btn:hover { filter:brightness(1.05); }
-        .c-btn:active { transform:scale(.98); }
+        .c-btn:hover:not(:disabled) { filter:brightness(1.05); }
+        .c-btn:active:not(:disabled) { transform:scale(.98); }
+        .c-btn:disabled { opacity:0.45; cursor:not-allowed; filter:none; transform:none; }
         .monto-btn { border:2px solid #F5E8EF; color:#7B4D5E; transition:all .15s; cursor:pointer; }
         .monto-btn.sel { border-color:#B5445C; background:#FFF4EE; color:#B5445C; font-weight:800; }
         .monto-btn:hover:not(.sel) { border-color:#B5445C; color:#B5445C; }
@@ -104,7 +105,7 @@
         <!-- Bonus -->
         <div id="bonus-notice" class="hidden bg-green-50 border border-green-200 rounded-xl p-3 mb-4 text-sm text-green-700 flex items-center gap-2">
             <span class="ms text-green-600" style="font-size:18px">card_giftcard</span>
-            <span>Bonus <strong>+10%</strong>: recibirás <strong id="bonus-val">$0</strong> USD extra gratis.</span>
+            <span>Bonus <strong id="bonus-pct-text">+0%</strong>: recibirás <strong id="bonus-val">$0</strong> USD extra gratis.</span>
         </div>
 
         <!-- Metodo de pago -->
@@ -326,6 +327,7 @@ function actualizarUI() {
     const bonusEl = document.getElementById('bonus-notice');
     if (pct > 0) {
         document.getElementById('bonus-val').textContent = `$${(m * pct).toFixed(2)}`;
+        document.getElementById('bonus-pct-text').textContent = `+${Math.round(pct * 100)}%`;
         bonusEl.classList.remove('hidden');
     } else {
         bonusEl.classList.add('hidden');
