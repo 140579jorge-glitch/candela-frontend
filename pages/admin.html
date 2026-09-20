@@ -489,9 +489,9 @@ async function cargarVerificaciones() {
                         <p class="text-xs text-c-soft mb-1">${esc(v.email || '')}</p>
                         <p class="text-xs text-c-soft mb-3">Enviado: ${fmt_fecha(v.fecha_solicitud)}</p>
                         <div class="flex gap-2 flex-wrap">
-                            ${v.doc_imagen_url ? `<button onclick="verImg('${v.doc_imagen_url}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">badge</span>CI frente</button>` : ''}
-                            ${v.doc_imagen_reverso_url ? `<button onclick="verImg('${v.doc_imagen_reverso_url}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">flip_to_back</span>CI dorso</button>` : ''}
-                            ${v.selfie_url ? `<button onclick="verImg('${v.selfie_url}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">selfie</span>Selfie</button>` : ''}
+                            ${v.doc_imagen_url ? `<button onclick="verImg('${esc(v.doc_imagen_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">badge</span>CI frente</button>` : ''}
+                            ${v.doc_imagen_reverso_url ? `<button onclick="verImg('${esc(v.doc_imagen_reverso_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">flip_to_back</span>CI dorso</button>` : ''}
+                            ${v.selfie_url ? `<button onclick="verImg('${esc(v.selfie_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">selfie</span>Selfie</button>` : ''}
                         </div>
                     </div>
                     <div class="flex gap-2 shrink-0">
