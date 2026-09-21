@@ -1345,7 +1345,7 @@ async function verificarOTP(e) {
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || 'Codigo invalido');
         localStorage.setItem('candela_token', data.access_token);
-        localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre }));
+        localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre, email: _adminEmailPendiente, es_super_admin: data.es_super_admin || false }));
         window.location.href = 'pages/admin.html';
     } catch(err) {
         toast(err.message, 'error');

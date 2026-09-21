@@ -126,7 +126,8 @@
         <div class="nav-item" onclick="mostrar('recargadores',this)"><span class="ms">bolt</span>Recargadores</div>
         <div class="nav-item" onclick="mostrar('deposito-manual',this)"><span class="ms">qr_code</span>Deposito QR</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
-        <a href="../index.html" class="nav-item"><span class="ms">home</span>Ver sitio</a>
+        <div class="nav-item" id="nav-admins" onclick="mostrar('admins',this)" style="display:none"><span class="ms">admin_panel_settings</span>Gestionar Admins</div>
+        <a href="https://clubcandela.com" target="_blank" class="nav-item"><span class="ms">home</span>Ver sitio</a>
     </aside>
 
     <main class="flex-1 md:ml-56 px-4 md:px-8 py-6">
@@ -410,6 +411,25 @@
             </div>
         </section>
 
+        <!-- GESTIONAR ADMINS (solo super admin) -->
+        <section id="sec-admins" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Gestionar Administradores</h2>
+            <p class="text-c-soft text-sm mb-6">Crea cuentas de admin para colaboradores. Solo vos (super admin) podes crear y revocar accesos.</p>
+            <div class="card p-6 max-w-md mb-6">
+                <p class="text-sm font-bold text-c-text mb-3">Nuevo administrador</p>
+                <div class="flex flex-col gap-3">
+                    <input id="adm-nombre" type="text" placeholder="Nombre" class="border border-c-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-c-accent font-body">
+                    <input id="adm-email" type="email" placeholder="Email" class="border border-c-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-c-accent font-body">
+                    <input id="adm-pass" type="password" placeholder="Contrasena temporal" class="border border-c-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-c-accent font-body">
+                    <button onclick="crearAdmin()" class="c-btn text-white text-sm font-bold py-2.5 rounded-xl">Crear Admin</button>
+                </div>
+            </div>
+            <h3 class="font-bold text-sm text-c-soft uppercase tracking-wider mb-3">Admins activos</h3>
+            <div id="lista-admins" class="flex flex-col gap-3">
+                <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
+            </div>
+        </section>
+
     </main>
 </div>
 
@@ -431,6 +451,10 @@ async function init() {
     const user = candela.auth.user();
     if (!user || user.tipo !== 'admin') { window.location.href = '../index.html'; return; }
     document.getElementById('admin-email').textContent = user.nombre || user.email || 'Admin';
+    // Mostrar seccion de admins solo a super_admin
+    if (user.es_super_admin) {
+        document.getElementById('nav-admins').style.display = '';
+    }
     // Registrar estado inicial en history para que "atras" no salga del panel
     const secInicial = location.hash.replace('#', '') || 'dashboard';
     history.replaceState({section: secInicial}, '', '#' + secInicial);
@@ -602,6 +626,7 @@ function _activarSeccion(sec) {
     if (sec === 'mensajes') cargarMensajesAdmin();
     if (sec === 'reclamos') cargarReclamos();
     if (sec === 'recargadores') cargarRecargadores();
+    if (sec === 'admins') cargarAdmins();
 }
 
 function mostrar(sec, navBtn) {
@@ -1042,6 +1067,56 @@ async function procesarDepositoManual() {
         toast('Credito acreditado correctamente', 'success');
     } catch(e) { toast(e.message || 'Error al acreditar', 'error'); }
     finally { btn.disabled = false; btn.textContent = 'Acreditar Credito'; }
+}
+
+async function cargarAdmins() {
+    const c = document.getElementById('lista-admins');
+    c.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Cargando...</p>';
+    try {
+        const lista = await candela.admin.listarAdmins();
+        if (!lista.length) { c.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Sin admins adicionales.</p>'; return; }
+        const user = candela.auth.user();
+        c.innerHTML = lista.map(a => `
+            <div class="card p-4 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shrink-0" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
+                    ${(a.nombre||'A')[0].toUpperCase()}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-bold text-sm">${esc(a.nombre)} ${a.es_super_admin ? '<span class="badge badge-pendiente ml-1">SUPER</span>' : ''}</p>
+                    <p class="text-xs text-c-soft">${esc(a.email)}</p>
+                    <p class="text-xs text-c-soft">Ultimo acceso: ${a.ultimo_acceso ? new Date(a.ultimo_acceso).toLocaleDateString('es-BO') : 'Nunca'}</p>
+                </div>
+                ${!a.es_super_admin && a.id !== (user && user.id) ? `
+                <button onclick="revocarAdmin('${a.id}','${esc(a.email)}')" class="text-xs text-red-400 hover:text-red-600 font-bold border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-xl transition-all shrink-0">Revocar</button>
+                ` : ''}
+            </div>`).join('');
+    } catch(e) { c.innerHTML = `<p class="text-red-400 text-sm text-center py-8">${e.message}</p>`; }
+}
+
+async function crearAdmin() {
+    const nombre = document.getElementById('adm-nombre').value.trim();
+    const email = document.getElementById('adm-email').value.trim();
+    const password = document.getElementById('adm-pass').value;
+    if (!nombre || !email || !password) { toast('Completa todos los campos', 'error'); return; }
+    if (password.length < 8) { toast('La contrasena debe tener al menos 8 caracteres', 'error'); return; }
+    if (!confirm(`Crear admin para ${email}?`)) return;
+    try {
+        const r = await candela.admin.crearAdmin(email, nombre, password);
+        toast(`Admin ${r.email} creado correctamente`, 'success');
+        document.getElementById('adm-nombre').value = '';
+        document.getElementById('adm-email').value = '';
+        document.getElementById('adm-pass').value = '';
+        cargarAdmins();
+    } catch(e) { toast(e.message || 'Error al crear admin', 'error'); }
+}
+
+async function revocarAdmin(id, email) {
+    if (!confirm(`Revocar acceso de admin a ${email}? La cuenta quedara desactivada.`)) return;
+    try {
+        await candela.admin.revocarAdmin(id);
+        toast(`Acceso revocado para ${email}`, 'success');
+        cargarAdmins();
+    } catch(e) { toast(e.message || 'Error', 'error'); }
 }
 
 init();
