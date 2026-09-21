@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,9 @@
         .c-btn:hover { filter:brightness(1.06); }
         .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#7B4D5E;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
         .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(244,162,97,.08);border-left-color:#B5445C; }
-        .stat-card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem;padding:1.25rem; }
+        .stat-card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem;padding:1.25rem;transition:border-color .15s,box-shadow .15s; }
+        .stat-card[onclick] { cursor:pointer; }
+        .stat-card[onclick]:hover { border-color:#B5445C;box-shadow:0 2px 8px rgba(181,68,92,.12); }
         .badge { display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:100px;font-size:.7rem;font-weight:700; }
         .badge-pendiente { background:rgba(244,162,97,.12);color:#CF6278;border:1px solid rgba(244,162,97,.3); }
         .badge-activa { background:rgba(46,204,113,.1);color:#27ae60;border:1px solid rgba(46,204,113,.3); }
@@ -139,33 +141,33 @@
             </div>
 
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
-                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C" onclick="mostrar('creadoras')">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Creadoras activas</p>
                     <p class="text-2xl font-bold text-c-accent" id="d-activas">-</p>
                 </div>
-                <div class="stat-card border-l-4" style="border-left-color:#F2B8C8">
+                <div class="stat-card border-l-4" style="border-left-color:#F2B8C8" onclick="mostrar('creadoras')">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Pendientes aprob.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-pendientes">-</p>
                 </div>
-                <div class="stat-card border-l-4" style="border-left-color:#9B72CF">
+                <div class="stat-card border-l-4" style="border-left-color:#9B72CF" onclick="mostrar('comisiones')">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Suscriptores totales</p>
                     <p class="text-2xl font-bold text-c-text" id="d-suscriptores">-</p>
                 </div>
-                <div class="stat-card border-l-4" style="border-left-color:#2ECC71">
+                <div class="stat-card border-l-4" style="border-left-color:#2ECC71" onclick="mostrar('retiros')">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Retiros pend.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-retiros">-</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div class="stat-card border-l-4" style="border-left-color:#B5445C">
+                <div class="stat-card border-l-4" style="border-left-color:#B5445C" onclick="mostrar('verificaciones')">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Verificaciones CI</p>
                     <p class="text-2xl font-bold text-c-text" id="d-verificaciones">-</p>
                 </div>
-                <div class="stat-card border-l-4" style="border-left-color:#E74C3C">
+                <div class="stat-card border-l-4" style="border-left-color:#E74C3C" onclick="mostrar('pagos')">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Pagos PPV pend.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-pagos">-</p>
                 </div>
-                <div class="stat-card border-l-4" style="border-left-color:#16a34a">
+                <div class="stat-card border-l-4" style="border-left-color:#16a34a" onclick="mostrar('depositos')">
                     <p class="text-[11px] font-bold text-c-soft uppercase tracking-wide mb-1">Depósitos pend.</p>
                     <p class="text-2xl font-bold text-c-text" id="d-depositos">-</p>
                 </div>
