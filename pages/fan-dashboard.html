@@ -108,6 +108,7 @@
         <div class="nav-item" onclick="mostrar('wallet',this)"><span class="ms">account_balance_wallet</span>Billetera</div>
         <div class="nav-item" onclick="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">report</span>Reclamos</div>
+        <a href="recargador.html" id="nav-agente" class="nav-item" style="display:none;text-decoration:none"><span class="ms" style="color:#2D8A5E">bolt</span>Panel Agente</a>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="nav-item" onclick="mostrar('cuenta',this)"><span class="ms">manage_accounts</span>Configuración</div>
         <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
@@ -377,6 +378,11 @@ async function cargar() {
     renderPropinas();
     renderReclamos();
     renderCuenta();
+
+    // Mostrar acceso al panel de agente si el usuario tiene rol recargador
+    candela._req('GET', '/api/recargadores/mi-balance').then(() => {
+        document.getElementById('nav-agente').style.display = 'flex';
+    }).catch(() => {});
 }
 
 // Siguiendo

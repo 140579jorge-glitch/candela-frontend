@@ -860,6 +860,10 @@ function init() {
     renderNavLinks();
     verificarStreamsActivos();
 
+    // Abrir modal si venimos de otra página (ej: gana-como-agente.html)
+    const _pendingModal = sessionStorage.getItem('openModal');
+    if (_pendingModal) { sessionStorage.removeItem('openModal'); setTimeout(() => abrirModal(_pendingModal), 400); }
+
     document.getElementById('hero-guest').classList.remove('hidden');
     document.getElementById('stories-section').style.display = 'none';
     document.getElementById('chips-section').style.display = 'none';
