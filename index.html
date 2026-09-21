@@ -851,9 +851,9 @@ function init() {
     if (candela.auth.isLoggedIn()) {
         const _preview = new URLSearchParams(location.search).has('preview');
         if (u?.tipo === 'admin' && !_preview) { window.location.replace('pages/admin.html'); return; }
-        if (u?.tipo === 'admin' && _preview)  { return; }  // admin navega el sitio libremente
-        if (u?.tipo === 'creadora')       { window.location.replace('pages/dashboard-creadora.html'); return; }
-        window.location.replace('pages/feed.html'); return;  // fan -> feed de contenido
+        if (u?.tipo === 'creadora')           { window.location.replace('pages/dashboard-creadora.html'); return; }
+        if (u?.tipo !== 'admin')              { window.location.replace('pages/feed.html'); return; }
+        // admin + ?preview=1: cae al flujo guest para ver el sitio normalmente
     }
 
     renderTopbar(false);
