@@ -849,7 +849,9 @@ function init() {
     // Los logueados NO ven la landing: van directo a su home real.
     const u = candela.auth.user?.() || JSON.parse(localStorage.getItem('candela_user') || 'null');
     if (candela.auth.isLoggedIn()) {
-        if (u?.tipo === 'admin')          { window.location.replace('pages/admin.html'); return; }
+        const _preview = new URLSearchParams(location.search).has('preview');
+        if (u?.tipo === 'admin' && !_preview) { window.location.replace('pages/admin.html'); return; }
+        if (u?.tipo === 'admin' && _preview)  { return; }  // admin navega el sitio libremente
         if (u?.tipo === 'creadora')       { window.location.replace('pages/dashboard-creadora.html'); return; }
         window.location.replace('pages/feed.html'); return;  // fan -> feed de contenido
     }
