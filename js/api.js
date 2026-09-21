@@ -29,7 +29,6 @@ const candela = {
         const res = await fetch(`${API_URL}${path}`, opts);
         const data = await res.json().catch(() => ({}));
         if (res.status === 401 && this._token()) {
-            // Token expirado o invalido — limpiar sesion y redirigir al login
             localStorage.removeItem('candela_token');
             localStorage.removeItem('candela_user');
             const inPages = location.pathname.includes('/pages/');
@@ -43,7 +42,7 @@ const candela = {
     auth: {
         async login(email, password) {
             const data = await candela._req('POST', '/api/auth/login', { email, password });
-            if (data.requires_otp) return data;  // admin 2FA — no guardar token aun
+            if (data.requires_otp) return data;
             if (data.access_token) {
                 localStorage.setItem('candela_token', data.access_token);
                 localStorage.setItem('candela_user', JSON.stringify({
@@ -250,6 +249,9 @@ const candela = {
         listarRecargadores: () => candela._req('GET', '/api/admin/recargadores'),
         toggleRecargador: (id, es_recargador) => candela._req('PATCH', `/api/admin/recargadores/${id}`, { es_recargador }),
         aprobarRecargadorEmail: (email, es_recargador) => candela._req('POST', '/api/admin/recargadores/por-email', { email, es_recargador }),
+        listarAdmins: () => candela._req('GET', '/api/admin/admins'),
+        crearAdmin: (email, nombre, password) => candela._req('POST', '/api/admin/admins/crear', { email, nombre, password }),
+        revocarAdmin: (id) => candela._req('DELETE', `/api/admin/admins/${id}`),
         comisiones: (params = {}) => {
             const q = new URLSearchParams(params).toString();
             return candela._req('GET', `/api/admin/comisiones${q ? '?' + q : ''}`);
