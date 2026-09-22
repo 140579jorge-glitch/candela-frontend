@@ -197,6 +197,14 @@
             <p class="font-bold text-green-700 mt-1">Pago confirmado</p>
             <p class="text-xs text-green-600 mt-1">Tu saldo ha sido acreditado.</p>
         </div>
+
+        <!-- Paso 3 alt: fallido/expirado -->
+        <div id="step-fallido" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+            <span class="ms text-red-400" style="font-size:36px">error_outline</span>
+            <p class="font-bold text-red-700 mt-1" id="step-fallido-titulo">Pago no completado</p>
+            <p class="text-xs text-red-600 mt-1" id="step-fallido-desc">El tiempo para completar el pago expiró o fue rechazado.</p>
+            <button onclick="reiniciarDeposito()" class="mt-3 bg-c-accent text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-c-accent/90 transition-colors">Intentar de nuevo</button>
+        </div>
     </div>
 
     <!-- Dormancy -->
@@ -400,6 +408,21 @@ function iniciarCountdown(expira) {
     }, 1000);
 }
 
+function mostrarFallido(titulo, desc) {
+    clearInterval(pollTimer);
+    clearInterval(countTimer);
+    document.getElementById('step-direccion').classList.add('hidden');
+    document.getElementById('step-fallido-titulo').textContent = titulo;
+    document.getElementById('step-fallido-desc').textContent = desc;
+    document.getElementById('step-fallido').classList.remove('hidden');
+}
+
+function reiniciarDeposito() {
+    depositoId = null;
+    document.getElementById('step-fallido').classList.add('hidden');
+    document.getElementById('step-generar').classList.remove('hidden');
+}
+
 function iniciarPolling() {
     clearInterval(pollTimer);
     pollTimer = setInterval(async () => {
@@ -411,6 +434,12 @@ function iniciarPolling() {
                 document.getElementById('step-direccion').classList.add('hidden');
                 document.getElementById('step-confirmado').classList.remove('hidden');
                 setTimeout(() => location.reload(), 3000);
+            } else if (r.estado === 'failed') {
+                mostrarFallido('Pago rechazado', 'La transaccion fue rechazada por la red. Intenta con un nuevo deposito.');
+            } else if (r.estado === 'expired') {
+                mostrarFallido('Pago expirado', 'El tiempo para completar el pago vencio. Genera una nueva direccion.');
+            } else if (r.estado === 'partially_paid') {
+                document.getElementById('pay-status-text').textContent = 'Pago parcial detectado, esperando monto completo...';
             } else if (r.estado !== 'pendiente') {
                 document.getElementById('pay-status-text').textContent = 'Pago detectado, confirmando...';
             }

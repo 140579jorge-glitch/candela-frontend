@@ -256,7 +256,7 @@
 <body class="bg-c-bg text-c-text antialiased min-h-screen pb-20 md:pb-0">
 
 <!-- ===== TOPBAR ===== -->
-<header id="main-header" class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,0.07);">
+<header id="main-header" class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,0.07);padding-top:env(safe-area-inset-top,0px)">
     <div class="flex items-center justify-between h-16 px-4 md:px-10 max-w-7xl mx-auto">
         <button class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-c-border transition-colors text-c-soft hover:text-c-accent">
             <span class="material-symbols-outlined">menu</span>
@@ -633,7 +633,7 @@
 </main>
 
 <!-- ===== BOTTOM NAV (mobile) ===== -->
-<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,0.1);">
+<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,0.1);padding-bottom:env(safe-area-inset-bottom,0px)">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
         <a href="index.html" class="flex flex-col items-center text-c-accent gap-0.5">
             <span class="material-symbols-outlined ms-fill">home</span>
@@ -1482,6 +1482,9 @@ if (!candela.auth.isLoggedIn()) initGoogleAuth();
 // Auto-open login modal if redirected from gated page
 if (new URLSearchParams(window.location.search).get('login') === '1') {
     abrirModal('login');
+}
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
 </script>
 </body>

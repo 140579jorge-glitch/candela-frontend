@@ -501,6 +501,14 @@
                     <p class="text-2xl font-bold text-c-text" id="an-subs-mes">0</p>
                 </div>
             </div>
+            <!-- Grafico de ingresos mensual historico -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 mb-5 shadow-sm">
+                <h3 class="font-bold text-sm text-c-text mb-4">Ingresos por mes — últimos 6 meses</h3>
+                <div class="overflow-x-auto">
+                    <canvas id="an-chart-mes" height="120" style="width:100%;min-width:300px;max-width:100%"></canvas>
+                </div>
+                <p id="an-chart-mes-empty" class="hidden text-center text-c-soft text-sm py-6">Sin datos aún.</p>
+            </div>
             <!-- Grafico de ingresos por dia -->
             <div class="bg-white border border-c-border rounded-2xl p-5 mb-5 shadow-sm">
                 <h3 class="font-bold text-sm text-c-text mb-4">Ingresos diarios — últimos 30 días</h3>
@@ -1168,7 +1176,7 @@
 </div>
 
 <!-- Bottom nav mobile -->
-<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(181,68,92,.1)">
+<nav class="glass md:hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(181,68,92,.1);padding-bottom:env(safe-area-inset-bottom,0px)">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
         <button onclick="mostrar('inicio')" class="flex flex-col items-center text-c-accent gap-0.5">
             <span class="ms ms-fill">home</span><span class="text-[10px] font-bold">Inicio</span>
@@ -2883,10 +2891,12 @@ async function cargarAnalitica() {
         const data = await candela.creadoras.analitica();
         document.getElementById('an-mes').textContent = '$' + (data.ingresos_mes || 0).toFixed(2);
         document.getElementById('an-subs-mes').textContent = data.subs_nuevas_mes || 0;
+        _renderChartMensual(data.ingresos_por_mes || []);
         _renderChartBarras(data.ingresos_por_dia || []);
         _renderTopFans(data.top_fans || []);
     } catch(e) {
         document.getElementById('an-chart-empty').classList.remove('hidden');
+        document.getElementById('an-chart-mes-empty').classList.remove('hidden');
     }
 }
 
@@ -2932,6 +2942,47 @@ function _renderChartBarras(dias) {
         ctx.textAlign = 'right';
         ctx.fillText(dias[dias.length-1].dia.slice(5), W - 10, 118);
     }
+}
+
+function _renderChartMensual(meses) {
+    const canvas = document.getElementById('an-chart-mes');
+    if (!canvas) return;
+    if (!meses.length) {
+        canvas.classList.add('hidden');
+        document.getElementById('an-chart-mes-empty').classList.remove('hidden');
+        return;
+    }
+    const ctx = canvas.getContext('2d');
+    const W = canvas.parentElement.offsetWidth || 500;
+    canvas.width = W; canvas.height = 120;
+    const max = Math.max(...meses.map(m => m.total), 0.01);
+    const N = meses.length;
+    const barW = Math.max(20, Math.floor((W - 40) / N) - 6);
+    const gap = Math.floor((W - 40) / N);
+    ctx.clearRect(0, 0, W, 120);
+    const LABEL_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    meses.forEach((m, i) => {
+        const h = Math.max(3, Math.round((m.total / max) * 85));
+        const x = 20 + i * gap + (gap - barW) / 2;
+        const y = 100 - h;
+        ctx.fillStyle = '#F4A261';
+        ctx.beginPath();
+        ctx.roundRect ? ctx.roundRect(x, y, barW, h, 4) : ctx.rect(x, y, barW, h);
+        ctx.fill();
+        // value on tallest
+        if (m.total === max) {
+            ctx.fillStyle = '#F4A261';
+            ctx.font = 'bold 10px DM Sans, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('$' + m.total.toFixed(0), x + barW / 2, y - 4);
+        }
+        // month label
+        const monthIdx = parseInt(m.mes.slice(5), 10) - 1;
+        ctx.fillStyle = '#9B8E8A';
+        ctx.font = '10px DM Sans, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(LABEL_NAMES[monthIdx] || m.mes.slice(5), x + barW / 2, 116);
+    });
 }
 
 function _renderTopFans(fans) {
