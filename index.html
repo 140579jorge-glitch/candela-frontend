@@ -1287,6 +1287,7 @@ function switchTab(tab) {
 
 // ─── AUTH ────────────────────────────────────────────────────────────
 let _adminEmailPendiente = null;
+let _otpTipoUsuario = 'admin';
 
 async function hacerLogin(e) {
     e.preventDefault();
@@ -1297,6 +1298,7 @@ async function hacerLogin(e) {
         const res = await candela.auth.login(email, document.getElementById('l-pass').value);
         if (res?.requires_otp) {
             _adminEmailPendiente = email;
+            _otpTipoUsuario = res.tipo_usuario || 'admin';
             document.getElementById('form-login').classList.add('hidden');
             document.getElementById('form-otp').classList.remove('hidden');
             document.getElementById('form-otp').classList.add('flex');
@@ -1319,15 +1321,16 @@ async function hacerLogin(e) {
 async function reenviarOTP() {
     const btn = document.getElementById('btn-reenviar');
     btn.textContent = 'Enviando...'; btn.disabled = true;
+    const endpoint = _otpTipoUsuario === 'creadora' ? '/api/auth/reenviar-otp-creadora' : '/api/auth/reenviar-otp-admin';
     try {
-        const res = await fetch(`${API_URL}/api/auth/reenviar-otp-admin`, {
+        const res = await fetch(`${API_URL}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: _adminEmailPendiente }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || 'Error al reenviar');
-        toast('Codigo reenviado a tu Gmail', 'success');
+        toast('Codigo reenviado a tu email', 'success');
         document.getElementById('otp-input').value = '';
         document.getElementById('otp-input').focus();
     } catch(err) {
@@ -1342,8 +1345,11 @@ async function verificarOTP(e) {
     const btn = document.getElementById('btn-otp');
     const codigo = document.getElementById('otp-input').value.trim();
     btn.textContent = 'Verificando...'; btn.disabled = true;
+    // Determina si es admin o creadora por el tipo pendiente
+    const esCreadora = _otpTipoUsuario === 'creadora';
+    const endpoint = esCreadora ? '/api/auth/verificar-otp-creadora' : '/api/auth/verificar-otp-admin';
     try {
-        const res = await fetch(`${API_URL}/api/auth/verificar-otp-admin`, {
+        const res = await fetch(`${API_URL}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: _adminEmailPendiente, codigo }),
@@ -1351,8 +1357,13 @@ async function verificarOTP(e) {
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || 'Codigo invalido');
         localStorage.setItem('candela_token', data.access_token);
-        localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre, email: _adminEmailPendiente, es_super_admin: data.es_super_admin || false }));
-        window.location.href = 'pages/admin.html';
+        if (esCreadora) {
+            localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug, email: _adminEmailPendiente, email_verificado: true }));
+            window.location.href = 'pages/dashboard-creadora.html';
+        } else {
+            localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre, email: _adminEmailPendiente, es_super_admin: data.es_super_admin || false }));
+            window.location.href = 'pages/admin.html';
+        }
     } catch(err) {
         toast(err.message, 'error');
         btn.textContent = 'Verificar'; btn.disabled = false;

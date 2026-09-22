@@ -115,6 +115,7 @@
         <div class="nav-item" onclick="mostrar('referidas')"><span class="ms">group_add</span>Referidas</div>
         <div class="nav-item" onclick="mostrar('metodos-pago')"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
         <div class="nav-item" onclick="mostrar('stream')"><span class="ms">live_tv</span>Stream en vivo</div>
+        <div class="nav-item" onclick="mostrar('seguridad')"><span class="ms">security</span>Seguridad</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
     </div>
@@ -143,6 +144,7 @@
         <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
         <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
         <div class="nav-item" onclick="mostrar('stream',this)"><span class="ms">live_tv</span>Stream en vivo</div>
+        <div class="nav-item" onclick="mostrar('seguridad',this)"><span class="ms">security</span>Seguridad</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="px-4 mb-2">
             <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Configuración</p>
@@ -1172,6 +1174,38 @@
             </div>
         </section>
 
+        <!-- ══ SEGURIDAD ══ -->
+        <section id="sec-seguridad" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-5">Seguridad</h2>
+
+            <!-- 2FA -->
+            <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm mb-4">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="font-semibold text-c-text">Verificacion en dos pasos</p>
+                        <p class="text-xs text-c-soft mt-0.5">Al activarlo, cada inicio de sesion requerira un codigo enviado a tu email.</p>
+                        <p class="text-xs mt-1 font-semibold" id="2fa-estado-label">Cargando...</p>
+                    </div>
+                    <button id="btn-toggle-2fa" onclick="toggle2FA()"
+                        class="shrink-0 px-4 py-2 rounded-full text-sm font-semibold border border-c-border text-c-text hover:border-c-accent hover:text-c-accent transition-colors">
+                        ...
+                    </button>
+                </div>
+                <!-- Confirmacion con password -->
+                <div id="2fa-confirm-box" class="hidden mt-4 border-t border-c-border pt-4">
+                    <p class="text-xs text-c-soft mb-2">Confirma tu contrasena para continuar:</p>
+                    <div class="flex gap-2">
+                        <input id="2fa-password-inp" type="password" placeholder="Tu contrasena actual"
+                            class="flex-1 px-3 py-2 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all">
+                        <button onclick="confirmarToggle2FA()"
+                            class="px-4 py-2 bg-c-accent text-white rounded-xl text-sm font-semibold hover:bg-c-accent/90 transition-colors">
+                            Confirmar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 </div>
 
@@ -1271,6 +1305,49 @@ async function init() {
 
     const pkArchivos = document.getElementById('pk-archivos');
     if (pkArchivos) pkArchivos.addEventListener('change', function() { previewPackArchivos(this); });
+}
+
+// ─── 2FA ─────────────────────────────────────────────────────
+let _2faActivo = false;
+
+async function cargarEstado2FA() {
+    try {
+        const p = await candela._req('GET', '/api/auth/me');
+        _2faActivo = !!p.dos_fa_activo;
+    } catch(_) { _2faActivo = false; }
+    const label = document.getElementById('2fa-estado-label');
+    const btn = document.getElementById('btn-toggle-2fa');
+    if (!label || !btn) return;
+    if (_2faActivo) {
+        label.textContent = 'Activo — tu cuenta esta protegida con verificacion de dos pasos';
+        label.className = 'text-xs mt-1 font-semibold text-green-600';
+        btn.textContent = 'Desactivar';
+    } else {
+        label.textContent = 'Inactivo — solo necesitas email y contrasena para entrar';
+        label.className = 'text-xs mt-1 font-semibold text-c-soft';
+        btn.textContent = 'Activar';
+    }
+}
+
+function toggle2FA() {
+    const box = document.getElementById('2fa-confirm-box');
+    box.classList.toggle('hidden');
+    if (!box.classList.contains('hidden')) {
+        document.getElementById('2fa-password-inp').focus();
+    }
+}
+
+async function confirmarToggle2FA() {
+    const pwd = document.getElementById('2fa-password-inp').value;
+    if (!pwd) return toast('Ingresa tu contrasena', 'error');
+    try {
+        const r = await candela._req('POST', '/api/auth/toggle-2fa', { password: pwd });
+        _2faActivo = r.dos_fa_activo;
+        document.getElementById('2fa-password-inp').value = '';
+        document.getElementById('2fa-confirm-box').classList.add('hidden');
+        await cargarEstado2FA();
+        toast(_2faActivo ? 'Verificacion en dos pasos activada' : 'Verificacion en dos pasos desactivada', 'success');
+    } catch(e) { toast(e.message || 'Contrasena incorrecta', 'error'); }
 }
 
 // ─── PERFIL ──────────────────────────────────────────────────
@@ -1733,6 +1810,7 @@ function _activarSeccion(sec) {
     if (sec === 'stream') cargarStreamActivo();
     if (sec === 'analitica') cargarAnalitica();
     if (sec === 'medios') cargarMisMedios();
+    if (sec === 'seguridad') cargarEstado2FA();
     if (sec === 'mensajes') { cargarMensajes(); cargarBroadcasts(); if (perfilData) { document.getElementById('toggle-acepta-msg').checked = perfilData.acepta_mensajes; document.getElementById('msg-precio-input').value = perfilData.precio_mensaje || 5; document.getElementById('msg-precio-desc').textContent = `Precio por mensaje: $${perfilData.precio_mensaje || 5}`; } }
     if (sec === 'chat-sesion') {
         cargarSolicitudesChat();
