@@ -514,17 +514,44 @@ async function cargarVerificaciones() {
                         </div>
                         <p class="text-xs text-c-soft mb-1">${esc(v.email || '')}</p>
                         <p class="text-xs text-c-soft mb-3">Enviado: ${fmt_fecha(v.fecha_solicitud)}</p>
-                        <div class="flex gap-2 flex-wrap">
+                        <div class="flex gap-2 flex-wrap mb-4">
                             ${v.doc_imagen_url ? `<button onclick="verImg('${esc(v.doc_imagen_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">badge</span>CI frente</button>` : ''}
                             ${v.doc_imagen_reverso_url ? `<button onclick="verImg('${esc(v.doc_imagen_reverso_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">flip_to_back</span>CI dorso</button>` : ''}
                             ${v.selfie_url ? `<button onclick="verImg('${esc(v.selfie_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">selfie</span>Selfie</button>` : ''}
+                        </div>
+                        <!-- Checklist KYC -->
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-1">
+                            <p class="text-[11px] font-bold text-amber-700 uppercase tracking-wide mb-2">Checklist de revision</p>
+                            <div class="flex flex-col gap-1.5" id="chk-${v.verificacion_id}">
+                                <label class="flex items-center gap-2 text-xs text-c-text cursor-pointer">
+                                    <input type="checkbox" class="kyc-check accent-green-500" data-id="${v.verificacion_id}">
+                                    Documento legible, no vencido y sin alteraciones visibles
+                                </label>
+                                <label class="flex items-center gap-2 text-xs text-c-text cursor-pointer">
+                                    <input type="checkbox" class="kyc-check accent-green-500" data-id="${v.verificacion_id}">
+                                    Nombre en el documento coincide con el nombre de la cuenta
+                                </label>
+                                <label class="flex items-center gap-2 text-xs text-c-text cursor-pointer">
+                                    <input type="checkbox" class="kyc-check accent-green-500" data-id="${v.verificacion_id}">
+                                    Selfie tomada en ese momento (no foto de foto), cara visible
+                                </label>
+                                <label class="flex items-center gap-2 text-xs text-c-text cursor-pointer">
+                                    <input type="checkbox" class="kyc-check accent-green-500" data-id="${v.verificacion_id}">
+                                    Cara en selfie coincide con la foto del documento
+                                </label>
+                                <label class="flex items-center gap-2 text-xs text-c-text cursor-pointer">
+                                    <input type="checkbox" class="kyc-check accent-green-500" data-id="${v.verificacion_id}">
+                                    Persona aparenta ser mayor de edad
+                                </label>
+                            </div>
+                            <p class="text-[11px] text-amber-600 mt-2 hidden" id="chk-warn-${v.verificacion_id}">Marca todos los puntos antes de aprobar.</p>
                         </div>
                     </div>
                     <div class="flex gap-2 shrink-0">
                         <button onclick="accionVer('${v.verificacion_id}','rechazar',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1">
                             <span class="ms" style="font-size:16px">close</span>Rechazar
                         </button>
-                        <button onclick="accionVer('${v.verificacion_id}','aprobar',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1">
+                        <button onclick="intentarAprobarVer('${v.verificacion_id}',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1">
                             <span class="ms" style="font-size:16px">check</span>Aprobar
                         </button>
                     </div>
@@ -568,6 +595,16 @@ async function cargarRetiros() {
                 </div>
             </div>`).join('');
     } catch(e) { cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error al cargar</p>'; }
+}
+
+function intentarAprobarVer(id, btn) {
+    const checks = document.querySelectorAll(`#chk-${id} .kyc-check`);
+    const todas = [...checks].every(c => c.checked);
+    if (!todas) {
+        document.getElementById(`chk-warn-${id}`).classList.remove('hidden');
+        return;
+    }
+    accionVer(id, 'aprobar', btn);
 }
 
 async function accionVer(id, accion, btn) {
