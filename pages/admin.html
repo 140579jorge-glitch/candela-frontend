@@ -87,6 +87,7 @@
         <div class="nav-item" onclick="mostrar('reclamos',this)"><span class="ms">flag</span>Reclamos</div>
         <div class="nav-item" onclick="mostrar('recargadores',this)"><span class="ms">bolt</span>Recargadores</div>
         <div class="nav-item" onclick="mostrar('deposito-manual',this)"><span class="ms">qr_code</span>Deposito QR</div>
+        <div class="nav-item" onclick="mostrar('calculadora',this)"><span class="ms">calculate</span>Calculadora Recargas</div>
         <div class="mt-auto px-4 pt-4 border-t border-c-border">
             <a href="https://clubcandela.com?preview=1" target="_blank" class="nav-item"><span class="ms">home</span>Ver sitio</a>
         </div>
@@ -125,6 +126,7 @@
         </div>
         <div class="nav-item" onclick="mostrar('recargadores',this)"><span class="ms">bolt</span>Recargadores</div>
         <div class="nav-item" onclick="mostrar('deposito-manual',this)"><span class="ms">qr_code</span>Deposito QR</div>
+        <div class="nav-item" onclick="mostrar('calculadora',this)"><span class="ms">calculate</span>Calculadora Recargas</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="nav-item" id="nav-admins" onclick="mostrar('admins',this)"><span class="ms">admin_panel_settings</span>Gestionar Admins</div>
         <a href="https://clubcandela.com?preview=1" target="_blank" class="nav-item"><span class="ms">home</span>Ver sitio</a>
@@ -402,6 +404,76 @@
             </div>
         </section>
 
+        <!-- CALCULADORA DE RECARGAS -->
+        <section id="sec-calculadora" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Calculadora de Recargas — WhatsApp</h2>
+            <p class="text-c-soft text-sm mb-6">Cuánto cobrar en moneda local para acreditar el saldo USD que pide el fan. Actualiza las tasas cada día antes de usarla.</p>
+
+            <div class="bg-white border border-c-border rounded-2xl p-5 max-w-2xl mb-4">
+                <p class="text-[11px] font-bold text-c-soft uppercase tracking-widest mb-3">Parámetros</p>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Monto (USD)</label>
+                        <input id="calc-monto" type="number" value="5" min="1" step="0.5" class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:border-c-accent font-body" oninput="calcularRecargas()">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Fee fijo (USD)</label>
+                        <input id="calc-fee" type="number" value="1" min="0" step="0.25" class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:border-c-accent font-body" oninput="calcularRecargas()">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Margen (%)</label>
+                        <input id="calc-margen" type="number" value="7" min="0" step="0.5" class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:border-c-accent font-body" oninput="calcularRecargas()">
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="calcPreset(5)" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border hover:border-c-accent hover:text-c-accent transition-colors">$5</button>
+                    <button onclick="calcPreset(10)" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border hover:border-c-accent hover:text-c-accent transition-colors">$10</button>
+                    <button onclick="calcPreset(15)" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border hover:border-c-accent hover:text-c-accent transition-colors">$15</button>
+                    <button onclick="calcPreset(20)" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border hover:border-c-accent hover:text-c-accent transition-colors">$20</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl">
+                <div class="bg-white border border-c-border rounded-2xl p-4" data-pais="bolivia">
+                    <p class="text-sm font-bold mb-2">🇧🇴 Bolivia</p>
+                    <label class="text-[10px] text-c-soft block mb-1">Bs/USD (paralelo)</label>
+                    <input class="calc-tasa w-full border border-c-border rounded-lg px-2 py-1.5 text-xs font-bold outline-none focus:border-c-accent font-body mb-2" type="number" value="11.9" step="0.01" oninput="calcularRecargas()">
+                    <div class="bg-green-50 rounded-lg py-2 text-center">
+                        <p class="calc-resultado text-base font-bold text-green-700">—</p>
+                        <p class="text-[9px] text-c-soft uppercase">a cobrar en Bs</p>
+                    </div>
+                </div>
+                <div class="bg-white border border-c-border rounded-2xl p-4" data-pais="argentina">
+                    <p class="text-sm font-bold mb-2">🇦🇷 Argentina</p>
+                    <label class="text-[10px] text-c-soft block mb-1">AR$/USD (blue)</label>
+                    <input class="calc-tasa w-full border border-c-border rounded-lg px-2 py-1.5 text-xs font-bold outline-none focus:border-c-accent font-body mb-2" type="number" value="1540" step="1" oninput="calcularRecargas()">
+                    <div class="bg-green-50 rounded-lg py-2 text-center">
+                        <p class="calc-resultado text-base font-bold text-green-700">—</p>
+                        <p class="text-[9px] text-c-soft uppercase">a cobrar en AR$</p>
+                    </div>
+                </div>
+                <div class="bg-white border border-c-border rounded-2xl p-4" data-pais="peru">
+                    <p class="text-sm font-bold mb-2">🇵🇪 Perú</p>
+                    <label class="text-[10px] text-c-soft block mb-1">S/·USD</label>
+                    <input class="calc-tasa w-full border border-c-border rounded-lg px-2 py-1.5 text-xs font-bold outline-none focus:border-c-accent font-body mb-2" type="number" value="3.38" step="0.01" oninput="calcularRecargas()">
+                    <div class="bg-green-50 rounded-lg py-2 text-center">
+                        <p class="calc-resultado text-base font-bold text-green-700">—</p>
+                        <p class="text-[9px] text-c-soft uppercase">a cobrar en S/</p>
+                    </div>
+                </div>
+                <div class="bg-white border border-c-border rounded-2xl p-4" data-pais="brasil">
+                    <p class="text-sm font-bold mb-2">🇧🇷 Brasil</p>
+                    <label class="text-[10px] text-c-soft block mb-1">R$/USD</label>
+                    <input class="calc-tasa w-full border border-c-border rounded-lg px-2 py-1.5 text-xs font-bold outline-none focus:border-c-accent font-body mb-2" type="number" value="5.18" step="0.01" oninput="calcularRecargas()">
+                    <div class="bg-green-50 rounded-lg py-2 text-center">
+                        <p class="calc-resultado text-base font-bold text-green-700">—</p>
+                        <p class="text-[9px] text-c-soft uppercase">a cobrar en R$ (PIX)</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-c-soft mt-4 max-w-2xl">Fórmula: (monto USD + fee fijo) × tasa del día × (1 + margen%). Bolivia y Argentina usan tasa paralela/P2P, no la oficial. Brasil se cobra vía PIX, no QR bancario.</p>
+        </section>
+
         <!-- MENSAJES -->
         <section id="sec-mensajes" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-5">Mensajes directos pendientes</h2>
@@ -664,6 +736,7 @@ function _activarSeccion(sec) {
     if (sec === 'reclamos') cargarReclamos();
     if (sec === 'recargadores') cargarRecargadores();
     if (sec === 'admins') cargarAdmins();
+    if (sec === 'calculadora') calcularRecargas();
 }
 
 function mostrar(sec, navBtn) {
@@ -1104,6 +1177,25 @@ async function procesarDepositoManual() {
         toast('Credito acreditado correctamente', 'success');
     } catch(e) { toast(e.message || 'Error al acreditar', 'error'); }
     finally { btn.disabled = false; btn.textContent = 'Acreditar Credito'; }
+}
+
+function calcPreset(v) {
+    document.getElementById('calc-monto').value = v;
+    calcularRecargas();
+}
+
+function calcularRecargas() {
+    const monto = parseFloat(document.getElementById('calc-monto').value) || 0;
+    const fee = parseFloat(document.getElementById('calc-fee').value) || 0;
+    const margen = parseFloat(document.getElementById('calc-margen').value) || 0;
+    const totalUsdEquiv = (monto + fee) * (1 + margen / 100);
+
+    document.querySelectorAll('[data-pais]').forEach(card => {
+        const tasa = parseFloat(card.querySelector('.calc-tasa').value) || 0;
+        const montoLocal = totalUsdEquiv * tasa;
+        const decimals = tasa > 100 ? 0 : 2;
+        card.querySelector('.calc-resultado').textContent = montoLocal.toLocaleString('es', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    });
 }
 
 async function cargarAdmins() {
