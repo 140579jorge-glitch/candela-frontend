@@ -176,6 +176,7 @@ const candela = {
         planes: (slug) => candela._req('GET', `/api/pagos/planes/${encodeURIComponent(slug)}`),
         solicitarRetiro: (monto, wallet, metodoRed = 'trc20') => candela._req('POST', '/api/pagos/solicitar-retiro', { monto, wallet_destino: wallet, metodo_red: metodoRed, metodo: 'usdt' }),
         misSuscripciones: () => candela._req('GET', '/api/pagos/mis-suscripciones'),
+        cancelarSuscripcion: (slug) => candela._req('DELETE', `/api/pagos/suscripciones/${encodeURIComponent(slug)}`),
     },
 
     wallet: {

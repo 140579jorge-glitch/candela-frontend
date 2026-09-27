@@ -133,24 +133,50 @@ async function init() {
             const [c1, c2] = GRADIENTES[s.creadora_color] || GRADIENTES.default;
             const inicial = (s.creadora_nombre || '?')[0].toUpperCase();
             const vence = s.fecha_fin ? `Vence ${fmtFecha(s.fecha_fin)}` : '';
+            const puedeCancelar = s.estado === 'activa';
             return `
-            <a href="creadora.html?slug=${esc(s.creadora_slug)}" class="sub-card flex items-center gap-3 p-4">
-                <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 text-white font-bold text-lg"
-                    style="background:linear-gradient(135deg,${c1},${c2})">
-                    ${s.creadora_avatar
-                        ? `<img src="${esc(s.creadora_avatar)}" class="w-full h-full object-cover rounded-full" alt="">`
-                        : inicial}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 mb-0.5">
-                        <p class="font-bold text-c-text truncate">${esc(s.creadora_nombre || 'Creadora')}</p>
-                        ${estadoBadge(s.estado)}
+            <div class="sub-card flex items-center gap-3 p-4" data-slug="${esc(s.creadora_slug)}">
+                <a href="creadora.html?slug=${esc(s.creadora_slug)}" class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 text-white font-bold text-lg"
+                        style="background:linear-gradient(135deg,${c1},${c2})">
+                        ${s.creadora_avatar
+                            ? `<img src="${esc(s.creadora_avatar)}" class="w-full h-full object-cover rounded-full" alt="">`
+                            : inicial}
                     </div>
-                    <p class="text-xs text-c-soft">${s.monto} USDT/mes${vence ? ' · ' + vence : ''}</p>
-                </div>
-                <span class="material-symbols-outlined text-c-soft shrink-0" style="font-size:18px">chevron_right</span>
-            </a>`;
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-0.5">
+                            <p class="font-bold text-c-text truncate">${esc(s.creadora_nombre || 'Creadora')}</p>
+                            ${estadoBadge(s.estado)}
+                        </div>
+                        <p class="text-xs text-c-soft cancel-status">${s.monto} USDT/mes${vence ? ' · ' + vence : ''}</p>
+                    </div>
+                </a>
+                ${puedeCancelar
+                    ? `<button type="button" class="btn-cancelar shrink-0 text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-red-300 hover:text-red-600 transition-colors">Cancelar</button>`
+                    : ''}
+            </div>`;
         }).join('');
+
+        lista.querySelectorAll('.btn-cancelar').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const card = btn.closest('.sub-card');
+                const slug = card.dataset.slug;
+                if (!confirm('¿Cancelar esta suscripción? Mantienes acceso hasta la fecha de vencimiento y no se te cobrará de nuevo.')) return;
+                btn.disabled = true;
+                btn.textContent = 'Cancelando...';
+                try {
+                    const res = await candela.pagos.cancelarSuscripcion(slug);
+                    btn.remove();
+                    const status = card.querySelector('.cancel-status');
+                    const hasta = res.acceso_hasta ? fmtFecha(res.acceso_hasta) : '';
+                    if (status) status.textContent = hasta ? `Cancelada · Acceso hasta ${hasta}` : 'Cancelada';
+                } catch (err) {
+                    btn.disabled = false;
+                    btn.textContent = 'Cancelar';
+                    alert('No pudimos cancelar la suscripción. Intenta de nuevo o escribe a soporte@clubcandela.com');
+                }
+            });
+        });
     } catch(err) {
         document.getElementById('skel').classList.add('hidden');
         document.getElementById('vacio').classList.remove('hidden');
