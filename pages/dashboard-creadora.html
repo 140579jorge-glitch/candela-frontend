@@ -2617,12 +2617,48 @@ async function cargarScore(contexto) {
         fillEl.style.background = color;
         if (hintEl) {
             if (pct < 80 && s.faltantes?.length) {
-                hintEl.textContent = 'Falta: ' + s.faltantes.map(f => f.label || f).join(', ');
+                hintEl.innerHTML = 'Falta: ' + s.faltantes.map(f => {
+                    const label = esc(f.label || f);
+                    const campo = f.campo ? esc(f.campo) : '';
+                    return campo
+                        ? `<a href="javascript:void(0)" onclick="irACompletar('${campo}')" style="color:#B5445C;font-weight:700;text-decoration:underline;text-underline-offset:2px">${label}</a>`
+                        : label;
+                }).join(', ');
             } else if (pct >= 80) {
                 hintEl.textContent = 'Perfil completo. Tus fans te encontraran mas facil.';
             }
         }
     } catch(e) { /* silencioso */ }
+}
+
+// Mapa de que campo del score va a que seccion/input del formulario
+const CAMPO_A_DESTINO = {
+    avatar:           { seccion: 'personalizar', focus: 'input-avatar', scrollTo: 'prev-avatar' },
+    banner:           { seccion: 'personalizar', focus: 'input-banner', scrollTo: 'prev-banner' },
+    bio:              { seccion: 'personalizar', focus: 'p-bio' },
+    pais:             { seccion: 'personalizar' }, // sin campo editable todavia
+    rango_edad:       { seccion: 'personalizar', focus: 'p-rango-edad' },
+    intereses:        { seccion: 'personalizar', focus: 'p-intereses' },
+    tipos_contenido:  { seccion: 'personalizar', focus: 'p-tipos' },
+    fotos_carrusel:   { seccion: 'personalizar', scrollTo: 'carrusel-add-btn' },
+    precio_suscrip:   { seccion: 'personalizar', focus: 'p-precio' },
+    al_menos_3_posts: { seccion: 'subir' },
+};
+
+function irACompletar(campo) {
+    const destino = CAMPO_A_DESTINO[campo];
+    if (!destino) return;
+    mostrar(destino.seccion);
+    setTimeout(() => {
+        const scrollId = destino.scrollTo || destino.focus;
+        const scrollEl = scrollId && document.getElementById(scrollId);
+        if (!scrollEl) return;
+        scrollEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (destino.focus) {
+            const focusEl = document.getElementById(destino.focus);
+            setTimeout(() => { try { focusEl && focusEl.focus({ preventScroll: true }); } catch (e) {} }, 350);
+        }
+    }, 200);
 }
 
 // ─── CARRUSEL ─────────────────────────────────────────────────
