@@ -180,6 +180,29 @@
                 <p id="score-hint-inicio" class="text-xs text-c-soft"></p>
             </div>
 
+            <!-- Invitar fans: aparece al publicar el primer contenido o completar 100% del perfil -->
+            <div id="card-compartir" class="hidden rounded-2xl p-4 mb-5 shadow-md text-white" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="ms ms-fill" style="font-size:20px">celebration</span>
+                    <span class="font-display text-lg font-semibold">Ya podes invitar a tus fans</span>
+                </div>
+                <p class="text-xs opacity-90 mb-3">Comparti el enlace de tu pagina para que te encuentren y se suscriban.</p>
+                <div class="flex items-center gap-2 bg-white/15 rounded-xl p-2 mb-3">
+                    <input id="compartir-link" readonly class="flex-1 bg-transparent text-xs font-semibold px-2 outline-none truncate" style="color:#fff">
+                    <button onclick="copiarLinkCompartir()" class="shrink-0 bg-white/20 hover:bg-white/30 transition-colors rounded-lg px-3 py-1.5 text-xs font-bold flex items-center gap-1">
+                        <span class="ms" style="font-size:16px">content_copy</span>Copiar
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="compartirWhatsapp()" class="flex-1 bg-white text-sm font-bold py-2.5 rounded-xl flex items-center justify-center gap-2" style="color:#25D366">
+                        <span class="ms ms-fill" style="font-size:18px">chat</span>WhatsApp
+                    </button>
+                    <button id="btn-compartir-general" onclick="compartirGeneral()" class="hidden flex-1 bg-white/20 hover:bg-white/30 transition-colors text-white text-sm font-bold py-2.5 rounded-xl flex items-center justify-center gap-2">
+                        <span class="ms" style="font-size:18px">share</span>Otras apps
+                    </button>
+                </div>
+            </div>
+
             <!-- Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 <div class="stat-card">
@@ -1456,6 +1479,40 @@ async function cargarGanancias() {
     } catch(e) {}
 }
 
+let _postsCount = 0;
+let _perfilCompleto100 = false;
+
+function _evaluarCardCompartir() {
+    const card = document.getElementById('card-compartir');
+    if (!card || card.dataset.listo) return;
+    if (_postsCount < 1 && !_perfilCompleto100) return;
+    const user = candela.auth.user();
+    if (!user?.slug) return;
+    card.dataset.listo = '1';
+    const link = `${location.origin}/pages/creadora.html?slug=${user.slug}`;
+    document.getElementById('compartir-link').value = link;
+    if (navigator.share) document.getElementById('btn-compartir-general').classList.remove('hidden');
+    card.classList.remove('hidden');
+}
+
+function copiarLinkCompartir() {
+    const val = document.getElementById('compartir-link').value;
+    navigator.clipboard.writeText(val).then(() => toast('Enlace copiado', 'success'))
+        .catch(() => toast('No se pudo copiar', 'error'));
+}
+
+function compartirWhatsapp() {
+    const link = document.getElementById('compartir-link').value;
+    const msg = `Mira mi contenido exclusivo en Candela 🔥 ${link}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function compartirGeneral() {
+    const link = document.getElementById('compartir-link').value;
+    if (!navigator.share) return;
+    navigator.share({ title: 'Candela', text: 'Mira mi contenido exclusivo en Candela 🔥', url: link }).catch(() => {});
+}
+
 async function cargarMisPosts() {
     try {
         const lista = await candela.contenido.misContenidos();
@@ -1464,6 +1521,8 @@ async function cargarMisPosts() {
         document.getElementById('s-posts').textContent = lista.length;
         const countEl = document.getElementById('posts-count');
         if (countEl) countEl.textContent = ocultos > 0 ? `${visibles} visible${visibles!==1?'s':''} · ${ocultos} oculto${ocultos!==1?'s':''}` : `${lista.length} publicacion${lista.length!==1?'es':''}`;
+        _postsCount = lista.length;
+        _evaluarCardCompartir();
         const grid = document.getElementById('grid-mis-posts');
         const empty = document.getElementById('posts-empty');
 
@@ -2612,6 +2671,8 @@ async function cargarScore(contexto) {
         const s = await candela._req('GET', '/api/creadoras/mi-perfil/score');
         const pct = s.score || 0;
         const color = pct >= 80 ? '#22c55e' : pct >= 50 ? '#B5445C' : '#ef4444';
+        _perfilCompleto100 = pct === 100;
+        _evaluarCardCompartir();
 
         const barEl = document.getElementById(`score-bar-${contexto}`);
         const pctEl = document.getElementById(`score-pct-${contexto}`);
