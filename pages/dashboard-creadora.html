@@ -2617,7 +2617,7 @@ async function cargarScore(contexto) {
         fillEl.style.background = color;
         if (hintEl) {
             if (pct < 80 && s.faltantes?.length) {
-                hintEl.textContent = 'Falta: ' + s.faltantes.join(', ');
+                hintEl.textContent = 'Falta: ' + s.faltantes.map(f => f.label || f).join(', ');
             } else if (pct >= 80) {
                 hintEl.textContent = 'Perfil completo. Tus fans te encontraran mas facil.';
             }
