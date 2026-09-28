@@ -30,6 +30,9 @@
         .monto-btn { border:2px solid #F5E8EF; color:#7B4D5E; transition:all .15s; cursor:pointer; }
         .monto-btn.sel { border-color:#B5445C; background:#FFF4EE; color:#B5445C; font-weight:800; }
         .monto-btn:hover:not(.sel) { border-color:#B5445C; color:#B5445C; }
+        .qr-monto-btn { color:#166534; transition:all .15s; cursor:pointer; background:#fff; }
+        .qr-monto-btn.sel { border-color:#16A34A !important; background:#DCFCE7; font-weight:800; }
+        .qr-monto-btn:hover:not(.sel) { border-color:#16A34A !important; }
         .metodo-card { border:2px solid #F5E8EF; border-radius:16px; padding:14px 16px; cursor:pointer; transition:all .15s; }
         .metodo-card.sel { border-color:#B5445C; background:#FFF4EE; }
         .metodo-card:hover:not(.sel):not(.disabled) { border-color:#FAF2F5; }
@@ -128,17 +131,44 @@
 
         <!-- ===== PANEL QR / WHATSAPP ===== -->
         <div id="panel-qr" class="hidden">
-            <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;padding:1.1rem;text-align:center;margin-bottom:.5rem">
-                <span class="ms text-green-600" style="font-size:32px">qr_code_2</span>
-                <p class="font-bold text-c-text text-sm mt-1 mb-1">Paga desde $5 USD con QR</p>
-                <p class="text-xs text-c-soft mb-4 leading-relaxed">Escríbenos por WhatsApp indicando cuánto quieres recargar. Te enviamos el QR en tu moneda local — pagas y en minutos te acreditamos el saldo.</p>
-                <a id="wa-recarga-link" href="https://wa.me/18457098595?text=Hola%2C%20quiero%20recargar%20mi%20cuenta%20de%20Candela"
-                    target="_blank" rel="noopener"
-                    class="inline-flex items-center gap-2 bg-green-600 text-white font-bold text-sm px-6 py-3 rounded-full shadow-md hover:bg-green-700 transition-colors">
-                    <span class="ms" style="font-size:18px">chat</span>
-                    Solicitar recarga por WhatsApp
-                </a>
-                <p class="text-[11px] text-c-soft mt-3">+1 845 709 8595</p>
+            <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;padding:1.1rem;margin-bottom:.5rem">
+                <div style="text-align:center;margin-bottom:.75rem">
+                    <span class="ms text-green-600" style="font-size:32px">qr_code_2</span>
+                    <p class="font-bold text-c-text text-sm mt-1">Paga desde $5 USD con QR</p>
+                </div>
+
+                <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5">¿Cuánto querés recargar?</p>
+                <div class="grid grid-cols-4 gap-1.5 mb-3">
+                    <button type="button" onclick="qrMontoPreset(5, this)" class="qr-monto-btn rounded-lg py-2 text-xs font-bold border border-c-border sel">$5</button>
+                    <button type="button" onclick="qrMontoPreset(10, this)" class="qr-monto-btn rounded-lg py-2 text-xs font-bold border border-c-border">$10</button>
+                    <button type="button" onclick="qrMontoPreset(15, this)" class="qr-monto-btn rounded-lg py-2 text-xs font-bold border border-c-border">$15</button>
+                    <button type="button" onclick="qrMontoPreset(20, this)" class="qr-monto-btn rounded-lg py-2 text-xs font-bold border border-c-border">$20</button>
+                </div>
+
+                <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5">¿Desde qué país pagás?</p>
+                <select id="qr-pais" onchange="actualizarPreviewQR()" class="w-full border border-c-border rounded-lg px-3 py-2 text-sm font-body mb-3 bg-white">
+                    <option value="bolivia">🇧🇴 Bolivia</option>
+                    <option value="argentina">🇦🇷 Argentina</option>
+                    <option value="peru">🇵🇪 Perú</option>
+                    <option value="brasil">🇧🇷 Brasil</option>
+                </select>
+
+                <div id="qr-preview" class="bg-white rounded-xl p-3 text-center mb-3">
+                    <p class="text-xs text-c-soft">Vas a recibir <strong id="qr-preview-usd" class="text-c-text">$5</strong> de saldo, pagando</p>
+                    <p class="text-2xl font-extrabold text-green-700 my-0.5" id="qr-preview-monto">—</p>
+                    <p class="text-[10px] text-c-soft">Tasa del día, puede variar levemente al confirmar</p>
+                </div>
+
+                <p class="text-xs text-c-soft mb-3 leading-relaxed text-center">Escríbenos por WhatsApp con estos datos. Te enviamos el QR — pagás y en minutos te acreditamos el saldo.</p>
+                <div style="text-align:center">
+                    <a id="wa-recarga-link" href="https://wa.me/18457098595?text=Hola%2C%20quiero%20recargar%20mi%20cuenta%20de%20Candela"
+                        target="_blank" rel="noopener"
+                        class="inline-flex items-center gap-2 bg-green-600 text-white font-bold text-sm px-6 py-3 rounded-full shadow-md hover:bg-green-700 transition-colors">
+                        <span class="ms" style="font-size:18px">chat</span>
+                        Solicitar recarga por WhatsApp
+                    </a>
+                    <p class="text-[11px] text-c-soft mt-3">+1 845 709 8595</p>
+                </div>
             </div>
         </div>
 
@@ -328,31 +358,72 @@ async function init() {
     }
 }
 
-async function actualizarLinkWhatsapp() {
+let montoQR = 5;
+let tasasQRCache = null;
+let codigoQRCache = null;
+
+async function cargarTasasQR() {
+    if (tasasQRCache) return tasasQRCache;
+    try { tasasQRCache = await candela.wallet.tasasRecarga(); }
+    catch (e) { tasasQRCache = null; }
+    return tasasQRCache;
+}
+
+function qrMontoPreset(v, btn) {
+    montoQR = v;
+    document.querySelectorAll('.qr-monto-btn').forEach(b => b.classList.remove('sel'));
+    btn?.classList.add('sel');
+    actualizarPreviewQR();
+}
+
+async function actualizarPreviewQR() {
+    const pais = document.getElementById('qr-pais')?.value || 'bolivia';
+    const d = await cargarTasasQR();
+    const info = d?.paises?.[pais];
+    const previewMonto = document.getElementById('qr-preview-monto');
+    document.getElementById('qr-preview-usd').textContent = `$${montoQR}`;
+
+    let costoTexto = null;
+    if (info) {
+        const totalUsdEquiv = (montoQR + d.fee_fijo) * (1 + d.margen_pct / 100);
+        const montoLocal = totalUsdEquiv * info.tasa;
+        const decimals = info.tasa > 100 ? 0 : 2;
+        costoTexto = `${info.moneda_simbolo} ${montoLocal.toLocaleString('es', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`;
+        previewMonto.textContent = costoTexto;
+    } else {
+        previewMonto.textContent = 'Te lo confirmamos por WhatsApp';
+    }
+
+    actualizarLinkWhatsapp(pais, costoTexto);
+}
+
+async function actualizarLinkWhatsapp(pais, costoTexto) {
     const link = document.getElementById('wa-recarga-link');
     if (!link) return;
     const user = candela.auth.user();
     const base = 'https://wa.me/18457098595?text=';
+    const nombresPais = { bolivia: 'Bolivia', argentina: 'Argentina', peru: 'Peru', brasil: 'Brasil' };
+    const detalle = `Monto deseado: $${montoQR} USD\nPais: ${nombresPais[pais] || pais}${costoTexto ? `\nCosto estimado: ${costoTexto}` : ''}`;
+
     if (!user?.email) {
-        link.href = base + encodeURIComponent('Hola, quiero recargar mi cuenta de Candela.');
+        link.href = base + encodeURIComponent(`Hola, quiero recargar mi cuenta de Candela.\n${detalle}`);
         return;
     }
     try {
-        const r = await candela.wallet.codigoRecarga();
-        const msg = `Hola, quiero recargar mi cuenta de Candela.\nCodigo: ${r.codigo}\nUsuario: ${user.email}`;
+        if (!codigoQRCache) codigoQRCache = await candela.wallet.codigoRecarga();
+        const msg = `Hola, quiero recargar mi cuenta de Candela.\nCodigo: ${codigoQRCache.codigo}\nUsuario: ${user.email}\n${detalle}`;
         link.href = base + encodeURIComponent(msg);
     } catch (e) {
-        // Si falla generar el codigo, igual mandamos el email para no bloquear el pedido
-        link.href = base + encodeURIComponent(`Hola, quiero recargar mi cuenta de Candela.\nUsuario: ${user.email}`);
+        link.href = base + encodeURIComponent(`Hola, quiero recargar mi cuenta de Candela.\nUsuario: ${user.email}\n${detalle}`);
     }
 }
-actualizarLinkWhatsapp();
 
 function elegirMetodo(m) {
     document.getElementById('card-usdt').classList.toggle('sel', m === 'usdt');
     document.getElementById('card-qr').classList.toggle('sel', m === 'qr');
     document.getElementById('bloque-usdt').classList.toggle('hidden', m === 'qr');
     document.getElementById('panel-qr').classList.toggle('hidden', m !== 'qr');
+    if (m === 'qr') actualizarPreviewQR();
 }
 
 function elegirRed(red) {

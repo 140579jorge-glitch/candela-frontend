@@ -506,6 +506,12 @@
                     </div>
                 </div>
             </div>
+
+            <div class="max-w-2xl mt-4 flex items-center gap-3">
+                <button onclick="guardarTasasRecarga()" id="btn-guardar-tasas" class="c-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl">Guardar tasas del día</button>
+                <p id="tasas-estado" class="text-xs text-c-soft"></p>
+            </div>
+            <p class="text-xs text-c-soft mt-2 max-w-2xl">Estas tasas son las que ve el fan en su vista previa antes de pedir la recarga por WhatsApp — guardalas apenas las actualices, si no, el fan va a ver un número viejo.</p>
             <p class="text-xs text-c-soft mt-4 max-w-2xl">Fórmula: (monto USD + fee fijo) × tasa del día × (1 + margen%). Bolivia y Argentina usan tasa paralela/P2P, no la oficial. Brasil se cobra vía PIX, no QR bancario.</p>
         </section>
 
@@ -772,7 +778,7 @@ function _activarSeccion(sec) {
     if (sec === 'reportes-abuso') cargarReportesAbuso();
     if (sec === 'recargadores') cargarRecargadores();
     if (sec === 'admins') cargarAdmins();
-    if (sec === 'calculadora') calcularRecargas();
+    if (sec === 'calculadora') cargarTasasRecarga();
 }
 
 function mostrar(sec, navBtn) {
@@ -1313,6 +1319,44 @@ async function procesarDepositoManual() {
         toast('Credito acreditado correctamente', 'success');
     } catch(e) { toast(e.message || 'Error al acreditar', 'error'); }
     finally { btn.disabled = false; btn.textContent = 'Acreditar Credito'; }
+}
+
+async function cargarTasasRecarga() {
+    try {
+        const d = await candela.wallet.tasasRecarga();
+        document.getElementById('calc-fee').value = d.fee_fijo;
+        document.getElementById('calc-margen').value = d.margen_pct;
+        Object.entries(d.paises).forEach(([pais, info]) => {
+            const card = document.querySelector(`[data-pais="${pais}"]`);
+            if (card) card.querySelector('.calc-tasa').value = info.tasa;
+        });
+        calcularRecargas();
+    } catch (e) {
+        toast('No se pudieron cargar las tasas guardadas, mostrando valores locales', 'error');
+        calcularRecargas();
+    }
+}
+
+async function guardarTasasRecarga() {
+    const btn = document.getElementById('btn-guardar-tasas');
+    const estado = document.getElementById('tasas-estado');
+    btn.disabled = true; btn.textContent = 'Guardando...';
+    const tasas = [...document.querySelectorAll('[data-pais]')].map(card => ({
+        pais: card.dataset.pais,
+        tasa: parseFloat(card.querySelector('.calc-tasa').value) || 0,
+    }));
+    try {
+        await candela.admin.actualizarTasasRecarga(tasas);
+        estado.textContent = '✓ Guardado — el fan ya ve estas tasas';
+        estado.className = 'text-xs text-green-700 font-semibold';
+        toast('Tasas actualizadas', 'success');
+    } catch (e) {
+        estado.textContent = '✗ Error al guardar: ' + (e.message || '');
+        estado.className = 'text-xs text-red-600 font-semibold';
+        toast(e.message || 'Error al guardar tasas', 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Guardar tasas del día';
+    }
 }
 
 function calcPreset(v) {
