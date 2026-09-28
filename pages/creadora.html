@@ -1637,7 +1637,8 @@ function renderCarruselPublico() {
 
     const logueado = candela.auth.isLoggedIn();
 
-    wrap.innerHTML = fotos.map(url => {
+    wrap.innerHTML = fotos.map(item => {
+        const url = (item && typeof item === 'object') ? item.url : item;
         if (logueado) {
             return `<div class="shrink-0 rounded-2xl overflow-hidden" style="width:200px;height:260px;scroll-snap-align:start">
                 <img src="${_u(url)}" class="w-full h-full object-cover" draggable="false" oncontextmenu="return false">

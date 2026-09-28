@@ -2671,11 +2671,13 @@ function irACompletar(campo) {
 
 // ─── CARRUSEL ─────────────────────────────────────────────────
 function renderCarrusel(fotos) {
+    fotos = fotos || [];
     const grid = document.getElementById('carrusel-grid');
     const addBtn = document.getElementById('carrusel-add-btn');
     if (!grid) return;
     grid.innerHTML = '';
-    fotos.forEach((url, idx) => {
+    fotos.forEach((item, idx) => {
+        const url = (item && typeof item === 'object') ? item.url : item;
         const div = document.createElement('div');
         div.className = 'relative rounded-xl overflow-hidden aspect-square bg-gray-100';
         div.innerHTML = `
