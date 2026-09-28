@@ -1514,6 +1514,12 @@ function toast(msg, tipo = 'info') {
 
 function wmLabel() {
     const u = candela.auth.user();
+    // Si quien mira es la propia creadora de esta pagina, nunca estampar su
+    // nombre real: esta marca es para rastrear filtraciones de FANS, no para
+    // exponer la identidad real de la creadora en su propio contenido.
+    if (u?.slug && creadoraData?.slug && u.slug === creadoraData.slug) {
+        return 'candela.app';
+    }
     if (u?.nombre) return u.nombre + ' · candela';
     if (u?.email) return u.email.split('@')[0] + ' · candela';
     return 'candela.app';
