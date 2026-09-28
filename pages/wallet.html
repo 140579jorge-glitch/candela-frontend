@@ -132,7 +132,7 @@
                 <span class="ms text-green-600" style="font-size:32px">qr_code_2</span>
                 <p class="font-bold text-c-text text-sm mt-1 mb-1">Paga desde $5 USD con QR</p>
                 <p class="text-xs text-c-soft mb-4 leading-relaxed">Escríbenos por WhatsApp indicando cuánto quieres recargar. Te enviamos el QR en tu moneda local — pagas y en minutos te acreditamos el saldo.</p>
-                <a href="https://wa.me/18457098595?text=Hola%2C%20quiero%20recargar%20mi%20cuenta%20de%20Candela"
+                <a id="wa-recarga-link" href="https://wa.me/18457098595?text=Hola%2C%20quiero%20recargar%20mi%20cuenta%20de%20Candela"
                     target="_blank" rel="noopener"
                     class="inline-flex items-center gap-2 bg-green-600 text-white font-bold text-sm px-6 py-3 rounded-full shadow-md hover:bg-green-700 transition-colors">
                     <span class="ms" style="font-size:18px">chat</span>
@@ -327,6 +327,18 @@ async function init() {
         document.getElementById('mov-list').innerHTML = '<p class="text-c-soft text-sm text-center py-4">Error al cargar.</p>';
     }
 }
+
+function actualizarLinkWhatsapp() {
+    const link = document.getElementById('wa-recarga-link');
+    if (!link) return;
+    const user = candela.auth.user();
+    const base = 'https://wa.me/18457098595?text=';
+    const msg = user?.email
+        ? `Hola, quiero recargar mi cuenta de Candela.\nUsuario: ${user.email}`
+        : 'Hola, quiero recargar mi cuenta de Candela.';
+    link.href = base + encodeURIComponent(msg);
+}
+actualizarLinkWhatsapp();
 
 function elegirMetodo(m) {
     document.getElementById('card-usdt').classList.toggle('sel', m === 'usdt');
