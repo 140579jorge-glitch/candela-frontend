@@ -42,7 +42,8 @@
     </ul>
 
     <h2>3. Documentos de verificación</h2>
-    <p>Las fotos de CI y selfies de las creadoras se almacenan de forma segura y <strong>solo son accedidas por el equipo de verificación de Candela</strong>. No se comparten con terceros. Se eliminan de nuestros registros internos una vez aprobada la cuenta.</p>
+    <p>Las fotos de CI y selfies de las creadoras se almacenan de forma segura (bucket privado, acceso solo por URL firmada de duración limitada) y <strong>solo son accedidas por el equipo de verificación de Candela</strong>. No se comparten con terceros.</p>
+    <p><strong>Retención legal obligatoria:</strong> a diferencia de otros datos de tu cuenta, estos documentos <strong>no se eliminan al aprobar la cuenta ni al eliminarla</strong>. La ley federal de EEUU 18 U.S.C. § 2257 exige a las plataformas de contenido para adultos conservar la verificación de identidad y edad de cada creadora por un mínimo de <strong>7 años</strong> desde la publicación de cada contenido. Ver nuestra <a href="/pages/2257.html" style="color:#B5445C;font-weight:700;">Declaración de Cumplimiento 18 U.S.C. § 2257</a> para más detalles.</p>
 
     <h2>4. Contenido</h2>
     <p>El contenido publicado por las creadoras es visible según el nivel de acceso que cada creadora define (suscriptores, PPV, gratis). Candela no vende ni comparte este contenido con terceros.</p>
@@ -55,6 +56,7 @@
         <li>Las contrasenas se almacenan con hash bcrypt (nunca en texto plano).</li>
         <li>Las comunicaciones se realizan sobre HTTPS en produccion.</li>
         <li>El contenido desbloqueado incluye un <strong>watermark</strong> con el nombre del suscriptor para desincentivar la distribucion no autorizada.</li>
+        <li>Registramos intentos de inicio de sesión fallidos (incluyendo el email usado) en un log de seguridad interno, para detectar accesos no autorizados. Este log se conserva 14 días y solo es accedido por el equipo técnico.</li>
     </ul>
 
     <h2>7. Tus derechos — estándar global, sin importar tu país</h2>
@@ -62,7 +64,7 @@
     <ul>
         <li><strong>Acceso:</strong> puedes solicitar una copia de todos los datos personales que tenemos sobre ti.</li>
         <li><strong>Rectificación:</strong> puedes corregir datos inexactos o incompletos desde tu panel o contactándonos.</li>
-        <li><strong>Eliminación / al olvido:</strong> puedes solicitar la eliminación completa de tu cuenta y datos personales. Procesamos la solicitud en un máximo de 30 días.</li>
+        <li><strong>Eliminación / al olvido:</strong> puedes solicitar la eliminación completa de tu cuenta y datos personales. Procesamos la solicitud en un máximo de 30 días, <strong>excepto</strong> registros de transacciones (retenidos por obligación fiscal) y, para creadoras, los documentos de verificación de identidad/edad (retenidos 7 años por 18 U.S.C. § 2257 — ver sección 3).</li>
         <li><strong>Portabilidad:</strong> puedes solicitar tus datos en un formato estructurado y legible por máquina.</li>
         <li><strong>Oposición:</strong> puedes oponerte al procesamiento de tus datos para fines de análisis o marketing.</li>
         <li><strong>Restricción del procesamiento:</strong> puedes solicitar que limitemos el uso de tus datos mientras se resuelve una disputa.</li>
@@ -77,7 +79,7 @@
     <p>Consulta nuestra <a href="/pages/cookies.html" style="color:#B5445C;font-weight:700;">Política de Cookies</a> para detalles completos sobre qué datos de navegación recopilamos y cómo gestionarlos.</p>
 
     <h2>10. Retención de datos</h2>
-    <p>Mantenemos tus datos mientras tu cuenta este activa. Al eliminar tu cuenta, eliminamos tus datos personales en un plazo de 30 días, excepto los requeridos por obligaciones legales o financieras (registros de transacciones: 5 años mínimo por regulación fiscal).</p>
+    <p>Mantenemos tus datos mientras tu cuenta este activa. Al eliminar tu cuenta, eliminamos tus datos personales en un plazo de 30 días, excepto los requeridos por obligaciones legales o financieras: registros de transacciones (5 años mínimo por regulación fiscal) y, para creadoras, documentos de verificación de identidad/edad (7 años por 18 U.S.C. § 2257).</p>
 
     <h2>11. Menores de edad</h2>
     <p>Candela es una plataforma <strong>exclusiva para mayores de 18 años</strong>. No recopilamos datos de menores de edad de forma intencional. Si detectamos una cuenta de menor, la cancelamos de inmediato y eliminamos todos sus datos.</p>
