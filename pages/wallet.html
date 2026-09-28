@@ -88,6 +88,63 @@
             </a>
         </div>
 
+        <!-- Metodo de pago -->
+        <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-3">Método de pago</p>
+        <div class="grid grid-cols-1 gap-2 mb-5">
+
+            <div class="metodo-card" id="card-qr" onclick="elegirMetodo('qr')">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="ms text-green-600" style="font-size:22px">qr_code_2</span>
+                        <span class="font-bold text-sm text-c-text">Pago local con QR</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full whitespace-nowrap">Desde $5</span>
+                </div>
+                <p class="text-[11px] text-c-soft leading-tight">QR en moneda local · Solicita por WhatsApp, te acreditamos en minutos</p>
+            </div>
+
+            <div class="metodo-card sel" id="card-usdt" onclick="elegirMetodo('usdt')">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="ms text-c-accent" style="font-size:22px">currency_bitcoin</span>
+                    <span class="font-bold text-sm text-c-text">USDT Crypto</span>
+                </div>
+                <p class="text-[11px] text-c-soft leading-tight">TRC20 o Polygon · Min $20</p>
+                <span class="inline-block mt-1.5 text-[10px] font-bold text-green-600 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">Sin comisión</span>
+            </div>
+
+            <div class="metodo-card disabled" id="card-tarjeta">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="ms text-c-soft" style="font-size:22px">credit_card</span>
+                        <div>
+                            <p class="font-bold text-sm text-c-text">Tarjeta / Apple Pay / Google Pay</p>
+                            <p class="text-[11px] text-c-soft">Disponible pronto</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold text-c-accent bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">Próximo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PANEL QR / WHATSAPP ===== -->
+        <div id="panel-qr" class="hidden">
+            <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;padding:1.1rem;text-align:center;margin-bottom:.5rem">
+                <span class="ms text-green-600" style="font-size:32px">qr_code_2</span>
+                <p class="font-bold text-c-text text-sm mt-1 mb-1">Paga desde $5 USD con QR</p>
+                <p class="text-xs text-c-soft mb-4 leading-relaxed">Escríbenos por WhatsApp indicando cuánto quieres recargar. Te enviamos el QR en tu moneda local — pagas y en minutos te acreditamos el saldo.</p>
+                <a href="https://wa.me/18457098595?text=Hola%2C%20quiero%20recargar%20mi%20cuenta%20de%20Candela"
+                    target="_blank" rel="noopener"
+                    class="inline-flex items-center gap-2 bg-green-600 text-white font-bold text-sm px-6 py-3 rounded-full shadow-md hover:bg-green-700 transition-colors">
+                    <span class="ms" style="font-size:18px">chat</span>
+                    Solicitar recarga por WhatsApp
+                </a>
+                <p class="text-[11px] text-c-soft mt-3">+1 845 709 8595</p>
+            </div>
+        </div>
+
+        <!-- ===== BLOQUE USDT (montos + red + flujo) ===== -->
+        <div id="bloque-usdt">
+
         <!-- Montos -->
         <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-2">Elige el monto (USD)</p>
         <p class="text-[11px] text-c-soft mb-2">Mínimo $20 USD por limitaciones de la red cripto.</p>
@@ -106,33 +163,6 @@
         <div id="bonus-notice" class="hidden bg-green-50 border border-green-200 rounded-xl p-3 mb-4 text-sm text-green-700 flex items-center gap-2">
             <span class="ms text-green-600" style="font-size:18px">card_giftcard</span>
             <span>Bonus <strong id="bonus-pct-text">+0%</strong>: recibirás <strong id="bonus-val">$0</strong> USD extra gratis.</span>
-        </div>
-
-        <!-- Metodo de pago -->
-        <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-3">Método de pago</p>
-        <div class="grid grid-cols-1 gap-2 mb-5">
-
-            <div class="metodo-card sel" id="card-usdt" onclick="elegirMetodo('usdt')">
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="ms text-c-accent" style="font-size:22px">currency_bitcoin</span>
-                    <span class="font-bold text-sm text-c-text">USDT Crypto</span>
-                </div>
-                <p class="text-[11px] text-c-soft leading-tight">TRC20 o Polygon</p>
-                <span class="inline-block mt-1.5 text-[10px] font-bold text-green-600 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">Sin comisión</span>
-            </div>
-
-            <div class="metodo-card disabled" id="card-tarjeta">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="ms text-c-soft" style="font-size:22px">credit_card</span>
-                        <div>
-                            <p class="font-bold text-sm text-c-text">Tarjeta / Apple Pay / Google Pay</p>
-                            <p class="text-[11px] text-c-soft">Disponible pronto</p>
-                        </div>
-                    </div>
-                    <span class="text-[10px] font-bold text-c-accent bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">Próximo</span>
-                </div>
-            </div>
         </div>
 
         <!-- ===== PANEL USDT ===== -->
@@ -205,6 +235,7 @@
             <p class="text-xs text-red-600 mt-1" id="step-fallido-desc">El tiempo para completar el pago expiró o fue rechazado.</p>
             <button onclick="reiniciarDeposito()" class="mt-3 bg-c-accent text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-c-accent/90 transition-colors">Intentar de nuevo</button>
         </div>
+        </div><!-- /bloque-usdt -->
     </div>
 
     <!-- Dormancy -->
@@ -299,6 +330,9 @@ async function init() {
 
 function elegirMetodo(m) {
     document.getElementById('card-usdt').classList.toggle('sel', m === 'usdt');
+    document.getElementById('card-qr').classList.toggle('sel', m === 'qr');
+    document.getElementById('bloque-usdt').classList.toggle('hidden', m === 'qr');
+    document.getElementById('panel-qr').classList.toggle('hidden', m !== 'qr');
 }
 
 function elegirRed(red) {
