@@ -53,6 +53,10 @@
         /* no scrollbar sidebar */
         .sidebar::-webkit-scrollbar { display:none; }
         .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
+        /* en movil no entran "Ver mi pagina" + badge de estado junto a los iconos: se ocultan del header y "Ver mi pagina" pasa al menu lateral */
+        @media (max-width:767px) {
+            #link-ver-pagina, #topbar-estado { display:none !important; }
+        }
     </style>
 </head>
 <body class="bg-c-bg text-c-text antialiased">
@@ -99,6 +103,7 @@
             <span class="font-display text-lg font-semibold logo-text">Candela</span>
             <button onclick="toggleMenuMobile()" class="text-c-soft p-1"><span class="ms" style="font-size:20px">close</span></button>
         </div>
+        <a id="link-ver-pagina-mobile" href="#" class="hidden nav-item" target="_blank"><span class="ms">open_in_new</span>Ver mi página</a>
         <div class="nav-item" onclick="mostrar('inicio')"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir')"><span class="ms">upload</span>Subir contenido</div>
         <div class="nav-item" onclick="mostrar('packs')"><span class="ms">inventory_2</span>Mis Packs</div>
@@ -1278,6 +1283,9 @@ async function init() {
         const link = document.getElementById('link-ver-pagina');
         link.href = `creadora.html?slug=${user.slug}`;
         link.classList.remove('hidden');
+        const linkMobile = document.getElementById('link-ver-pagina-mobile');
+        linkMobile.href = `creadora.html?slug=${user.slug}`;
+        linkMobile.classList.remove('hidden');
     }
 
     renderTemaGrid('melocoton');
