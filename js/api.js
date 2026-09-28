@@ -31,8 +31,13 @@ const candela = {
         if (res.status === 401 && this._token()) {
             localStorage.removeItem('candela_token');
             localStorage.removeItem('candela_user');
-            const inPages = location.pathname.includes('/pages/');
-            window.location.href = inPages ? '../index.html' : '/index.html';
+            // Si varias llamadas en paralelo reciben 401 a la vez (ej. al cargar el
+            // dashboard), solo la primera dispara el redirect -- evita parpadeo.
+            if (!sessionStorage.getItem('candela_return')) {
+                sessionStorage.setItem('candela_return', location.href);
+                const inPages = location.pathname.includes('/pages/');
+                window.location.href = inPages ? '../index.html?sesion=expirada' : '/index.html?sesion=expirada';
+            }
             throw new Error('Sesion expirada');
         }
         if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);

@@ -863,6 +863,12 @@ function init() {
     const _pendingModal = sessionStorage.getItem('openModal');
     if (_pendingModal) { sessionStorage.removeItem('openModal'); setTimeout(() => abrirModal(_pendingModal), 400); }
 
+    // Sesion vencida: avisar y abrir login directo (al volver a entrar, candela_return la lleva de nuevo a donde estaba)
+    if (new URLSearchParams(location.search).get('sesion') === 'expirada') {
+        history.replaceState(null, '', location.pathname);
+        setTimeout(() => { toast('Tu sesión expiró. Iniciá sesión de nuevo para continuar.', 'info'); abrirModal('login'); }, 400);
+    }
+
     document.getElementById('hero-guest').classList.remove('hidden');
     document.getElementById('stories-section').style.display = 'none';
     document.getElementById('chips-section').style.display = 'none';
