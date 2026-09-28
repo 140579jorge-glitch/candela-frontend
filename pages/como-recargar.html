@@ -423,17 +423,25 @@
   <p>Candela &copy; 2026 &bull; <a href="privacidad.html">Privacidad</a> &bull; <a href="terminos.html">Términos</a> &bull; <a href="mailto:legal@clubcandela.com">Contacto</a></p>
 </footer>
 
+<script src="../js/api.js"></script>
 <script>
-(function actualizarLinkWhatsapp() {
+(async function actualizarLinkWhatsapp() {
   const link = document.getElementById('wa-recarga-link');
   if (!link) return;
   let user = null;
   try { user = JSON.parse(localStorage.getItem('candela_user')); } catch {}
   const base = 'https://wa.me/18457098595?text=';
-  const msg = user?.email
-    ? `Hola, quiero recargar mi cuenta de Candela.\nUsuario: ${user.email}`
-    : 'Hola, quiero recargar mi cuenta de Candela.';
-  link.href = base + encodeURIComponent(msg);
+  if (!user?.email) {
+    link.href = base + encodeURIComponent('Hola, quiero recargar mi cuenta de Candela.');
+    return;
+  }
+  try {
+    const r = await candela.wallet.codigoRecarga();
+    const msg = `Hola, quiero recargar mi cuenta de Candela.\nCodigo: ${r.codigo}\nUsuario: ${user.email}`;
+    link.href = base + encodeURIComponent(msg);
+  } catch (e) {
+    link.href = base + encodeURIComponent(`Hola, quiero recargar mi cuenta de Candela.\nUsuario: ${user.email}`);
+  }
 })();
 
 function toggleFaq(btn) {

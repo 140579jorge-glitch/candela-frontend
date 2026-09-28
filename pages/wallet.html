@@ -328,15 +328,23 @@ async function init() {
     }
 }
 
-function actualizarLinkWhatsapp() {
+async function actualizarLinkWhatsapp() {
     const link = document.getElementById('wa-recarga-link');
     if (!link) return;
     const user = candela.auth.user();
     const base = 'https://wa.me/18457098595?text=';
-    const msg = user?.email
-        ? `Hola, quiero recargar mi cuenta de Candela.\nUsuario: ${user.email}`
-        : 'Hola, quiero recargar mi cuenta de Candela.';
-    link.href = base + encodeURIComponent(msg);
+    if (!user?.email) {
+        link.href = base + encodeURIComponent('Hola, quiero recargar mi cuenta de Candela.');
+        return;
+    }
+    try {
+        const r = await candela.wallet.codigoRecarga();
+        const msg = `Hola, quiero recargar mi cuenta de Candela.\nCodigo: ${r.codigo}\nUsuario: ${user.email}`;
+        link.href = base + encodeURIComponent(msg);
+    } catch (e) {
+        // Si falla generar el codigo, igual mandamos el email para no bloquear el pedido
+        link.href = base + encodeURIComponent(`Hola, quiero recargar mi cuenta de Candela.\nUsuario: ${user.email}`);
+    }
 }
 actualizarLinkWhatsapp();
 

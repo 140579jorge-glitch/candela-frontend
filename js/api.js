@@ -184,6 +184,7 @@ const candela = {
         crearPago: (data) => candela._req('POST', '/api/wallet/crear-pago', data),
         estadoPago: (id) => candela._req('GET', `/api/wallet/estado-pago/${id}`),
         movimientos: (limit = 50, offset = 0) => candela._req('GET', `/api/wallet/movimientos?limit=${limit}&offset=${offset}`),
+        codigoRecarga: () => candela._req('POST', '/api/wallet/codigo-recarga'),
     },
 
     balance: {
@@ -246,7 +247,8 @@ const candela = {
         procesarMensaje: (id, accion) => candela._req('POST', `/api/admin/mensajes/${id}`, { accion }),
         reclamosPendientes: () => candela._req('GET', '/api/admin/reclamos'),
         actualizarReclamo: (id, estado, notas) => candela._req('POST', `/api/admin/reclamos/${id}`, { estado, notas }),
-        depositoManual: (email_usuario, monto, nota) => candela._req('POST', '/api/admin/deposito-manual', { email_usuario, monto, nota }),
+        depositoManual: (email_usuario, monto, nota, codigo) => candela._req('POST', '/api/admin/deposito-manual', { email_usuario, monto, nota, codigo }),
+        buscarCodigoRecarga: (codigo) => candela._req('GET', `/api/admin/codigo-recarga/${encodeURIComponent(codigo)}`),
         listarRecargadores: () => candela._req('GET', '/api/admin/recargadores'),
         toggleRecargador: (id, es_recargador) => candela._req('PATCH', `/api/admin/recargadores/${id}`, { es_recargador }),
         aprobarRecargadorEmail: (email, es_recargador) => candela._req('POST', '/api/admin/recargadores/por-email', { email, es_recargador }),

@@ -413,6 +413,12 @@
             <p class="text-c-soft text-sm mb-6">Acredita credito a un fan que pago via QR/Wasap. Ingresa el monto YA descontado el fee (lo que el fan recibe).</p>
             <div class="card p-6 max-w-md">
                 <div class="mb-4">
+                    <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Código de solicitud (opcional)</label>
+                    <input id="dm-codigo" type="text" placeholder="Ej: 7K9XPQR2" maxlength="10" style="text-transform:uppercase" class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-c-accent font-body font-mono tracking-widest" onblur="buscarCodigoRecarga()">
+                    <p class="text-xs text-c-soft mt-1">Pegá el código que te mandó el fan por WhatsApp para ver y comparar sus datos reales.</p>
+                    <div id="dm-codigo-info" class="hidden mt-2 p-3 rounded-xl text-xs"></div>
+                </div>
+                <div class="mb-4">
                     <label class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5 block">Email del usuario</label>
                     <input id="dm-email" type="email" placeholder="fan@ejemplo.com" class="w-full border border-c-border rounded-xl px-3 py-2.5 text-sm outline-none focus:border-c-accent font-body">
                 </div>
@@ -1256,22 +1262,54 @@ async function revocarRecargador(id, email) {
     } catch(e) { toast(e.message || 'Error', 'error'); }
 }
 
+async function buscarCodigoRecarga() {
+    const input = document.getElementById('dm-codigo');
+    const info = document.getElementById('dm-codigo-info');
+    const codigo = input.value.trim().toUpperCase();
+    input.value = codigo;
+    if (!codigo) { info.classList.add('hidden'); return; }
+    info.className = 'mt-2 p-3 rounded-xl text-xs bg-c-champagne text-c-soft';
+    info.textContent = 'Buscando...';
+    try {
+        const d = await candela.admin.buscarCodigoRecarga(codigo);
+        if (d.codigo_usado) {
+            info.className = 'mt-2 p-3 rounded-xl text-xs bg-amber-50 border border-amber-200 text-amber-800';
+            info.innerHTML = `⚠ Este código ya fue usado el ${new Date(d.codigo_usado).toLocaleString('es')}. Verificá con el fan antes de acreditar de nuevo.`;
+        } else if (d.codigo_expirado) {
+            info.className = 'mt-2 p-3 rounded-xl text-xs bg-red-50 border border-red-200 text-red-700';
+            info.innerHTML = `⚠ Código vencido (generado el ${new Date(d.codigo_generado).toLocaleString('es')}). Pedile uno nuevo al fan.`;
+        } else {
+            info.className = 'mt-2 p-3 rounded-xl text-xs bg-green-50 border border-green-200 text-green-800';
+            info.innerHTML = `✓ <strong>${esc(d.nombre || 'Sin nombre')}</strong> — ${esc(d.email)}<br>Tipo: ${esc(d.tipo)} · Balance actual: $${d.balance_actual.toFixed(2)} · ${d.activo ? 'Cuenta activa' : '⚠ Cuenta inactiva'}`;
+            document.getElementById('dm-email').value = d.email;
+        }
+        info.classList.remove('hidden');
+    } catch(e) {
+        info.className = 'mt-2 p-3 rounded-xl text-xs bg-red-50 border border-red-200 text-red-700';
+        info.textContent = e.message === 'Codigo no encontrado' ? 'Código no encontrado — revisá que esté bien copiado.' : (e.message || 'Error al buscar el código');
+        info.classList.remove('hidden');
+    }
+}
+
 async function procesarDepositoManual() {
     const email = document.getElementById('dm-email').value.trim();
     const monto = parseFloat(document.getElementById('dm-monto').value);
     const nota = document.getElementById('dm-nota').value.trim();
+    const codigo = document.getElementById('dm-codigo').value.trim().toUpperCase();
     if (!email || !monto || monto <= 0) { toast('Completa email y monto', 'error'); return; }
     if (!confirm(`Acreditar $${monto.toFixed(2)} a ${email}?`)) return;
     const btn = document.getElementById('btn-dm');
     btn.disabled = true; btn.textContent = 'Procesando...';
     try {
-        const r = await candela.admin.depositoManual(email, monto, nota || null);
+        const r = await candela.admin.depositoManual(email, monto, nota || null, codigo || null);
         document.getElementById('dm-resultado').classList.remove('hidden');
         document.getElementById('dm-resultado').textContent =
             `✓ Acreditado $${r.monto_acreditado.toFixed(2)} a ${r.email}. Balance nuevo: $${r.balance_nuevo.toFixed(2)}`;
         document.getElementById('dm-email').value = '';
         document.getElementById('dm-monto').value = '';
         document.getElementById('dm-nota').value = '';
+        document.getElementById('dm-codigo').value = '';
+        document.getElementById('dm-codigo-info').classList.add('hidden');
         toast('Credito acreditado correctamente', 'success');
     } catch(e) { toast(e.message || 'Error al acreditar', 'error'); }
     finally { btn.disabled = false; btn.textContent = 'Acreditar Credito'; }
