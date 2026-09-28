@@ -1518,11 +1518,11 @@ function wmLabel() {
     // nombre real: esta marca es para rastrear filtraciones de FANS, no para
     // exponer la identidad real de la creadora en su propio contenido.
     if (u?.slug && creadoraData?.slug && u.slug === creadoraData.slug) {
-        return 'candela.app';
+        return 'clubcandela.com';
     }
     if (u?.nombre) return u.nombre + ' · candela';
     if (u?.email) return u.email.split('@')[0] + ' · candela';
-    return 'candela.app';
+    return 'clubcandela.com';
 }
 
 function crearWmLayer(label, oscuro) {
