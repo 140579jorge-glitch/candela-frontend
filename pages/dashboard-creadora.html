@@ -748,7 +748,7 @@
 
             <div id="ver-estado-box" class="hidden rounded-2xl p-4 mb-5 border text-sm"></div>
 
-            <div class="bg-white border border-c-border rounded-2xl p-5 max-w-lg shadow-sm">
+            <div id="ver-form-card" class="bg-white border border-c-border rounded-2xl p-5 max-w-lg shadow-sm">
                 <form id="form-verificacion" onsubmit="enviarVerificacion(event)" class="flex flex-col gap-4">
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tipo de documento</label>
@@ -1448,14 +1448,14 @@ async function cargarPerfil() {
         // Estado persistente de verificacion (sobrevive a un reload)
         const v = perfilData.verificacion;
         const vBox = document.getElementById('ver-estado-box');
-        const vForm = document.getElementById('form-verificacion');
+        const vFormCard = document.getElementById('ver-form-card');
         if (v && (v.estado === 'pendiente' || v.estado === 'aprobado')) {
             vBox.className = `rounded-2xl p-4 mb-5 border text-sm ${v.estado === 'aprobado' ? 'badge-activa' : 'badge-pendiente'}`;
             vBox.innerHTML = v.estado === 'aprobado'
                 ? '✅ Tu identidad ya fue verificada.'
                 : '⏳ Documentos enviados. Revisaremos en 24-48h y te notificaremos.';
             vBox.classList.remove('hidden');
-            vForm.classList.add('hidden');
+            vFormCard.classList.add('hidden');
         } else if (v && v.estado === 'rechazado') {
             vBox.className = 'rounded-2xl p-4 mb-5 border text-sm badge-rechazada';
             vBox.innerHTML = `❌ Tu verificacion fue rechazada${v.notas_admin ? ': ' + esc(v.notas_admin) : '.'} Podes volver a enviar tus documentos.`;
