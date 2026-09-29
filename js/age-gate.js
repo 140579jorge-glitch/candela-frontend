@@ -41,7 +41,10 @@
       'padding:.9rem;border-radius:12px;font-weight:600;font-size:.875rem;' +
       'cursor:pointer;border:1px solid #F0E6E1;font-family:inherit}' +
       '#ag-legal{color:#786B65;font-size:.8rem;margin-top:1rem}' +
-      '#ag-legal a{color:#B35A1E;text-decoration:underline}';
+      '#ag-legal a{color:#B35A1E;text-decoration:underline}' +
+      '#ag-zero-tol{background:#FDF8F5;border:1px solid #F0E6E1;border-radius:8px;' +
+      'padding:.5rem .75rem;font-size:.75rem;font-weight:700;margin-bottom:1rem}' +
+      '#ag-zero-tol a{color:#B5445C;text-decoration:underline}';
     document.head.appendChild(s);
 
     var el = document.createElement('div');
@@ -52,6 +55,7 @@
       '<h2>Contenido para adultos</h2>' +
       '<p>Esta plataforma contiene material de naturaleza adulta.<br>' +
       'Solo para mayores de <strong style="color:#2D2D2D">18 a\xF1os</strong>.</p>' +
+      '<p id="ag-zero-tol"><a href="/pages/proteccion-menores.html" target="_blank" rel="noopener">Tolerancia cero a la explotaci\xF3n de menores</a></p>' +
       '<div id="ag-year-wrap">' +
       '<label for="ag-year" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">A\xF1o de nacimiento</label>' +
       '<input id="ag-year" type="number" min="1900" max="' + (new Date().getFullYear() - 18) + '" ' +
