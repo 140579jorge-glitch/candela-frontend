@@ -1444,6 +1444,23 @@ async function cargarPerfil() {
             document.getElementById('p-tema').value = perfilData.tema_color;
             renderTemaGrid(perfilData.tema_color);
         }
+
+        // Estado persistente de verificacion (sobrevive a un reload)
+        const v = perfilData.verificacion;
+        const vBox = document.getElementById('ver-estado-box');
+        const vForm = document.getElementById('form-verificacion');
+        if (v && (v.estado === 'pendiente' || v.estado === 'aprobado')) {
+            vBox.className = `rounded-2xl p-4 mb-5 border text-sm ${v.estado === 'aprobado' ? 'badge-activa' : 'badge-pendiente'}`;
+            vBox.innerHTML = v.estado === 'aprobado'
+                ? '✅ Tu identidad ya fue verificada.'
+                : '⏳ Documentos enviados. Revisaremos en 24-48h y te notificaremos.';
+            vBox.classList.remove('hidden');
+            vForm.classList.add('hidden');
+        } else if (v && v.estado === 'rechazado') {
+            vBox.className = 'rounded-2xl p-4 mb-5 border text-sm badge-rechazada';
+            vBox.innerHTML = `❌ Tu verificacion fue rechazada${v.notas_admin ? ': ' + esc(v.notas_admin) : '.'} Podes volver a enviar tus documentos.`;
+            vBox.classList.remove('hidden');
+        }
     } catch(e) { console.error('cargarPerfil:', e); }
 }
 
