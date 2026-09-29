@@ -97,7 +97,8 @@ const candela = {
         reenviarVerificacion: (email) => candela._req('POST', '/api/auth/reenviar-verificacion', { email }),
         eliminarCuenta: () => candela._req('DELETE', '/api/auth/cuenta'),
         cambiarPassword: (password_actual, nueva_password) => candela._req('POST', '/api/auth/cambiar-password', { password_actual, nueva_password }),
-        async logout() {
+        async logout(sinConfirmar = false) {
+            if (!sinConfirmar && !confirm('¿Seguro que queres cerrar sesion?')) return;
             try { await candela._req('POST', '/api/auth/logout'); } catch (_) {}
             localStorage.removeItem('candela_token');
             localStorage.removeItem('candela_user');

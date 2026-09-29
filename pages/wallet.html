@@ -632,7 +632,7 @@ async function eliminarCuenta() {
     try {
         await candela.auth.eliminarCuenta();
         toast('Cuenta eliminada. Cerrando sesión...', 'info');
-        setTimeout(() => { candela.auth.logout(); window.location.href = '../index.html'; }, 2000);
+        setTimeout(() => { candela.auth.logout(true); window.location.href = '../index.html'; }, 2000);
     } catch(e) {
         toast(e.message || 'Error al eliminar cuenta', 'error');
     }

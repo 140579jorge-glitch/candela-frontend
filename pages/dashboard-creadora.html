@@ -1733,7 +1733,7 @@ async function eliminarCuentaCreadora() {
     try {
         await candela.auth.eliminarCuenta();
         toast('Cuenta eliminada. Cerrando sesion...', 'success');
-        setTimeout(() => { candela.auth.logout(); window.location.href = '../index.html'; }, 2000);
+        setTimeout(() => { candela.auth.logout(true); window.location.href = '../index.html'; }, 2000);
     } catch(err) { toast(err.message, 'error'); }
 }
 
