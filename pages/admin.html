@@ -626,6 +626,16 @@ async function cargarVerificaciones() {
                             <span class="badge badge-pendiente">${esc(v.doc_tipo || 'CI')}</span>
                         </div>
                         <p class="text-xs text-c-soft mb-1">${esc(v.email || '')}</p>
+                        <div class="bg-c-bg border border-c-border rounded-xl p-3 mb-3 grid grid-cols-2 gap-2">
+                            <div>
+                                <p class="text-[10px] font-bold text-c-soft uppercase tracking-wide">Nombre registrado en la cuenta</p>
+                                <p class="text-sm font-bold text-c-text">${esc(v.nombre_real || 'Sin nombre registrado')}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-c-soft uppercase tracking-wide">Fecha de nacimiento declarada</p>
+                                <p class="text-sm font-bold text-c-text">${fmt_fecha(v.fecha_nacimiento_declarada)}</p>
+                            </div>
+                        </div>
                         <p class="text-xs text-c-soft mb-3">Enviado: ${fmt_fecha(v.fecha_solicitud)}</p>
                         <div class="flex gap-2 flex-wrap mb-4">
                             ${v.doc_imagen_url ? `<button onclick="verImg('${esc(v.doc_imagen_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">badge</span>CI frente</button>` : ''}
