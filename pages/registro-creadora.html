@@ -269,9 +269,9 @@
             <span class="ms" style="font-size:3rem;color:#B5445C">celebration</span>
         </div>
         <h2 class="font-display text-2xl font-semibold mb-2">Bienvenida a Candela!</h2>
-        <p class="text-c-soft mb-5 text-sm max-w-xs mx-auto">Tu cuenta fue creada. Sube tu verificación de CI para activarla.</p>
-        <a href="dashboard-creadora.html" class="c-btn text-white inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-md">
-            <span class="ms" style="font-size:18px">arrow_forward</span> Ir a mi panel
+        <p class="text-c-soft mb-5 text-sm max-w-xs mx-auto">Tu cuenta fue creada. Te enviamos un correo de confirmación — abrilo y hacé clic en el enlace para activar tu acceso. Después vas a poder subir tu verificación de CI.</p>
+        <a href="../index.html" class="c-btn text-white inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-md">
+            <span class="ms" style="font-size:18px">arrow_forward</span> Ir al inicio
         </a>
     </div>
 
@@ -368,7 +368,9 @@ async function registrar() {
     };
     try {
         await candela.auth.registroCreadora(data);
-        await candela.auth.login(data.email, data.password);
+        // No intentamos auto-login: la cuenta recien creada siempre requiere
+        // verificar el email primero (el backend rechaza el login con 403
+        // hasta entonces), asi que mostramos el exito directo sin loguear.
         document.getElementById('paso3').classList.add('hidden');
         document.getElementById('exito').classList.remove('hidden');
     } catch(err) {
