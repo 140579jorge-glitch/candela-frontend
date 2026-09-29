@@ -242,11 +242,10 @@
                 <h2 class="font-display text-lg font-semibold">Mis publicaciones</h2>
                 <span id="posts-count" class="text-xs text-c-soft"></span>
             </div>
-            <div id="grid-mis-posts" class="grid grid-cols-3 gap-2">
-                <p class="col-span-3 text-c-soft text-sm py-8 text-center" id="posts-empty">
-                    No has publicado nada aun. <button onclick="mostrar('subir')" class="text-c-accent font-bold">Sube tu primer contenido</button>
-                </p>
-            </div>
+            <div id="grid-mis-posts" class="grid grid-cols-3 gap-2"></div>
+            <p class="text-c-soft text-sm py-8 text-center" id="posts-empty">
+                No has publicado nada aun. <button onclick="mostrar('subir')" class="text-c-accent font-bold">Sube tu primer contenido</button>
+            </p>
         </section>
 
         <!-- ══ SUBIR CONTENIDO ══ -->
@@ -1546,7 +1545,7 @@ async function cargarMisPosts() {
         const grid = document.getElementById('grid-mis-posts');
         const empty = document.getElementById('posts-empty');
 
-        if (!lista.length) { empty.classList.remove('hidden'); return; }
+        if (!lista.length) { empty.classList.remove('hidden'); grid.innerHTML = ''; return; }
         empty.classList.add('hidden');
 
         grid.innerHTML = lista.map(c => {
