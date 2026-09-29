@@ -24,7 +24,7 @@
       'box-shadow:0 32px 80px rgba(0,0,0,.5)}' +
       '#ag h2{font-size:1.45rem;font-weight:700;color:#2D2D2D;' +
       'margin:.75rem 0 .5rem;font-family:"Playfair Display",Georgia,serif}' +
-      '#ag p{color:#8B7D77;font-size:.875rem;line-height:1.65;margin-bottom:1rem}' +
+      '#ag p{color:#6B5B54;font-size:.875rem;line-height:1.65;margin-bottom:1rem}' +
       '#ag-year-wrap{position:relative;margin-bottom:1rem}' +
       '#ag-year{width:100%;padding:.75rem 1rem;border:2px solid #F0E6E1;' +
       'border-radius:12px;font-size:1rem;font-family:Nunito,sans-serif;' +
@@ -37,11 +37,11 @@
       'font-size:.95rem;margin-bottom:.75rem;cursor:pointer;border:none;' +
       'font-family:inherit;transition:filter .2s}' +
       '#ag-yes:hover{filter:brightness(1.07)}' +
-      '#ag-no{display:block;width:100%;background:transparent;color:#8B7D77;' +
+      '#ag-no{display:block;width:100%;background:transparent;color:#6B5B54;' +
       'padding:.9rem;border-radius:12px;font-weight:600;font-size:.875rem;' +
       'cursor:pointer;border:1px solid #F0E6E1;font-family:inherit}' +
-      '#ag-legal{color:#c9b9b3;font-size:.72rem;margin-top:1rem}' +
-      '#ag-legal a{color:#F4A261;text-decoration:none}';
+      '#ag-legal{color:#786B65;font-size:.8rem;margin-top:1rem}' +
+      '#ag-legal a{color:#B35A1E;text-decoration:underline}';
     document.head.appendChild(s);
 
     var el = document.createElement('div');
@@ -53,8 +53,9 @@
       '<p>Esta plataforma contiene material de naturaleza adulta.<br>' +
       'Solo para mayores de <strong style="color:#2D2D2D">18 a\xF1os</strong>.</p>' +
       '<div id="ag-year-wrap">' +
+      '<label for="ag-year" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">A\xF1o de nacimiento</label>' +
       '<input id="ag-year" type="number" min="1900" max="' + (new Date().getFullYear() - 18) + '" ' +
-      'placeholder="A\xF1o de nacimiento (ej: 1995)">' +
+      'aria-label="A\xF1o de nacimiento" placeholder="A\xF1o de nacimiento (ej: 1995)">' +
       '</div>' +
       '<div id="ag-err"></div>' +
       '<button id="ag-yes">Confirmar y entrar</button>' +
