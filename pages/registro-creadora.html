@@ -113,6 +113,7 @@
     <div id="paso1" class="form-card-outer">
     <div class="form-card-inner">
         <h2 class="font-bold text-base mb-4">Crea tu cuenta</h2>
+        <input type="text" id="r-website" name="website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
         <div class="flex flex-col gap-3">
             <div>
                 <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Nombre real (privado, solo para verificación)</label>
@@ -358,6 +359,7 @@ async function registrar() {
     const data = {
         nombre: document.getElementById('r-nombre').value.trim(),
         email: document.getElementById('r-email').value.trim(),
+        website: document.getElementById('r-website').value,
         password: document.getElementById('r-pass').value,
         fecha_nacimiento: document.getElementById('r-nacimiento').value,
         nombre_artistico: document.getElementById('r-artistico').value.trim(),

@@ -131,7 +131,7 @@
     <!-- Sidebar (desktop) -->
     <aside class="sidebar hidden md:flex flex-col w-56 shrink-0 fixed top-16 left-0 bottom-0 bg-white border-r border-c-border overflow-y-auto pt-4 pb-8">
         <div class="px-4 mb-4">
-            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Mi cuenta</p>
+            <p class="text-[11px] font-bold text-c-soft uppercase tracking-widest">Mi cuenta</p>
         </div>
         <div class="nav-item active" onclick="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir',this)"><span class="ms">upload</span>Subir contenido</div>
@@ -152,7 +152,7 @@
         <div class="nav-item" onclick="mostrar('seguridad',this)"><span class="ms">security</span>Seguridad</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="px-4 mb-2">
-            <p class="text-[11px] font-bold text-c-border uppercase tracking-widest">Configuración</p>
+            <p class="text-[11px] font-bold text-c-soft uppercase tracking-widest">Configuración</p>
         </div>
         <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
     </aside>
@@ -274,7 +274,7 @@
                             <span class="ms" id="upload-icon" style="font-size:2.5rem;color:#FAF2F5">upload_file</span>
                             <img id="upload-preview" src="" alt="" style="display:none;max-height:140px;border-radius:10px;margin:4px auto 0;object-fit:cover;max-width:100%">
                             <p class="text-sm text-c-soft mt-2" id="archivo-nombre">Haz clic para seleccionar archivo</p>
-                            <p class="text-xs text-c-border mt-1" id="upload-hint">JPG, PNG, MP4, MOV — max 500MB</p>
+                            <p class="text-xs text-c-soft mt-1" id="upload-hint">JPG, PNG, MP4, MOV — max 500MB</p>
                             <input type="file" id="archivo-input" accept="image/*,video/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                         </label>
                         <!-- Barra de progreso -->

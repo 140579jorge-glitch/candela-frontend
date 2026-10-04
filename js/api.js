@@ -60,8 +60,8 @@ const candela = {
             }
             return data;
         },
-        async registroSuscriptor(email, password, nombre, fecha_nacimiento) {
-            const data = await candela._req('POST', '/api/auth/registro/suscriptor', { email, password, nombre, fecha_nacimiento });
+        async registroSuscriptor(email, password, nombre, fecha_nacimiento, website) {
+            const data = await candela._req('POST', '/api/auth/registro/suscriptor', { email, password, nombre, fecha_nacimiento, website });
             localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre,

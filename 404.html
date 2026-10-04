@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada — Candela</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "c-bg": "#FDF8F5", "c-white": "#FFFFFF", "c-accent": "#B5445C",
+                        "c-accent-d": "#CF6278", "c-rose": "#F2B8C8", "c-text": "#2D2D2D",
+                        "c-soft": "#7B4D5E", "c-border": "#F5E8EF",
+                    },
+                    fontFamily: { display: ["Playfair Display", "serif"], body: ["Nunito", "sans-serif"] },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        .logo-text {
+            background: linear-gradient(90deg, #B5445C 0%, #F2B8C8 60%, #D4869D 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-c-bg text-c-text min-h-screen flex items-center justify-center px-5">
+    <div class="max-w-md w-full text-center">
+        <a href="/index.html" class="font-display text-2xl font-semibold logo-text select-none">Candela</a>
+        <p class="font-display text-7xl font-semibold mt-8 mb-2 text-c-accent">404</p>
+        <h1 class="font-display text-xl font-semibold mb-3">Esta página no existe</h1>
+        <p class="text-c-soft text-sm leading-relaxed mb-8">
+            El enlace que seguiste puede estar roto, o la página se movió.
+            Revisá la dirección o volvé al inicio.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/index.html" class="bg-c-accent text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-c-accent-d transition-colors">
+                Volver al inicio
+            </a>
+            <a href="/pages/explorar.html" class="bg-white border border-c-border text-c-text px-6 py-2.5 rounded-full text-sm font-bold hover:border-c-accent transition-colors">
+                Explorar creadoras
+            </a>
+        </div>
+        <p class="text-xs text-c-soft mt-10">
+            ¿Seguís con problemas? <a href="mailto:soporte@clubcandela.com" class="text-c-accent font-semibold hover:underline">Escribinos</a>
+        </p>
+    </div>
+</body>
+</html>

@@ -24,12 +24,33 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Candela",
-      "url": "https://clubcandela.com",
-      "description": "Plataforma de contenido exclusivo en español para creadoras verificadas.",
-      "inLanguage": "es",
-      "sameAs": []
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://clubcandela.com/#organization",
+          "name": "Candela",
+          "legalName": "Club Candela LLC",
+          "url": "https://clubcandela.com",
+          "logo": "https://clubcandela.com/favicon.svg",
+          "image": "https://clubcandela.com/img/og-cover.jpg",
+          "description": "Plataforma de contenido exclusivo en español para creadoras verificadas.",
+          "email": "soporte@clubcandela.com",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "soporte@clubcandela.com",
+            "availableLanguage": ["es"]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://clubcandela.com/#website",
+          "name": "Candela",
+          "url": "https://clubcandela.com",
+          "publisher": { "@id": "https://clubcandela.com/#organization" },
+          "inLanguage": "es"
+        }
+      ]
     }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -619,6 +640,7 @@
                     <a href="pages/proteccion-menores.html" class="hover:text-c-accent transition-colors">Protección a Menores</a>
                     <a href="pages/dmca.html" class="hover:text-c-accent transition-colors">DMCA / Copyright</a>
                     <a href="pages/reporte-abuso.html" class="hover:text-c-accent transition-colors">Reporte de Abuso</a>
+                    <a href="pages/aviso-legal.html" class="hover:text-c-accent transition-colors">Aviso Legal</a>
                     <a href="pages/modelo-release.html" class="hover:text-c-accent transition-colors">Acuerdo Creadora</a>
                     <a href="mailto:soporte@clubcandela.com" class="hover:text-c-accent transition-colors">Soporte</a>
                 </div>
@@ -763,6 +785,7 @@
 
             <!-- Registro suscriptor -->
             <form id="form-registro" onsubmit="hacerRegistro(event)" class="hidden flex-col gap-4">
+                <input type="text" id="r-website" name="website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                 <div>
                     <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Nombre</label>
                     <input id="r-nombre" type="text" required placeholder="Tu nombre"
@@ -803,6 +826,7 @@
 <script src="/js/age-gate.js"></script>
 <script src="js/api.js"></script>
 <script src="/js/cookie-consent.js"></script>
+<script src="/js/whatsapp-button.js"></script>
 <script src="/js/pwa-install.js"></script>
 <script>
 const GRADIENTES = {
@@ -1390,6 +1414,7 @@ async function hacerRegistro(e) {
             document.getElementById('r-pass').value,
             document.getElementById('r-nombre').value,
             document.getElementById('r-dob').value,
+            document.getElementById('r-website').value,
         );
         cerrarModal();
         toast('Cuenta creada. Revisa tu email para verificar tu cuenta.', 'info');
