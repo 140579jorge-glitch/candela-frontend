@@ -273,7 +273,7 @@ async function pagarEntrada() {
         if (r.ok) {
             document.getElementById('modal-entrada').style.display = 'none';
             document.getElementById('loading').style.display = 'flex';
-            miBalance = Math.max(0, miBalance - streamInfo.precio_entrada);
+            miBalance = d.nuevo_balance ?? Math.max(0, miBalance - streamInfo.precio_entrada);
             actualizarBalance(miBalance);
             arrancarStream(d.url_hls);
         } else {
@@ -371,12 +371,16 @@ async function cargarObsequios() {
     } catch(e) {}
 }
 
+let _obsequioEnCurso = false;
+
 async function enviarObsequio(g) {
     if (!token) { location.href = '../index.html?login=1'; return; }
     if (miBalance < g.precio) {
         mostrarToast(`Saldo insuficiente`, '#E8413E');
         return;
     }
+    if (_obsequioEnCurso) return;
+    _obsequioEnCurso = true;
     try {
         const r = await fetch(`${API}/api/streams/${STREAM_ID}/obsequio`, {
             method: 'POST',
@@ -390,7 +394,10 @@ async function enviarObsequio(g) {
         } else {
             mostrarToast(d.detail || 'Error al enviar obsequio', '#E8413E');
         }
-    } catch(e) {}
+    } catch(e) {
+    } finally {
+        _obsequioEnCurso = false;
+    }
 }
 
 function manejarObsequio(ev) {

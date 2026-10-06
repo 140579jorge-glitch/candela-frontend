@@ -317,7 +317,7 @@ async function refrescarHilo(silencioso) {
                     ${src ? `<img src="${src}" alt="" draggable="false" oncontextmenu="return false">` : '<div style="height:200px;background:#F5E8EF"></div>'}
                     ${bloqueado ? `<div class="msg-lock-cta">
                         <span class="material-symbols-outlined text-white" style="font-size:26px">lock</span>
-                        <button onclick="desbloquearMsg('${esc(m.id)}')">Desbloquear por $${Number(m.precio_desbloqueo)}</button>
+                        <button onclick="desbloquearMsg('${esc(m.id)}', this)">Desbloquear por $${Number(m.precio_desbloqueo)}</button>
                     </div>` : ''}
                 </div>`;
                 return `<div>${media}${cap}${ts}</div>`;
@@ -355,7 +355,12 @@ function cancelarAdjunto() {
     document.getElementById('adj-preview').classList.add('hidden');
 }
 
-async function desbloquearMsg(id) {
+const _desbloqueosEnCurso = new Set();
+
+async function desbloquearMsg(id, btn) {
+    if (_desbloqueosEnCurso.has(id)) return;
+    _desbloqueosEnCurso.add(id);
+    if (btn) btn.disabled = true;
     try {
         const r = await candela.mensajes.desbloquear(id);
         if (r && r.nuevo_balance != null) toast('Foto desbloqueada', 'success');
@@ -368,6 +373,9 @@ async function desbloquearMsg(id) {
             box.innerHTML = esc(msg) + ' <a href="wallet.html" class="underline">Recargar</a>';
             box.classList.remove('hidden');
         } else { toast(msg, 'error'); }
+        if (btn) btn.disabled = false;
+    } finally {
+        _desbloqueosEnCurso.delete(id);
     }
 }
 

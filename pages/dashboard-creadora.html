@@ -510,7 +510,7 @@
                         <input id="ret-monto" type="number" min="20" step="1" placeholder="Mínimo $20"
                             class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
                     </div>
-                    <button onclick="solicitarRetiro()" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Solicitar retiro</button>
+                    <button id="btn-solicitar-retiro" onclick="solicitarRetiro()" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Solicitar retiro</button>
                     <button type="button" onclick="mostrar('metodos-pago')" class="text-xs text-c-accent font-semibold text-center hover:text-c-accent-d transition-colors">Cambiar método de pago →</button>
                 </div>
             </div>
@@ -1680,11 +1680,20 @@ async function solicitarRetiro() {
         mostrar('metodos-pago');
         return;
     }
+    const btn = document.getElementById('btn-solicitar-retiro');
+    btn.disabled = true;
+    const txt = btn.textContent;
+    btn.textContent = 'Procesando...';
     try {
         const r = await candela.pagos.solicitarRetiro(monto, wallet, metodo);
         toast(r.mensaje, 'success');
         cargarGanancias();
-    } catch(err) { toast(err.message, 'error'); }
+    } catch(err) {
+        toast(err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = txt;
+    }
 }
 
 let _perfilCreadora = null;

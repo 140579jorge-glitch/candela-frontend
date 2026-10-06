@@ -499,7 +499,7 @@
         <div style="background:#FDF8F5;border:1px solid #F5E8EF;border-radius:10px;padding:.65rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:#7B4D5E;line-height:1.4;">
             <strong style="color:#2D2D2D">Pago irreversible en USDT.</strong> Sin reembolso. Al confirmar declaras tener 18+ años y que este contenido es legal en tu país.
         </div>
-        <button onclick="confirmarChatSesion()" class="c-btn text-white w-full py-3 rounded-full font-bold text-sm">Solicitar sesión</button>
+        <button id="btn-confirmar-chat-sesion" onclick="confirmarChatSesion()" class="c-btn text-white w-full py-3 rounded-full font-bold text-sm">Solicitar sesión</button>
     </div>
 </div>
 
@@ -1189,7 +1189,7 @@ async function confirmarCompra() {
     btn.textContent = 'Desbloqueando...'; btn.disabled = true;
     try {
         const r = await candela.contenido.comprar(contenidoSeleccionado.id);
-        userBalance = r.nuevo_balance || Math.max(0, userBalance - precio);
+        userBalance = r.nuevo_balance ?? Math.max(0, userBalance - precio);
         cerrarModal('modal-compra');
         toast('Contenido desbloqueado', 'success');
         setTimeout(() => location.reload(), 1500);
@@ -1295,7 +1295,7 @@ async function confirmarPropina() {
             monto,
             mensaje: mensaje || null,
         });
-        userBalance = r.nuevo_balance || Math.max(0, userBalance - monto);
+        userBalance = r.nuevo_balance ?? Math.max(0, userBalance - monto);
         cerrarModal('modal-propina');
         toast(`Propina de $${monto} enviada a ${creadoraData.nombre_artistico}`, 'success');
     } catch (e) {
@@ -1341,6 +1341,8 @@ async function confirmarChatSesion() {
         toast(`Saldo insuficiente. Necesitas $${total.toFixed(2)}`, 'error'); return;
     }
     const msg = document.getElementById('chat-sesion-msg-inicial').value.trim();
+    const btn = document.getElementById('btn-confirmar-chat-sesion');
+    btn.disabled = true; btn.textContent = 'Enviando...';
     try {
         const r = await candela._req('POST', '/api/chat-sesion/solicitar', {
             creadora_slug: creadoraData.slug,
@@ -1354,6 +1356,8 @@ async function confirmarChatSesion() {
         _esperarAceptacion(r.sesion_id);
     } catch (e) {
         toast(e.message || 'Error al solicitar sesion', 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Solicitar sesión';
     }
 }
 
@@ -1489,7 +1493,7 @@ async function confirmarMensaje() {
             creadora_slug: creadoraData.slug,
             contenido,
         });
-        userBalance = r.nuevo_balance || Math.max(0, userBalance - precio);
+        userBalance = r.nuevo_balance ?? Math.max(0, userBalance - precio);
         cerrarModal('modal-dm');
         toast(`Mensaje enviado a ${creadoraData.nombre_artistico}`, 'success');
         setTimeout(() => { window.location.href = 'mensajes.html?con=' + encodeURIComponent(creadoraData.id); }, 900);
@@ -1930,10 +1934,10 @@ async function confirmarCompraPack() {
     const btn = document.getElementById('btn-confirmar-pack');
     btn.disabled = true; btn.textContent = 'Procesando...';
     try {
-        await candela._req('POST', `/api/packs/${packSeleccionado.id}/comprar`);
+        const r = await candela._req('POST', `/api/packs/${packSeleccionado.id}/comprar`);
         cerrarModal('modal-pack');
         toast('Pack comprado. Revisa tu seccion de compras.', 'success');
-        userBalance -= packSeleccionado.precioFan;
+        userBalance = r.nuevo_balance ?? Math.max(0, userBalance - packSeleccionado.precioFan);
     } catch(e) {
         toast(e.message || 'Error al comprar', 'error');
     } finally {
