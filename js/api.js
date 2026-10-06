@@ -271,8 +271,9 @@ const candela = {
 
     recargadores: {
         miBalance:            () => candela._req('GET', '/api/recargadores/mi-balance'),
-        transferirAFan:       (email_fan, monto) => candela._req('POST', '/api/recargadores/transferir', { email_fan, monto }),
+        crearVoucher:         (monto) => candela._req('POST', '/api/recargadores/crear-voucher', { monto }),
         transferirAMiCuenta:  (monto) => candela._req('POST', '/api/recargadores/transferir-a-mi-cuenta', { monto }),
+        canjearVoucher:       (codigo) => candela._req('POST', '/api/recargadores/canjear-voucher', { codigo }),
     },
 
     fans: {

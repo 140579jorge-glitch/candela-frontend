@@ -70,7 +70,7 @@
             <span class="ms">account_balance_wallet</span> Mi Balance
         </div>
         <div class="nav-item" onclick="ir('transferir',this)">
-            <span class="ms">send</span> Transferir a Fan
+            <span class="ms">confirmation_number</span> Generar código
         </div>
         <div class="nav-item" onclick="ir('consumo',this)">
             <span class="ms">person</span> Cargar a mi Cuenta
@@ -95,7 +95,7 @@
                 <div class="card p-5">
                     <p class="text-xs text-c-soft uppercase tracking-wider mb-1">Balance Recargador</p>
                     <p id="bal-recargador" class="text-3xl font-bold text-c-accent skeleton h-9 w-28"></p>
-                    <p class="text-xs text-c-soft mt-1">Disponible para transferir a fans</p>
+                    <p class="text-xs text-c-soft mt-1">Disponible para generar códigos de recarga</p>
                 </div>
                 <div class="card p-5">
                     <p class="text-xs text-c-soft uppercase tracking-wider mb-1">Balance Consumo</p>
@@ -126,38 +126,34 @@
             </div>
         </section>
 
-        <!-- TRANSFERIR A FAN -->
+        <!-- GENERAR VOUCHER -->
         <section id="sec-transferir" class="dash-section">
-            <h2 class="text-xl font-bold text-c-text mb-2">Transferir a Fan</h2>
-            <p class="text-sm text-c-soft mb-6">Ingresa el email del fan y el monto a acreditar en su wallet.</p>
+            <h2 class="text-xl font-bold text-c-text mb-2">Generar código de recarga</h2>
+            <p class="text-sm text-c-soft mb-6">Generás un código de un solo uso por el monto acordado. Pasáselo al fan — él lo canjea en su propia cuenta, en Wallet → "Canjear código". El código vale por 72 horas.</p>
 
             <div class="card p-6 max-w-md">
-                <div class="mb-4">
-                    <label class="text-xs font-700 text-c-soft uppercase tracking-wider mb-1.5 block">Email del Fan</label>
-                    <input id="fan-email" type="email" placeholder="fan@ejemplo.com" class="input-field">
-                </div>
                 <div class="mb-5">
-                    <label class="text-xs font-700 text-c-soft uppercase tracking-wider mb-1.5 block">Monto a transferir (USD)</label>
+                    <label class="text-xs font-700 text-c-soft uppercase tracking-wider mb-1.5 block">Monto del código (USD)</label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
                         <input id="fan-monto" type="number" min="1" step="0.01" placeholder="5.00" class="input-field pl-7">
                     </div>
-                    <p class="text-xs text-c-soft mt-1">Minimo $1. Se debita de tu balance recargador.</p>
+                    <p class="text-xs text-c-soft mt-1">Minimo $1. Se debita de tu balance recargador al generarlo.</p>
                 </div>
 
-                <div id="transfer-preview" class="hidden bg-pink-50 border border-c-rose rounded-xl p-4 mb-5 text-sm">
+                <div id="voucher-resultado" class="hidden bg-pink-50 border border-c-rose rounded-xl p-4 mb-5 text-sm">
                     <div class="flex justify-between mb-1">
-                        <span class="text-c-soft">Debita de tu balance:</span>
-                        <span id="tp-debito" class="font-bold text-c-accent"></span>
+                        <span class="text-c-soft">Código:</span>
+                        <span id="vr-codigo" class="font-bold text-c-accent text-base tracking-widest"></span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-c-soft">Fan recibe:</span>
-                        <span id="tp-credito" class="font-bold text-green-600"></span>
+                        <span class="text-c-soft">Monto:</span>
+                        <span id="vr-monto" class="font-bold text-green-600"></span>
                     </div>
                 </div>
 
-                <button id="btn-transferir" onclick="transferirAFan()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
-                    <span class="ms text-base">send</span> Transferir
+                <button id="btn-transferir" onclick="generarVoucher()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                    <span class="ms text-base">confirmation_number</span> Generar código
                 </button>
             </div>
         </section>
@@ -211,7 +207,7 @@
                 </div>
                 <div class="card p-5">
                     <p class="font-bold text-c-accent mb-1">2. Vende recargas localmente</p>
-                    <p class="text-sm text-c-soft">Acepta pagos locales (Takenos, Meru, transferencia, efectivo) y usa el panel "Transferir a Fan" para acreditar el monto en la cuenta del fan. Solo necesitas su email registrado en Candela.</p>
+                    <p class="text-sm text-c-soft">Acepta pagos locales (Takenos, Meru, transferencia, efectivo) y usa el panel "Generar código" para crear un código de un solo uso por ese monto. Pasáselo al fan — él lo canjea en su propia cuenta, en Wallet → "Canjear código". Vale por 72 horas.</p>
                 </div>
                 <div class="card p-5">
                     <p class="font-bold text-c-accent mb-1">3. Ganancia automatica</p>
@@ -224,8 +220,8 @@
                 <div class="card p-5 border-red-100 bg-red-50">
                     <p class="font-bold text-red-600 mb-1">Reglas importantes</p>
                     <ul class="text-sm text-c-soft list-disc list-inside space-y-1">
-                        <li>El credito recargador no es retirable — solo transferible a fans o convertible a consumo.</li>
-                        <li>Estafar a fans (cobrar sin acreditar) resulta en suspension inmediata.</li>
+                        <li>El credito recargador no es retirable — solo convertible en códigos de recarga o en consumo.</li>
+                        <li>Un código solo puede canjearse una vez. Estafar a fans (cobrar sin entregar un código válido) resulta en suspension inmediata.</li>
                         <li>No puedes transferirte directamente sin el fee del 10%.</li>
                     </ul>
                 </div>
@@ -242,8 +238,8 @@
         <span>Balance</span>
     </div>
     <div class="bot-nav-item" onclick="ir('transferir',this,'bot')">
-        <span class="ms text-xl">send</span>
-        <span>Transferir</span>
+        <span class="ms text-xl">confirmation_number</span>
+        <span>Código</span>
     </div>
     <div class="bot-nav-item" onclick="ir('consumo',this,'bot')">
         <span class="ms text-xl">person</span>
@@ -329,18 +325,6 @@ function _renderMovimientos(movs) {
     }).join('');
 }
 
-// Preview transferencia fan
-document.getElementById('fan-monto')?.addEventListener('input', () => {
-    const monto = parseFloat(document.getElementById('fan-monto').value) || 0;
-    const prev = document.getElementById('transfer-preview');
-    if (monto >= 1) {
-        prev.classList.remove('hidden');
-        document.getElementById('tp-debito').textContent = '$' + monto.toFixed(2);
-        document.getElementById('tp-credito').textContent = '$' + monto.toFixed(2);
-    } else {
-        prev.classList.add('hidden');
-    }
-});
 
 function actualizarPreviewConsumo() {
     const monto = parseFloat(document.getElementById('consumo-monto').value) || 0;
@@ -357,23 +341,23 @@ function actualizarPreviewConsumo() {
     }
 }
 
-async function transferirAFan() {
-    const email = document.getElementById('fan-email').value.trim();
+async function generarVoucher() {
     const monto = parseFloat(document.getElementById('fan-monto').value);
-    if (!email || !monto || monto < 1) { showToast('Completa todos los campos', 'err'); return; }
+    if (!monto || monto < 1) { showToast('Ingresa un monto valido', 'err'); return; }
     const btn = document.getElementById('btn-transferir');
-    btn.disabled = true; btn.textContent = 'Enviando...';
+    btn.disabled = true;
     try {
-        const r = await candela.recargadores.transferirAFan(email, monto);
-        showToast(`✓ $${r.transferido.toFixed(2)} acreditado a ${r.fan}`, 'ok');
-        document.getElementById('fan-email').value = '';
+        const r = await candela.recargadores.crearVoucher(monto);
+        document.getElementById('vr-codigo').textContent = r.codigo;
+        document.getElementById('vr-monto').textContent = '$' + r.monto.toFixed(2);
+        document.getElementById('voucher-resultado').classList.remove('hidden');
+        showToast(`✓ Código ${r.codigo} generado`, 'ok');
         document.getElementById('fan-monto').value = '';
-        document.getElementById('transfer-preview').classList.add('hidden');
         await cargarBalance();
     } catch (e) {
-        showToast(e.message || 'Error al transferir', 'err');
+        showToast(e.message || 'Error al generar el código', 'err');
     } finally {
-        btn.disabled = false; btn.textContent = 'Transferir';
+        btn.disabled = false;
     }
 }
 

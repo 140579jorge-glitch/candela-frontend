@@ -82,6 +82,20 @@
         </div>
     </div>
 
+    <!-- Canjear codigo de recarga -->
+    <div class="bg-white border border-c-border rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="font-bold text-c-text text-base">¿Tenés un código de recarga?</h2>
+        </div>
+        <div class="flex gap-2">
+            <input id="voucher-codigo" type="text" placeholder="Ej: A3F7K9PQ" maxlength="8"
+                style="text-transform:uppercase;letter-spacing:.1em"
+                class="flex-1 border border-c-border rounded-xl px-3 py-2.5 text-sm font-bold font-body">
+            <button onclick="canjearCodigo()" id="btn-canjear"
+                class="c-btn px-5 rounded-xl font-bold text-sm whitespace-nowrap">Canjear</button>
+        </div>
+    </div>
+
     <!-- Cargar saldo -->
     <div class="bg-white border border-c-border rounded-2xl p-5">
         <div class="flex items-center justify-between mb-4">
@@ -341,6 +355,24 @@ if (user?.nombre) document.getElementById('nav-nombre').textContent = user.nombr
         banner.classList.remove('hidden');
     } catch(e) {}
 })();
+
+async function canjearCodigo() {
+    const input = document.getElementById('voucher-codigo');
+    const codigo = input.value.trim().toUpperCase();
+    if (!codigo) { toast('Ingresa un código', 'error'); return; }
+    const btn = document.getElementById('btn-canjear');
+    btn.disabled = true;
+    try {
+        const r = await candela.wallet_voucher.canjear(codigo);
+        toast(`✓ $${r.acreditado.toFixed(2)} acreditados a tu cuenta`, 'success');
+        input.value = '';
+        await init();
+    } catch (e) {
+        toast(e.message || 'Código inválido', 'error');
+    } finally {
+        btn.disabled = false;
+    }
+}
 
 async function init() {
     try {
