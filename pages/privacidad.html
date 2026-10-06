@@ -43,7 +43,7 @@
 
     <h2>3. Documentos de verificación</h2>
     <p>Las fotos de CI y selfies de las creadoras se almacenan de forma segura (bucket privado, acceso solo por URL firmada de duración limitada) y <strong>solo son accedidas por el equipo de verificación de Candela</strong>. No se comparten con terceros.</p>
-    <p><strong>Retención legal obligatoria:</strong> a diferencia de otros datos de tu cuenta, estos documentos <strong>no se eliminan al aprobar la cuenta ni al eliminarla</strong>. La ley federal de EEUU 18 U.S.C. § 2257 exige a las plataformas de contenido para adultos conservar la verificación de identidad y edad de cada creadora por un mínimo de <strong>7 años</strong> desde la publicación de cada contenido. Ver nuestra <a href="/pages/2257.html" style="color:#B5445C;font-weight:700;">Declaración de Cumplimiento 18 U.S.C. § 2257</a> para más detalles.</p>
+    <p><strong>Retención legal obligatoria:</strong> a diferencia de otros datos de tu cuenta, estos documentos <strong>no se eliminan al aprobar la cuenta ni al eliminarla</strong>. La ley federal de EEUU 18 U.S.C. § 2257 y su reglamento (28 C.F.R. § 75.4) exigen a las plataformas de contenido para adultos conservar la verificación de identidad y edad de cada creadora por un mínimo de <strong>7 años desde la creación o última modificación del registro</strong>, y por <strong>5 años adicionales</strong> si Candela cesara su actividad. Ver nuestra <a href="/pages/2257.html" style="color:#B5445C;font-weight:700;">Declaración de Cumplimiento 18 U.S.C. § 2257</a> para más detalles.</p>
 
     <h2>4. Contenido</h2>
     <p>El contenido publicado por las creadoras es visible según el nivel de acceso que cada creadora define (suscriptores, PPV, gratis). Candela no vende ni comparte este contenido con terceros.</p>
@@ -55,12 +55,12 @@
     <ul>
         <li>Las contrasenas se almacenan con hash bcrypt (nunca en texto plano).</li>
         <li>Las comunicaciones se realizan sobre HTTPS en produccion.</li>
-        <li>El contenido desbloqueado incluye un <strong>watermark</strong> con el nombre del suscriptor para desincentivar la distribucion no autorizada.</li>
+        <li>El contenido subido por las creadoras lleva una <strong>marca de agua</strong> de la plataforma para desincentivar la distribución no autorizada, y se le elimina toda la metadata original del archivo (ubicación, dispositivo, cuenta) antes de guardarlo.</li>
         <li>Registramos intentos de inicio de sesión fallidos (incluyendo el email usado) en un log de seguridad interno, para detectar accesos no autorizados. Este log se conserva 14 días y solo es accedido por el equipo técnico.</li>
     </ul>
 
     <h2>7. Tus derechos — estándar global, sin importar tu país</h2>
-    <p>Candela aplica el mismo estándar de derechos a toda persona usuaria, sin importar su país de residencia, incluyendo (entre otros) los derechos reconocidos por el GDPR europeo, la LGPD de Brasil (Lei 13.709/2018), la LFPDPPP de México, la Ley 1581 de Colombia, la Ley 29733 de Perú, la LOPDP de Ecuador y la Ley 25.326 de Argentina:</p>
+    <p>Candela aplica el mismo estándar de derechos a toda persona usuaria, sin importar su país de residencia, incluyendo (entre otros) los derechos reconocidos por la nueva Ley de Protección de Datos Personales de México (2025, a cargo de la Secretaría Anticorrupción y Buen Gobierno tras la disolución del INAI), la Ley 1581 de Colombia, la Ley 29733 de Perú, la LOPDP de Ecuador y la Ley 25.326 de Argentina:</p>
     <ul>
         <li><strong>Acceso:</strong> puedes solicitar una copia de todos los datos personales que tenemos sobre ti.</li>
         <li><strong>Rectificación:</strong> puedes corregir datos inexactos o incompletos desde tu panel o contactándonos.</li>
@@ -72,14 +72,24 @@
     </ul>
     <p>Para ejercer cualquiera de estos derechos, escribe a: <strong>privacidad@clubcandela.com</strong>. Respondemos en un plazo máximo de <strong>30 días naturales</strong>, independientemente del país desde el que escribas.</p>
 
-    <h2>8. Transferencias internacionales de datos</h2>
-    <p>Candela utiliza proveedores de infraestructura y almacenamiento en la nube ubicados fuera de algunos países de residencia de sus usuarios. Al registrarte, aceptas que tus datos pueden ser procesados fuera de tu país de residencia. Aplicamos salvaguardias técnicas (cifrado en tránsito y en reposo, acceso restringido) para proteger tus datos independientemente de dónde se almacenen.</p>
+    <h2>8. Proveedores que procesan tus datos</h2>
+    <p>Candela utiliza los siguientes proveedores externos para operar la plataforma, cada uno con acceso únicamente a los datos necesarios para su función:</p>
+    <ul>
+        <li><strong>Base de datos:</strong> Supabase (infraestructura en Amazon Web Services, EEUU).</li>
+        <li><strong>Servidor de aplicación:</strong> alojado en un proveedor de VPS en Francia.</li>
+        <li><strong>Procesamiento de pagos en USDT:</strong> NOWPayments / FD Transfers LLC.</li>
+        <li><strong>Envío de emails transaccionales:</strong> proveedor de email (notificaciones de cuenta, confirmaciones de pago).</li>
+        <li><strong>Red de distribución de contenido (CDN):</strong> para servir la plataforma web.</li>
+        <li><strong>Analítica (opcional, solo con tu consentimiento):</strong> Google Analytics — ver <a href="/pages/cookies.html" style="color:#B5445C;font-weight:700;">Política de Cookies</a>.</li>
+    </ul>
+    <p>Al registrarte, aceptas que tus datos pueden ser procesados fuera de tu país de residencia, incluyendo en Estados Unidos y Francia. Aplicamos salvaguardias técnicas (cifrado en tránsito y en reposo, acceso restringido) y contractuales con cada proveedor para proteger tus datos independientemente de dónde se almacenen.</p>
 
     <h2>9. Cookies y seguimiento</h2>
     <p>Consulta nuestra <a href="/pages/cookies.html" style="color:#B5445C;font-weight:700;">Política de Cookies</a> para detalles completos sobre qué datos de navegación recopilamos y cómo gestionarlos.</p>
 
     <h2>10. Retención de datos</h2>
-    <p>Mantenemos tus datos mientras tu cuenta este activa. Al eliminar tu cuenta, eliminamos tus datos personales en un plazo de 30 días, excepto los requeridos por obligaciones legales o financieras: registros de transacciones (5 años mínimo por regulación fiscal) y, para creadoras, documentos de verificación de identidad/edad (7 años por 18 U.S.C. § 2257).</p>
+    <p>Mantenemos tus datos mientras tu cuenta este activa. Al eliminar tu cuenta, eliminamos tus datos personales en un plazo de 30 días, excepto los requeridos por obligaciones legales o financieras: registros de transacciones (5 años mínimo por regulación fiscal) y, para creadoras, documentos de verificación de identidad/edad (7 años desde su creación o última modificación, más 5 años adicionales si Candela cesa su actividad, por 18 U.S.C. § 2257 / 28 C.F.R. § 75.4).</p>
+    <p>Los hashes de transacciones en blockchain que forman parte del historial de pagos son, por su propia naturaleza, públicos y permanentes en la red donde se registraron — ninguna solicitud de eliminación de datos puede revertir ni ocultar esa información una vez confirmada en la cadena.</p>
 
     <h2>11. Menores de edad</h2>
     <p>Candela es una plataforma <strong>exclusiva para mayores de 18 años</strong>. No recopilamos datos de menores de edad de forma intencional. Si detectamos una cuenta de menor, la cancelamos de inmediato y eliminamos todos sus datos.</p>
