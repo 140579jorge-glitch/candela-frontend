@@ -23,7 +23,7 @@
   function showBanner() {
     var css = document.createElement('style');
     css.textContent =
-      '#ccb{position:fixed;bottom:0;left:0;right:0;z-index:10000;' +
+      '#ccb{position:fixed;bottom:0;left:0;right:0;z-index:50;' +
       'background:#fff;border-top:1px solid #F0E6E1;' +
       'padding:1rem 1.5rem;box-shadow:0 -8px 32px rgba(0,0,0,.07);' +
       'font-family:Nunito,system-ui,sans-serif}' +
