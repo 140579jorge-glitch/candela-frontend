@@ -333,8 +333,8 @@
                         onmouseover="this.style.color='#B5445C'" onmouseout="this.style.color='#7B4D5E'">
                         ¿Ya tienes cuenta? Entrar aquí →
                     </button>
-                    <span style="color:rgba(123,77,94,.3);font-size:.76rem">|</span>
-                    <a href="pages/gana-como-agente.html"
+                    <span class="hidden" style="color:rgba(123,77,94,.3);font-size:.76rem">|</span>
+                    <a class="hidden" href="pages/gana-como-agente.html"
                         style="background:none;border:none;cursor:pointer;font-size:.76rem;color:#7B4D5E;font-family:'Nunito',sans-serif;transition:color .2s;text-decoration:none"
                         onmouseover="this.style.color='#2D8A5E'" onmouseout="this.style.color='#7B4D5E'">
                         ¿Quieres ganar distribuyendo créditos? Ser Agente →
@@ -409,7 +409,7 @@
         </div>
 
         <!-- ── Creator preview section ── -->
-        <div style="background:#FDF8F5;padding:3.5rem 1.5rem 1.5rem" class="md:px-10">
+        <div id="preview-section" style="background:#FDF8F5;padding:3.5rem 1.5rem 1.5rem" class="hidden md:px-10">
             <div class="max-w-4xl mx-auto">
                 <p style="text-align:center;font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7B4D5E;margin-bottom:.5rem">Creadoras activas en este momento</p>
                 <h2 class="font-display text-2xl text-center text-c-text font-semibold mb-2">Descubre quién te está esperando</h2>
@@ -510,7 +510,7 @@
         </div>
 
         <!-- ── Strip captación agentes ── -->
-        <div class="mx-4 md:mx-10 my-4 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#062414,#0B3D26)">
+        <div class="hidden mx-4 md:mx-10 my-4 rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#062414,#0B3D26)">
             <div class="px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="text-center md:text-left">
                     <p class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-1">¿Tienes contactos en tu zona?</p>
@@ -1009,7 +1009,10 @@ async function cargarPreviewPublico() {
         const resp = await fetch(`${base}/api/creadoras/explorar?limit=6`);
         if (!resp.ok) throw new Error('no data');
         const lista = await resp.json();
-        if (!lista || !lista.length) return;
+        // ponytail: sin vitrina publica hasta tener masa critica; subir MIN_PREVIEW cuando haya mas creadoras
+        const MIN_PREVIEW = 6;
+        if (!lista || lista.length < MIN_PREVIEW) return;
+        document.getElementById('preview-section')?.classList.remove('hidden');
 
         // Render preview cards
         const grid = document.getElementById('preview-grid');
