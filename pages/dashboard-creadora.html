@@ -105,7 +105,7 @@
         <div class="nav-item" onclick="mostrar('chat-sesion')"><span class="ms">videocam</span>Chat privado</div>
         <div class="nav-item" onclick="mostrar('referidas')"><span class="ms">group_add</span>Referidas</div>
         <div class="nav-item" onclick="mostrar('metodos-pago')"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
-        <div class="nav-item" onclick="mostrar('stream')"><span class="ms">live_tv</span>Stream en vivo</div>
+        <div class="nav-item" style="display:none" onclick="mostrar('stream')"><span class="ms">live_tv</span>Stream en vivo</div>
         <div class="nav-item" onclick="mostrar('seguridad')"><span class="ms">security</span>Seguridad</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="nav-item" onclick="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
@@ -134,7 +134,7 @@
         <div class="nav-item" onclick="mostrar('chat-sesion',this)"><span class="ms">videocam</span>Chat privado</div>
         <div class="nav-item" onclick="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
         <div class="nav-item" onclick="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
-        <div class="nav-item" onclick="mostrar('stream',this)"><span class="ms">live_tv</span>Stream en vivo</div>
+        <div class="nav-item" style="display:none" onclick="mostrar('stream',this)"><span class="ms">live_tv</span>Stream en vivo</div>
         <div class="nav-item" onclick="mostrar('seguridad',this)"><span class="ms">security</span>Seguridad</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="px-4 mb-2">
@@ -260,7 +260,7 @@
                             <span class="ms" id="upload-icon" style="font-size:2.5rem;color:#FAF2F5">upload_file</span>
                             <img id="upload-preview" src="" alt="" style="display:none;max-height:140px;border-radius:10px;margin:4px auto 0;object-fit:cover;max-width:100%">
                             <p class="text-sm text-c-soft mt-2" id="archivo-nombre">Haz clic para seleccionar archivo</p>
-                            <p class="text-xs text-c-soft mt-1" id="upload-hint">JPG, PNG, MP4, MOV — max 500MB</p>
+                            <p class="text-xs text-c-soft mt-1" id="upload-hint">JPG, PNG, MP4, MOV — max 100MB</p>
                             <input type="file" id="archivo-input" accept="image/*,video/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                         </label>
                         <!-- Barra de progreso -->
@@ -355,7 +355,7 @@
                         <label class="upload-zone block cursor-pointer" id="pk-upload-zone">
                             <span class="ms" style="font-size:2.5rem;color:#FAF2F5">add_photo_alternate</span>
                             <p class="text-sm font-bold text-c-soft mt-2">Arrastra archivos o toca para seleccionar</p>
-                            <p class="text-xs text-c-soft mt-1">JPG, PNG, MP4, MOV — max 200MB cada uno</p>
+                            <p class="text-xs text-c-soft mt-1">JPG, PNG, MP4, MOV — max 100MB cada uno</p>
                             <input type="file" id="pk-archivos" accept="image/*,video/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                         </label>
                         <div id="pk-preview" class="grid grid-cols-4 gap-2 mt-3 hidden"></div>
@@ -1253,7 +1253,7 @@
         <button onclick="mostrar('verificacion')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">verified_user</span><span class="text-[10px] font-semibold">CI</span>
         </button>
-        <button onclick="mostrar('stream')" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
+        <button onclick="mostrar('stream')" style="display:none" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">live_tv</span><span class="text-[10px] font-semibold">En vivo</span>
         </button>
     </div>
@@ -1545,6 +1545,8 @@ async function cargarMisPosts() {
                     ? `<img src="${c.preview_url}" alt="" class="w-full h-full object-cover">`
                     : `<div class="w-full h-full flex items-center justify-center text-3xl">${tipoIcon}</div>`}
                 ${oculto ? `<div class="absolute top-1.5 left-1.5 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">OCULTO</div>` : ''}
+                ${c.mod_estado === 'pendiente' ? `<div class="absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" style="background:rgba(217,119,6,.92)">EN REVISIÓN</div>` : ''}
+                ${c.mod_estado === 'rechazado' ? `<div class="absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" style="background:rgba(220,38,38,.92)" title="${esc(c.mod_razon || 'No cumple las normas de contenido')}">RECHAZADO</div>` : ''}
                 <!-- Acciones al hover -->
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex flex-col items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
                     <button onclick="toggleOcultar('${c.id}',${oculto})" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:${oculto?'rgba(34,197,94,.8)':'rgba(251,191,36,.8)'}">
@@ -1588,23 +1590,24 @@ async function subirContenido(e) {
         progressTxt.textContent = pct < 30 ? 'Subiendo...' : pct < 65 ? 'Procesando...' : 'Casi listo...';
     }, 400);
     try {
-        await candela.contenido.subir(
+        const resp = await candela.contenido.subir(
             tipo,
             document.getElementById('sub-titulo').value,
             document.getElementById('sub-desc').value,
             precio, esGratis, archivo
         );
+        const enRevision = resp && resp.mod_estado === 'pendiente';
         clearInterval(iv);
         progressBar.style.width = '100%';
-        progressTxt.textContent = 'Publicado!';
+        progressTxt.textContent = enRevision ? 'Recibido!' : 'Publicado!';
         await new Promise(r => setTimeout(r, 600));
         document.getElementById('form-subir').reset();
         document.getElementById('archivo-nombre').textContent = 'Haz clic para seleccionar archivo';
-        document.getElementById('upload-hint').textContent = 'JPG, PNG, MP4, MOV — max 500MB';
+        document.getElementById('upload-hint').textContent = 'JPG, PNG, MP4, MOV — max 100MB';
         const prev = document.getElementById('upload-preview');
         if (prev) { prev.style.display = 'none'; prev.src = ''; }
         document.getElementById('upload-icon').style.display = '';
-        toast('Contenido publicado! Ya aparece en tu perfil.', 'success');
+        toast(enRevision ? 'Recibimos tu contenido. Queda en revisión y se publica al aprobarlo, normalmente en menos de 24 horas.' : 'Contenido publicado! Ya aparece en tu perfil.', 'success');
         mostrar('inicio');
         cargarMisPosts();
     } catch(err) {

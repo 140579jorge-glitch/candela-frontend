@@ -63,6 +63,7 @@
         </div>
         <div class="nav-item active" onclick="mostrar('dashboard',this)"><span class="ms ms-fill">dashboard</span>Panel</div>
         <div class="nav-item" onclick="mostrar('verificaciones',this)"><span class="ms">verified_user</span>Verificaciones</div>
+        <div class="nav-item" onclick="mostrar('moderacion',this)"><span class="ms">visibility</span>Moderación</div>
         <div class="nav-item" onclick="mostrar('retiros',this)"><span class="ms">payments</span>Retiros</div>
         <div class="nav-item" onclick="mostrar('creadoras',this)"><span class="ms">people</span>Creadoras</div>
         <div class="nav-item" onclick="mostrar('pagos',this)"><span class="ms">receipt_long</span>Pagos PPV</div>
@@ -90,6 +91,9 @@
         <div class="nav-item active" onclick="mostrar('dashboard',this)"><span class="ms ms-fill">dashboard</span>Panel</div>
         <div class="nav-item" onclick="mostrar('verificaciones',this)"><span class="ms">verified_user</span>Verificaciones
             <span class="ml-auto bg-c-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-ver">0</span>
+        </div>
+        <div class="nav-item" onclick="mostrar('moderacion',this)"><span class="ms">visibility</span>Moderación
+            <span class="ml-auto bg-c-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-mod">0</span>
         </div>
         <div class="nav-item" onclick="mostrar('retiros',this)"><span class="ms">payments</span>Retiros
             <span class="ml-auto bg-c-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-ret">0</span>
@@ -340,6 +344,19 @@
             <h2 class="font-display text-2xl font-semibold mb-5">Propinas pendientes</h2>
             <p class="text-c-soft text-sm mb-5">Verifica el hash en blockchain antes de confirmar.</p>
             <div id="lista-propinas" class="flex flex-col gap-3">
+                <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
+            </div>
+        </section>
+
+        <!-- MODERACION DE CONTENIDO -->
+        <section id="sec-moderacion" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Moderación de contenido</h2>
+            <p class="text-c-soft text-sm mb-5">Las primeras 3 subidas de cada creadora quedan pendientes hasta que las apruebes. Revisa que sea contenido de adultos que consienten, sin menores, sin violencia y sin datos personales visibles. Si dudas, rechaza.</p>
+            <div class="flex gap-2 mb-5">
+                <button onclick="cargarModeracion('pendiente')" id="mfil-pendiente" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border bg-c-accent text-white transition-all">Pendientes</button>
+                <button onclick="cargarModeracion('rechazado')" id="mfil-rechazado" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-c-accent transition-all">Rechazados</button>
+            </div>
+            <div id="lista-moderacion" class="flex flex-col gap-3">
                 <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
             </div>
         </section>
@@ -762,6 +779,7 @@ function _activarSeccion(sec) {
     });
     window.scrollTo(0, 0);
     if (sec === 'verificaciones') cargarVerificaciones();
+    if (sec === 'moderacion') cargarModeracion('pendiente');
     if (sec === 'retiros') cargarRetiros();
     if (sec === 'dashboard') cargarDashboard();
     if (sec === 'creadoras') cargarCreadoras();
@@ -791,6 +809,71 @@ window.addEventListener('popstate', e => {
     const sec = e.state?.section || 'dashboard';
     _activarSeccion(sec);
 });
+
+async function cargarModeracion(estado) {
+    estado = estado || 'pendiente';
+    ['pendiente', 'rechazado'].forEach(e => {
+        const b = document.getElementById('mfil-' + e);
+        if (!b) return;
+        b.classList.toggle('bg-c-accent', e === estado);
+        b.classList.toggle('text-white', e === estado);
+        b.classList.toggle('text-c-soft', e !== estado);
+    });
+    const cont = document.getElementById('lista-moderacion');
+    cont.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Cargando...</p>';
+    try {
+        const lista = await candela._req('GET', `/api/admin/contenido-pendiente?estado=${estado}&limit=50`);
+        if (estado === 'pendiente') {
+            const bd = document.getElementById('badge-mod');
+            if (bd) bd.textContent = lista.length;
+        }
+        if (!lista.length) {
+            cont.innerHTML = `<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#FAF2F5">check_circle</span><p class="text-c-soft mt-2">Sin contenido ${estado === 'pendiente' ? 'pendiente de revisión' : 'rechazado'}</p></div>`;
+            return;
+        }
+        cont.innerHTML = lista.map(c => {
+            const media = !c.archivo_url ? '<p class="text-xs text-c-soft">Sin archivo</p>'
+                : c.tipo === 'video'
+                    ? `<video src="${esc(c.archivo_url)}" controls preload="metadata" class="w-full max-h-80 rounded-xl bg-black"></video>`
+                    : `<img src="${esc(c.archivo_url)}" alt="" class="w-full max-h-80 object-contain rounded-xl bg-c-bg">`;
+            const acceso = c.es_gratis ? 'Muestra gratis' : (c.precio > 0 ? '$' + Number(c.precio).toFixed(2) + ' (PPV)' : 'Solo suscriptoras');
+            const razon = c.mod_razon ? `<p class="text-xs text-red-500 mt-1">Motivo: ${esc(c.mod_razon)}</p>` : '';
+            const botones = estado === 'pendiente'
+                ? `<button onclick="moderarContenido('${c.id}','rechazado',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">close</span>Rechazar</button>
+                   <button onclick="moderarContenido('${c.id}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">check</span>Aprobar</button>`
+                : `<button onclick="moderarContenido('${c.id}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">undo</span>Revertir y aprobar</button>`;
+            return `
+            <div class="ver-card" id="mod-${c.id}">
+                <div class="flex items-start justify-between gap-4 flex-wrap mb-3">
+                    <div class="min-w-0">
+                        <p class="font-bold text-sm">${esc(c.creadora_nombre)}</p>
+                        <p class="text-xs text-c-soft">${esc(c.titulo || '(sin título)')} · ${esc(c.tipo)} · ${acceso}</p>
+                        <p class="text-[11px] text-c-soft">${fmt_fecha(c.publicado_en)}</p>
+                        ${razon}
+                    </div>
+                    <div class="flex gap-2 shrink-0">${botones}</div>
+                </div>
+                ${media}
+            </div>`;
+        }).join('');
+    } catch(e) { cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error al cargar</p>'; }
+}
+
+async function moderarContenido(id, estado, btn) {
+    let razon = null;
+    if (estado === 'rechazado') {
+        razon = (prompt('Motivo del rechazo (la creadora lo verá):') || '').trim();
+        if (!razon) { toast('Escribe un motivo para rechazar', 'error'); return; }
+    }
+    btn.disabled = true; btn.style.opacity = '.5';
+    try {
+        await candela._req('PATCH', `/api/admin/contenido/${id}/moderar`, { estado, razon });
+        toast(estado === 'aprobado' ? 'Contenido aprobado' : 'Contenido rechazado', 'success');
+        document.getElementById('mod-' + id)?.remove();
+        const bd = document.getElementById('badge-mod');
+        if (bd && Number(bd.textContent) > 0) bd.textContent = Number(bd.textContent) - 1;
+    } catch(e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
+}
 
 async function cargarDepositos() {
     const cont = document.getElementById('lista-depositos');

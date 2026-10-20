@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://clubcandela.com/sitemap.xml
+Sitemap: https://www.clubcandela.com/sitemap.xml
