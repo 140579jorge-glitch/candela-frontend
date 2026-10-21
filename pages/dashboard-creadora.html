@@ -93,6 +93,7 @@
         <div class="nav-item" onclick="mostrar('inicio')"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir')"><span class="ms">upload</span>Subir contenido</div>
         <div class="nav-item" onclick="mostrar('packs')"><span class="ms">inventory_2</span>Mis Packs</div>
+        <div class="nav-item" onclick="mostrar('colaboradores')"><span class="ms">group</span>Colaboradores</div>
         <div class="nav-item" onclick="mostrar('stories')"><span class="ms">auto_stories</span>Stories</div>
         <div class="nav-item" onclick="mostrar('encuestas')"><span class="ms">poll</span>Encuestas</div>
         <div class="nav-item" onclick="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
@@ -122,6 +123,7 @@
         <div class="nav-item active" onclick="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" onclick="mostrar('subir',this)"><span class="ms">upload</span>Subir contenido</div>
         <div class="nav-item" onclick="mostrar('packs',this)"><span class="ms">inventory_2</span>Mis Packs</div>
+        <div class="nav-item" onclick="mostrar('colaboradores',this)"><span class="ms">group</span>Colaboradores</div>
         <div class="nav-item" onclick="mostrar('stories',this)"><span class="ms">auto_stories</span>Stories</div>
         <div class="nav-item" onclick="mostrar('encuestas',this)"><span class="ms">poll</span>Encuestas</div>
         <div class="nav-item" onclick="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
@@ -306,10 +308,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="rounded-xl bg-c-bg border border-c-border p-3 text-xs text-c-soft leading-relaxed">
-                        <p class="font-bold text-c-text mb-0.5">¿Quién aparece en este contenido?</p>
-                        <p>Solo tú. Al publicar declaras que eres la única persona que aparece. El contenido con otras personas requiere su registro previo, que habilitaremos pronto. <a href="normas.html#participantes" target="_blank" rel="noopener" class="text-c-accent font-bold hover:underline">Ver reglas</a></p>
-                    </div>
+                    <div id="qa-contenido"></div>
                     <button type="submit" id="btn-subir" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2">
                         <span class="ms" style="font-size:18px">upload</span>Publicar
                     </button>
@@ -370,10 +369,7 @@
                         </div>
                         <p id="pk-progress-txt" class="text-xs text-c-soft mt-1 text-center">Subiendo...</p>
                     </div>
-                    <div class="rounded-xl bg-c-bg border border-c-border p-3 text-xs text-c-soft leading-relaxed">
-                        <p class="font-bold text-c-text mb-0.5">¿Quién aparece en este contenido?</p>
-                        <p>Solo tú. Al publicar declaras que eres la única persona que aparece. El contenido con otras personas requiere su registro previo, que habilitaremos pronto. <a href="normas.html#participantes" target="_blank" rel="noopener" class="text-c-accent font-bold hover:underline">Ver reglas</a></p>
-                    </div>
+                    <div id="qa-pack"></div>
                     <button type="submit" id="btn-crear-pack" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
                         Crear pack
                     </button>
@@ -386,6 +382,28 @@
                 <div id="lista-mis-packs">
                     <p class="text-c-soft text-sm py-8 text-center" id="packs-empty-msg">Aun no tienes packs creados.</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- ══ COLABORADORES (registro de personas que aparecen, 18 U.S.C. 2257) ══ -->
+        <section id="sec-colaboradores" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-1">Colaboradores</h2>
+            <p class="text-c-soft text-sm mb-5 max-w-lg">Si en tu contenido aparece otra persona, ella completa un registro corto y voluntario. Tú solo ingresas su correo: Candela le envía el enlace y tú no ves sus datos ni su documento.</p>
+            <div class="bg-white border border-c-border rounded-2xl p-5 max-w-lg shadow-sm mb-5">
+                <h3 class="font-bold text-sm mb-3">Invitar a alguien</h3>
+                <form id="form-invitar" onsubmit="invitarColaborador(event)" class="flex flex-col gap-3">
+                    <input id="colab-email" type="email" required maxlength="200" autocomplete="off" placeholder="Correo de la persona" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    <input id="colab-alias" type="text" maxlength="80" autocomplete="off" placeholder="Cómo la llamas (opcional, ej: Ana)" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    <button type="submit" id="colab-btn" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Enviar invitación</button>
+                </form>
+                <p class="text-[11px] text-c-soft mt-3 leading-relaxed">El enlace vence en 7 días y solo lo puede usar esa persona. Si no respondió, puedes reenviarlo.</p>
+            </div>
+            <div class="max-w-lg mb-6">
+                <h3 class="font-bold text-sm mb-3">Mis colaboradores</h3>
+                <div id="lista-colaboradores"><p class="text-c-soft text-sm py-6 text-center">Aún no has invitado a nadie.</p></div>
+            </div>
+            <div class="max-w-lg rounded-xl bg-c-bg border border-c-border p-3 text-[11px] text-c-soft leading-relaxed">
+                Cada persona firma con su propio documento y selfie. Si alguien da datos falsos o firma haciéndose pasar por otra persona, incluida la creadora que invita, la responsabilidad civil y penal es de quien lo hizo. Candela conserva estos registros por ley y puede entregarlos a las autoridades ante un requerimiento formal. <a href="normas.html#participantes" target="_blank" rel="noopener" class="text-c-accent font-bold hover:underline">Ver reglas</a>
             </div>
         </section>
 
@@ -1295,6 +1313,8 @@ async function init() {
     history.replaceState({section: secInicial}, '', '#' + secInicial);
     if (secInicial !== 'inicio') _activarSeccion(secInicial);
     const user = candela.auth.user();
+    refrescarQuienAparece();
+    cargarColaboradores();
 
     // Topbar
     document.getElementById('topbar-avatar').textContent = (user.nombre||'C')[0].toUpperCase();
@@ -1553,7 +1573,7 @@ async function cargarMisPosts() {
                     ? `<img src="${c.preview_url}" alt="" class="w-full h-full object-cover">`
                     : `<div class="w-full h-full flex items-center justify-center text-3xl">${tipoIcon}</div>`}
                 ${oculto ? `<div class="absolute top-1.5 left-1.5 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">OCULTO</div>` : ''}
-                ${c.mod_estado === 'pendiente' ? `<div class="absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" style="background:rgba(217,119,6,.92)">EN REVISIÓN</div>` : ''}
+                ${c.mod_estado === 'pendiente' ? `<div class="absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" style="background:rgba(217,119,6,.92)" title="${esc(c.mod_razon || 'Pendiente de revisión')}">${c.mod_razon ? 'ESPERANDO COLABORADOR' : 'EN REVISIÓN'}</div>` : ''}
                 ${c.mod_estado === 'rechazado' ? `<div class="absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" style="background:rgba(220,38,38,.92)" title="${esc(c.mod_razon || 'No cumple las normas de contenido')}">RECHAZADO</div>` : ''}
                 <!-- Acciones al hover -->
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex flex-col items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
@@ -1584,6 +1604,8 @@ async function subirContenido(e) {
     const acceso = document.querySelector('input[name="acceso"]:checked').value;
     const precio = acceso === 'ppv' ? parseFloat(document.getElementById('sub-precio').value) || 0 : 0;
     const esGratis = acceso === 'gratis';
+    let interpretesIds;
+    try { interpretesIds = leerQuienAparece('qa-contenido'); } catch (err) { toast(err.message, 'error'); return; }
     const btn = document.getElementById('btn-subir');
     const progressEl = document.getElementById('upload-progress');
     const progressBar = document.getElementById('upload-progress-bar');
@@ -1602,7 +1624,7 @@ async function subirContenido(e) {
             tipo,
             document.getElementById('sub-titulo').value,
             document.getElementById('sub-desc').value,
-            precio, esGratis, archivo
+            precio, esGratis, archivo, undefined, interpretesIds
         );
         const enRevision = resp && resp.mod_estado === 'pendiente';
         clearInterval(iv);
@@ -1615,7 +1637,8 @@ async function subirContenido(e) {
         const prev = document.getElementById('upload-preview');
         if (prev) { prev.style.display = 'none'; prev.src = ''; }
         document.getElementById('upload-icon').style.display = '';
-        toast(enRevision ? 'Recibimos tu contenido. Queda en revisión y se publica al aprobarlo, normalmente en menos de 24 horas.' : 'Contenido publicado! Ya aparece en tu perfil.', 'success');
+        toast(enRevision ? (resp.mensaje || 'Recibimos tu contenido. Queda en revisión y se publica al aprobarlo, normalmente en menos de 24 horas.') : 'Contenido publicado! Ya aparece en tu perfil.', 'success');
+        refrescarQuienAparece();
         mostrar('inicio');
         cargarMisPosts();
     } catch(err) {
@@ -1883,6 +1906,114 @@ function seleccionarTema(id, el) {
     if (t) document.getElementById('color-preview-bar').style.background = t.g;
 }
 
+// ─── COLABORADORES (registro 2257) ───────────────────────────
+let colaboradores = [];
+const ESTADO_COLAB = {
+    aprobado:   ['Aprobado', 'bg-green-100 text-green-700'],
+    pendiente:  ['En revisión', 'bg-amber-100 text-amber-700'],
+    invitado:   ['Esperando su registro', 'bg-gray-100 text-gray-600'],
+    procesando: ['Procesando', 'bg-gray-100 text-gray-600'],
+    rechazado:  ['Rechazado', 'bg-red-100 text-red-700'],
+    retirado:   ['Retiró su consentimiento', 'bg-red-100 text-red-700'],
+};
+function chipColab(c) {
+    const par = c.vencido ? ['Enlace vencido', 'bg-gray-100 text-gray-600'] : (ESTADO_COLAB[c.estado] || [c.estado, 'bg-gray-100 text-gray-600']);
+    return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${par[1]}">${esc(par[0])}</span>`;
+}
+async function cargarColaboradores() {
+    try { colaboradores = await candela.interpretes.misColaboradores(); } catch (e) { colaboradores = []; }
+    renderColaboradores();
+    refrescarQuienAparece();
+}
+function renderColaboradores() {
+    const el = document.getElementById('lista-colaboradores');
+    if (!el) return;
+    if (!colaboradores.length) { el.innerHTML = '<p class="text-c-soft text-sm py-6 text-center">Aún no has invitado a nadie.</p>'; return; }
+    el.innerHTML = colaboradores.map(c => `
+        <div class="bg-white border border-c-border rounded-xl p-3 mb-2 flex items-center gap-3">
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold truncate">${esc(c.alias)}</p>
+                <p class="text-[11px] text-c-soft truncate">${esc(c.email)}${c.codigo ? ' · ' + esc(c.codigo) : ''}</p>
+            </div>
+            ${chipColab(c)}
+            ${c.estado === 'invitado' ? `
+                <button type="button" onclick="reenviarColab('${esc(c.id)}')" class="text-[11px] font-bold text-c-accent hover:underline">Reenviar</button>
+                <button type="button" onclick="cancelarColab('${esc(c.id)}')" class="text-[11px] font-bold text-c-soft hover:underline">Cancelar</button>` : ''}
+        </div>`).join('');
+}
+async function invitarColaborador(e) {
+    e.preventDefault();
+    const btn = document.getElementById('colab-btn');
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try {
+        const r = await candela.interpretes.invitar(document.getElementById('colab-email').value, document.getElementById('colab-alias').value);
+        toast(r.mensaje || 'Invitación enviada', 'success');
+        document.getElementById('form-invitar').reset();
+        await cargarColaboradores();
+    } catch (err) { toast(err.message || 'No pudimos enviar la invitación', 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Enviar invitación'; }
+}
+async function reenviarColab(id) {
+    try { const r = await candela.interpretes.reenviar(id); toast(r.mensaje || 'Invitación reenviada', 'success'); await cargarColaboradores(); }
+    catch (err) { toast(err.message || 'No pudimos reenviarla', 'error'); }
+}
+async function cancelarColab(id) {
+    if (!confirm('¿Cancelar esta invitación? El enlace dejará de funcionar.')) return;
+    try { await candela.interpretes.cancelar(id); toast('Invitación cancelada', 'success'); await cargarColaboradores(); }
+    catch (err) { toast(err.message || 'No pudimos cancelarla', 'error'); }
+}
+
+// Selector "¿Quién aparece?" de los formularios de contenido y de pack.
+function montarQuienAparece(id) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    const esPack = id === 'qa-pack';
+    const sel = box.querySelector('input[type=radio]:checked');
+    const modo = sel ? sel.value : 'solo';
+    const marcados = new Set(Array.from(box.querySelectorAll('input[data-colab]:checked')).map(x => x.value));
+    const vigentes = colaboradores.filter(c => ['invitado', 'pendiente', 'aprobado'].includes(c.estado));
+    const filas = vigentes.map(c => {
+        const bloqueado = esPack && c.estado !== 'aprobado';
+        return `<label class="flex items-center gap-2 py-1 text-sm ${bloqueado ? 'opacity-50' : 'cursor-pointer'}">
+            <input type="checkbox" data-colab value="${esc(c.id)}" ${marcados.has(c.id) ? 'checked' : ''} ${bloqueado ? 'disabled' : ''} class="accent-orange-400">
+            <span class="font-semibold text-c-text">${esc(c.alias)}</span>${chipColab(c)}
+        </label>`;
+    }).join('');
+    const notaLista = esPack
+        ? 'Los packs solo admiten colaboradores ya aprobados.'
+        : 'Si alguien aún no completó su registro, tu contenido queda en espera y sigue su curso cuando lo haga y sea aprobado.';
+    const declara = modo === 'otros'
+        ? 'Al publicar declaras que las personas marcadas, además de ti, son todas las que aparecen.'
+        : 'Al publicar declaras que eres la única persona que aparece.';
+    box.innerHTML = `
+        <div class="rounded-xl bg-c-bg border border-c-border p-3 text-xs text-c-soft leading-relaxed">
+            <p class="font-bold text-c-text mb-2">¿Quién aparece en este contenido?</p>
+            <label class="flex items-center gap-2 cursor-pointer text-sm mb-1">
+                <input type="radio" name="${id}-modo" value="solo" ${modo === 'solo' ? 'checked' : ''} onchange="montarQuienAparece('${id}')" class="accent-orange-400">
+                <span class="font-semibold text-c-text">Solo yo</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+                <input type="radio" name="${id}-modo" value="otros" ${modo === 'otros' ? 'checked' : ''} onchange="montarQuienAparece('${id}')" class="accent-orange-400">
+                <span class="font-semibold text-c-text">Yo y otras personas</span>
+            </label>
+            <div class="${modo === 'otros' ? '' : 'hidden'} mt-3 pt-3 border-t border-c-border">
+                ${filas || '<p class="mb-1">Aún no tienes colaboradores.</p>'}
+                <button type="button" onclick="mostrar('colaboradores')" class="text-c-accent font-bold hover:underline mt-1">Invitar a alguien</button>
+                <p class="mt-2">${notaLista}</p>
+            </div>
+            <p class="mt-2">${declara} <a href="normas.html#participantes" target="_blank" rel="noopener" class="text-c-accent font-bold hover:underline">Ver reglas</a></p>
+        </div>`;
+}
+function refrescarQuienAparece() { montarQuienAparece('qa-contenido'); montarQuienAparece('qa-pack'); }
+function leerQuienAparece(id) {
+    const box = document.getElementById(id);
+    const sel = box ? box.querySelector('input[type=radio]:checked') : null;
+    if (!sel || sel.value === 'solo') return [];
+    const ids = Array.from(box.querySelectorAll('input[data-colab]:checked')).map(x => x.value);
+    if (!ids.length) throw new Error('Marca a las personas que aparecen, o elige "Solo yo".');
+    return ids;
+}
+
 // ─── NAVIGATION ──────────────────────────────────────────────
 function _activarSeccion(sec) {
     document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
@@ -1894,6 +2025,7 @@ function _activarSeccion(sec) {
     if (sec === 'ganancias') cargarGanancias();
     if (sec === 'inicio') { cargarGanancias(); cargarMisPosts(); cargarScore('inicio'); }
     if (sec === 'packs') cargarMisPacks();
+    if (sec === 'colaboradores') cargarColaboradores();
     if (sec === 'stories') cargarMisStories();
     if (sec === 'encuestas') cargarMisEncuestas();
     if (sec === 'personalizar') { cargarScore('personalizar'); renderCarrusel(perfilData?.fotos_carrusel || []); }
@@ -2824,6 +2956,8 @@ async function crearPack(e) {
     if (!archivos.length) { toast('Selecciona al menos un archivo', 'error'); return; }
     if (archivos.length > 10) { toast('Maximo 10 archivos', 'error'); return; }
 
+    let interpretesIds;
+    try { interpretesIds = leerQuienAparece('qa-pack'); } catch (err) { toast(err.message, 'error'); return; }
     const btn = document.getElementById('btn-crear-pack');
     btn.disabled = true;
     btn.textContent = 'Creando...';
@@ -2837,7 +2971,8 @@ async function crearPack(e) {
     fd.append('descripcion', document.getElementById('pk-desc').value);
     fd.append('precio_base', document.getElementById('pk-precio').value);
     fd.append('modo', document.getElementById('pk-modo').value);
-    fd.append('declara_solo_yo', 'true');
+    fd.append('declara_solo_yo', interpretesIds.length ? 'false' : 'true');
+    if (interpretesIds.length) fd.append('interpretes_ids', interpretesIds.join(','));
     Array.from(archivos).forEach(f => fd.append('archivos', f));
 
     try {

@@ -64,6 +64,7 @@
         <div class="nav-item active" onclick="mostrar('dashboard',this)"><span class="ms ms-fill">dashboard</span>Panel</div>
         <div class="nav-item" onclick="mostrar('verificaciones',this)"><span class="ms">verified_user</span>Verificaciones</div>
         <div class="nav-item" onclick="mostrar('moderacion',this)"><span class="ms">visibility</span>Moderación</div>
+        <div class="nav-item" onclick="mostrar('interpretes',this)"><span class="ms">badge</span>Intérpretes</div>
         <div class="nav-item" onclick="mostrar('retiros',this)"><span class="ms">payments</span>Retiros</div>
         <div class="nav-item" onclick="mostrar('creadoras',this)"><span class="ms">people</span>Creadoras</div>
         <div class="nav-item" onclick="mostrar('pagos',this)"><span class="ms">receipt_long</span>Pagos PPV</div>
@@ -94,6 +95,9 @@
         </div>
         <div class="nav-item" onclick="mostrar('moderacion',this)"><span class="ms">visibility</span>Moderación
             <span class="ml-auto bg-c-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-mod">0</span>
+        </div>
+        <div class="nav-item" onclick="mostrar('interpretes',this)"><span class="ms">badge</span>Intérpretes
+            <span class="ml-auto bg-c-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-int">0</span>
         </div>
         <div class="nav-item" onclick="mostrar('retiros',this)"><span class="ms">payments</span>Retiros
             <span class="ml-auto bg-c-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-ret">0</span>
@@ -361,6 +365,22 @@
             </div>
         </section>
 
+        <!-- REGISTRO DE INTERPRETES (18 U.S.C. 2257) -->
+        <section id="sec-interpretes" class="dash-section">
+            <h2 class="font-display text-2xl font-semibold mb-2">Registro de intérpretes</h2>
+            <p class="text-c-soft text-sm mb-5 max-w-2xl">Personas que aparecen en el contenido de una creadora y se registraron con su documento. Compara el documento con la selfie, comprueba que el nombre y la fecha de nacimiento coincidan con lo escrito, y que la persona sea claramente mayor de edad. Si dudas, rechaza. Al aprobar, el contenido en espera sigue su curso.</p>
+            <div class="flex gap-2 mb-5 flex-wrap">
+                <button onclick="cargarInterpretes('pendiente')" id="ifil-pendiente" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border bg-c-accent text-white transition-all">Pendientes</button>
+                <button onclick="cargarInterpretes('aprobado')" id="ifil-aprobado" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-c-accent transition-all">Aprobados</button>
+                <button onclick="cargarInterpretes('rechazado')" id="ifil-rechazado" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-c-accent transition-all">Rechazados</button>
+                <button onclick="cargarInterpretes('retirado')" id="ifil-retirado" class="text-xs font-bold px-3 py-1.5 rounded-full border border-c-border text-c-soft hover:border-c-accent transition-all">Retirados</button>
+            </div>
+            <div id="lista-interpretes" class="flex flex-col gap-3">
+                <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
+            </div>
+        </section>
+
+
         <!-- RECLAMOS -->
         <section id="sec-reclamos" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-2">Reclamos y Disputas</h2>
@@ -606,6 +626,7 @@ async function cargarDashboard() {
         document.getElementById('d-depositos').textContent = d.depositos_pendientes ?? '-';
         document.getElementById('d-balance-fans').textContent = d.total_balance_fans != null ? `$${d.total_balance_fans.toFixed(2)}` : '-';
         document.getElementById('badge-ver').textContent = d.verificaciones_pendientes ?? 0;
+        const bi = document.getElementById('badge-int'); if (bi) bi.textContent = d.interpretes_pendientes ?? 0;
         document.getElementById('badge-ret').textContent = d.retiros_pendientes ?? 0;
         document.getElementById('badge-dep').textContent = d.depositos_pendientes ?? 0;
     } catch(e) { toast('Error al cargar dashboard: ' + (e.message || 'Error'), 'error'); }
@@ -780,6 +801,7 @@ function _activarSeccion(sec) {
     window.scrollTo(0, 0);
     if (sec === 'verificaciones') cargarVerificaciones();
     if (sec === 'moderacion') cargarModeracion('pendiente');
+    if (sec === 'interpretes') cargarInterpretes('pendiente');
     if (sec === 'retiros') cargarRetiros();
     if (sec === 'dashboard') cargarDashboard();
     if (sec === 'creadoras') cargarCreadoras();
@@ -810,6 +832,103 @@ window.addEventListener('popstate', e => {
     _activarSeccion(sec);
 });
 
+// ─── REGISTRO DE INTERPRETES ─────────────────────────────────
+function _edadDe(iso) {
+    if (!iso) return '?';
+    const n = new Date(iso + 'T00:00:00'), h = new Date();
+    return h.getFullYear() - n.getFullYear() - ((h.getMonth() < n.getMonth() || (h.getMonth() === n.getMonth() && h.getDate() < n.getDate())) ? 1 : 0);
+}
+async function cargarInterpretes(estado) {
+    estado = estado || 'pendiente';
+    ['pendiente', 'aprobado', 'rechazado', 'retirado'].forEach(e => {
+        const b = document.getElementById('ifil-' + e);
+        if (!b) return;
+        b.classList.toggle('bg-c-accent', e === estado);
+        b.classList.toggle('text-white', e === estado);
+        b.classList.toggle('text-c-soft', e !== estado);
+    });
+    const cont = document.getElementById('lista-interpretes');
+    cont.innerHTML = '<p class="text-c-soft text-sm text-center py-8">Cargando...</p>';
+    try {
+        if (estado !== 'pendiente') {
+            const lista = await candela._req('GET', `/api/admin/interpretes?estado=${estado}`);
+            const bd = document.getElementById('badge-int'); void bd;
+            if (!lista.length) { cont.innerHTML = `<p class="text-c-soft text-sm text-center py-10">Sin registros ${esc(estado)}s</p>`; return; }
+            cont.innerHTML = lista.map(i => `
+                <div class="ver-card" id="int-${esc(i.id)}">
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div class="min-w-0">
+                            <p class="font-bold text-sm">${esc(i.nombre_legal || '(sin nombre)')} <span class="text-c-soft font-normal">con ${esc(i.creadora)}</span></p>
+                            <p class="text-[11px] text-c-soft">${esc(i.codigo || '')} · ${i.firmado_en ? fmt_fecha(i.firmado_en) : ''}</p>
+                        </div>
+                        ${estado === 'aprobado' ? `<button onclick="retirarInterprete('${esc(i.id)}',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all">Retirar consentimiento</button>` : ''}
+                    </div>
+                </div>`).join('');
+            return;
+        }
+        const lista = await candela._req('GET', '/api/admin/interpretes/pendientes');
+        const bd = document.getElementById('badge-int');
+        if (bd) bd.textContent = lista.length;
+        if (!lista.length) {
+            cont.innerHTML = '<div class="text-center py-12"><span class="ms" style="font-size:3rem;color:#FAF2F5">check_circle</span><p class="text-c-soft mt-2">Sin registros pendientes</p></div>';
+            return;
+        }
+        const imagen = (url, etq) => url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="block"><p class="text-[10px] font-bold text-c-soft uppercase mb-1">${etq}</p><img src="${esc(url)}" alt="${etq}" class="w-full max-h-64 object-contain rounded-xl bg-c-bg border border-c-border"></a>` : '';
+        cont.innerHTML = lista.map(i => `
+            <div class="ver-card" id="int-${esc(i.id)}">
+                <div class="flex items-start justify-between gap-4 flex-wrap mb-3">
+                    <div class="min-w-0">
+                        <p class="font-bold text-sm">${esc(i.nombre_legal)} <span class="text-c-soft font-normal">· ${_edadDe(i.fecha_nacimiento)} años</span></p>
+                        <p class="text-xs text-c-soft">Invitada por <b>${esc(i.creadora)}</b>${i.alias_visible ? ' como "' + esc(i.alias_visible) + '"' : ''} · ${esc(i.email)}</p>
+                        <p class="text-xs text-c-soft">Nacimiento ${esc(i.fecha_nacimiento)} · ${esc(i.doc_tipo)} · otros nombres: ${esc(i.otros_nombres || 'ninguno')}</p>
+                        <p class="text-[11px] text-c-soft">${esc(i.codigo)} · firmado ${fmt_fecha(i.firmado_en)} · IP ${esc(i.firma_ip || '-')} · contenido en espera: ${i.contenidos_en_espera}</p>
+                        ${i.pdf_url ? `<a href="${esc(i.pdf_url)}" target="_blank" rel="noopener" class="text-xs font-bold text-c-accent hover:underline">Ver contrato firmado (PDF)</a>` : ''}
+                    </div>
+                    <div class="flex gap-2 shrink-0">
+                        <button onclick="revisarInterprete('${esc(i.id)}','rechazar',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">close</span>Rechazar</button>
+                        <button onclick="revisarInterprete('${esc(i.id)}','aprobar',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">check</span>Aprobar</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    ${imagen(i.doc_url, 'Documento (frente)')}
+                    ${imagen(i.reverso_url, 'Documento (reverso)')}
+                    ${imagen(i.selfie_url, 'Selfie')}
+                    ${imagen(i.firma_url, 'Firma')}
+                </div>
+            </div>`).join('');
+    } catch (e) { cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error al cargar</p>'; }
+}
+
+async function revisarInterprete(id, accion, btn) {
+    let notas = '';
+    if (accion === 'rechazar') {
+        notas = (prompt('Motivo del rechazo (se le envía a la persona):') || '').trim();
+        if (!notas) { toast('Escribe un motivo para rechazar', 'error'); return; }
+    } else if (!confirm('¿Confirmas que el documento y la selfie corresponden a la misma persona, mayor de 18, y que los datos coinciden?')) {
+        return;
+    }
+    btn.disabled = true; btn.style.opacity = '.5';
+    try {
+        await candela._req('POST', `/api/admin/interpretes/${id}/revisar`, { accion, notas });
+        toast(accion === 'aprobar' ? 'Registro aprobado' : 'Registro rechazado', 'success');
+        document.getElementById('int-' + id)?.remove();
+        const bd = document.getElementById('badge-int');
+        if (bd && Number(bd.textContent) > 0) bd.textContent = Number(bd.textContent) - 1;
+    } catch (e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
+}
+
+async function retirarInterprete(id, btn) {
+    const motivo = (prompt('Retiro de consentimiento. Motivo o referencia de la solicitud (comprueba antes que quien escribe es la persona):') || '').trim();
+    if (!motivo) { toast('Escribe el motivo', 'error'); return; }
+    if (!confirm('Se dará de baja TODO el contenido y los packs con esta persona. El registro y sus archivos se conservan por ley. ¿Continuar?')) return;
+    btn.disabled = true; btn.style.opacity = '.5';
+    try {
+        const r = await candela._req('POST', `/api/admin/interpretes/${id}/retirar`, { motivo });
+        toast(`Consentimiento retirado. Dados de baja: ${r.bajas}`, 'success');
+        document.getElementById('int-' + id)?.remove();
+    } catch (e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
+}
+
 async function cargarModeracion(estado) {
     estado = estado || 'pendiente';
     ['pendiente', 'rechazado'].forEach(e => {
@@ -838,6 +957,7 @@ async function cargarModeracion(estado) {
                     : `<img src="${esc(c.archivo_url)}" alt="" class="w-full max-h-80 object-contain rounded-xl bg-c-bg">`;
             const acceso = c.es_gratis ? 'Muestra gratis' : (c.precio > 0 ? '$' + Number(c.precio).toFixed(2) + ' (PPV)' : 'Solo suscriptoras');
             const razon = c.mod_razon ? `<p class="text-xs text-red-500 mt-1">Motivo: ${esc(c.mod_razon)}</p>` : '';
+            const quienes = (c.interpretes && c.interpretes.length) ? `<p class="text-xs text-c-soft mt-1">Aparece con: ${c.interpretes.map(x => esc(x.alias) + ' (' + esc(x.estado) + ')').join(', ')}</p>` : '<p class="text-xs text-c-soft mt-1">Declara que aparece solo ella</p>';
             const botones = estado === 'pendiente'
                 ? `<button onclick="moderarContenido('${c.id}','rechazado',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">close</span>Rechazar</button>
                    <button onclick="moderarContenido('${c.id}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">check</span>Aprobar</button>`
@@ -850,6 +970,7 @@ async function cargarModeracion(estado) {
                         <p class="text-xs text-c-soft">${esc(c.titulo || '(sin título)')} · ${esc(c.tipo)} · ${acceso}</p>
                         <p class="text-[11px] text-c-soft">${fmt_fecha(c.publicado_en)}</p>
                         ${razon}
+                        ${quienes}
                     </div>
                     <div class="flex gap-2 shrink-0">${botones}</div>
                 </div>

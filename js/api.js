@@ -163,18 +163,26 @@ const candela = {
         misContenidos: () => candela._req('GET', '/api/contenido/mis-contenidos'),
         eliminar: (id) => candela._req('DELETE', `/api/contenido/${id}`),
         toggleVisibilidad: (id, visible) => candela._req('PATCH', `/api/contenido/${id}/visibilidad?visible=${visible}`),
-        async subir(tipo, titulo, descripcion, precio, esGratis, archivoFile, previewFile) {
+        async subir(tipo, titulo, descripcion, precio, esGratis, archivoFile, previewFile, interpretesIds = []) {
             const fd = new FormData();
             fd.append('tipo', tipo);
             if (titulo) fd.append('titulo', titulo);
             if (descripcion) fd.append('descripcion', descripcion);
             fd.append('precio', precio);
             fd.append('es_gratis', esGratis);
-            fd.append('declara_solo_yo', 'true');  // la UI muestra la declaracion junto al boton Publicar
+            fd.append('declara_solo_yo', interpretesIds.length ? 'false' : 'true');
+            if (interpretesIds.length) fd.append('interpretes_ids', interpretesIds.join(','));
             fd.append('archivo', archivoFile);
             if (previewFile) fd.append('preview', previewFile);
             return candela._req('POST', '/api/contenido/subir', fd, true);
         },
+    },
+
+    interpretes: {
+        invitar: (email, alias) => candela._req('POST', '/api/interpretes/invitar', { email, alias }),
+        misColaboradores: () => candela._req('GET', '/api/interpretes/mis-colaboradores'),
+        reenviar: (id) => candela._req('POST', `/api/interpretes/${encodeURIComponent(id)}/reenviar`),
+        cancelar: (id) => candela._req('DELETE', `/api/interpretes/${encodeURIComponent(id)}`),
     },
 
     pagos: {
