@@ -170,6 +170,7 @@ const candela = {
             if (descripcion) fd.append('descripcion', descripcion);
             fd.append('precio', precio);
             fd.append('es_gratis', esGratis);
+            fd.append('declara_solo_yo', 'true');  // la UI muestra la declaracion junto al boton Publicar
             fd.append('archivo', archivoFile);
             if (previewFile) fd.append('preview', previewFile);
             return candela._req('POST', '/api/contenido/subir', fd, true);
@@ -220,6 +221,7 @@ const candela = {
             const fd = new FormData();
             fd.append('fan_id', fanId);
             fd.append('precio', precio || 0);
+            fd.append('declara_solo_yo', 'true');
             if (contenido) fd.append('contenido', contenido);
             fd.append('archivo', archivo);
             return candela._req('POST', '/api/mensajes/responder-media', fd, true);

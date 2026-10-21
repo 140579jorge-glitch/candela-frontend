@@ -306,6 +306,10 @@
                             </label>
                         </div>
                     </div>
+                    <div class="rounded-xl bg-c-bg border border-c-border p-3 text-xs text-c-soft leading-relaxed">
+                        <p class="font-bold text-c-text mb-0.5">¿Quién aparece en este contenido?</p>
+                        <p>Solo tú. Al publicar declaras que eres la única persona que aparece. El contenido con otras personas requiere su registro previo, que habilitaremos pronto. <a href="normas.html#participantes" target="_blank" rel="noopener" class="text-c-accent font-bold hover:underline">Ver reglas</a></p>
+                    </div>
                     <button type="submit" id="btn-subir" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2">
                         <span class="ms" style="font-size:18px">upload</span>Publicar
                     </button>
@@ -365,6 +369,10 @@
                             <div id="pk-progress-bar" class="h-2 rounded-full c-btn transition-all duration-300" style="width:0%"></div>
                         </div>
                         <p id="pk-progress-txt" class="text-xs text-c-soft mt-1 text-center">Subiendo...</p>
+                    </div>
+                    <div class="rounded-xl bg-c-bg border border-c-border p-3 text-xs text-c-soft leading-relaxed">
+                        <p class="font-bold text-c-text mb-0.5">¿Quién aparece en este contenido?</p>
+                        <p>Solo tú. Al publicar declaras que eres la única persona que aparece. El contenido con otras personas requiere su registro previo, que habilitaremos pronto. <a href="normas.html#participantes" target="_blank" rel="noopener" class="text-c-accent font-bold hover:underline">Ver reglas</a></p>
                     </div>
                     <button type="submit" id="btn-crear-pack" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">
                         Crear pack
@@ -2829,6 +2837,7 @@ async function crearPack(e) {
     fd.append('descripcion', document.getElementById('pk-desc').value);
     fd.append('precio_base', document.getElementById('pk-precio').value);
     fd.append('modo', document.getElementById('pk-modo').value);
+    fd.append('declara_solo_yo', 'true');
     Array.from(archivos).forEach(f => fd.append('archivos', f));
 
     try {
