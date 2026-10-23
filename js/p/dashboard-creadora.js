@@ -2078,10 +2078,10 @@ async function cargarMisMedios() {
         empty.classList.add('hidden');
         grid.innerHTML = items.map(item => `
             <div class="relative rounded-xl overflow-hidden cursor-pointer group" style="aspect-ratio:1"
-                data-on-click="copiarUrlMedio('${String(item.id).replace(/[^a-z0-9-]/gi,'')}','${_u(item.preview_url||'')}')"
+                data-on-click="copiarUrlMedio('${String(item.id).replace(/[^a-z0-9-]/gi,'')}','${_url(item.preview_url||'')}')"
                 title="Clic para copiar URL">
                 ${item.preview_url
-                    ? `<img src="${_u(item.preview_url)}" alt="" class="w-full h-full object-cover" draggable="false" data-on-contextmenu="return false">`
+                    ? `<img src="${_url(item.preview_url)}" alt="" class="w-full h-full object-cover" draggable="false" data-on-contextmenu="return false">`
                     : `<div class="w-full h-full bg-c-bg flex items-center justify-center"><span class="ms text-c-soft" style="font-size:28px">${item.tipo==='video'?'videocam':'photo_camera'}</span></div>`
                 }
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
