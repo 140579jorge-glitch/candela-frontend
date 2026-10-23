@@ -108,14 +108,15 @@
             .calc-results { grid-template-columns: 1fr; }
         }
     </style>
+    <script src="/js/ui-events.js"></script>
 </head>
 <body>
 
 <nav>
     <a href="../index.html" class="logo">Candela</a>
     <div class="nav-btns">
-        <a href="../index.html" class="btn-outline" onclick="window.__openLogin=true">Iniciar sesión</a>
-        <a href="../index.html" class="btn-primary" onclick="window.__openRegister=true">Registrarse gratis</a>
+        <a href="../index.html" class="btn-outline" data-on-click="window.__openLogin=true">Iniciar sesión</a>
+        <a href="../index.html" class="btn-primary" data-on-click="window.__openRegister=true">Registrarse gratis</a>
     </div>
 </nav>
 
@@ -124,7 +125,7 @@
     <div class="hero-badge"><span class="ms" style="font-size:14px">bolt</span> Programa de Agentes</div>
     <h1>Gana dinero distribuyendo<br><span>créditos Candela</span></h1>
     <p>Compra créditos al por mayor, véndelos en tu zona al precio que tú defines. Sin oficina, sin jefe, sin inversión mínima.</p>
-    <a href="../index.html#registro" class="hero-cta" onclick="window.location='../index.html';window.__openRegister=true;return false;">
+    <a href="../index.html#registro" class="hero-cta" data-on-click="window.location='../index.html';window.__openRegister=true;return false;">
         <span class="ms" style="font-size:20px">rocket_launch</span>
         Quiero ser Agente Candela
     </a>
@@ -197,11 +198,11 @@
 
         <div class="calc-slider-wrap">
             <div class="calc-label">Inversión mensual <span id="lbl-inv">$100</span></div>
-            <input type="range" min="20" max="1000" step="10" value="100" id="sl-inv" oninput="calcular()">
+            <input type="range" min="20" max="1000" step="10" value="100" id="sl-inv" data-on-input="calcular()">
         </div>
         <div class="calc-slider-wrap">
             <div class="calc-label">Markup que cobrás a tus clientes <span id="lbl-mk">20%</span></div>
-            <input type="range" min="5" max="50" step="5" value="20" id="sl-mk" oninput="calcular()">
+            <input type="range" min="5" max="50" step="5" value="20" id="sl-mk" data-on-input="calcular()">
         </div>
 
         <div class="calc-results">
@@ -274,31 +275,31 @@
 
     <div class="faq-list">
         <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">¿Tengo que pagar algo para ser Agente? <span class="ms">expand_more</span></button>
+            <button class="faq-q" data-on-click="toggleFaq(this)">¿Tengo que pagar algo para ser Agente? <span class="ms">expand_more</span></button>
             <div class="faq-a">No. El registro como agente es completamente gratis. Pagás solamente cuando querés comprar créditos para revender.</div>
         </div>
         <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">¿Cuánto mínimo tengo que invertir? <span class="ms">expand_more</span></button>
+            <button class="faq-q" data-on-click="toggleFaq(this)">¿Cuánto mínimo tengo que invertir? <span class="ms">expand_more</span></button>
             <div class="faq-a">No hay mínimo. Podés empezar con $10, $20, lo que tengas disponible. El bonus del 10% aplica desde el primer peso.</div>
         </div>
         <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">¿Cómo le transfiero créditos a un cliente? <span class="ms">expand_more</span></button>
+            <button class="faq-q" data-on-click="toggleFaq(this)">¿Cómo le transfiero créditos a un cliente? <span class="ms">expand_more</span></button>
             <div class="faq-a">Desde tu panel de agente ingresás el email del fan registrado en Candela, la cantidad de créditos y confirmas. El cliente los recibe instantáneamente en su cuenta.</div>
         </div>
         <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">¿Cómo me pagan los clientes a mí? <span class="ms">expand_more</span></button>
+            <button class="faq-q" data-on-click="toggleFaq(this)">¿Cómo me pagan los clientes a mí? <span class="ms">expand_more</span></button>
             <div class="faq-a">Como acuerdes con cada cliente: efectivo, transferencia bancaria, el método que prefieran. Candela no interviene en el pago entre vos y tu cliente — eso lo manejás directamente.</div>
         </div>
         <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">¿Cómo recargo mi balance de agente? <span class="ms">expand_more</span></button>
+            <button class="faq-q" data-on-click="toggleFaq(this)">¿Cómo recargo mi balance de agente? <span class="ms">expand_more</span></button>
             <div class="faq-a">Hacés un depósito en USDT (criptomoneda estable equivalente al dólar) a la dirección de la billetera que te mostramos en el panel. Una vez confirmado, el 110% del valor aparece como créditos disponibles para vender.</div>
         </div>
         <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">¿Hay un límite de cuántos créditos puedo vender? <span class="ms">expand_more</span></button>
+            <button class="faq-q" data-on-click="toggleFaq(this)">¿Hay un límite de cuántos créditos puedo vender? <span class="ms">expand_more</span></button>
             <div class="faq-a">No existe tope. Podés vender todo lo que tengas disponible en tu balance. Cuanto más vendés, más ganás.</div>
         </div>
         <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">¿Puedo usar créditos para mi propio consumo? <span class="ms">expand_more</span></button>
+            <button class="faq-q" data-on-click="toggleFaq(this)">¿Puedo usar créditos para mi propio consumo? <span class="ms">expand_more</span></button>
             <div class="faq-a">Sí. Una parte de tu balance de agente la podés mover a tu cuenta personal para suscribirte a creadoras o desbloquear contenido. Lo hacés desde la sección "Cargar a mi cuenta" del panel.</div>
         </div>
     </div>
@@ -310,11 +311,11 @@
         <h2>¿Listo para empezar a ganar?</h2>
         <p>El registro es gratis. En 2 minutos tenés tu cuenta activa y podés hacer tu primera recarga.</p>
         <div class="cta-btns">
-            <a href="../index.html" class="hero-cta" onclick="sessionStorage.setItem('openModal','registro');return true;" style="font-size:.9rem;padding:.75rem 1.75rem;">
+            <a href="../index.html" class="hero-cta" data-on-click="sessionStorage.setItem('openModal','registro');return true;" style="font-size:.9rem;padding:.75rem 1.75rem;">
                 <span class="ms" style="font-size:18px">rocket_launch</span>
                 Registrarme como Agente
             </a>
-            <a href="../index.html" class="btn-outline" style="color:#fff;border-color:rgba(255,255,255,.3);padding:.75rem 1.5rem;" onclick="sessionStorage.setItem('openModal','login');return true;">
+            <a href="../index.html" class="btn-outline" style="color:#fff;border-color:rgba(255,255,255,.3);padding:.75rem 1.5rem;" data-on-click="sessionStorage.setItem('openModal','login');return true;">
                 Ya tengo cuenta — Entrar
             </a>
         </div>
@@ -322,38 +323,6 @@
     </div>
 </section>
 
-<script>
-function calcular() {
-    const inv = Number(document.getElementById('sl-inv').value);
-    const mk = Number(document.getElementById('sl-mk').value) / 100;
-    const creditos = inv * 1.10;
-    const venta = creditos * (1 + mk);
-    const ganancia = venta - inv;
-    const roi = (ganancia / inv * 100).toFixed(0);
-
-    document.getElementById('lbl-inv').textContent = '$' + inv;
-    document.getElementById('lbl-mk').textContent = Math.round(mk * 100) + '%';
-    document.getElementById('res-bonus').textContent = '$' + creditos.toFixed(0);
-    document.getElementById('res-venta').textContent = '$' + venta.toFixed(0);
-    document.getElementById('res-ganancia').textContent = '$' + ganancia.toFixed(0);
-    document.getElementById('res-roi').textContent = roi + '%';
-}
-
-function toggleFaq(btn) {
-    const a = btn.nextElementSibling;
-    const open = a.classList.toggle('open');
-    btn.classList.toggle('open', open);
-}
-
-// Si volvemos a la landing con una sesión de modal pendiente
-window.addEventListener('load', () => {
-    calcular();
-    const modal = sessionStorage.getItem('openModal');
-    if (modal) {
-        sessionStorage.removeItem('openModal');
-        // No aplica aqui, se maneja en index.html
-    }
-});
-</script>
+<script src="/js/p/gana-como-agente.js"></script>
 </body>
 </html>

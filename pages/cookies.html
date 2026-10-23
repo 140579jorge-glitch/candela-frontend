@@ -25,6 +25,7 @@ strong{color:#2D2D2D;}
 .revoke-btn{background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;border:none;padding:.6rem 1.5rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;transition:filter .2s;}
 .revoke-btn:hover{filter:brightness(1.07);}
 </style>
+    <script src="/js/ui-events.js"></script>
 </head>
 <body class="bg-c-bg text-c-text min-h-screen">
 
@@ -101,8 +102,8 @@ strong{color:#2D2D2D;}
   <div style="background:#fff;border:1px solid #F5E8EF;border-radius:16px;padding:1.25rem 1.5rem;margin:1rem 0;">
     <p id="consent-status" style="font-size:.875rem;margin-bottom:1rem;"></p>
     <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
-      <button class="revoke-btn" onclick="setConsent('1')">Aceptar cookies analíticas</button>
-      <button style="background:#fff;border:2px solid #B5445C;color:#B5445C;padding:.55rem 1.25rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;" onclick="setConsent('0')">Rechazar cookies analíticas</button>
+      <button class="revoke-btn" data-on-click="setConsent('1')">Aceptar cookies analíticas</button>
+      <button style="background:#fff;border:2px solid #B5445C;color:#B5445C;padding:.55rem 1.25rem;border-radius:999px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;" data-on-click="setConsent('0')">Rechazar cookies analíticas</button>
     </div>
   </div>
 
@@ -152,21 +153,6 @@ strong{color:#2D2D2D;}
 
 <script src="/js/cookie-consent.js"></script>
 <script src="/js/pwa-install.js"></script>
-<script>
-function setConsent(v) {
-  localStorage.setItem('candela_cookies', v);
-  updateStatus();
-  if (v === '1' && window.candela_cc_inject) window.candela_cc_inject();
-  else location.reload();
-}
-function updateStatus() {
-  var v = localStorage.getItem('candela_cookies');
-  var el = document.getElementById('consent-status');
-  if (v === '1') el.innerHTML = '<strong style="color:#2E7D32">✓ Has aceptado</strong> las cookies analíticas.';
-  else if (v === '0') el.innerHTML = '<strong style="color:#C62828">✗ Has rechazado</strong> las cookies analíticas. Google Analytics no está activo.';
-  else el.innerHTML = '<strong style="color:#F57F17">— Pendiente de decisión.</strong> No has aceptado ni rechazado todavía.';
-}
-updateStatus();
-</script>
+<script src="/js/p/cookies.js"></script>
 </body>
 </html>

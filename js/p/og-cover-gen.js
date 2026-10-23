@@ -1,0 +1,137 @@
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+
+function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+}
+
+function draw() {
+    const W = 1200, H = 630;
+
+    // Background
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#140602');
+    bg.addColorStop(1, '#3D1A0A');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Glow circles right side
+    ctx.save();
+    ctx.globalAlpha = 0.09;
+    ctx.fillStyle = '#B5445C';
+    ctx.beginPath(); ctx.arc(960, 220, 300, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 0.05;
+    ctx.beginPath(); ctx.arc(1080, 500, 180, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // Left accent bar
+    const barGrd = ctx.createLinearGradient(0, 90, 0, 520);
+    barGrd.addColorStop(0, '#B5445C');
+    barGrd.addColorStop(1, '#D4869D');
+    ctx.fillStyle = barGrd;
+    ctx.fillRect(62, 90, 5, 450);
+
+    // Logo "Candela"
+    ctx.font = 'italic 700 114px "Playfair Display", Georgia, serif';
+    const logoGrd = ctx.createLinearGradient(85, 0, 580, 0);
+    logoGrd.addColorStop(0, '#B5445C');
+    logoGrd.addColorStop(0.55, '#F2B8C8');
+    logoGrd.addColorStop(1, '#D4869D');
+    ctx.fillStyle = logoGrd;
+    ctx.fillText('Candela', 85, 210);
+
+    // Tagline
+    ctx.font = '600 34px "Nunito", Arial, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.fillText('Creadoras latinas exclusivas', 85, 268);
+
+    // Divider
+    const divGrd = ctx.createLinearGradient(85, 0, 680, 0);
+    divGrd.addColorStop(0, 'rgba(244,162,97,0.6)');
+    divGrd.addColorStop(1, 'rgba(244,162,97,0)');
+    ctx.strokeStyle = divGrd;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(85, 298); ctx.lineTo(700, 298); ctx.stroke();
+
+    // Countries
+    ctx.font = '600 21px "Nunito", Arial, sans-serif';
+    ctx.fillStyle = 'rgba(244,162,97,0.75)';
+    ctx.fillText('Bolivia \u00B7 Colombia \u00B7 M\u00E9xico \u00B7 Argentina \u00B7 Venezuela \u00B7 Per\u00FA', 85, 338);
+
+    // Benefit chips
+    const chips = ['84% para ti', 'USDT Crypto', '$0 registro'];
+    let cx = 85;
+    ctx.font = '700 18px "Nunito", Arial, sans-serif';
+    chips.forEach(function(text) {
+        var tw = ctx.measureText(text).width;
+        var pw = tw + 36, ph = 38;
+        var cy = 370;
+        ctx.fillStyle = 'rgba(244,162,97,0.10)';
+        roundRect(cx, cy, pw, ph, 19); ctx.fill();
+        ctx.strokeStyle = 'rgba(244,162,97,0.28)';
+        ctx.lineWidth = 1;
+        roundRect(cx, cy, pw, ph, 19); ctx.stroke();
+        ctx.fillStyle = '#B5445C';
+        ctx.fillText(text, cx + 18, cy + 26);
+        cx += pw + 12;
+    });
+
+    // Right side: stats column
+    var stats = [
+        ['84%', 'para las creadoras'],
+        ['24h', 'aprobaci\u00F3n'],
+        ['3', 'm\u00E9todos de pago'],
+    ];
+    var sy = 120, sx = 820;
+    stats.forEach(function(st) {
+        ctx.font = 'italic 700 54px "Playfair Display", Georgia, serif';
+        ctx.fillStyle = '#B5445C';
+        ctx.fillText(st[0], sx, sy + 46);
+        ctx.font = '600 17px "Nunito", Arial, sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.45)';
+        ctx.fillText(st[1], sx, sy + 70);
+        // divider between stats
+        ctx.strokeStyle = 'rgba(244,162,97,0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(sx, sy + 88); ctx.lineTo(sx + 260, sy + 88); ctx.stroke();
+        sy += 115;
+    });
+
+    // Bottom bar
+    ctx.fillStyle = 'rgba(244,162,97,0.08)';
+    ctx.fillRect(0, 568, W, H - 568);
+    ctx.strokeStyle = 'rgba(244,162,97,0.18)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, 569); ctx.lineTo(W, 569); ctx.stroke();
+
+    ctx.font = '700 20px "Nunito", Arial, sans-serif';
+    ctx.fillStyle = '#B5445C';
+    ctx.textAlign = 'left';
+    ctx.fillText('clubcandela.com', 85, 606);
+
+    ctx.font = '600 17px "Nunito", Arial, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.38)';
+    ctx.textAlign = 'right';
+    ctx.fillText('La plataforma latina de contenido exclusivo', 1118, 606);
+}
+
+function download() {
+    c.toBlob(function(blob) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'og-cover.jpg';
+        a.click();
+    }, 'image/jpeg', 0.93);
+}
+
+document.fonts.ready.then(function() { draw(); });

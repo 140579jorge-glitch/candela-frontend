@@ -115,6 +115,7 @@
         .reveal-d5 { transition-delay:.42s; }
         .reveal-d6 { transition-delay:.5s; }
     </style>
+    <script src="/js/ui-events.js"></script>
 </head>
 <body class="bg-c-bg text-c-text antialiased">
 
@@ -304,7 +305,7 @@
                     <span id="calc-subs-val" class="font-bold text-c-accent">50</span>
                 </div>
                 <input type="range" id="calc-subs" min="5" max="500" value="50" step="5"
-                    class="w-full accent-c-accent" oninput="calcular()">
+                    class="w-full accent-c-accent" data-on-input="calcular()">
             </div>
             <div class="mb-6">
                 <div class="flex justify-between text-sm mb-2">
@@ -312,7 +313,7 @@
                     <span id="calc-precio-val" class="font-bold text-c-accent">$15</span>
                 </div>
                 <input type="range" id="calc-precio" min="5" max="50" value="15" step="1"
-                    class="w-full accent-c-accent" oninput="calcular()">
+                    class="w-full accent-c-accent" data-on-input="calcular()">
             </div>
             <div class="calc-result">
                 <p class="text-white/80 text-xs font-bold uppercase tracking-wide mb-1">Tu ganancia mensual estimada</p>
@@ -396,28 +397,7 @@
     </div>
 </footer>
 
-<script>
-// Scroll reveals — IntersectionObserver (no scroll listener, no reflow)
-(function(){
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-})();
-
-function calcular() {
-    const subs = parseInt(document.getElementById('calc-subs').value);
-    const precio = parseInt(document.getElementById('calc-precio').value);
-    document.getElementById('calc-subs-val').textContent = subs;
-    document.getElementById('calc-precio-val').textContent = '$' + precio;
-    const ganancia = (subs * precio * 0.84).toFixed(0);
-    const ganancia100 = (subs * precio).toFixed(0);
-    document.getElementById('calc-resultado').textContent = '$' + ganancia + '/mes';
-    document.getElementById('calc-detalle').textContent =
-        `${subs} subs × $${precio} × 84% (tu parte)`;
-}
-calcular();
-</script>
+<script src="/js/p/gana-con-candela.js"></script>
 <script src="../js/age-gate.js"></script>
 
 <script src="/js/cookie-consent.js"></script>

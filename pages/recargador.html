@@ -36,6 +36,7 @@
         @keyframes shimmer { 0%{background-position:-300% 0}100%{background-position:300% 0} }
         .skeleton { background:linear-gradient(90deg,#FAF2F5 25%,#FFF0EA 50%,#FAF2F5 75%);background-size:300% 100%;animation:shimmer 1.6s infinite;border-radius:8px; }
     </style>
+    <script src="/js/ui-events.js"></script>
 </head>
 <body class="min-h-screen">
 
@@ -44,7 +45,7 @@
     <a href="../index.html" class="logo-text font-display text-2xl font-semibold">Candela</a>
     <div class="flex items-center gap-3">
         <span id="nav-nombre" class="text-sm text-c-soft font-medium"></span>
-        <button onclick="candela.auth.logout()" class="text-sm text-c-soft hover:text-c-accent transition-colors">Salir</button>
+        <button data-on-click="candela.auth.logout()" class="text-sm text-c-soft hover:text-c-accent transition-colors">Salir</button>
     </div>
 </nav>
 
@@ -52,20 +53,20 @@
     <!-- SIDEBAR DESKTOP -->
     <aside class="sidebar hidden md:flex flex-col w-56 min-h-[calc(100vh-56px)] sticky top-14 pt-6 pb-10 shrink-0">
         <p class="px-5 text-xs font-700 uppercase tracking-widest text-c-soft mb-3">Recargador</p>
-        <div class="nav-item active" onclick="ir('balance',this)">
+        <div class="nav-item active" data-on-click="ir('balance',this)">
             <span class="ms">account_balance_wallet</span> Mi Balance
         </div>
-        <div class="nav-item" onclick="ir('transferir',this)">
+        <div class="nav-item" data-on-click="ir('transferir',this)">
             <span class="ms">confirmation_number</span> Generar código
         </div>
-        <div class="nav-item" onclick="ir('consumo',this)">
+        <div class="nav-item" data-on-click="ir('consumo',this)">
             <span class="ms">person</span> Cargar a mi Cuenta
         </div>
-        <div class="nav-item" onclick="ir('ayuda',this)">
+        <div class="nav-item" data-on-click="ir('ayuda',this)">
             <span class="ms">help_outline</span> Como Funciona
         </div>
         <div class="mt-auto px-4 pt-6">
-            <button onclick="candela.auth.logout()" class="w-full text-sm text-c-soft hover:text-c-accent transition-colors flex items-center gap-2">
+            <button data-on-click="candela.auth.logout()" class="w-full text-sm text-c-soft hover:text-c-accent transition-colors flex items-center gap-2">
                 <span class="ms text-base">logout</span> Cerrar sesion
             </button>
         </div>
@@ -138,7 +139,7 @@
                     </div>
                 </div>
 
-                <button id="btn-transferir" onclick="generarVoucher()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                <button id="btn-transferir" data-on-click="generarVoucher()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
                     <span class="ms text-base">confirmation_number</span> Generar código
                 </button>
             </div>
@@ -158,7 +159,7 @@
                     <label class="text-xs font-700 text-c-soft uppercase tracking-wider mb-1.5 block">Monto a convertir (USD)</label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
-                        <input id="consumo-monto" type="number" min="1" step="0.01" placeholder="10.00" class="input-field pl-7" oninput="actualizarPreviewConsumo()">
+                        <input id="consumo-monto" type="number" min="1" step="0.01" placeholder="10.00" class="input-field pl-7" data-on-input="actualizarPreviewConsumo()">
                     </div>
                 </div>
 
@@ -177,7 +178,7 @@
                     </div>
                 </div>
 
-                <button id="btn-consumo" onclick="transferirAMiCuenta()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                <button id="btn-consumo" data-on-click="transferirAMiCuenta()" class="c-btn w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
                     <span class="ms text-base">swap_horiz</span> Convertir
                 </button>
             </div>
@@ -219,19 +220,19 @@
 
 <!-- BOTTOM NAV MOVIL -->
 <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-c-border z-30 flex justify-around py-2">
-    <div class="bot-nav-item active" onclick="ir('balance',this,'bot')">
+    <div class="bot-nav-item active" data-on-click="ir('balance',this,'bot')">
         <span class="ms text-xl">account_balance_wallet</span>
         <span>Balance</span>
     </div>
-    <div class="bot-nav-item" onclick="ir('transferir',this,'bot')">
+    <div class="bot-nav-item" data-on-click="ir('transferir',this,'bot')">
         <span class="ms text-xl">confirmation_number</span>
         <span>Código</span>
     </div>
-    <div class="bot-nav-item" onclick="ir('consumo',this,'bot')">
+    <div class="bot-nav-item" data-on-click="ir('consumo',this,'bot')">
         <span class="ms text-xl">person</span>
         <span>Mi Cuenta</span>
     </div>
-    <div class="bot-nav-item" onclick="ir('ayuda',this,'bot')">
+    <div class="bot-nav-item" data-on-click="ir('ayuda',this,'bot')">
         <span class="ms text-xl">help_outline</span>
         <span>Ayuda</span>
     </div>
@@ -240,137 +241,6 @@
 <div id="toast-cnt"></div>
 
 <script src="../js/api.js"></script>
-<script>
-if (!requireAuth()) { /* redirige */ }
-
-let _secActual = 'balance';
-let _datosBalance = null;
-
-function ir(sec, el, tipo) {
-    _secActual = sec;
-    document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('sec-' + sec).classList.add('active');
-    if (tipo === 'bot') {
-        document.querySelectorAll('.bot-nav-item').forEach(n => n.classList.remove('active'));
-    } else {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    }
-    el.classList.add('active');
-    if (sec === 'balance') cargarBalance();
-}
-
-function showToast(msg, tipo = 'ok') {
-    const c = document.getElementById('toast-cnt');
-    const el = document.createElement('div');
-    el.className = 'toast-msg';
-    el.style.background = tipo === 'ok' ? '#B5445C' : tipo === 'warn' ? '#CF6278' : '#2D2D2D';
-    el.textContent = msg;
-    c.appendChild(el);
-    requestAnimationFrame(() => { requestAnimationFrame(() => { el.classList.add('show'); }); });
-    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 3500);
-}
-
-async function cargarBalance() {
-    try {
-        const d = await candela.recargadores.miBalance();
-        _datosBalance = d;
-        document.getElementById('bal-recargador').textContent = '$' + d.balance_recargador.toFixed(2);
-        document.getElementById('bal-consumo').textContent = '$' + d.balance_consumo.toFixed(2);
-        _renderMovimientos(d.movimientos || []);
-    } catch (e) {
-        if (e.message && (e.message.includes('403') || e.message.toLowerCase().includes('autorizado') || e.message.toLowerCase().includes('recargador'))) {
-            window.location.href = '../pages/fan-dashboard.html';
-            return;
-        }
-        document.getElementById('bal-recargador').textContent = '$0.00';
-        document.getElementById('bal-consumo').textContent = '$0.00';
-        document.getElementById('mov-lista').innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aun.</p>';
-    }
-}
-
-function _renderMovimientos(movs) {
-    const c = document.getElementById('mov-lista');
-    if (!movs.length) { c.innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aun.</p>'; return; }
-    const iconos = { deposito:'add_circle', recarga_transferencia:'send', recarga_consumo:'swap_horiz', bonus:'star' };
-    const colores = { deposito:'#27ae60', recarga_transferencia:'#B5445C', recarga_consumo:'#e67e22', bonus:'#8e44ad' };
-    c.innerHTML = movs.map(m => {
-        const ico = iconos[m.tipo] || 'circle';
-        const col = colores[m.tipo] || '#7B4D5E';
-        const signo = m.monto >= 0 ? '+' : '';
-        const fecha = m.fecha ? new Date(m.fecha).toLocaleDateString('es', { day:'2-digit', month:'short' }) : '';
-        return `<div class="mov-row">
-            <div class="mov-ico" style="background:${col}18">
-                <span class="ms text-base" style="color:${col}">${ico}</span>
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-sm font-600 text-c-text truncate">${esc(m.descripcion || m.tipo)}</p>
-                <p class="text-xs text-c-soft">${fecha}</p>
-            </div>
-            <p class="text-sm font-bold" style="color:${m.monto >= 0 ? '#27ae60' : '#B5445C'}">${signo}$${Math.abs(m.monto).toFixed(2)}</p>
-        </div>`;
-    }).join('');
-}
-
-
-function actualizarPreviewConsumo() {
-    const monto = parseFloat(document.getElementById('consumo-monto').value) || 0;
-    const prev = document.getElementById('consumo-preview');
-    if (monto >= 1) {
-        const fee = monto * 0.10;
-        const neto = monto - fee;
-        prev.classList.remove('hidden');
-        document.getElementById('cp-debito').textContent = '$' + monto.toFixed(2);
-        document.getElementById('cp-fee').textContent = '-$' + fee.toFixed(2);
-        document.getElementById('cp-neto').textContent = '$' + neto.toFixed(2);
-    } else {
-        prev.classList.add('hidden');
-    }
-}
-
-async function generarVoucher() {
-    const monto = parseFloat(document.getElementById('fan-monto').value);
-    if (!monto || monto < 1) { showToast('Ingresa un monto valido', 'err'); return; }
-    const btn = document.getElementById('btn-transferir');
-    btn.disabled = true;
-    try {
-        const r = await candela.recargadores.crearVoucher(monto);
-        document.getElementById('vr-codigo').textContent = r.codigo;
-        document.getElementById('vr-monto').textContent = '$' + r.monto.toFixed(2);
-        document.getElementById('voucher-resultado').classList.remove('hidden');
-        showToast(`✓ Código ${r.codigo} generado`, 'ok');
-        document.getElementById('fan-monto').value = '';
-        await cargarBalance();
-    } catch (e) {
-        showToast(e.message || 'Error al generar el código', 'err');
-    } finally {
-        btn.disabled = false;
-    }
-}
-
-async function transferirAMiCuenta() {
-    const monto = parseFloat(document.getElementById('consumo-monto').value);
-    if (!monto || monto < 1) { showToast('Ingresa un monto valido', 'err'); return; }
-    const btn = document.getElementById('btn-consumo');
-    btn.disabled = true; btn.textContent = 'Procesando...';
-    try {
-        const r = await candela.recargadores.transferirAMiCuenta(monto);
-        showToast(`✓ $${r.credito_consumo_acreditado.toFixed(2)} cargados a tu cuenta`, 'ok');
-        document.getElementById('consumo-monto').value = '';
-        document.getElementById('consumo-preview').classList.add('hidden');
-        await cargarBalance();
-    } catch (e) {
-        showToast(e.message || 'Error al convertir', 'err');
-    } finally {
-        btn.disabled = false; btn.textContent = 'Convertir';
-    }
-}
-
-// Init
-(async () => {
-    const user = candela.auth.user();
-    if (user?.nombre) document.getElementById('nav-nombre').textContent = user.nombre;
-    await cargarBalance();
-})();
-</script>
+<script src="/js/p/recargador.js"></script>
 </body>
 </html>

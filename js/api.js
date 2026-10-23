@@ -318,3 +318,6 @@ function requireAuth(tipo = null) {
     }
     return true;
 }
+
+// ui-events.js resuelve los nombres de los data-on-* contra window; una const no es propiedad de window
+window.candela = candela;

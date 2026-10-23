@@ -11,6 +11,7 @@
         body { font-family:'Nunito',sans-serif; background:#FDF8F5; color:#2D2D2D; }
         .logo-text { background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
     </style>
+    <script src="/js/ui-events.js"></script>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center px-4">
 
@@ -48,7 +49,7 @@
             <div class="flex gap-2">
                 <input id="email-reenvio" type="email" placeholder="tu@email.com"
                     class="flex-1 border border-c-border rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:border-c-accent">
-                <button onclick="reenviar()" id="btn-reenviar"
+                <button data-on-click="reenviar()" id="btn-reenviar"
                     class="bg-c-accent text-white font-bold px-4 py-2 rounded-xl text-sm hover:bg-c-accent-d transition-colors whitespace-nowrap">
                     Reenviar
                 </button>
@@ -57,52 +58,7 @@
         <a href="../index.html" class="text-c-soft text-sm hover:text-c-accent transition-colors">Volver al inicio</a>
     </div>
 
-<script>
-const API_URL = 'https://api.clubcandela.com';
-
-async function reenviar() {
-    const email = document.getElementById('email-reenvio').value.trim();
-    if (!email) return;
-    const btn = document.getElementById('btn-reenviar');
-    btn.textContent = '...'; btn.disabled = true;
-    try {
-        const res = await fetch(`${API_URL}/api/auth/reenviar-verificacion`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || 'Error');
-        btn.textContent = 'Enviado';
-        btn.style.background = '#27ae60';
-    } catch(e) {
-        btn.textContent = 'Error'; btn.disabled = false;
-    }
-}
-
-(async () => {
-    const token = new URLSearchParams(location.search).get('token');
-    if (!token) {
-        document.getElementById('estado-verificando').classList.add('hidden');
-        document.getElementById('estado-error').classList.remove('hidden');
-        return;
-    }
-    try {
-        const res = await fetch(`${API_URL}/api/auth/verificar-email?token=${encodeURIComponent(token)}`);
-        const data = await res.json();
-        document.getElementById('estado-verificando').classList.add('hidden');
-        if (res.ok) {
-            document.getElementById('estado-ok').classList.remove('hidden');
-        } else {
-            document.getElementById('error-msg').textContent = data.detail || 'Token invalido o expirado.';
-            document.getElementById('estado-error').classList.remove('hidden');
-        }
-    } catch(_) {
-        document.getElementById('estado-verificando').classList.add('hidden');
-        document.getElementById('estado-error').classList.remove('hidden');
-    }
-})();
-</script>
+<script src="/js/p/verificar-email.js"></script>
 <script src="/js/cookie-consent.js"></script>
 <script src="/js/pwa-install.js"></script>
 </body>
