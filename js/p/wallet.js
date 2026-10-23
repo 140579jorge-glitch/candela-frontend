@@ -33,7 +33,7 @@ async function canjearCodigo() {
     const btn = document.getElementById('btn-canjear');
     btn.disabled = true;
     try {
-        const r = await candela.wallet_voucher.canjear(codigo);
+        const r = await candela.recargadores.canjearVoucher(codigo);
         toast(`✓ $${r.acreditado.toFixed(2)} acreditados a tu cuenta`, 'success');
         input.value = '';
         await init();

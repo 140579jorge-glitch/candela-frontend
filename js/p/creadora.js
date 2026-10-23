@@ -1207,6 +1207,7 @@ function renderEncuestaCard(e) {
 
 // ─── TOP FANS ────────────────────────────────────────────────
 async function cargarTopFans() {
+    if (!candela.auth.isLoggedIn()) return; // el ranking solo lo ven usuarios con sesion
     try {
         const fans = await candela._req('GET', `/api/creadoras/${slug}/top-fans`);
         if (!fans?.length) return;
