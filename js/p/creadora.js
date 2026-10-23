@@ -39,7 +39,6 @@ async function init() {
         renderCarruselPublico();
         cargarPacksPublicos();
         cargarTopFans();
-        cargarEncuestas();
         cargarStories();
         initStickyBar();
     } catch(e) {
@@ -68,6 +67,7 @@ async function init() {
                 btnSub.onclick = () => document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
             }
         } catch(e) {}
+        cargarEncuestas(); // necesita saber antes si esta suscrito
         // Estado follow
         try {
             const favIds = await candela._req('GET', '/api/fans/favoritos/ids');
