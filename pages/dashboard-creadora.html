@@ -2597,7 +2597,7 @@ async function irEnVivo() {
         document.getElementById('stream-key-val').textContent = d.stream_key || '';
         document.getElementById('stream-activo-ingresos').textContent = '$0.00';
 
-        await startWhip(d.url_hls, localStream);
+        await startWhip(d.url_hls, localStream, d.stream_pass);
 
         await candela._req('POST', `/api/streams/${d.stream_id}/iniciar`);
         document.getElementById('monitor-badge').style.display = '';
@@ -2619,7 +2619,7 @@ async function irEnVivo() {
     }
 }
 
-async function startWhip(hlsUrl, localStream) {
+async function startWhip(hlsUrl, localStream, pass) {
     const whipUrl = hlsUrl.replace('/index.m3u8', '/whip');
     _whipPc = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
@@ -2644,12 +2644,12 @@ async function startWhip(hlsUrl, localStream) {
         };
         setTimeout(resolve, 4000);
     });
-    // OJO: el streaming esta apagado (STREAMS_ENABLED=false). La publicacion WHIP va a otro host (stream.*) y no
-    // puede usar la cookie HttpOnly de api.*: al reactivar streams hay que rediseñar esa autenticacion.
+    // WHIP va a otro host (stream.*) y no puede usar la cookie de api.*: se autentica con la clave del stream.
     const resp = await fetch(whipUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/sdp',
+            'Authorization': 'Basic ' + btoa('candela:' + pass),
         },
         body: _whipPc.localDescription.sdp,
     });
