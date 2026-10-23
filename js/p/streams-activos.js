@@ -79,7 +79,7 @@ function renderStreams(lista) {
             </div>
             <div class="stream-card-bottom">
                 <div class="flex items-center gap-2.5 mb-2">
-                    <img src="${esc(s.creadora_avatar || '')}" class="stream-avatar" data-on-error="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.creadora_nombre||'C')}&background=F4A261&color=fff&size=80'">
+                    <img src="${esc(s.creadora_avatar || '')}" class="stream-avatar" data-on-error="this.src='/img/avatar-default.svg'">
                     <div class="min-w-0">
                         <div class="stream-title">${esc(s.titulo)}</div>
                         <div class="stream-creadora">${esc(s.creadora_nombre)}</div>
