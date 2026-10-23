@@ -1,4 +1,6 @@
 const API_BASE = 'https://api.clubcandela.com';
+// las URLs firmadas del storage ya vienen completas; solo las rutas relativas llevan el prefijo de la API
+const _abs = u => (!u ? '' : /^https?:/.test(u) ? u : API_BASE + u);
 let feedData = [];
 
 async function init() {
@@ -145,8 +147,8 @@ async function cargarFeed() {
 function renderCard(item) {
     const bloqueado = !item.desbloqueado && !item.es_gratis;
     const esPPV = bloqueado && Number(item.precio) > 0;
-    const mediaUrl = item.url_archivo ? (API_BASE + item.url_archivo) : '';
-    const previewUrl = item.preview_url ? (API_BASE + item.preview_url) : '';
+    const mediaUrl = _abs(item.url_archivo);
+    const previewUrl = _abs(item.preview_url);
     const esVideo = item.tipo === 'video';
     const nombre = esc(item.creadora_nombre || 'Creadora');
     const inicial = esc((item.creadora_nombre || '?')[0].toUpperCase());
