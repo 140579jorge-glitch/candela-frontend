@@ -39,6 +39,7 @@ summary{cursor:pointer;font-weight:800;color:#2D2D2D;font-size:.95rem;}
 .prog{height:6px;border-radius:99px;background:#F5E8EF;overflow:hidden;}
 .prog > div{height:100%;background:linear-gradient(90deg,#B5445C,#F2B8C8);transition:width .3s ease;}
 #firma-lienzo{width:100%;height:170px;border:1px solid #F5E8EF;border-radius:12px;background:#fff;touch-action:none;display:block;}
+h1:focus{outline:none;}  /* el titulo recibe foco por codigo al cambiar de paso, no es un control */
 .paso{display:none;}
 .paso.on{display:block;}
 @media (prefers-reduced-motion:reduce){.prog > div{transition:none;}}
@@ -247,6 +248,11 @@ summary{cursor:pointer;font-weight:800;color:#2D2D2D;font-size:.95rem;}
     $('nacimiento').max = hoy.toISOString().slice(0, 10);
     ir('p-1');
   })();
+
+  // el aviso rojo desaparece apenas la persona corrige algo
+  [['f-datos', 'err-3'], ['f-firma', 'err-4']].forEach(function (par) {
+    ['input', 'change'].forEach(function (ev) { $(par[0]).addEventListener(ev, function () { limpiarErr(par[1]); }); });
+  });
 
   $('b-empezar').addEventListener('click', function () { ir('p-2'); });
   $('b-2').addEventListener('click', function () { ir('p-3'); });
