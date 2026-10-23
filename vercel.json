@@ -12,13 +12,13 @@
       ]
     },
     {
-      "source": "/pages/(admin|dashboard-creadora|feed|resetear-password|wallet|mensajes|fan-dashboard|mis-favoritos|mis-suscripciones|verificar-email|verificacion-edad|registro-interprete).html",
+      "source": "/pages/(admin|dashboard-creadora|feed|resetear-password|wallet|mensajes|fan-dashboard|mis-favoritos|mis-suscripciones|verificar-email|verificacion-edad|registro-interprete|retirar-consentimiento).html",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
     },
     {
-      "source": "/pages/registro-interprete.html",
+      "source": "/pages/(registro-interprete|retirar-consentimiento).html",
       "headers": [
         { "key": "Referrer-Policy", "value": "no-referrer" },
         { "key": "Cache-Control", "value": "no-store" }

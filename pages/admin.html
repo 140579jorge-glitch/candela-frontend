@@ -363,6 +363,17 @@
             <div id="lista-moderacion" class="flex flex-col gap-3">
                 <p class="text-c-soft text-sm text-center py-8">Cargando...</p>
             </div>
+
+            <h3 class="font-bold text-sm mt-10 mb-3">Packs</h3>
+            <div id="lista-mod-packs" class="flex flex-col gap-3">
+                <p class="text-c-soft text-sm text-center py-6">Cargando...</p>
+            </div>
+
+            <h3 class="font-bold text-sm mt-10 mb-1">Fotos de chat recientes (revisión posterior)</h3>
+            <p class="text-c-soft text-xs mb-3 max-w-2xl">Las fotos que las creadoras envían por chat no se revisan antes de enviarse. Aquí ves las de los últimos 7 días. Retirar una foto la oculta para el fan; el archivo se conserva.</p>
+            <div id="lista-dm-fotos" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <p class="text-c-soft text-sm col-span-full text-center py-6">Cargando...</p>
+            </div>
         </section>
 
         <!-- REGISTRO DE INTERPRETES (18 U.S.C. 2257) -->
@@ -627,6 +638,7 @@ async function cargarDashboard() {
         document.getElementById('d-balance-fans').textContent = d.total_balance_fans != null ? `$${d.total_balance_fans.toFixed(2)}` : '-';
         document.getElementById('badge-ver').textContent = d.verificaciones_pendientes ?? 0;
         const bi = document.getElementById('badge-int'); if (bi) bi.textContent = d.interpretes_pendientes ?? 0;
+        const bm = document.getElementById('badge-mod'); if (bm) bm.textContent = d.moderacion_pendiente ?? 0;
         document.getElementById('badge-ret').textContent = d.retiros_pendientes ?? 0;
         document.getElementById('badge-dep').textContent = d.depositos_pendientes ?? 0;
     } catch(e) { toast('Error al cargar dashboard: ' + (e.message || 'Error'), 'error'); }
@@ -929,8 +941,83 @@ async function retirarInterprete(id, btn) {
     } catch (e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
 }
 
+async function cargarModeracionPacks(estado) {
+    const cont = document.getElementById('lista-mod-packs');
+    if (!cont) return;
+    try {
+        const lista = await candela._req('GET', `/api/admin/packs-moderacion?estado=${estado}&limit=50`);
+        if (!lista.length) { cont.innerHTML = `<p class="text-c-soft text-sm text-center py-6">Sin packs ${estado === 'pendiente' ? 'pendientes de revisión' : 'rechazados'}</p>`; return; }
+        cont.innerHTML = lista.map(p => {
+            const miniaturas = (p.archivos || []).map(a => a.tipo === 'video'
+                ? `<video src="${esc(a.url)}" controls preload="metadata" class="w-full h-32 object-cover rounded-lg bg-black"></video>`
+                : `<a href="${esc(a.url)}" target="_blank" rel="noopener"><img src="${esc(a.url)}" alt="" class="w-full h-32 object-cover rounded-lg bg-c-bg"></a>`).join('');
+            const quienes = (p.interpretes && p.interpretes.length) ? `Aparece con: ${p.interpretes.map(x => esc(x.alias) + ' (' + esc(x.estado) + ')').join(', ')}` : 'Declara que aparece solo ella';
+            const botones = estado === 'pendiente'
+                ? `<button onclick="moderarPack('${esc(p.id)}','rechazado',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all">Rechazar</button>
+                   <button onclick="moderarPack('${esc(p.id)}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all">Aprobar</button>`
+                : `<button onclick="moderarPack('${esc(p.id)}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all">Revertir y aprobar</button>`;
+            return `<div class="ver-card" id="modpk-${esc(p.id)}">
+                <div class="flex items-start justify-between gap-4 flex-wrap mb-3">
+                    <div class="min-w-0">
+                        <p class="font-bold text-sm">${esc(p.creadora_nombre)}</p>
+                        <p class="text-xs text-c-soft">${esc(p.titulo)} · ${p.modo === 'venta' ? 'Venta' : 'PPV'} · $${Number(p.precio_base).toFixed(2)} · ${(p.archivos || []).length} archivo(s)</p>
+                        <p class="text-xs text-c-soft">${quienes}</p>
+                        ${p.mod_razon ? `<p class="text-xs text-red-500 mt-1">Motivo: ${esc(p.mod_razon)}</p>` : ''}
+                    </div>
+                    <div class="flex gap-2 shrink-0">${botones}</div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-2">${miniaturas}</div>
+            </div>`;
+        }).join('');
+    } catch (e) { cont.innerHTML = '<p class="text-red-400 text-sm text-center py-6">Error al cargar los packs</p>'; }
+}
+
+async function moderarPack(id, estado, btn) {
+    let razon = null;
+    if (estado === 'rechazado') {
+        razon = (prompt('Motivo del rechazo (la creadora lo verá):') || '').trim();
+        if (!razon) { toast('Escribe un motivo para rechazar', 'error'); return; }
+    }
+    btn.disabled = true; btn.style.opacity = '.5';
+    try {
+        await candela._req('PATCH', `/api/admin/packs/${id}/moderar`, { estado, razon });
+        toast(estado === 'aprobado' ? 'Pack aprobado' : 'Pack rechazado', 'success');
+        document.getElementById('modpk-' + id)?.remove();
+    } catch (e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
+}
+
+async function cargarDmFotos() {
+    const cont = document.getElementById('lista-dm-fotos');
+    if (!cont) return;
+    try {
+        const lista = await candela._req('GET', '/api/admin/dm-fotos?dias=7&limit=60');
+        if (!lista.length) { cont.innerHTML = '<p class="text-c-soft text-sm col-span-full text-center py-6">Sin fotos de chat en los últimos 7 días</p>'; return; }
+        cont.innerHTML = lista.map(f => `
+            <div class="ver-card" id="dm-${esc(f.id)}" style="padding:.6rem">
+                <a href="${esc(f.url)}" target="_blank" rel="noopener"><img src="${esc(f.url)}" alt="" class="w-full h-40 object-cover rounded-lg bg-c-bg ${f.retirada ? 'opacity-30' : ''}"></a>
+                <p class="text-xs font-bold mt-2 truncate">${esc(f.creadora_nombre)}</p>
+                <p class="text-[11px] text-c-soft">${fmt_fecha(f.fecha)}${f.precio > 0 ? ' · $' + Number(f.precio).toFixed(0) : ''}</p>
+                ${f.retirada ? '<p class="text-[11px] text-red-500 font-bold mt-1">Retirada</p>'
+                             : `<button onclick="retirarDmFoto('${esc(f.id)}',this)" class="mt-2 w-full bg-red-50 text-red-500 border border-red-200 text-[11px] font-bold px-2 py-1.5 rounded-lg hover:bg-red-100 transition-all">Retirar</button>`}
+            </div>`).join('');
+    } catch (e) { cont.innerHTML = '<p class="text-red-400 text-sm col-span-full text-center py-6">Error al cargar</p>'; }
+}
+
+async function retirarDmFoto(id, btn) {
+    const motivo = (prompt('Motivo del retiro (la creadora lo verá):') || '').trim();
+    if (!motivo) { toast('Escribe un motivo', 'error'); return; }
+    btn.disabled = true; btn.style.opacity = '.5';
+    try {
+        await candela._req('POST', `/api/admin/dm-fotos/${id}/retirar`, { motivo });
+        toast('Foto retirada', 'success');
+        cargarDmFotos();
+    } catch (e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
+}
+
 async function cargarModeracion(estado) {
     estado = estado || 'pendiente';
+    cargarModeracionPacks(estado);
+    if (estado === 'pendiente') cargarDmFotos();
     ['pendiente', 'rechazado'].forEach(e => {
         const b = document.getElementById('mfil-' + e);
         if (!b) return;
@@ -1503,11 +1590,17 @@ async function procesarDepositoManual() {
     const nota = document.getElementById('dm-nota').value.trim();
     const codigo = document.getElementById('dm-codigo').value.trim().toUpperCase();
     if (!email || !monto || monto <= 0) { toast('Completa email y monto', 'error'); return; }
+    if (!isFinite(monto)) { toast('Monto invalido', 'error'); return; }
     if (!confirm(`Acreditar $${monto.toFixed(2)} a ${email}?`)) return;
+    let montoAlto = false;
+    if (monto > 500) {
+        if (!confirm(`ATENCION: $${monto.toFixed(2)} es un monto alto. ¿Comprobaste que ese dinero entró de verdad a la cuenta y que no es un error de tipeo?`)) return;
+        montoAlto = true;
+    }
     const btn = document.getElementById('btn-dm');
     btn.disabled = true; btn.textContent = 'Procesando...';
     try {
-        const r = await candela.admin.depositoManual(email, monto, nota || null, codigo || null);
+        const r = await candela.admin.depositoManual(email, monto, nota || null, codigo || null, montoAlto);
         document.getElementById('dm-resultado').classList.remove('hidden');
         document.getElementById('dm-resultado').textContent =
             `✓ Acreditado $${r.monto_acreditado.toFixed(2)} a ${r.email}. Balance nuevo: $${r.balance_nuevo.toFixed(2)}`;

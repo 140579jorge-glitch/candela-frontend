@@ -1973,7 +1973,7 @@ function montarQuienAparece(id) {
     const marcados = new Set(Array.from(box.querySelectorAll('input[data-colab]:checked')).map(x => x.value));
     const vigentes = colaboradores.filter(c => ['invitado', 'pendiente', 'aprobado'].includes(c.estado));
     const filas = vigentes.map(c => {
-        const bloqueado = esPack && c.estado !== 'aprobado';
+        const bloqueado = (esPack && c.estado !== 'aprobado') || c.vencido;
         return `<label class="flex items-center gap-2 py-1 text-sm ${bloqueado ? 'opacity-50' : 'cursor-pointer'}">
             <input type="checkbox" data-colab value="${esc(c.id)}" ${marcados.has(c.id) ? 'checked' : ''} ${bloqueado ? 'disabled' : ''} class="accent-orange-400">
             <span class="font-semibold text-c-text">${esc(c.alias)}</span>${chipColab(c)}
@@ -2977,7 +2977,7 @@ async function crearPack(e) {
 
     try {
         // XHR para progreso
-        await new Promise((resolve, reject) => {
+        const respPack = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open('POST', API_URL + '/api/packs');
             const tok = candela._token();
@@ -2996,8 +2996,9 @@ async function crearPack(e) {
             xhr.onerror = () => reject(new Error('Error de red'));
             xhr.send(fd);
         });
-        toast('Pack creado exitosamente', 'success');
+        toast((respPack && respPack.mensaje) || 'Pack creado exitosamente', 'success');
         document.getElementById('form-pack').reset();
+        refrescarQuienAparece();
         document.getElementById('pk-preview').classList.add('hidden');
         cargarMisPacks();
     } catch(err) { toast(err.message || 'Error al crear pack', 'error'); }
@@ -3026,7 +3027,12 @@ async function cargarMisPacks() {
             return `<div class="bg-white border border-c-border rounded-2xl p-4 mb-3 shadow-sm">
                 <div class="flex items-start justify-between gap-2">
                     <div class="flex-1 min-w-0">
-                        <p class="font-bold text-sm truncate">${esc(pk.titulo)}</p>
+                        <p class="font-bold text-sm truncate">${esc(pk.titulo)}
+                            ${pk.mod_estado === 'pendiente' ? '<span class="ml-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">EN REVISIÓN</span>' : ''}
+                            ${pk.mod_estado === 'rechazado' ? '<span class="ml-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700" title="' + esc(pk.mod_razon || '') + '">RECHAZADO</span>' : ''}
+                        </p>
+                        ${pk.mod_estado === 'pendiente' ? '<p class="text-[11px] text-amber-700 mt-0.5">El link funcionará cuando el equipo lo apruebe.</p>' : ''}
+                        ${pk.mod_estado === 'rechazado' && pk.mod_razon ? '<p class="text-[11px] text-red-600 mt-0.5">Motivo: ' + esc(pk.mod_razon) + '</p>' : ''}
                         <p class="text-xs text-c-soft mt-0.5">${pk.archivos?.length || 0} archivo(s) · ${pk.modo === 'venta' ? 'Venta' : 'PPV'} · $${precio}</p>
                         ${pk.descripcion ? `<p class="text-xs text-c-soft mt-1 line-clamp-2">${esc(pk.descripcion)}</p>` : ''}
                     </div>

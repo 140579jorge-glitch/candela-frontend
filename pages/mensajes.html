@@ -296,6 +296,9 @@ async function refrescarHilo(silencioso) {
             const cls = m.mio ? 'mine' : 'theirs';
             const ts = `<div class="text-[10px] text-c-soft mt-0.5 ${m.mio ? 'text-right' : ''}">${hace(m.fecha)}</div>`;
 
+            if (m.adjunto_retirado) {
+                return `<div><div class="bubble ${cls}" style="font-style:italic;opacity:.7">Imagen retirada</div>${ts}</div>`;
+            }
             if (m.adjunto_tipo) {
                 const bloqueado = !m.desbloqueado && !m.mio && Number(m.precio_desbloqueo) > 0;
                 const src = esc(m.adjunto_url || m.adjunto_preview_url || '');
