@@ -986,13 +986,11 @@ async function cargarPacksPublicos() {
         sec.classList.remove('hidden');
 
         lista.innerHTML = packs.map(pk => {
-            const precioFan = pk.modo === 'venta'
-                ? (pk.precio_base * 1.20).toFixed(2)
-                : pk.precio_base.toFixed(2);
+            const precioFan = Number(pk.precio_fan || 0).toFixed(2);
             const modoBadge = pk.modo === 'venta'
                 ? '<span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-1">Descargable</span>'
                 : '<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full ml-1">PPV</span>';
-            const archivos = pk.archivos?.length || 0;
+            const archivos = pk.total_archivos || 0;
             return `<div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-1 flex-wrap">
@@ -1003,7 +1001,7 @@ async function cargarPacksPublicos() {
                 </div>
                 <div class="shrink-0 text-right">
                     <p class="text-lg font-bold text-c-text mb-1">$${precioFan}</p>
-                    <button data-on-click="abrirCompraPack('${String(pk.id).replace(/[^a-z0-9-]/gi,'')}',${Number(pk.precio_base)||0},'${pk.modo === 'venta' ? 'venta' : 'ppv'}')"
+                    <button data-on-click="abrirCompraPack('${String(pk.id).replace(/[^a-z0-9-]/gi,'')}',${Number(pk.precio_fan)||0},'${pk.modo === 'venta' ? 'venta' : 'ppv'}')"
                         class="c-btn text-white px-4 py-1.5 rounded-xl text-xs font-bold shadow-sm">
                         Comprar
                     </button>
@@ -1015,13 +1013,13 @@ async function cargarPacksPublicos() {
     }
 }
 
-function abrirCompraPack(id, precioBase, modo) {
+function abrirCompraPack(id, precioFan, modo) {
     if (!candela.auth.isLoggedIn()) {
         window.location.href = '../index.html';
         return;
     }
     const pk = packsCreadora.find(p => p.id === id) || {};
-    const precioFan = modo === 'venta' ? precioBase * 1.20 : precioBase;
+    // precioFan ya incluye el recargo de los packs en venta: lo calcula el servidor
     packSeleccionado = { id, precioFan };
     document.getElementById('pack-modal-titulo').textContent = pk.titulo || 'Pack';
     document.getElementById('pack-modal-desc').textContent = pk.descripcion || 'Pack exclusivo';

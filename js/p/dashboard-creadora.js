@@ -1739,7 +1739,7 @@ async function cargarMisPacks() {
                         </p>
                         ${pk.mod_estado === 'pendiente' ? '<p class="text-[11px] text-amber-700 mt-0.5">El link funcionará cuando el equipo lo apruebe.</p>' : ''}
                         ${pk.mod_estado === 'rechazado' && pk.mod_razon ? '<p class="text-[11px] text-red-600 mt-0.5">Motivo: ' + esc(pk.mod_razon) + '</p>' : ''}
-                        <p class="text-xs text-c-soft mt-0.5">${pk.archivos?.length || 0} archivo(s) · ${pk.modo === 'venta' ? 'Venta' : 'PPV'} · $${precio}</p>
+                        <p class="text-xs text-c-soft mt-0.5">${pk.total_archivos || 0} archivo(s) · ${pk.modo === 'venta' ? 'Venta' : 'PPV'} · $${precio}</p>
                         ${pk.descripcion ? `<p class="text-xs text-c-soft mt-1 line-clamp-2">${esc(pk.descripcion)}</p>` : ''}
                     </div>
                     <button data-on-click="eliminarPack('${String(pk.id).replace(/[^a-z0-9-]/gi,'')}')" class="text-c-soft hover:text-red-500 transition-colors shrink-0 p-1">
