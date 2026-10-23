@@ -136,7 +136,7 @@ async function cargarRetiros() {
             <div class="ver-card">
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div class="flex-1 min-w-0">
-                        <p class="font-bold text-sm mb-1">${esc(r.creadora_nombre || r.creadora_id)}</p>
+                        <p class="font-bold text-sm mb-1">${esc(r.creadora || '?')}</p>
                         <div class="flex items-center gap-3 flex-wrap mb-2">
                             <span class="text-lg font-bold text-c-accent">$${(r.monto||0).toFixed(2)}</span>
                             <span class="text-xs text-c-soft">${r.metodo_red === 'qr' ? 'QR Pago' : r.metodo_red === 'polygon' ? 'USDT Polygon' : 'USDT TRC20'}</span>
@@ -148,10 +148,10 @@ async function cargarRetiros() {
                         <p class="text-xs text-c-soft">Solicitado: ${fmt_fecha(r.fecha_solicitud)}</p>
                     </div>
                     <div class="flex gap-2 shrink-0">
-                        <button data-on-click="accionRet('${r.id}','rechazar',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1">
+                        <button data-on-click="accionRet('${r.retiro_id}','rechazar',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1">
                             <span class="ms" style="font-size:16px">close</span>Rechazar
                         </button>
-                        <button data-on-click="accionRet('${r.id}','procesar',this)" class="c-btn text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 shadow-sm">
+                        <button data-on-click="accionRet('${r.retiro_id}','procesar',this)" class="c-btn text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1 shadow-sm">
                             <span class="ms" style="font-size:16px">send</span>Procesar
                         </button>
                     </div>
