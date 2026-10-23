@@ -23,7 +23,7 @@ function _activarSeccion(sec) {
     document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
     document.getElementById('sec-'+sec)?.classList.add('active');
     document.querySelectorAll('.nav-item,.bot-nav-item').forEach(n => {
-        n.classList.toggle('active', !!n.getAttribute('onclick')?.includes("'"+sec+"'"));
+        n.classList.toggle('active', !!n.getAttribute('data-on-click')?.includes("'"+sec+"'"));
     });
     window.scrollTo(0,0);
 }
