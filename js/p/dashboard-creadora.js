@@ -436,7 +436,7 @@ async function cargarDatosRetiro() {
         document.getElementById('w-polygon').value = p.wallet_polygon || '';
 
 
-        if (p.qr_pago_url) {
+        if (p.qr_pago_url && document.getElementById('qr-preview-box')) {
             document.getElementById('qr-preview-box').innerHTML =
                 `<img src="${_url(p.qr_pago_url)}" class="w-full h-full object-contain">`;
         }
@@ -470,7 +470,8 @@ async function guardarDatosRetiro(e) {
     const polygon = document.getElementById('w-polygon').value.trim();
     const qrInput = document.getElementById('qr-input');
     try {
-        if (qrInput.files[0]) {
+        // el cobro por QR ya no esta en la pantalla: sin este campo no hay nada que subir
+        if (qrInput && qrInput.files[0]) {
             await candela.creadoras.subirQrPago(qrInput.files[0]);
         }
         await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined);
