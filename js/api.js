@@ -11,25 +11,23 @@ function esc(str) {
         .replace(/'/g, '&#39;');
 }
 
-const candela = {
-    _token: () => localStorage.getItem('candela_token'),
+// La sesion vive en una cookie HttpOnly que pone la API: el JavaScript no puede leerla ni robarla.
+// Aqui solo se guarda el perfil basico (candela_user) para pintar la interfaz.
+try { localStorage.removeItem('candela_token'); } catch (_) {}  // limpia tokens de la version anterior
 
+const candela = {
     _headers(extra = {}) {
-        const h = { 'Content-Type': 'application/json', ...extra };
-        const t = this._token();
-        if (t) h['Authorization'] = `Bearer ${t}`;
-        return h;
+        return { 'Content-Type': 'application/json', ...extra };
     },
 
     _wsBase: () => API_URL.replace(/^https/, 'wss').replace(/^http/, 'ws'),
 
     async _req(method, path, body = null, form = false) {
-        const opts = { method, headers: form ? { Authorization: `Bearer ${this._token()}` } : this._headers() };
+        const opts = { method, credentials: 'include', headers: form ? {} : this._headers() };
         if (body) opts.body = form ? body : JSON.stringify(body);
         const res = await fetch(`${API_URL}${path}`, opts);
         const data = await res.json().catch(() => ({}));
-        if (res.status === 401 && this._token()) {
-            localStorage.removeItem('candela_token');
+        if (res.status === 401 && localStorage.getItem('candela_user')) {
             localStorage.removeItem('candela_user');
             // Si varias llamadas en paralelo reciben 401 a la vez (ej. al cargar el
             // dashboard), solo la primera dispara el redirect -- evita parpadeo.
@@ -48,8 +46,7 @@ const candela = {
         async login(email, password) {
             const data = await candela._req('POST', '/api/auth/login', { email, password });
             if (data.requires_otp) return data;
-            if (data.access_token) {
-                localStorage.setItem('candela_token', data.access_token);
+            if (data.tipo_usuario) {
                 localStorage.setItem('candela_user', JSON.stringify({
                     tipo: data.tipo_usuario,
                     nombre: data.nombre,
@@ -62,7 +59,6 @@ const candela = {
         },
         async registroSuscriptor(email, password, nombre, fecha_nacimiento, website) {
             const data = await candela._req('POST', '/api/auth/registro/suscriptor', { email, password, nombre, fecha_nacimiento, website });
-            localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre,
                 email: data.email,
@@ -72,7 +68,6 @@ const candela = {
         },
         async registroCreadora(form) {
             const data = await candela._req('POST', '/api/auth/registro/creadora', form);
-            localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug,
                 email: data.email,
@@ -83,7 +78,6 @@ const candela = {
         config: () => candela._req('GET', '/api/auth/config'),
         async google(credential, fecha_nacimiento) {
             const data = await candela._req('POST', '/api/auth/google', { credential, fecha_nacimiento });
-            localStorage.setItem('candela_token', data.access_token);
             localStorage.setItem('candela_user', JSON.stringify({
                 tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug,
                 email: data.email,
@@ -99,8 +93,7 @@ const candela = {
         cambiarPassword: (password_actual, nueva_password) => candela._req('POST', '/api/auth/cambiar-password', { password_actual, nueva_password }),
         async logout(sinConfirmar = false) {
             if (!sinConfirmar && !confirm('¿Seguro que queres cerrar sesion?')) return;
-            try { await candela._req('POST', '/api/auth/logout'); } catch (_) {}
-            localStorage.removeItem('candela_token');
+            try { await candela._req('POST', '/api/auth/logout'); } catch (_) {}  // la API borra la cookie
             localStorage.removeItem('candela_user');
             const isFile = location.protocol === 'file:';
             const inPages = location.pathname.includes('/pages/');
@@ -111,7 +104,7 @@ const candela = {
         user() {
             try { return JSON.parse(localStorage.getItem('candela_user')); } catch { return null; }
         },
-        isLoggedIn: () => !!localStorage.getItem('candela_token') && !!localStorage.getItem('candela_user'),
+        isLoggedIn: () => !!localStorage.getItem('candela_user'),  // si la cookie venciera, la primera llamada da 401 y se cierra la sesion
     },
 
     creadoras: {

@@ -4,7 +4,7 @@
 */
 (function () {
   // Logged-in users confirmed age at registration
-  if (localStorage.getItem('candela_token')) return;
+  if (localStorage.getItem('candela_user')) return;
 
   var stored = localStorage.getItem('candela_18');
   if (stored) {

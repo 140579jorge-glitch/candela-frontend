@@ -181,7 +181,7 @@ const WS = API.replace('https://', 'wss://').replace('http://', 'ws://');
 
 const params = new URLSearchParams(location.search);
 const STREAM_ID = params.get('id');
-const token = localStorage.getItem('candela_token');
+const token = localStorage.getItem('candela_user') ? 'sesion' : null;  // la sesion real va en la cookie
 const _cu = (() => { try { return JSON.parse(localStorage.getItem('candela_user') || '{}'); } catch(e) { return {}; } })();
 const miNombre = _cu.nombre || 'Fan';
 
@@ -219,7 +219,7 @@ async function init() {
 
 async function cargarBalance() {
     try {
-        const r = await fetch(`${API}/api/wallet/mi-saldo`, { headers: { Authorization: `Bearer ${token}` } });
+        const r = await fetch(`${API}/api/wallet/mi-saldo`, { credentials: 'include' });
         if (r.ok) {
             const d = await r.json();
             miBalance = d.balance || 0;
@@ -232,7 +232,7 @@ async function intentarUnirse() {
     try {
         const r = await fetch(`${API}/api/streams/${STREAM_ID}/unirse`, {
             method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
+            credentials: 'include',
         });
         const d = await r.json();
         if (r.ok) {
@@ -267,7 +267,7 @@ async function pagarEntrada() {
     try {
         const r = await fetch(`${API}/api/streams/${STREAM_ID}/unirse`, {
             method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
+            credentials: 'include',
         });
         const d = await r.json();
         if (r.ok) {
@@ -314,10 +314,9 @@ function arrancarStream(hlsUrl) {
 // WebSocket
 // ------------------------------------------------------------------ //
 function conectarWS() {
-    const wsToken = localStorage.getItem('candela_token') || '';
     ws = new WebSocket(`${WS}/api/streams/${STREAM_ID}/ws`);
     // El token va en el primer mensaje, NO en la URL (evita fuga en logs de proxy).
-    ws.onopen = () => ws.send(JSON.stringify({ tipo: 'auth', token: wsToken }));
+    // la sesion viaja en la cookie HttpOnly: el WebSocket la envia solo, no hay token que mandar
     ws.onmessage = (e) => {
         const ev = JSON.parse(e.data);
         if (ev.tipo === 'chat')      agregarChat(ev.usuario, ev.texto);
@@ -384,7 +383,8 @@ async function enviarObsequio(g) {
     try {
         const r = await fetch(`${API}/api/streams/${STREAM_ID}/obsequio`, {
             method: 'POST',
-            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ obsequio_id: g.id, cantidad: 1 }),
         });
         const d = await r.json();

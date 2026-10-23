@@ -1388,12 +1388,12 @@ async function verificarOTP(e) {
     try {
         const res = await fetch(`${API_URL}${endpoint}`, {
             method: 'POST',
+            credentials: 'include',  // para que el navegador guarde la cookie de sesion
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: _adminEmailPendiente, codigo }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || 'Codigo invalido');
-        localStorage.setItem('candela_token', data.access_token);
         if (esCreadora) {
             localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug, email: _adminEmailPendiente, email_verificado: true }));
             window.location.href = 'pages/dashboard-creadora.html';

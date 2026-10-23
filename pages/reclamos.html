@@ -147,7 +147,7 @@ document.getElementById('descripcion').addEventListener('input', function() {
 });
 
 function getToken() {
-  return localStorage.getItem('token') || sessionStorage.getItem('token') || '';
+  return localStorage.getItem('candela_user') ? 'sesion' : '';  // la sesion real va en la cookie HttpOnly
 }
 
 function badgeClass(estado) {
@@ -168,9 +168,7 @@ async function cargarHistorial() {
     return;
   }
   try {
-    const r = await fetch(API + '/api/reclamos/mis-reclamos', {
-      headers: { Authorization: 'Bearer ' + token }
-    });
+    const r = await fetch(API + '/api/reclamos/mis-reclamos', { credentials: 'include' });
     if (!r.ok) return;
     const data = await r.json();
     if (!data.length) return;
@@ -218,7 +216,8 @@ document.getElementById('reclamo-form').addEventListener('submit', async functio
   try {
     const r = await fetch(API + '/api/reclamos', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tipo_reclamo: tipoSeleccionado, descripcion: desc, referencia_id: ref }),
     });
     const data = await r.json();

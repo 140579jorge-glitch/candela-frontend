@@ -56,10 +56,10 @@ strong{color:#2D2D2D;}
       <th>Propósito</th>
     </tr>
     <tr>
-      <td><code>candela_token</code></td>
+      <td><code>__Host-candela_sesion</code></td>
       <td><span class="badge-essential">Esencial</span></td>
-      <td>Hasta cerrar sesión</td>
-      <td>Token JWT de autenticación. Requerido para mantener tu sesión activa.</td>
+      <td>7 días o hasta cerrar sesión</td>
+      <td>Cookie de sesión, <strong>HttpOnly</strong> y segura: la página no puede leerla. Mantiene tu sesión activa y solo se envía a nuestra API.</td>
     </tr>
     <tr>
       <td><code>candela_user</code></td>
@@ -89,7 +89,7 @@ strong{color:#2D2D2D;}
   </div>
 
   <h2>3. Cookies esenciales — siempre activas</h2>
-  <p>Las cookies esenciales (<code>candela_token</code>, <code>candela_user</code>, <code>candela_18</code>) son necesarias para el funcionamiento de la plataforma. Sin ellas, no puedes iniciar sesión ni navegar correctamente. No pueden desactivarse.</p>
+  <p>Las cookies y datos esenciales (<code>__Host-candela_sesion</code>, <code>candela_user</code>, <code>candela_18</code>) son necesarias para el funcionamiento de la plataforma. Sin ellas, no puedes iniciar sesión ni navegar correctamente. No pueden desactivarse.</p>
 
   <h2>4. Cookies analíticas — requieren consentimiento</h2>
   <p>Google Analytics (<code>_ga</code>) se carga <strong>únicamente</strong> cuando aceptas las cookies en el banner que aparece en tu primera visita. Si rechazas, no se carga ningún script de seguimiento. Google Analytics tiene activada la opción de <strong>anonimización de IP</strong> en nuestra configuración.</p>

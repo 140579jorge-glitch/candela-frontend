@@ -142,7 +142,7 @@ const API = (location.hostname === 'localhost' || location.hostname === '127.0.0
     ? 'http://localhost:8000'
     : 'https://api.clubcandela.com';
 
-const token = localStorage.getItem('candela_token');
+const token = localStorage.getItem('candela_user') ? 'sesion' : null;  // la sesion real va en la cookie
 
 async function init() {
     // nav user state
@@ -159,7 +159,7 @@ async function init() {
 
 async function cargarBalance() {
     try {
-        const r = await fetch(`${API}/api/wallet/mi-saldo`, { headers: { Authorization: `Bearer ${token}` } });
+        const r = await fetch(`${API}/api/wallet/mi-saldo`, { credentials: 'include' });
         if (r.ok) {
             const d = await r.json();
             document.getElementById('nav-balance').textContent = (d.balance || 0).toFixed(2);

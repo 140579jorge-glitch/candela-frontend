@@ -1365,9 +1365,8 @@ function _abrirVentanaChat(sesionId, sesionInfo) {
     document.getElementById('chat-activo-mensajes').innerHTML = '';
     document.getElementById('modal-chat-activo').style.display = 'flex';
 
-    const token = candela.auth.getToken ? candela.auth.getToken() : (localStorage.getItem('candela_token') || '');
+    // la sesion viaja en la cookie HttpOnly: el WebSocket la envia solo, no hay token que mandar
     _chatSesionWs = new WebSocket(`${candela._wsBase()}/api/chat-sesion/${encodeURIComponent(sesionId)}/ws`);
-    _chatSesionWs.onopen = () => _chatSesionWs.send(JSON.stringify({ tipo: 'auth', token }));
 
     _chatSesionWs.onmessage = e => {
         const d = JSON.parse(e.data);

@@ -2321,10 +2321,9 @@ function _abrirChatCr(sesionId, fanNombre, expiresAt) {
     document.getElementById('chat-sesion-msgs-cr').innerHTML = '';
     document.getElementById('chat-sesion-activa-panel').classList.remove('hidden');
 
-    const token = localStorage.getItem('candela_token') || '';
+    // la sesion viaja en la cookie HttpOnly: el WebSocket la envia solo, no hay token que mandar
     const wsBase = candela._wsBase();
     _chatCrWs = new WebSocket(`${wsBase}/api/chat-sesion/${encodeURIComponent(sesionId)}/ws`);
-    _chatCrWs.onopen = () => _chatCrWs.send(JSON.stringify({ tipo: 'auth', token }));
 
     _chatCrWs.onmessage = e => {
         const d = JSON.parse(e.data);
@@ -2645,12 +2644,12 @@ async function startWhip(hlsUrl, localStream) {
         };
         setTimeout(resolve, 4000);
     });
-    const token = localStorage.getItem('candela_token') || '';
+    // OJO: el streaming esta apagado (STREAMS_ENABLED=false). La publicacion WHIP va a otro host (stream.*) y no
+    // puede usar la cookie HttpOnly de api.*: al reactivar streams hay que rediseñar esa autenticacion.
     const resp = await fetch(whipUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/sdp',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: _whipPc.localDescription.sdp,
     });
@@ -2661,10 +2660,9 @@ async function startWhip(hlsUrl, localStream) {
 
 function conectarMonitorWs(streamId) {
     if (_monitorWs) { try { _monitorWs.close(); } catch(_) {} }
-    const token = localStorage.getItem('candela_token') || '';
+    // la sesion viaja en la cookie HttpOnly: el WebSocket la envia solo, no hay token que mandar
     const wsBase = API_URL.replace('https://', 'wss://').replace('http://', 'ws://');
     _monitorWs = new WebSocket(`${wsBase}/api/streams/${encodeURIComponent(streamId)}/ws`);
-    _monitorWs.onopen = () => _monitorWs.send(JSON.stringify({ tipo: 'auth', token }));
     _monitorWs.onmessage = e => {
         const d = JSON.parse(e.data);
         const chat = document.getElementById('monitor-chat');
@@ -2980,8 +2978,7 @@ async function crearPack(e) {
         const respPack = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open('POST', API_URL + '/api/packs');
-            const tok = candela._token();
-            if (tok) xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+            xhr.withCredentials = true;  // cookie de sesion
             xhr.upload.onprogress = ev => {
                 if (ev.lengthComputable) {
                     const pct = Math.round(ev.loaded / ev.total * 100);
@@ -3087,7 +3084,7 @@ async function subirStory() {
     await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', API_URL + '/api/stories');
-        xhr.setRequestHeader('Authorization', 'Bearer ' + candela._token());
+        xhr.withCredentials = true;  // cookie de sesion
         xhr.upload.onprogress = e => { if (e.lengthComputable) bar.style.width = Math.round(e.loaded/e.total*100)+'%'; };
         xhr.onload = () => { if (xhr.status < 300) resolve(); else reject(new Error(JSON.parse(xhr.responseText).detail || 'Error')); };
         xhr.onerror = () => reject(new Error('Error de red'));
