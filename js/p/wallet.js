@@ -179,7 +179,7 @@ function generarDireccion() {
     const monto = montoActual || parseFloat(document.getElementById('monto-custom').value);
     if (!monto || monto < 20) { toast('El monto mínimo es $20 USD', 'error'); return; }
     // Mostrar modal de confirmación de red antes de generar
-    const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT Polygon (MATIC)' };
+    const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT o USDC Polygon' };
     document.getElementById('modal-red-nombre').textContent = nombres[redActual] || redActual.toUpperCase();
     document.getElementById('modal-red').classList.remove('hidden');
     document.getElementById('modal-red').style.display = 'flex';
@@ -204,7 +204,7 @@ async function confirmarRedYGenerar() {
         depositoId = r.deposito_id;
 
         document.getElementById('pay-addr-text').textContent  = r.pay_address;
-        document.getElementById('pay-amount-label').textContent = `${r.pay_amount} USDT`;
+        document.getElementById('pay-amount-label').textContent = `${Number(r.pay_amount).toFixed(3)} USDT`;
 
         // Mostrar red activa en el banner rojo
         const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT Polygon (MATIC)' };
