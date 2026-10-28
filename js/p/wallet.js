@@ -1,5 +1,5 @@
 let redActual   = 'trc20';
-let montoActual = 20;
+let montoActual = 5;
 function setMontoActual(v) { montoActual = parseFloat(v) || 0; actualizarUI(); }
 let depositoId  = null;
 let pollTimer   = null;
@@ -177,7 +177,7 @@ function copiarDireccion() {
 
 function generarDireccion() {
     const monto = montoActual || parseFloat(document.getElementById('monto-custom').value);
-    if (!monto || monto < 20) { toast('El monto mínimo es $20 USD', 'error'); return; }
+    if (!monto || monto < 1) { toast('El monto mínimo es $1 USD', 'error'); return; }
     // Mostrar modal de confirmación de red antes de generar
     const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT o USDC Polygon' };
     document.getElementById('modal-red-nombre').textContent = nombres[redActual] || redActual.toUpperCase();
@@ -207,7 +207,7 @@ async function confirmarRedYGenerar() {
         document.getElementById('pay-amount-label').textContent = `${Number(r.pay_amount).toFixed(3)} USDT`;
 
         // Mostrar red activa en el banner rojo
-        const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT Polygon (MATIC)' };
+        const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT o USDC Polygon' };
         document.getElementById('red-activa-label').textContent = nombres[redActual] || redActual.toUpperCase();
 
         document.getElementById('step-generar').classList.add('hidden');
@@ -305,7 +305,7 @@ function renderMovimientos(movs) {
     }).join('');
 }
 
-elegirMonto(20);
+elegirMonto(5);
 init();
 
 async function cambiarPassword(e) {

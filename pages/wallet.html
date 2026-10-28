@@ -180,15 +180,19 @@
 
         <!-- Montos -->
         <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-2">Elige el monto (USD)</p>
-        <p class="text-[11px] text-c-soft mb-2">Mínimo $20 USD por limitaciones de la red cripto.</p>
+        <p class="text-[11px] text-c-soft mb-2">Desde $1 USD. Con Polygon las comisiones son de centavos; en Tron suelen costar más, así que para montos chicos conviene Polygon.</p>
         <div class="grid grid-cols-4 gap-2 mb-3">
-            <button data-on-click="elegirMonto(20)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold sel" data-m="20">$20</button>
-            <button data-on-click="elegirMonto(30)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="30">$30</button>
-            <button data-on-click="elegirMonto(50)"  class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="50">$50</button>
+            <button data-on-click="elegirMonto(1)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="1">$1</button>
+            <button data-on-click="elegirMonto(2)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="2">$2</button>
+            <button data-on-click="elegirMonto(3)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="3">$3</button>
+            <button data-on-click="elegirMonto(5)" class="monto-btn rounded-xl py-2.5 text-sm font-bold sel" data-m="5">$5</button>
+            <button data-on-click="elegirMonto(10)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="10">$10</button>
+            <button data-on-click="elegirMonto(20)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="20">$20</button>
+            <button data-on-click="elegirMonto(50)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="50">$50</button>
             <button data-on-click="elegirMonto(100)" class="monto-btn rounded-xl py-2.5 text-sm font-bold" data-m="100">$100</button>
-            <button data-on-click="elegirMonto(0)"   class="monto-btn rounded-xl py-2.5 text-sm font-bold col-span-4" data-m="0">Otro monto (min $20)</button>
+            <button data-on-click="elegirMonto(0)"   class="monto-btn rounded-xl py-2.5 text-sm font-bold col-span-4" data-m="0">Otro monto (min $1)</button>
         </div>
-        <input id="monto-custom" type="number" min="20" step="1" placeholder="Monto en USD (min $20)"
+        <input id="monto-custom" type="number" min="1" step="1" placeholder="Monto en USD (min $1)"
             class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all mb-3 hidden"
             data-on-input="setMontoActual(this.value)">
 
