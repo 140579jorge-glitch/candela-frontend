@@ -135,12 +135,13 @@ const candela = {
             return candela._req('POST', '/api/creadoras/verificacion/enviar', fd, true);
         },
         misReferidas: () => candela._req('GET', '/api/creadoras/mi-perfil/referidas'),
-        actualizarDatosRetiro(walletTrc20, walletPolygon, metodoRetiro) {
-            const params = new URLSearchParams();
-            if (walletTrc20 !== undefined) params.append('wallet_trc20', walletTrc20);
-            if (walletPolygon !== undefined) params.append('wallet_polygon', walletPolygon);
-            if (metodoRetiro !== undefined) params.append('metodo_retiro', metodoRetiro);
-            return candela._req('PUT', `/api/creadoras/mi-perfil/datos-retiro?${params}`);
+        actualizarDatosRetiro(walletTrc20, walletPolygon, metodoRetiro, password) {
+            const body = {};
+            if (walletTrc20 !== undefined) body.wallet_trc20 = walletTrc20;
+            if (walletPolygon !== undefined) body.wallet_polygon = walletPolygon;
+            if (metodoRetiro !== undefined) body.metodo_retiro = metodoRetiro;
+            if (password) body.password = password;
+            return candela._req('PUT', '/api/creadoras/mi-perfil/datos-retiro', body);
         },
         async subirQrPago(file) {
             const fd = new FormData(); fd.append('imagen', file);

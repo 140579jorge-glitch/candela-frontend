@@ -474,7 +474,9 @@ async function guardarDatosRetiro(e) {
         if (qrInput && qrInput.files[0]) {
             await candela.creadoras.subirQrPago(qrInput.files[0]);
         }
-        await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined);
+        const clave = document.getElementById('w-pass').value;
+        await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined, clave);
+        document.getElementById('w-pass').value = '';
         _perfilCreadora = await candela.creadoras.miPerfil();
         toast('Metodos de pago guardados', 'success');
     } catch(err) { toast(err.message, 'error'); }
