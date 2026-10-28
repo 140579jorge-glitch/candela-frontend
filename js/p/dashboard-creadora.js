@@ -1001,7 +1001,7 @@ async function cargarSolicitudesChat() {
                     ${s.mensaje_inicial ? `<p class="text-sm text-c-text mt-1 italic">"${esc(s.mensaje_inicial)}"</p>` : ''}
                 </div>
                 <div class="flex gap-2">
-                    <button data-on-click="aceptarSolicitudChat('${s.id}','${esc(s.fan_nombre)}')" class="c-btn text-white px-3 py-1.5 rounded-full text-xs font-bold">Aceptar</button>
+                    <button data-nombre="${esc(s.fan_nombre)}" data-on-click="aceptarSolicitudChat('${s.id}',this.dataset.nombre)" class="c-btn text-white px-3 py-1.5 rounded-full text-xs font-bold">Aceptar</button>
                     <button data-on-click="rechazarSolicitudChat('${s.id}')" class="c-btn-outline px-3 py-1.5 rounded-full text-xs font-bold text-red-500 border-red-300">Rechazar</button>
                 </div>
             </div>
@@ -2078,7 +2078,7 @@ async function cargarMisMedios() {
         empty.classList.add('hidden');
         grid.innerHTML = items.map(item => `
             <div class="relative rounded-xl overflow-hidden cursor-pointer group" style="aspect-ratio:1"
-                data-on-click="copiarUrlMedio('${String(item.id).replace(/[^a-z0-9-]/gi,'')}','${_url(item.preview_url||'')}')"
+                data-url="${esc(_url(item.preview_url||''))}" data-on-click="copiarUrlMedio('${String(item.id).replace(/[^a-z0-9-]/gi,'')}',this.dataset.url)"
                 title="Clic para copiar URL">
                 ${item.preview_url
                     ? `<img src="${_url(item.preview_url)}" alt="" class="w-full h-full object-cover" draggable="false" data-on-contextmenu="return false">`

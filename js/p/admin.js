@@ -78,9 +78,9 @@ async function cargarVerificaciones() {
                         </div>
                         <p class="text-xs text-c-soft mb-3">Enviado: ${fmt_fecha(v.fecha_solicitud)}</p>
                         <div class="flex gap-2 flex-wrap mb-4">
-                            ${v.doc_imagen_url ? `<button data-on-click="verImg('${esc(v.doc_imagen_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">badge</span>CI frente</button>` : ''}
-                            ${v.doc_imagen_reverso_url ? `<button data-on-click="verImg('${esc(v.doc_imagen_reverso_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">flip_to_back</span>CI dorso</button>` : ''}
-                            ${v.selfie_url ? `<button data-on-click="verImg('${esc(v.selfie_url)}')" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">selfie</span>Selfie</button>` : ''}
+                            ${v.doc_imagen_url ? `<button data-url="${esc(v.doc_imagen_url)}" data-on-click="verImg(this.dataset.url)" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">badge</span>CI frente</button>` : ''}
+                            ${v.doc_imagen_reverso_url ? `<button data-url="${esc(v.doc_imagen_reverso_url)}" data-on-click="verImg(this.dataset.url)" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">flip_to_back</span>CI dorso</button>` : ''}
+                            ${v.selfie_url ? `<button data-url="${esc(v.selfie_url)}" data-on-click="verImg(this.dataset.url)" class="text-xs font-bold text-c-accent border border-c-champagne px-3 py-1.5 rounded-full hover:bg-c-champagne transition-all flex items-center gap-1"><span class="ms" style="font-size:14px">selfie</span>Selfie</button>` : ''}
                         </div>
                         <!-- Checklist KYC -->
                         <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-1">
@@ -934,7 +934,7 @@ async function cargarRecargadores() {
                         <span class="text-xs text-c-soft">Consumo: <strong>$${r.balance_consumo.toFixed(2)}</strong></span>
                     </div>
                 </div>
-                <button data-on-click="revocarRecargador('${r.id}','${esc(r.email)}')" class="text-xs text-red-400 hover:text-red-600 font-bold border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-xl transition-all">Revocar</button>
+                <button data-email="${esc(r.email)}" data-on-click="revocarRecargador('${r.id}',this.dataset.email)" class="text-xs text-red-400 hover:text-red-600 font-bold border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-xl transition-all">Revocar</button>
             </div>`).join('');
     } catch(e) { c.innerHTML = `<p class="text-red-400 text-sm text-center py-8">${e.message}</p>`; }
 }
@@ -1093,7 +1093,7 @@ async function cargarAdmins() {
                     <p class="text-xs text-c-soft">Ultimo acceso: ${a.ultimo_acceso ? new Date(a.ultimo_acceso).toLocaleDateString('es-BO') : 'Nunca'}</p>
                 </div>
                 ${!a.es_super_admin && a.id !== (user && user.id) ? `
-                <button data-on-click="revocarAdmin('${a.id}','${esc(a.email)}')" class="text-xs text-red-400 hover:text-red-600 font-bold border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-xl transition-all shrink-0">Revocar</button>
+                <button data-email="${esc(a.email)}" data-on-click="revocarAdmin('${a.id}',this.dataset.email)" class="text-xs text-red-400 hover:text-red-600 font-bold border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-xl transition-all shrink-0">Revocar</button>
                 ` : ''}
             </div>`).join('');
     } catch(e) { c.innerHTML = `<p class="text-red-400 text-sm text-center py-8">${e.message}</p>`; }

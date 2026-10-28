@@ -14,7 +14,7 @@
   var PROHIBIDOS = {
     constructor: 1, __proto__: 1, prototype: 1, eval: 1, Function: 1, setTimeout: 1, setInterval: 1,
     write: 1, writeln: 1, innerHTML: 1, outerHTML: 1, insertAdjacentHTML: 1, srcdoc: 1, importScripts: 1,
-    import: 1, cookie: 1, localStorage: 1, XMLHttpRequest: 1, WebSocket: 1, fetch: 1
+    import: 1, _req: 1, cookie: 1, localStorage: 1, XMLHttpRequest: 1, WebSocket: 1, fetch: 1
   };
   // Globales a las que se permite llegar. Cualquier otra raiz se busca en window (funciones de la pagina).
   var RAICES_VEDADAS = { eval: 1, Function: 1, setTimeout: 1, setInterval: 1, fetch: 1, XMLHttpRequest: 1, WebSocket: 1, localStorage: 1 };

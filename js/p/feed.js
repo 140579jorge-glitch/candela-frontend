@@ -157,7 +157,7 @@ function renderCard(item) {
     const tipo = esc(item.tipo || 'foto');
     const clickAttr = bloqueado
         ? `data-on-click="location.href='creadora.html?slug=${slug}'"`
-        : `data-on-click="abrirVisor('${id}','${tipo}','${esc(mediaUrl)}')"`;
+        : `data-url="${esc(mediaUrl)}" data-on-click="abrirVisor('${id}','${tipo}',this.dataset.url)"`;
 
     return `
     <div class="feed-card">
