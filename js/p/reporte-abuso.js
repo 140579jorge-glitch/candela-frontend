@@ -16,12 +16,11 @@ document.getElementById('abuse-form').onsubmit = async function(e) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tipo, url, descripcion: desc, email_contacto: email })
     });
-    // Show success regardless (we don't want to expose backend errors)
+    if (!res.ok) throw new Error('http ' + res.status);
     document.getElementById('abuse-form').style.display = 'none';
     document.getElementById('rep-success').style.display = 'block';
   } catch(err) {
-    // Fallback: show success anyway (email backup)
-    document.getElementById('abuse-form').style.display = 'none';
-    document.getElementById('rep-success').style.display = 'block';
+    btn.textContent = 'Enviar reporte'; btn.disabled = false;
+    alert('No pudimos enviar el reporte. Intenta de nuevo o escribenos a legal@clubcandela.com.');
   }
 };

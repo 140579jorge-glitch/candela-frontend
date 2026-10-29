@@ -850,7 +850,7 @@ async function cargarReportesAbuso(filtro) {
         const badge = document.getElementById('badge-reportes');
         if (badge) badge.textContent = lista.filter(r => r.estado === 'pendiente').length;
         if (!lista.length) { cont.innerHTML = '<p class="text-c-soft text-sm text-center py-12">Sin reportes</p>'; return; }
-        const LABS = { menor:'Menor de edad', 'no-consensual':'No consensual', violencia:'Violencia real', identidad:'Identidad falsa', acoso:'Acoso / Extorsion', otro:'Otro' };
+        const LABS = { ncii:'Retiro de contenido intimo (48 h)', menor:'Menor de edad', 'no-consensual':'No consensual', violencia:'Violencia real', identidad:'Identidad falsa', acoso:'Acoso / Extorsion', otro:'Otro' };
         const BCLS = { pendiente:'badge-pendiente', en_revision:'badge-aprobada', resuelto:'badge-activa', descartado:'badge-rechazada' };
         cont.innerHTML = lista.map(r => `
             <div class="ver-card">
@@ -860,6 +860,7 @@ async function cargarReportesAbuso(filtro) {
                             <p class="font-bold text-sm">${LABS[r.tipo]||esc(r.tipo)}</p>
                             <span class="badge ${BCLS[r.estado]||'badge-pendiente'}">${esc(r.estado)}</span>
                             ${r.tipo === 'menor' ? '<span class="badge badge-rechazada">PRIORIDAD</span>' : ''}
+                            ${r.tipo === 'ncii' && r.fecha_limite && r.estado !== 'resuelto' && r.estado !== 'descartado' ? `<span class="badge badge-rechazada">${(() => { const h = Math.round((new Date(r.fecha_limite) - Date.now()) / 3600000); return h >= 0 ? 'Quedan ' + h + ' h' : 'VENCIDO hace ' + (-h) + ' h'; })()}</span>` : ''}
                         </div>
                         <p class="text-xs text-c-soft mb-1 break-all">${esc(r.url)}</p>
                         <p class="text-sm text-c-text leading-relaxed mb-2">${esc(r.descripcion)}</p>

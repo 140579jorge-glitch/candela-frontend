@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retiro de contenido íntimo sin consentimiento — Candela</title>
+<meta name="description" content="Pide el retiro de imágenes o videos íntimos publicados sin tu consentimiento. Respondemos en menos de 48 horas, sin necesidad de tener cuenta.">
+<meta name="robots" content="index, follow">
+<link rel="stylesheet" href="../css/tailwind.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Nunito',sans-serif;}
+.logo-text{background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+h2{font-size:1.05rem;font-weight:700;margin-top:2rem;margin-bottom:.5rem;color:#2D2D2D;}
+p,li{color:#7B4D5E;line-height:1.7;font-size:.925rem;}
+ul{list-style:disc;padding-left:1.5rem;margin:.5rem 0;}
+strong{color:#2D2D2D;}
+label.campo{display:block;font-size:.8rem;font-weight:700;color:#7B4D5E;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;}
+input[type=text],input[type=email],textarea{width:100%;padding:.65rem .9rem;border:1px solid #F5E8EF;border-radius:10px;font-size:.9rem;font-family:'Nunito',sans-serif;color:#2D2D2D;background:#fff;}
+input:focus,textarea:focus{outline:none;border-color:#B5445C;box-shadow:0 0 0 3px rgba(181,68,92,.12);}
+.c-btn{background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;border:none;padding:.75rem 1.75rem;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;}
+.c-btn:disabled{opacity:.6;cursor:not-allowed;}
+.aviso{background:#FFF0F0;border:1px solid #FFCDD2;border-left:4px solid #D32F2F;border-radius:8px;padding:.85rem 1.1rem;margin:1.25rem 0;font-size:.875rem;}
+.aviso a{color:#D32F2F;font-weight:700;}
+.ok-box{background:#E8F5E9;border:1px solid #A5D6A7;border-radius:12px;padding:1.5rem;display:none;}
+.ok-box h3{color:#2E7D32;font-weight:700;margin-bottom:.5rem;}
+.error-box{background:#FFF0F0;border:1px solid #FFCDD2;border-radius:10px;padding:.75rem 1rem;color:#B71C1C;font-size:.85rem;display:none;}
+.trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+.opcion{display:flex;gap:.6rem;align-items:flex-start;font-size:.9rem;color:#7B4D5E;}
+.opcion input{margin-top:.25rem;}
+</style>
+<script src="/js/ui-events.js"></script>
+</head>
+<body class="bg-c-bg text-c-text min-h-screen">
+
+<header class="bg-white border-b border-c-border sticky top-0 z-10">
+  <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+    <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+    <a href="../index.html" class="text-c-soft text-sm hover:text-c-text">← Volver</a>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-5 py-10">
+  <h1 class="font-display text-3xl font-semibold mb-2">Retiro de contenido íntimo sin consentimiento</h1>
+  <p class="text-c-soft text-sm mb-4">Si una imagen o un video íntimo tuyo se publicó en Candela sin tu permiso, pide su retiro aquí. No necesitas tener una cuenta.</p>
+
+  <ul>
+    <li><strong>Lo retiramos en menos de 48 horas</strong> desde que recibimos tu solicitud, y buscamos copias idénticas.</li>
+    <li>Revisamos tu solicitud con prioridad y te avisamos por correo cuando esté hecho.</li>
+    <li>Usamos tus datos solo para atender esta solicitud.</li>
+  </ul>
+
+  <div class="aviso">
+    <strong>Si la persona es menor de edad</strong>, repórtalo también a
+    <a href="https://www.missingkids.org/gethelpnow/cybertipline" target="_blank" rel="noopener">NCMEC CyberTipline</a>
+    y a la policía de tu país. Para otros tipos de reporte usa el <a href="reporte-abuso.html">formulario general</a>.
+  </div>
+
+  <form id="retiro-form" novalidate style="background:#fff;border:1px solid #F5E8EF;border-radius:20px;padding:1.75rem;display:flex;flex-direction:column;gap:1.25rem;">
+
+    <div>
+      <label class="campo" for="r-nombre">Tu nombre completo</label>
+      <input type="text" id="r-nombre" maxlength="150" autocomplete="name" required>
+    </div>
+
+    <div>
+      <label class="campo" for="r-email">Tu correo</label>
+      <input type="email" id="r-email" maxlength="255" autocomplete="email" required>
+      <p style="font-size:.75rem;color:#a58f89;margin-top:.3rem;">Aquí te enviamos la confirmación y el aviso de retiro.</p>
+    </div>
+
+    <div>
+      <label class="campo">Quién eres</label>
+      <label class="opcion"><input type="radio" name="calidad" value="persona" checked> Soy la persona que aparece en el contenido</label>
+      <label class="opcion" style="margin-top:.4rem;"><input type="radio" name="calidad" value="representante"> Represento a esa persona con su autorización</label>
+    </div>
+
+    <div>
+      <label class="campo" for="r-urls">Enlaces del contenido (uno por línea, opcional)</label>
+      <textarea id="r-urls" rows="3" placeholder="https://www.clubcandela.com/pages/creadora.html?slug=..." style="resize:vertical;"></textarea>
+      <p style="font-size:.75rem;color:#a58f89;margin-top:.3rem;">Hasta 10 enlaces de clubcandela.com. Si no los tienes, descríbenos dónde lo viste.</p>
+    </div>
+
+    <div>
+      <label class="campo" for="r-desc">Cuéntanos qué pasó</label>
+      <textarea id="r-desc" rows="4" minlength="20" maxlength="3000" placeholder="Qué contenido es, en qué perfil lo viste y por qué no diste tu consentimiento." required style="resize:vertical;"></textarea>
+    </div>
+
+    <label class="opcion">
+      <input type="checkbox" id="r-decl">
+      <span>Declaro de buena fe que el contenido íntimo indicado se publicó sin mi consentimiento (o sin el de la persona a la que represento) y que lo que escribo en esta solicitud es verdadero. Entiendo que una solicitud falsa puede tener consecuencias legales.</span>
+    </label>
+
+    <div>
+      <label class="campo" for="r-firma">Firma: escribe tu nombre completo</label>
+      <input type="text" id="r-firma" maxlength="150" autocomplete="off" required>
+    </div>
+
+    <div class="trampa" aria-hidden="true"><label>No llenar <input type="text" id="r-web" tabindex="-1" autocomplete="off"></label></div>
+
+    <div class="error-box" id="r-error" role="alert"></div>
+
+    <button type="submit" class="c-btn" id="r-enviar" style="width:fit-content;">Enviar solicitud</button>
+  </form>
+
+  <div class="ok-box" id="r-ok" role="status">
+    <h3>Solicitud recibida</h3>
+    <p style="color:#2E7D32;">Tu número de referencia es <strong id="r-ref"></strong>. Retiramos el contenido en menos de 48 horas (a más tardar el <strong id="r-limite"></strong>) y te escribimos a tu correo cuando esté hecho. Guarda este número.</p>
+  </div>
+
+  <h2>Qué hacemos con tu solicitud</h2>
+  <ul>
+    <li>Retiramos el contenido y las copias idénticas, y guardamos una huella para impedir que se vuelva a subir.</li>
+    <li>Suspendemos la cuenta que lo publicó si se confirma que no había consentimiento.</li>
+    <li>Cooperamos con las autoridades cuando corresponde.</li>
+  </ul>
+
+  <h2>Contacto directo</h2>
+  <p>Para una urgencia: <a href="mailto:legal@clubcandela.com" style="color:#B5445C;font-weight:700;">legal@clubcandela.com</a>. También puedes ayudarte de <a href="https://stopncii.org" target="_blank" rel="noopener" style="color:#B5445C;font-weight:700;">StopNCII.org</a> para impedir que tu imagen se difunda en otros sitios.</p>
+</main>
+
+<script src="/js/p/retiro-contenido.js"></script>
+</body>
+</html>
