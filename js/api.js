@@ -28,7 +28,7 @@ const candela = {
         const res = await fetch(`${API_URL}${path}`, opts);
         const data = await res.json().catch(() => ({}));
         if (res.status === 401 && localStorage.getItem('candela_user')) {
-            localStorage.removeItem('candela_user');
+            localStorage.removeItem('candela_user'); localStorage.removeItem('candela_balance');
             // Si varias llamadas en paralelo reciben 401 a la vez (ej. al cargar el
             // dashboard), solo la primera dispara el redirect -- evita parpadeo.
             if (!sessionStorage.getItem('candela_return')) {
@@ -94,7 +94,7 @@ const candela = {
         async logout(sinConfirmar = false) {
             if (!sinConfirmar && !confirm('¿Seguro que queres cerrar sesion?')) return;
             try { await candela._req('POST', '/api/auth/logout'); } catch (_) {}  // la API borra la cookie
-            localStorage.removeItem('candela_user');
+            localStorage.removeItem('candela_user'); localStorage.removeItem('candela_balance');
             const isFile = location.protocol === 'file:';
             const inPages = location.pathname.includes('/pages/');
             window.location.href = isFile
