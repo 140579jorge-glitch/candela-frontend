@@ -514,10 +514,13 @@ async function cargarModeracion(estado) {
 
 async function retirarYBloquear(id, btn) {
     if (!confirm('Retirar esta pieza y bloquear que vuelva a subirse (el mismo archivo se rechaza y las copias casi identicas iran a revision). Continuar?')) return;
+    const esCsam = confirm('¿Es material sexual con una persona menor de edad?\n\nAceptar: se guarda la evidencia cifrada por 1 año y se retira. NO lo abras otra vez ni lo copies. Reporta ya a NCMEC.\nCancelar: se retira como contenido íntimo sin consentimiento.');
+    let ncmec = '';
+    if (esCsam) ncmec = (prompt('Número de reporte de NCMEC (si ya lo tienes, si no déjalo vacío):') || '').trim();
     const ref = (prompt('Referencia del reporte de retiro, 8 caracteres (opcional):') || '').trim();
     btn.disabled = true; btn.style.opacity = '.5';
     try {
-        const r = await candela._req('POST', `/api/admin/contenido/${id}/retirar-y-bloquear`, { reporte_id: ref || null, motivo: 'ncii' });
+        const r = await candela._req('POST', `/api/admin/contenido/${id}/retirar-y-bloquear`, { reporte_id: ref || null, motivo: esCsam ? 'csam' : 'ncii', ncmec_reporte: ncmec || null });
         toast(r.aviso || 'Pieza retirada y huella bloqueada', r.aviso ? 'error' : 'success');
         document.getElementById('mod-' + id)?.remove();
     } catch(e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
