@@ -725,7 +725,7 @@ function montarQuienAparece(id) {
             <p class="mt-2">${declara} <a href="normas.html#participantes" target="_blank" rel="noopener" class="text-c-accent font-bold hover:underline">Ver reglas</a></p>
         </div>`;
 }
-function refrescarQuienAparece() { montarQuienAparece('qa-contenido'); montarQuienAparece('qa-pack'); }
+function refrescarQuienAparece() { montarQuienAparece('qa-contenido'); montarQuienAparece('qa-pack'); montarQuienAparece('qa-story'); }
 function leerQuienAparece(id) {
     const box = document.getElementById(id);
     const sel = box ? box.querySelector('input[type=radio]:checked') : null;
@@ -1793,6 +1793,8 @@ function previewStory(input) {
 async function subirStory() {
     const input = document.getElementById('story-archivo');
     if (!input.files[0]) { toast('Selecciona un archivo primero', 'error'); return; }
+    let interpretesIds;
+    try { interpretesIds = leerQuienAparece('qa-story'); } catch (err) { toast(err.message, 'error'); return; }
     const btn = document.getElementById('btn-story-subir');
     const prog = document.getElementById('story-progress');
     const bar = document.getElementById('story-progress-bar');
@@ -1801,17 +1803,19 @@ async function subirStory() {
 
     const fd = new FormData();
     fd.append('archivo', input.files[0]);
+    fd.append('declara_solo_yo', interpretesIds.length ? 'false' : 'true');
+    if (interpretesIds.length) fd.append('interpretes_ids', interpretesIds.join(','));
 
     await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', API_URL + '/api/stories');
         xhr.withCredentials = true;  // cookie de sesion
         xhr.upload.onprogress = e => { if (e.lengthComputable) bar.style.width = Math.round(e.loaded/e.total*100)+'%'; };
-        xhr.onload = () => { if (xhr.status < 300) resolve(); else reject(new Error(JSON.parse(xhr.responseText).detail || 'Error')); };
+        xhr.onload = () => { if (xhr.status < 300) resolve(JSON.parse(xhr.responseText)); else reject(new Error((JSON.parse(xhr.responseText).detail) || 'Error')); };
         xhr.onerror = () => reject(new Error('Error de red'));
         xhr.send(fd);
-    }).then(() => {
-        toast('Story publicada. Dura 24 horas.', 'success');
+    }).then((r) => {
+        toast(r && r.mod_estado === 'pendiente' ? 'Tu story esta en revision. Se publica cuando la aprobemos.' : 'Story publicada. Dura 24 horas.', 'success');
         input.value = '';
         document.getElementById('story-file-name').classList.add('hidden');
         document.getElementById('story-upload-label').querySelector('span.ms').textContent = 'add_photo_alternate';
@@ -1845,6 +1849,7 @@ async function cargarMisStories() {
                 <div class="flex-1 min-w-0">
                     <p class="text-xs font-semibold capitalize">${s.tipo}</p>
                     <p class="text-[11px] text-c-soft">${s.vistas_count} vista${s.vistas_count!==1?'s':''} · expira en ${diffH}h</p>
+                    ${s.mod_estado === 'pendiente' ? '<p class="text-[11px] font-bold text-amber-600">En revision: aun no la ven tus suscriptores</p>' : ''}
                 </div>
                 <div class="flex gap-1">
                     <button data-on-click="verVistasStory('${s.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-c-champagne text-c-soft hover:bg-orange-100 transition-colors">

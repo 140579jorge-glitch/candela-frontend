@@ -418,9 +418,49 @@ async function retirarDmFoto(id, btn) {
     } catch (e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
 }
 
+async function cargarModeracionStories(estado) {
+    const cont = document.getElementById('lista-mod-stories');
+    if (!cont) return;
+    try {
+        const lista = await candela._req('GET', `/api/admin/stories-moderacion?estado=${estado}&limit=50`);
+        if (!lista.length) { cont.innerHTML = `<p class="text-c-soft text-sm text-center py-6">Sin stories ${estado === 'pendiente' ? 'pendientes de revisión' : 'rechazadas'}</p>`; return; }
+        cont.innerHTML = lista.map(s => {
+            const media = s.tipo === 'video'
+                ? `<video src="${esc(s.archivo_url || '')}" controls preload="metadata" class="w-full max-h-64 rounded-lg bg-black"></video>`
+                : `<a href="${esc(s.archivo_url || '')}" target="_blank" rel="noopener"><img src="${esc(s.archivo_url || '')}" alt="" class="w-full max-h-64 object-contain rounded-lg bg-black"></a>`;
+            const quienes = s.declara_solo_yo ? 'Declara que aparece solo ella.' : ('Aparece con: ' + (s.interpretes.map(x => esc(x.alias) + ' (' + esc(x.estado) + ')').join(', ') || '-'));
+            const botones = estado === 'pendiente'
+                ? `<button data-on-click="moderarStory('${esc(s.id)}','rechazado',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100">Rechazar</button>
+                   <button data-on-click="moderarStory('${esc(s.id)}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100">Aprobar</button>`
+                : `<button data-on-click="moderarStory('${esc(s.id)}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100">Revertir y aprobar</button>`;
+            return `<div class="ver-card" id="modst-${esc(s.id)}">
+                <p class="font-bold text-sm mb-1">Story de ${esc(s.creadora_nombre)}</p>
+                <p class="text-xs text-c-soft mb-2">${quienes}${s.mod_razon ? ' · ' + esc(s.mod_razon) : ''}</p>
+                ${media}
+                <div class="flex gap-2 mt-3">${botones}</div>
+            </div>`;
+        }).join('');
+    } catch (e) { cont.innerHTML = '<p class="text-red-500 text-sm text-center py-6">No se pudieron cargar las stories</p>'; }
+}
+
+async function moderarStory(id, estado, btn) {
+    let razon = null;
+    if (estado === 'rechazado') {
+        razon = (prompt('Motivo del rechazo (la creadora lo verá):') || '').trim();
+        if (!razon) { toast('Escribe un motivo para rechazar', 'error'); return; }
+    }
+    btn.disabled = true; btn.style.opacity = '.5';
+    try {
+        await candela._req('PATCH', `/api/admin/stories/${id}/moderar`, { estado, razon });
+        toast(estado === 'aprobado' ? 'Story aprobada' : 'Story rechazada', 'success');
+        document.getElementById('modst-' + id)?.remove();
+    } catch (e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
+}
+
 async function cargarModeracion(estado) {
     estado = estado || 'pendiente';
     cargarModeracionPacks(estado);
+    cargarModeracionStories(estado);
     if (estado === 'pendiente') cargarDmFotos();
     ['pendiente', 'rechazado'].forEach(e => {
         const b = document.getElementById('mfil-' + e);
