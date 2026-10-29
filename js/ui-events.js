@@ -17,6 +17,22 @@
     import: 1, _req: 1, cookie: 1, localStorage: 1, XMLHttpRequest: 1, WebSocket: 1, fetch: 1
   };
   // Globales a las que se permite llegar. Cualquier otra raiz se busca en window (funciones de la pagina).
+  // Modelo de lista blanca (2026-10-29): solo se alcanza lo que la pagina define a proposito. Un atacante que
+  // inyecte HTML con data-on-* no debe llegar a Reflect, Object, Function ni a funciones nativas arbitrarias.
+  var RAICES_OK = { window: 1, document: 1, location: 1, history: 1, navigator: 1, sessionStorage: 1, candela: 1,
+    Math: 1, Number: 1, String: 1, parseInt: 1, parseFloat: 1, encodeURIComponent: 1, undefined: 1, NaN: 1, Infinity: 1 };
+  var WINDOW_OK = { location: 1, history: 1, scrollTo: 1, scrollY: 1, innerWidth: 1, innerHeight: 1, document: 1,
+    navigator: 1, sessionStorage: 1, open: 1, candela: 1 };
+  var DOCUMENT_OK = { getElementById: 1, querySelector: 1, querySelectorAll: 1, body: 1, documentElement: 1,
+    activeElement: 1, title: 1, location: 1, referrer: 1 };
+  // unicas funciones nativas invocables (las que los handlers del sitio usan de verdad)
+  var NATIVOS_OK = { stopPropagation: 1, stopImmediatePropagation: 1, preventDefault: 1, setItem: 1, getItem: 1,
+    back: 1, forward: 1, reload: 1, getElementById: 1, querySelector: 1, querySelectorAll: 1, scrollTo: 1,
+    scrollIntoView: 1, writeText: 1, then: 1, catch: 1, click: 1, focus: 1, blur: 1, select: 1, toggle: 1,
+    add: 1, remove: 1, contains: 1, toFixed: 1, round: 1, floor: 1, ceil: 1, max: 1, min: 1, abs: 1, parseInt: 1, parseFloat: 1, encodeURIComponent: 1, open: 1 };
+  function esNativa(f) {
+    try { return Function.prototype.toString.call(f).indexOf('[native code]') !== -1; } catch (_) { return true; }
+  }
   var RAICES_VEDADAS = { eval: 1, Function: 1, setTimeout: 1, setInterval: 1, fetch: 1, XMLHttpRequest: 1, WebSocket: 1, localStorage: 1 };
 
   function error(msg) { throw new Error('ui-events: ' + msg); }
@@ -207,6 +223,13 @@
   // ---------- Evaluador ----------
   function nombreSeguro(n) { if (PROHIBIDOS[n] === 1) error('nombre vedado: ' + n); return n; }
 
+  function comprobarMiembro(o, p) {
+    if (o === window) {
+      var v = window[p];
+      if (WINDOW_OK[p] !== 1 && !(typeof v === 'function' && !esNativa(v))) error('ventana: ' + p);
+    } else if (o === document && DOCUMENT_OK[p] !== 1) error('documento: ' + p);
+  }
+
   function evaluar(n, amb) {
     switch (n.t) {
       case 'lit': return n.v;
@@ -215,10 +238,14 @@
         if (n.n === 'event') return amb.evento;
         if (Object.prototype.hasOwnProperty.call(amb.vars, n.n)) return amb.vars[n.n];
         if (RAICES_VEDADAS[n.n] === 1) error('raiz vedada: ' + n.n);
-        return window[n.n];
+        var val = window[n.n];
+        if (RAICES_OK[n.n] === 1 || val === undefined) return val;
+        if (typeof val === 'function' && !esNativa(val)) return val; // funcion declarada por la pagina
+        return error('raiz no permitida: ' + n.n);
       case 'mem': {
         var o = evaluar(n.o, amb), p = evaluar(n.p, amb);
         nombreSeguro(String(p));
+        comprobarMiembro(o, String(p));
         return o == null ? undefined : o[p];
       }
       case 'call': {
@@ -227,11 +254,16 @@
           ctx = evaluar(n.f.o, amb);
           var nm = evaluar(n.f.p, amb); nombreSeguro(String(nm));
           if (ctx == null) error('objeto nulo en llamada a ' + nm);
+          comprobarMiembro(ctx, String(nm));
           f = ctx[nm];
         } else {
           f = evaluar(n.f, amb); ctx = window;
         }
         if (typeof f !== 'function') error('no es una funcion');
+        if (esNativa(f)) {
+          var nomf = n.f.t === 'mem' ? String(nm) : (n.f.n || '');
+          if (NATIVOS_OK[nomf] !== 1) error('funcion nativa no permitida: ' + nomf);
+        }
         var a = n.a.map(function (x) { return evaluar(x, amb); });
         return f.apply(ctx, a);
       }
