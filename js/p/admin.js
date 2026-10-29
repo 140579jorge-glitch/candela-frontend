@@ -451,6 +451,7 @@ async function cargarModeracion(estado) {
             const quienes = (c.interpretes && c.interpretes.length) ? `<p class="text-xs text-c-soft mt-1">Aparece con: ${c.interpretes.map(x => esc(x.alias) + ' (' + esc(x.estado) + ')').join(', ')}</p>` : '<p class="text-xs text-c-soft mt-1">Declara que aparece solo ella</p>';
             const botones = estado === 'pendiente'
                 ? `<button data-on-click="moderarContenido('${c.id}','rechazado',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">close</span>Rechazar</button>
+                   <button data-on-click="retirarYBloquear('${c.id}',this)" class="bg-red-600 text-white text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-700 transition-all flex items-center gap-1" title="Retira la pieza y bloquea que vuelva a subirse"><span class="ms" style="font-size:16px">block</span>Retirar y bloquear</button>
                    <button data-on-click="moderarContenido('${c.id}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">check</span>Aprobar</button>`
                 : `<button data-on-click="moderarContenido('${c.id}','aprobado',this)" class="bg-green-50 text-green-600 border border-green-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-all flex items-center gap-1"><span class="ms" style="font-size:16px">undo</span>Revertir y aprobar</button>`;
             return `
@@ -469,6 +470,17 @@ async function cargarModeracion(estado) {
             </div>`;
         }).join('');
     } catch(e) { cont.innerHTML = '<p class="text-red-400 text-sm text-center py-8">Error al cargar</p>'; }
+}
+
+async function retirarYBloquear(id, btn) {
+    if (!confirm('Retirar esta pieza y bloquear que vuelva a subirse (el mismo archivo se rechaza y las copias casi identicas iran a revision). Continuar?')) return;
+    const ref = (prompt('Referencia del reporte de retiro, 8 caracteres (opcional):') || '').trim();
+    btn.disabled = true; btn.style.opacity = '.5';
+    try {
+        const r = await candela._req('POST', `/api/admin/contenido/${id}/retirar-y-bloquear`, { reporte_id: ref || null, motivo: 'ncii' });
+        toast(r.aviso || 'Pieza retirada y huella bloqueada', r.aviso ? 'error' : 'success');
+        document.getElementById('mod-' + id)?.remove();
+    } catch(e) { toast(e.message || 'Error', 'error'); btn.disabled = false; btn.style.opacity = '1'; }
 }
 
 async function moderarContenido(id, estado, btn) {
