@@ -7,6 +7,10 @@
   var GA_ID = 'G-HNJ89RN59N';
 
   function injectGA() {
+    // Analytics de Google desactivado 2026-10-29: un host de terceros en script-src permitia ejecutar
+    // codigo ajeno ante una inyeccion de HTML, y el rastreo de fans de una plataforma adulta es un riesgo
+    // de privacidad. Para metricas usar Cloudflare Web Analytics (sin cookies).
+    return;
     if (window._ga_injected) return;
     window._ga_injected = true;
     var s = document.createElement('script');
