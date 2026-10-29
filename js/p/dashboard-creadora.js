@@ -461,6 +461,15 @@ function previsualizarQr(input) {
         `<img src="${url}" class="w-full h-full object-contain">`;
 }
 
+async function pedirCodigoRetiro(btn) {
+    btn.disabled = true;
+    try {
+        await candela.creadoras.pedirCodigoRetiro();
+        toast('Te enviamos un codigo a tu correo', 'success');
+    } catch (err) { toast(err.message, 'error'); }
+    setTimeout(() => { btn.disabled = false; }, 30000);
+}
+
 async function guardarDatosRetiro(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-guardar-pago');
@@ -474,9 +483,9 @@ async function guardarDatosRetiro(e) {
         if (qrInput && qrInput.files[0]) {
             await candela.creadoras.subirQrPago(qrInput.files[0]);
         }
-        const clave = document.getElementById('w-pass').value;
-        await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined, clave);
-        document.getElementById('w-pass').value = '';
+        const codigo = document.getElementById('w-codigo').value.trim();
+        await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined, codigo);
+        document.getElementById('w-codigo').value = '';
         _perfilCreadora = await candela.creadoras.miPerfil();
         toast('Metodos de pago guardados', 'success');
     } catch(err) { toast(err.message, 'error'); }
