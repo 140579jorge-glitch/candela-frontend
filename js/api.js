@@ -434,6 +434,7 @@ function reenviarAvisoVerificacion(btn) {
                 const me = await candela._req('GET', '/api/auth/me');
                 verificado = me.email_verificado !== false;
                 sessionStorage.setItem('cdl_ev', JSON.stringify({ t: Date.now(), v: verificado }));
+                if (me.marca) sessionStorage.setItem('cdl_marca', me.marca);
                 if (u.email_verificado !== verificado) { u.email_verificado = verificado; localStorage.setItem('candela_user', JSON.stringify(u)); }
             }
         } catch (_) { return; }

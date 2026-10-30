@@ -823,9 +823,8 @@ function wmLabel() {
     if (u?.slug && creadoraData?.slug && u.slug === creadoraData.slug) {
         return 'clubcandela.com';
     }
-    if (u?.nombre) return u.nombre + ' · candela';
-    if (u?.email) return u.email.split('@')[0] + ' · candela';
-    return 'clubcandela.com';
+    // codigo corto de la sesion (no el nombre): identifica la cuenta si el contenido se filtra, sin exponer a la persona
+    return sessionStorage.getItem('cdl_marca') || 'candela';
 }
 
 function crearWmLayer(label, oscuro) {
@@ -840,8 +839,8 @@ function crearWmLayer(label, oscuro) {
             span.style.left = (c * 34 + 4) + '%';
             span.style.top  = (r * 34 + 8) + '%';
             span.style.color = oscuro
-                ? 'rgba(255,255,255,.17)'
-                : 'rgba(0,0,0,.1)';
+                ? 'rgba(255,255,255,.055)'
+                : 'rgba(0,0,0,.04)';
             span.textContent = label;
             layer.appendChild(span);
         }
@@ -854,7 +853,7 @@ function aplicarWatermarks() {
     document.querySelectorAll('#content-grid .content-item').forEach(item => {
         // Solo contenido visible (no bloqueado) — los bloqueados ya tienen blur
         if (item.querySelector('.wm-layer')) return;
-        const esBloqueado = !!item.querySelector('.ms');  // lock icon = bloqueado
+        const esBloqueado = !!item.querySelector('.ct-lock');  // candado = bloqueado
         if (!esBloqueado) {
             const oscuro = !!item.querySelector('img');
             item.style.position = 'relative';
@@ -915,7 +914,7 @@ function abrirVisor(item) {
             span.className = 'wm-text';
             span.style.left = (c * 25 + 2) + '%';
             span.style.top  = (r * 25 + 4) + '%';
-            span.style.color = 'rgba(255,255,255,.2)';
+            span.style.color = 'rgba(255,255,255,.06)';
             span.textContent = label;
             wm.appendChild(span);
         }

@@ -203,7 +203,7 @@ function renderCard(item) {
 
 function aplicarWatermarks() {
     const u = candela.auth.user();
-    const label = (u?.nombre || u?.email?.split('@')[0] || 'usuario') + ' · candela';
+    const label = sessionStorage.getItem('cdl_marca') || 'candela';
     feedData.forEach(item => {
         const wm = document.getElementById('wm-' + item.id);
         if (!wm || wm.children.length) return;
@@ -276,14 +276,14 @@ function abrirVisor(id, tipo, url) {
     // Watermark en visor
     wm.innerHTML = '';
     const u = candela.auth.user();
-    const label = (u?.nombre || u?.email?.split('@')[0] || 'usuario') + ' · candela';
+    const label = sessionStorage.getItem('cdl_marca') || 'candela';
     for (let r = 0; r < 4; r++) {
         for (let c = 0; c < 4; c++) {
             const span = document.createElement('span');
             span.className = 'wm-text';
             span.style.left = (c * 25 + 2) + '%';
             span.style.top  = (r * 25 + 4) + '%';
-            span.style.color = 'rgba(255,255,255,.2)';
+            span.style.color = 'rgba(255,255,255,.06)';
             span.textContent = label;
             wm.appendChild(span);
         }
