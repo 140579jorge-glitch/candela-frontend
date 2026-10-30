@@ -471,7 +471,7 @@ async function confirmarSub() {
         const r = await candela.pagos.confirmarSuscripcion({ creadora_slug: slug, meses: _planSel });
         userBalance = r.nuevo_balance != null ? r.nuevo_balance : Math.max(0, userBalance - _planCosto);
         cerrarModal('modal-sub');
-        toast(r.mensaje || 'Suscripcion activada', 'success');
+        toast(r.mensaje || 'Suscripción activada', 'success');
         setTimeout(() => location.reload(), 2000);
     } catch(err) {
         toast(err.message, 'error');
@@ -533,7 +533,7 @@ let propinaMonto = 5;
 function setPropinaMonto(v) { propinaMonto = parseFloat(v) || 0; limpiarBtnsPropina(); }
 
 function abrirPropina() {
-    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para enviar una propina', 'info'); return; }
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesión para enviar una propina', 'info'); return; }
     document.getElementById('propina-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
     document.getElementById('propina-monto-custom').value = '';
     document.getElementById('propina-mensaje').value = '';
@@ -580,7 +580,7 @@ function elegirMontoPropina(monto) {
 }
 
 async function confirmarPropina() {
-    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion primero', 'info'); return; }
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesión primero', 'info'); return; }
     const monto = propinaMonto || parseFloat(document.getElementById('propina-monto-custom').value);
     if (!monto || monto < 1) { toast('Elige un monto valido (minimo $1)', 'error'); return; }
     if (userBalance < monto) { window.location.href = 'wallet.html'; return; }
@@ -610,7 +610,7 @@ let _chatSesionWs = null;
 let _chatSesionTimer = null;
 
 function abrirChatSesion() {
-    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para solicitar un chat privado', 'info'); return; }
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesión para solicitar un chat privado', 'info'); return; }
     const pMin = creadoraData?.precio_chat_minuto || 5;
     document.getElementById('chat-sesion-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
     document.getElementById('chat-sesion-precio-info').textContent = `$${pMin.toFixed(2)} por minuto`;
@@ -654,7 +654,7 @@ async function confirmarChatSesion() {
         // Pollear hasta que la sesion sea aceptada o rechazada
         _esperarAceptacion(r.sesion_id);
     } catch (e) {
-        toast(e.message || 'Error al solicitar sesion', 'error');
+        toast(e.message || 'Error al solicitar sesión', 'error');
     } finally {
         btn.disabled = false; btn.textContent = 'Solicitar sesión';
     }
@@ -698,8 +698,8 @@ function _abrirVentanaChat(sesionId, sesionInfo) {
             _agregarMensajeChat(d.usuario, d.texto, d.role === 'fan');
         } else if (d.tipo === 'sesion_fin') {
             clearInterval(_chatSesionTimer);
-            document.getElementById('chat-activo-timer').textContent = 'Sesion terminada';
-            toast('La sesion de chat ha terminado', 'info');
+            document.getElementById('chat-activo-timer').textContent = 'Sesión terminada';
+            toast('La sesión de chat ha terminado', 'info');
             setTimeout(() => cerrarModal('modal-chat-activo'), 3000);
         }
     };
@@ -757,7 +757,7 @@ function terminarChatSesion() {
 
 // --- Mensajes directos ---
 function abrirMensaje() {
-    if (!candela.auth.isLoggedIn()) { toast('Inicia sesion para enviar un mensaje', 'info'); return; }
+    if (!candela.auth.isLoggedIn()) { toast('Inicia sesión para enviar un mensaje', 'info'); return; }
     const precio = creadoraData?.precio_mensaje || 5;
     document.getElementById('dm-nombre-creadora').textContent = creadoraData?.nombre_artistico || '';
     document.getElementById('dm-precio-display').textContent = `$${precio}`;

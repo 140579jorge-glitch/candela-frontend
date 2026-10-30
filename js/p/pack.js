@@ -102,7 +102,7 @@ async function init() {
         btnCta.disabled = true;
         btnCta.className = 'bg-green-500 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md';
     } else if (!logueado) {
-        document.getElementById('btn-cta').textContent = 'Iniciar sesion para comprar';
+        document.getElementById('btn-cta').textContent = 'Iniciar sesión para comprar';
     }
 
     // Balance si logueado

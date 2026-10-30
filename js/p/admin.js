@@ -1039,7 +1039,7 @@ async function buscarCodigoRecarga() {
         info.classList.remove('hidden');
     } catch(e) {
         info.className = 'mt-2 p-3 rounded-xl text-xs bg-red-50 border border-red-200 text-red-700';
-        info.textContent = e.message === 'Codigo no encontrado' ? 'Código no encontrado — revisá que esté bien copiado.' : (e.message || 'Error al buscar el código');
+        info.textContent = e.message === 'Codigo no encontrado' ? 'Código no encontrado — revisa que esté bien copiado.' : (e.message || 'Error al buscar el código');
         info.classList.remove('hidden');
     }
 }
@@ -1160,7 +1160,7 @@ async function crearAdmin() {
     const email = document.getElementById('adm-email').value.trim();
     const password = document.getElementById('adm-pass').value;
     if (!nombre || !email || !password) { toast('Completa todos los campos', 'error'); return; }
-    if (password.length < 8) { toast('La contrasena debe tener al menos 8 caracteres', 'error'); return; }
+    if (password.length < 8) { toast('La contraseña debe tener al menos 8 caracteres', 'error'); return; }
     if (!confirm(`Crear admin para ${email}?`)) return;
     try {
         const r = await candela.admin.crearAdmin(email, nombre, password);

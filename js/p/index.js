@@ -504,13 +504,13 @@ async function reenviarOTP() {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || 'Error al reenviar');
-        toast('Codigo reenviado a tu email', 'success');
+        toast('Código reenviado a tu email', 'success');
         document.getElementById('otp-input').value = '';
         document.getElementById('otp-input').focus();
     } catch(err) {
         toast(err.message, 'error');
     } finally {
-        setTimeout(() => { btn.textContent = 'No llego el codigo — Reenviar'; btn.disabled = false; }, 30000);
+        setTimeout(() => { btn.textContent = 'No llego el código — Reenviar'; btn.disabled = false; }, 30000);
     }
 }
 
@@ -530,7 +530,7 @@ async function verificarOTP(e) {
             body: JSON.stringify({ email: _adminEmailPendiente, codigo }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || 'Codigo invalido');
+        if (!res.ok) throw new Error(data.detail || 'Código invalido');
         if (esCreadora) {
             localStorage.setItem('candela_user', JSON.stringify({ tipo: data.tipo_usuario, nombre: data.nombre, slug: data.creadora_slug, email: _adminEmailPendiente, email_verificado: true }));
             window.location.href = 'pages/dashboard-creadora.html';

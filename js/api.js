@@ -36,7 +36,7 @@ const candela = {
                 const inPages = location.pathname.includes('/pages/');
                 window.location.href = inPages ? '../index.html?sesion=expirada' : '/index.html?sesion=expirada';
             }
-            throw new Error('Sesion expirada');
+            throw new Error('Sesión expirada');
         }
         if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);
         return data;

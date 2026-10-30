@@ -210,7 +210,7 @@ async function cancelarSub(slug, btn) {
     try {
         const res = await candela._req('DELETE', '/api/pagos/suscripciones/' + slug);
         const hasta = res?.acceso_hasta ? fmtFecha(res.acceso_hasta) : '';
-        toast('Suscripcion cancelada.' + (hasta ? ' Acceso hasta ' + hasta : ''), 'success');
+        toast('Suscripción cancelada.' + (hasta ? ' Acceso hasta ' + hasta : ''), 'success');
         // Recargar datos y re-renderizar sección
         actData = await candela._req('GET', '/api/fans/mi-actividad');
         renderSubs();
@@ -360,7 +360,7 @@ async function eliminarMiCuenta() {
     if (!confirm('Segura? Esta accion no se puede deshacer.')) return;
     try {
         await candela.auth.eliminarCuenta();
-        toast('Cuenta eliminada. Cerrando sesion...', 'success');
+        toast('Cuenta eliminada. Cerrando sesión...', 'success');
         setTimeout(() => { candela.auth.logout(true); window.location.href = '../index.html'; }, 2000);
     } catch(e) { toast(e.message||'Error al eliminar cuenta', 'error'); }
 }

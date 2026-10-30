@@ -32,7 +32,7 @@ function irPaso2() {
     const nac = document.getElementById('r-nacimiento').value;
     if (!nombre) { toast('Ingresa tu nombre', 'error'); return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Email invalido', 'error'); return; }
-    if (pass.length < 8) { toast('La contrasena debe tener al menos 8 caracteres', 'error'); return; }
+    if (pass.length < 8) { toast('La contraseña debe tener al menos 8 caracteres', 'error'); return; }
     if (pass !== pass2) { toast('Las contrasenas no coinciden', 'error'); return; }
     if (!nac) { toast('Ingresa tu fecha de nacimiento', 'error'); return; }
     const nacDate = new Date(nac);

@@ -172,7 +172,7 @@ function actualizarUI() {
 function copiarDireccion() {
     const addr = document.getElementById('pay-addr-text').textContent;
     navigator.clipboard.writeText(addr);
-    toast('Direccion copiada', 'success');
+    toast('Dirección copiada', 'success');
 }
 
 function generarDireccion() {
@@ -264,7 +264,7 @@ function iniciarPolling() {
             } else if (r.estado === 'failed') {
                 mostrarFallido('Pago rechazado', 'La transaccion fue rechazada por la red. Intenta con un nuevo deposito.');
             } else if (r.estado === 'expired') {
-                mostrarFallido('Pago expirado', 'El tiempo para completar el pago vencio. Genera una nueva direccion.');
+                mostrarFallido('Pago expirado', 'El tiempo para completar el pago vencio. Genera una nueva dirección.');
             } else if (r.estado === 'partially_paid') {
                 document.getElementById('pay-status-text').textContent = 'Pago parcial detectado, esperando monto completo...';
             } else if (r.estado !== 'pendiente') {

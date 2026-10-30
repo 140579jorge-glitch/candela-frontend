@@ -76,11 +76,11 @@ async function cargarEstado2FA() {
     const btn = document.getElementById('btn-toggle-2fa');
     if (!label || !btn) return;
     if (_2faActivo) {
-        label.textContent = 'Activo — tu cuenta esta protegida con verificacion de dos pasos';
+        label.textContent = 'Activo — tu cuenta esta protegida con verificación de dos pasos';
         label.className = 'text-xs mt-1 font-semibold text-green-600';
         btn.textContent = 'Desactivar';
     } else {
-        label.textContent = 'Inactivo — solo necesitas email y contrasena para entrar';
+        label.textContent = 'Inactivo — solo necesitas email y contraseña para entrar';
         label.className = 'text-xs mt-1 font-semibold text-c-soft';
         btn.textContent = 'Activar';
     }
@@ -96,15 +96,15 @@ function toggle2FA() {
 
 async function confirmarToggle2FA() {
     const pwd = document.getElementById('2fa-password-inp').value;
-    if (!pwd) return toast('Ingresa tu contrasena', 'error');
+    if (!pwd) return toast('Ingresa tu contraseña', 'error');
     try {
         const r = await candela._req('POST', '/api/auth/toggle-2fa', { password: pwd });
         _2faActivo = r.dos_fa_activo;
         document.getElementById('2fa-password-inp').value = '';
         document.getElementById('2fa-confirm-box').classList.add('hidden');
         await cargarEstado2FA();
-        toast(_2faActivo ? 'Verificacion en dos pasos activada' : 'Verificacion en dos pasos desactivada', 'success');
-    } catch(e) { toast(e.message || 'Contrasena incorrecta', 'error'); }
+        toast(_2faActivo ? 'Verificación en dos pasos activada' : 'Verificación en dos pasos desactivada', 'success');
+    } catch(e) { toast(e.message || 'Contraseña incorrecta', 'error'); }
 }
 
 // ─── PERFIL ──────────────────────────────────────────────────
@@ -385,7 +385,7 @@ async function guardarPerfil(e) {
         });
         txt.textContent = 'Guardado!';
         setTimeout(() => { txt.textContent = 'Guardar cambios'; btn.disabled = false; }, 1500);
-        toast('Cambios guardados. Visita tu pagina para verlos.', 'success');
+        toast('Cambios guardados. Visita tu página para verlos.', 'success');
     } catch(err) {
         toast(err.message || 'Error al guardar', 'error');
         txt.textContent = 'Guardar cambios'; btn.disabled = false;
@@ -465,7 +465,7 @@ async function pedirCodigoRetiro(btn) {
     btn.disabled = true;
     try {
         await candela.creadoras.pedirCodigoRetiro();
-        toast('Te enviamos un codigo a tu correo', 'success');
+        toast('Te enviamos un código a tu correo', 'success');
     } catch (err) { toast(err.message, 'error'); }
     setTimeout(() => { btn.disabled = false; }, 30000);
 }
@@ -499,7 +499,7 @@ async function eliminarCuentaCreadora() {
     if (conf !== 'ELIMINAR') { toast('Cancelado. No escribiste ELIMINAR.', 'error'); return; }
     try {
         await candela.auth.eliminarCuenta();
-        toast('Cuenta eliminada. Cerrando sesion...', 'success');
+        toast('Cuenta eliminada. Cerrando sesión...', 'success');
         setTimeout(() => { candela.auth.logout(true); window.location.href = '../index.html'; }, 2000);
     } catch(err) { toast(err.message, 'error'); }
 }
@@ -526,7 +526,7 @@ async function enviarVerificacion(e) {
 async function toggleOcultar(id, estaOculto) {
     try {
         await candela.contenido.toggleVisibilidad(id, estaOculto);
-        toast(estaOculto ? 'Contenido visible en tu pagina' : 'Contenido oculto de tu pagina', 'success');
+        toast(estaOculto ? 'Contenido visible en tu página' : 'Contenido oculto de tu página', 'success');
         cargarMisPosts();
     } catch(err) { toast(err.message, 'error'); }
 }
@@ -543,7 +543,7 @@ async function eliminarPost(id) {
     if (!confirm('Eliminar permanentemente esta publicacion? Esta accion no se puede deshacer.')) return;
     try {
         await candela.contenido.eliminar(id);
-        toast('Publicacion eliminada', 'success');
+        toast('Publicación eliminada', 'success');
         cargarMisPosts();
     } catch(err) { toast(err.message, 'error'); }
 }
@@ -552,7 +552,7 @@ async function eliminarPost(id) {
 async function generarBannerAuto() {
     const canvas = document.getElementById('banner-canvas');
     const ctx = canvas.getContext('2d');
-    const nombre = perfilData?.nombre_artistico || candela.auth.user()?.nombre || 'Mi Pagina';
+    const nombre = perfilData?.nombre_artistico || candela.auth.user()?.nombre || 'Mi Página';
     const temaId = document.getElementById('p-tema').value || 'melocoton';
     const tema = TEMAS_DEF.find(t => t.id === temaId) || TEMAS_DEF[0];
 
@@ -1023,7 +1023,7 @@ async function cargarSolicitudesChat() {
 async function aceptarSolicitudChat(sesionId, fanNombre) {
     try {
         const r = await candela.chatSesion.aceptar(sesionId);
-        toast('Sesion aceptada. Conectando...', 'success');
+        toast('Sesión aceptada. Conectando...', 'success');
         await cargarSolicitudesChat();
         _abrirChatCr(sesionId, fanNombre, r.expires_at);
     } catch(e) { toast(e.message || 'Error', 'error'); }
@@ -1053,9 +1053,9 @@ function _abrirChatCr(sesionId, fanNombre, expiresAt) {
         else if (d.tipo === 'chat') _agregarMsgCr(d.usuario, d.texto, d.role === 'creadora');
         else if (d.tipo === 'sesion_fin') {
             clearInterval(_chatCrTimer);
-            document.getElementById('chat-sesion-timer-cr').textContent = 'Sesion terminada';
+            document.getElementById('chat-sesion-timer-cr').textContent = 'Sesión terminada';
             document.getElementById('chat-sesion-activa-panel').classList.add('hidden');
-            toast('Sesion terminada', 'info');
+            toast('Sesión terminada', 'info');
         }
     };
 
