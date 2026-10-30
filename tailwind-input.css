@@ -5,3 +5,11 @@
 /* Zonas tactiles comodas (min ~40px) en pies de pagina y enlaces sueltos de texto */
 footer a { display: inline-block; padding-block: .6rem; }
 footer a[aria-label] { padding: .65rem; margin: -.65rem; }
+
+/* Accesibilidad y respuesta tactil */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid #B5445C; outline-offset: 2px; border-radius: inherit; }
+.c-btn, .c-btn-outline, button.rounded-full { transition: transform .2s cubic-bezier(.32,.72,0,1), filter .2s; }
+.c-btn:active, .c-btn-outline:active, button.rounded-full:active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
