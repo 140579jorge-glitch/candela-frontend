@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Zonas tactiles comodas (min ~40px) en pies de pagina y enlaces sueltos de texto */
+footer a { display: inline-block; padding-block: .6rem; }
+footer a[aria-label] { padding: .65rem; margin: -.65rem; }
