@@ -376,7 +376,7 @@ function cargarVitrina(idContenedor, limite, modo) {
         const st = document.createElement('style');
         st.id = 'estilo-vitrina';
         st.textContent =
-            '.vt-rail{display:flex;gap:.75rem;overflow-x:auto;padding:.25rem .25rem .75rem;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}' +
+            '.vt-rail{display:flex;justify-content:safe center;gap:.75rem;overflow-x:auto;padding:.25rem .25rem .75rem;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}' +
             '.vt-rail::-webkit-scrollbar{display:none}' +
             '.vt-card .ms{font-family:"Material Symbols Outlined";font-style:normal;font-weight:normal;line-height:1;letter-spacing:normal;white-space:nowrap}' +
             '.vt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}.vt-grid .vt-card{flex:none;aspect-ratio:3/4}' +

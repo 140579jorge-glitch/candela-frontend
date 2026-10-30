@@ -88,7 +88,7 @@ async function cargar() {
     document.getElementById('topbar-avatar').textContent = (user.nombre||'F')[0].toUpperCase();
     cargarNotif();
 
-    document.getElementById('bienvenida-sub').textContent = `Hola, ${user.nombre||'Fan'}! Todo tu historial en un lugar.`;
+    document.getElementById('bienvenida-sub').textContent = `¡Hola, ${user.nombre||'Fan'}! Todo tu historial en un lugar.`;
 
     try {
         actData = await candela._req('GET', '/api/fans/mi-actividad');

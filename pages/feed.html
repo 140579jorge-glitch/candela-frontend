@@ -47,17 +47,17 @@
 
 <!-- TopBar -->
 <header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
-    <div class="flex items-center justify-between h-14 px-4 max-w-2xl mx-auto">
+    <div class="flex items-center justify-between h-14 px-4 max-w-2xl lg:max-w-5xl mx-auto">
         <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
         <div class="flex items-center gap-2">
-            <button id="btn-avatar" data-on-click="candela.auth.logout()" title="Salir" class="w-9 h-9 rounded-full text-white text-sm font-bold flex items-center justify-center shadow-sm" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">?</button>
+            <a id="btn-avatar" href="fan-dashboard.html" title="Mi cuenta" class="w-9 h-9 rounded-full text-white text-sm font-bold flex items-center justify-center shadow-sm" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">?</a>
         </div>
     </div>
 </header>
 
 <!-- Nav top secundario -->
 <div class="pt-14 pb-0">
-    <div class="flex gap-1 px-4 py-3 max-w-2xl mx-auto overflow-x-auto no-scrollbar">
+    <div class="flex gap-1 px-4 py-3 max-w-2xl lg:max-w-5xl mx-auto overflow-x-auto no-scrollbar">
         <button data-on-click="mostrarTab('feed',this)" id="tab-feed" class="tab-btn shrink-0 px-4 py-1.5 rounded-full text-xs font-bold bg-c-accent text-white transition-all">
             <span class="ms" style="font-size:14px;vertical-align:-2px">home</span> Mi feed
         </button>

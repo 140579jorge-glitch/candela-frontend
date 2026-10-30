@@ -9,6 +9,7 @@ async function init() {
     // Avatar inicial
     const av = document.getElementById('btn-avatar');
     av.textContent = (u?.nombre || 'U')[0].toUpperCase();
+    if (u?.tipo === 'creadora') av.href = 'dashboard-creadora.html';
 
     cargarFeed();
     cargarLives();
