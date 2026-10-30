@@ -40,7 +40,8 @@
       '#pwa-ib-later{background:none;border:none;color:#8B7D77;font-size:.75rem;' +
       'cursor:pointer;font-family:inherit;text-decoration:underline;white-space:nowrap}' +
       '#pwa-ib-close{background:none;border:none;color:#B7A9A2;font-size:1.1rem;' +
-      'cursor:pointer;line-height:1;padding:.25rem}';
+      'cursor:pointer;line-height:1;padding:.25rem}' +
+      'body:has(.modal-bg.open) #pwa-ib{display:none!important}';
     document.head.appendChild(css);
   }
 
