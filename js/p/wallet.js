@@ -204,7 +204,7 @@ async function confirmarRedYGenerar() {
         depositoId = r.deposito_id;
 
         document.getElementById('pay-addr-text').textContent  = r.pay_address;
-        document.getElementById('pay-amount-label').textContent = `${Number(r.pay_amount).toFixed(3)} USDT`;
+        document.getElementById('pay-amount-label').textContent = `${Number(r.pay_amount).toFixed(2)} USDT`;
 
         // Mostrar red activa en el banner rojo
         const nombres = { trc20: 'USDT TRC20 (Tron)', polygon: 'USDT o USDC Polygon' };
