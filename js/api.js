@@ -369,7 +369,7 @@ function habilitarRail(rail) {
 }
 
 // Vitrina: miniaturas de lo mas nuevo (lo de pago llega difuminado desde el servidor). Pensada para que el fan se tiente a entrar.
-function cargarVitrina(idContenedor, limite) {
+function cargarVitrina(idContenedor, limite, modo) {
     const cont = document.getElementById(idContenedor);
     if (!cont) return Promise.resolve();
     if (!document.getElementById('estilo-vitrina')) {
@@ -378,6 +378,8 @@ function cargarVitrina(idContenedor, limite) {
         st.textContent =
             '.vt-rail{display:flex;gap:.75rem;overflow-x:auto;padding:.25rem .25rem .75rem;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}' +
             '.vt-rail::-webkit-scrollbar{display:none}' +
+            '.vt-card .ms{font-family:"Material Symbols Outlined";font-style:normal;font-weight:normal;line-height:1;letter-spacing:normal;white-space:nowrap}' +
+            '.vt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}.vt-grid .vt-card{flex:none;aspect-ratio:3/4}' +
             '.vt-card{position:relative;flex:0 0 150px;aspect-ratio:3/4;border-radius:18px;overflow:hidden;scroll-snap-align:start;background:#2a1520;display:block;box-shadow:0 8px 22px -10px rgba(90,20,45,.55);transition:transform .25s}' +
             '.vt-card:hover{transform:translateY(-3px)}' +
             '.vt-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.04)}' +
@@ -392,7 +394,7 @@ function cargarVitrina(idContenedor, limite) {
     }
     return candela._req('GET', '/api/contenido/destacados?limit=' + (limite || 12)).then(items => {
         if (!items || !items.length) { cont.classList.add('hidden'); return; }
-        cont.innerHTML = '<div class="vt-rail">' + items.map(it => {
+        cont.innerHTML = '<div class="' + (modo === 'grid' ? 'vt-grid' : 'vt-rail') + '">' + items.map(it => {
             const href = 'creadora.html?slug=' + encodeURIComponent(it.creadora_slug || '');
             const gratis = it.es_gratis || !(it.precio > 0);
             const precio = gratis ? '<span class="vt-precio libre">Gratis</span>'

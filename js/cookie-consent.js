@@ -73,8 +73,8 @@
     var consent = localStorage.getItem(KEY);
     if (consent === '1') { injectGA(); return; }
     if (consent === '0') return;
-    // No decision yet — show banner
-    showBanner();
+    // Sin analitica de terceros no hay nada que consentir: no se muestra banner.
+    return;
   }
 
   if (document.readyState === 'loading') {

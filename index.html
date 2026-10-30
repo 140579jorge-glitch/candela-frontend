@@ -195,6 +195,7 @@
             align-items:center;
             gap:40px;
         }
+        @media(min-width:941px){ #preview-section{display:none!important} }
         @media(max-width:940px){
             #hero-darkbg {
                 grid-template-columns:1fr;
@@ -360,52 +361,10 @@
                 </div>
             </div>
 
-            <!-- RIGHT: creator mosaic (desktop only) -->
-            <div id="hero-mosaic-wrap" style="position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
-                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(-1.5deg);box-shadow:0 4px 24px rgba(30,10,18,.06)">
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
-                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:linear-gradient(135deg,#B5445C,#F2B8C8);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:20px;color:#fff">lock</span></div>
-                        </div>
-                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Nombre real privado</div><div style="font-size:11px;color:#7B4D5E">Usas un nombre artístico</div></div>
-                    </div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
-                        <span style="font-size:11px;color:#7B4D5E">Para creadoras</span>
-                    </div>
-                </div>
-                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(1deg);margin-top:22px;box-shadow:0 4px 24px rgba(30,10,18,.06)">
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
-                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:linear-gradient(135deg,#B5445C,#F2B8C8);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:20px;color:#fff">water_drop</span></div>
-                        </div>
-                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Marca de agua</div><div style="font-size:11px;color:#7B4D5E">En cada foto y video</div></div>
-                    </div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
-                        <span style="font-size:11px;color:#7B4D5E">Protección</span>
-                    </div>
-                </div>
-                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(.5deg);box-shadow:0 4px 24px rgba(30,10,18,.06)">
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
-                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:linear-gradient(135deg,#B5445C,#F2B8C8);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:20px;color:#fff">sell</span></div>
-                        </div>
-                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Tú pones el precio</div><div style="font-size:11px;color:#7B4D5E">Suscripción, PPV y propinas</div></div>
-                    </div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
-                        <span style="font-size:11px;color:#7B4D5E">Tú decides</span>
-                    </div>
-                </div>
-                <div style="background:#fff;border:1px solid rgba(181,68,92,.1);border-radius:20px;padding:16px;transform:rotate(-1.2deg);margin-top:-14px;box-shadow:0 4px 24px rgba(30,10,18,.06)">
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-                        <div style="width:44px;height:44px;flex-shrink:0;padding:2px;border-radius:50%;background:conic-gradient(#B5445C,#F2B8C8,#fce8ef,#B5445C)">
-                            <div style="width:100%;height:100%;border-radius:50%;border:2px solid #fff;background:linear-gradient(135deg,#B5445C,#F2B8C8);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:20px;color:#fff">account_balance_wallet</span></div>
-                        </div>
-                        <div><div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#1E0A12">Retiros desde $30</div><div style="font-size:11px;color:#7B4D5E">En USDT o QR</div></div>
-                    </div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(30,10,18,.07)">
-                        <span style="font-size:11px;color:#7B4D5E">84% para ti</span>
-                    </div>
-                </div>
+            <!-- RIGHT: lo mas nuevo, miniaturas reales (de pago, desenfocadas en el servidor) -->
+            <div id="hero-mosaic-wrap" style="position:relative;z-index:2">
+                <p class="font-display" style="font-size:1.1rem;color:#1E0A12;margin-bottom:.75rem">Lo más nuevo, esperándote</p>
+                <div id="hero-vitrina" class="hidden"></div>
             </div>
         </div>
 
@@ -416,12 +375,7 @@
                 <h2 class="font-display text-2xl text-center text-c-text font-semibold mb-2">Descubre quién te está esperando</h2>
                 <p style="text-align:center;font-size:.85rem;color:#7B4D5E;margin-bottom:2rem">Regístrate gratis para ver todo su contenido exclusivo</p>
 
-                <!-- Grid filled by cargarPreviewPublico() -->
-                <div id="preview-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-2">
-                    <div class="rounded-2xl overflow-hidden" style="aspect-ratio:3/4"><div class="skeleton w-full h-full rounded-2xl"></div></div>
-                    <div class="rounded-2xl overflow-hidden" style="aspect-ratio:3/4"><div class="skeleton w-full h-full rounded-2xl"></div></div>
-                    <div class="rounded-2xl overflow-hidden hidden md:block" style="aspect-ratio:3/4"><div class="skeleton w-full h-full rounded-2xl"></div></div>
-                </div>
+                <div id="vitrina-home" class="hidden mb-2"></div>
 
                 <!-- Login wall CTA -->
                 <div class="text-center py-8 px-4">

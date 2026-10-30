@@ -182,56 +182,13 @@ async function verificarStreamsActivos() {
     } catch (_) {}
 }
 
-// ─── PUBLIC CREATOR PREVIEW (guests) ─────────────────────────────────
-async function cargarPreviewPublico() {
-    try {
-        const base = (typeof API_URL !== 'undefined' ? API_URL : '').replace(/\/$/, '');
-        const resp = await fetch(`${base}/api/creadoras/explorar?limit=6`);
-        if (!resp.ok) throw new Error('no data');
-        const lista = await resp.json();
-        // ponytail: sin vitrina publica hasta tener masa critica; subir MIN_PREVIEW cuando haya mas creadoras
-        const MIN_PREVIEW = 6;
-        if (!lista || lista.length < MIN_PREVIEW) return;
-        document.getElementById('preview-section')?.classList.remove('hidden');
-
-        // Render preview cards
-        const grid = document.getElementById('preview-grid');
-        if (!grid) return;
-
-        grid.innerHTML = lista.slice(0, 6).map(c => {
-            const [c1, c2] = PREVIEW_GRAD[c.tema_color] || ['#1A0D08', '#B5445C'];
-            const flag = FLAGS[c.pais] || '🌎';
-            const inicial = (c.nombre_artistico || '?')[0].toUpperCase();
-            const precio = c.precio_suscripcion > 0 ? `$${c.precio_suscripcion}/mes` : 'Gratis';
-            const subs = c.total_suscriptores || 0;
-
-            return `
-            <div class="preview-card" data-on-click="abrirModal('registro')">
-                <div style="position:absolute;inset:0;background:linear-gradient(160deg,${c1} 0%,${c2} 100%)"></div>
-                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1">
-                    <span style="font-family:'Playfair Display',serif;font-size:5.5rem;color:rgba(255,255,255,.1);user-select:none;line-height:1">${inicial}</span>
-                </div>
-                <div style="position:absolute;bottom:0;left:0;right:0;z-index:2;padding:1rem;background:linear-gradient(to top,rgba(17,8,5,.92) 0%,rgba(17,8,5,.32) 60%,transparent 100%)">
-                    <div style="color:#fff;font-weight:700;font-size:.88rem;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.nombre_artistico)}</div>
-                    <div style="color:rgba(255,255,255,.52);font-size:.7rem;margin-bottom:.5rem">${flag} ${esc(c.pais || 'Latam')}</div>
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="color:#B5445C;font-size:.74rem;font-weight:700">${esc(precio)}</span>
-                        <span style="font-size:.62rem;color:rgba(255,255,255,.38)">${subs > 0 ? subs + (subs === 1 ? ' fan' : ' fans') : ''}</span>
-                    </div>
-                </div>
-                <div class="pcard-hover">
-                    <div style="background:linear-gradient(135deg,#B5445C,#F2B8C8);border-radius:50%;width:46px;height:46px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(244,162,97,.5)">
-                        <span class="material-symbols-outlined" style="color:#fff;font-size:20px">lock</span>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-
-    } catch(e) {
-        // Fail silently — CTA below still works
-        const grid = document.getElementById('preview-grid');
-        if (grid) grid.innerHTML = '';
-    }
+// ─── PUBLIC TEASERS (guests) ─────────────────────────────────────────
+function cargarPreviewPublico() {
+    cargarVitrina('hero-vitrina', 6, 'grid');
+    cargarVitrina('vitrina-home', 6, 'grid').then(() => {
+        if (!document.getElementById('vitrina-home').classList.contains('hidden'))
+            document.getElementById('preview-section')?.classList.remove('hidden');
+    });
 }
 
 function animarContador(el, target, suffix) {
