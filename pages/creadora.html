@@ -59,6 +59,11 @@
             display:flex; align-items:center; justify-content:center;
         }
         .ct-lock svg { width:11px; height:11px; }
+        /* Al desbloquear: el velo se disuelve y el candado se abre */
+        @keyframes ctAbrir { 0%{transform:scale(1)} 40%{transform:scale(1.18) rotate(-8deg)} 100%{transform:scale(0);opacity:0} }
+        .ct-abriendo .ct-scrim, .ct-abriendo .ct-cta { opacity:0; transition:opacity .7s cubic-bezier(.32,.72,0,1); }
+        .ct-abriendo img { filter:blur(0) !important; transition:filter .9s cubic-bezier(.32,.72,0,1); }
+        .ct-abriendo .ct-lock { animation:ctAbrir .8s cubic-bezier(.32,.72,0,1) forwards; }
         .ct-cta { position:absolute; left:6px; right:6px; bottom:7px; display:flex; justify-content:center; pointer-events:none; }
         .ct-chip {
             display:inline-flex; align-items:center; gap:4px; white-space:nowrap;

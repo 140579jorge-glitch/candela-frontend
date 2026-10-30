@@ -490,6 +490,8 @@ async function confirmarCompra() {
         userBalance = r.nuevo_balance ?? Math.max(0, userBalance - precio);
         cerrarModal('modal-compra');
         toast('Contenido desbloqueado', 'success');
+        const tarjeta = document.querySelector(`[data-on-click^="clicContenido('${String(contenidoSeleccionado.id).replace(/[^a-z0-9-]/gi,'')}'"]`);
+        if (tarjeta) tarjeta.classList.add('ct-abriendo');
         setTimeout(() => location.reload(), 1500);
     } catch(err) {
         toast(err.message, 'error');
