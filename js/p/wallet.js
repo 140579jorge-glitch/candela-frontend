@@ -1,4 +1,4 @@
-let redActual   = 'trc20';
+let redActual   = 'polygon';
 let montoActual = 5;
 function setMontoActual(v) { montoActual = parseFloat(v) || 0; actualizarUI(); }
 let depositoId  = null;
@@ -126,14 +126,6 @@ function elegirMetodo(m) {
     document.getElementById('bloque-usdt').classList.toggle('hidden', m === 'qr');
     document.getElementById('panel-qr').classList.toggle('hidden', m !== 'qr');
     if (m === 'qr') actualizarPreviewQR();
-}
-
-function elegirRed(red) {
-    redActual = red;
-    const activo = 'flex-1 py-2.5 rounded-xl text-sm font-bold border-2 border-c-accent bg-orange-50 text-c-accent transition-all';
-    const inact  = 'flex-1 py-2.5 rounded-xl text-sm font-bold border-2 border-c-border text-c-soft transition-all hover:border-c-accent hover:text-c-accent';
-    document.getElementById('red-trc20').className  = red === 'trc20'   ? activo : inact;
-    document.getElementById('red-polygon').className = red === 'polygon' ? activo : inact;
 }
 
 function elegirMonto(m) {
