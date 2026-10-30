@@ -20,10 +20,18 @@ body { font-family:'Nunito',sans-serif; background:#FDF8F5; color:#2D2D2D; }
 .chip.active { background:#B5445C; border-color:#B5445C; color:#fff; }
 .card-creadora { display:flex; flex-direction:column; border-radius:18px; overflow:hidden; background:#fff; border:1px solid #F5E8EF; cursor:pointer; transition:transform .25s cubic-bezier(.32,.72,0,1), box-shadow .25s cubic-bezier(.32,.72,0,1); }
 .card-creadora:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(244,162,97,.18); }
-.card-banner { position:relative; aspect-ratio:16/7; overflow:hidden; background:linear-gradient(135deg,#F5E8EF,#F2B8C8); }
+.card-banner { position:relative; aspect-ratio:3/4; overflow:hidden; background:linear-gradient(135deg,#F5E8EF,#F2B8C8); }
 .card-banner img { width:100%; height:100%; object-fit:cover; transition:transform .4s cubic-bezier(.32,.72,0,1); }
 .card-creadora:hover .card-banner img { transform:scale(1.04); }
-.card-avatar { width:52px; height:52px; border-radius:50%; border:3px solid #fff; background:linear-gradient(135deg,#B5445C,#F2B8C8); overflow:hidden; margin-top:-26px; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+.card-avatar { width:34px; height:34px; border-radius:50%; border:2px solid #fff; background:linear-gradient(135deg,#B5445C,#F2B8C8); overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:.85rem; }
+.card-vel { position:absolute; inset:0; background:linear-gradient(to top,rgba(26,10,15,.92) 0%,rgba(26,10,15,.35) 45%,rgba(26,10,15,0) 70%); pointer-events:none; }
+.card-pie { position:absolute; left:0; right:0; bottom:0; padding:.75rem; color:#fff; }
+.card-nombre { display:flex; align-items:center; gap:.3rem; font-weight:800; font-size:.85rem; line-height:1.2; text-shadow:0 1px 4px rgba(0,0,0,.6); }
+.card-nombre .card-verif { position:static; flex-shrink:0; width:14px; height:14px; }
+.card-sub { font-size:.68rem; color:rgba(255,255,255,.8); }
+.card-precio { font-size:.78rem; font-weight:800; }
+.card-ir { font-size:.68rem; font-weight:800; padding:.35rem .8rem; border-radius:999px; background:linear-gradient(135deg,#B5445C,#F2B8C8); color:#fff; box-shadow:0 4px 12px rgba(181,68,92,.5); }
+.card-tag { font-size:.6rem; font-weight:700; padding:.15rem .55rem; border-radius:999px; background:rgba(255,255,255,.18); backdrop-filter:blur(4px); }
 .card-avatar img { width:100%; height:100%; object-fit:cover; }
 .badge-dest { position:absolute; top:8px; right:8px; background:linear-gradient(135deg,#B5445C,#D4869D); color:#fff; font-size:9px; font-weight:800; padding:3px 8px; border-radius:999px; letter-spacing:.05em; text-transform:uppercase; }
 .chip-row { display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; padding-bottom:2px; }
@@ -131,10 +139,10 @@ body::before { content:''; position:fixed; inset:0; z-index:999; pointer-events:
         <div id="vitrina-explorar" class="hidden"></div>
     </div>
     <div id="skeleton" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        <div class="rounded-2xl overflow-hidden border border-c-border"><div class="aspect-[16/7] skel"></div><div class="p-3 space-y-2"><div class="flex gap-2"><div class="w-10 h-10 rounded-full skel mt-[-20px]"></div><div class="flex-1 space-y-1.5 pt-1"><div class="h-2.5 skel rounded-full w-3/4"></div><div class="h-2 skel rounded-full w-1/2"></div></div></div></div></div>
-        <div class="rounded-2xl overflow-hidden border border-c-border"><div class="aspect-[16/7] skel"></div><div class="p-3 space-y-2"><div class="flex gap-2"><div class="w-10 h-10 rounded-full skel mt-[-20px]"></div><div class="flex-1 space-y-1.5 pt-1"><div class="h-2.5 skel rounded-full w-3/4"></div><div class="h-2 skel rounded-full w-1/2"></div></div></div></div></div>
-        <div class="rounded-2xl overflow-hidden border border-c-border hidden sm:block"><div class="aspect-[16/7] skel"></div><div class="p-3 space-y-2"><div class="flex gap-2"><div class="w-10 h-10 rounded-full skel mt-[-20px]"></div><div class="flex-1 space-y-1.5 pt-1"><div class="h-2.5 skel rounded-full w-3/4"></div><div class="h-2 skel rounded-full w-1/2"></div></div></div></div></div>
-        <div class="rounded-2xl overflow-hidden border border-c-border hidden md:block"><div class="aspect-[16/7] skel"></div><div class="p-3 space-y-2"><div class="flex gap-2"><div class="w-10 h-10 rounded-full skel mt-[-20px]"></div><div class="flex-1 space-y-1.5 pt-1"><div class="h-2.5 skel rounded-full w-3/4"></div><div class="h-2 skel rounded-full w-1/2"></div></div></div></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border"><div class="aspect-[3/4] skel"></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border"><div class="aspect-[3/4] skel"></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border hidden sm:block"><div class="aspect-[3/4] skel"></div></div>
+        <div class="rounded-2xl overflow-hidden border border-c-border hidden md:block"><div class="aspect-[3/4] skel"></div></div>
     </div>
 
     <!-- Resultados -->

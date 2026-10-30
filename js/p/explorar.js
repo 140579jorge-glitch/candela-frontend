@@ -130,38 +130,32 @@ function renderCards(lista) {
         const el = document.createElement('div');
         el.className = 'card-creadora';
         el.onclick = () => window.location.href = 'creadora.html?slug=' + encodeURIComponent(c.slug || '');
+        const tags = (c.intereses || []).slice(0, 2).map(i => '<span class="card-tag">' + esc(i) + '</span>').join('');
         el.innerHTML =
             '<div class="card-banner">' +
                 (img
-                    ? '<img src="' + esc(img) + '" alt="' + nombre + '" loading="lazy">'
-                    : '<div class="w-full h-full" style="background:linear-gradient(135deg,' + gr + ')"></div>' +
-                      '<span class="card-mono">' + esc(ini) + '</span>') +
+                    ? '<img src="' + esc(img) + '" alt="' + nombre + '" loading="lazy" draggable="false">'
+                    : '<div class="w-full h-full" style="background:linear-gradient(135deg,' + gr + ')"></div><span class="card-mono">' + esc(ini) + '</span>') +
+                '<div class="card-vel"></div>' +
                 (c.destacada ? '<span class="badge-dest">Destacada</span>' : '') +
-                VERIF_SVG +
-            '</div>' +
-            '<div class="px-3 pb-3">' +
-                '<div class="flex items-end gap-2 mb-2">' +
-                    '<div class="card-avatar">' +
-                        (c.avatar_url
-                            ? '<img src="' + esc(c.avatar_url) + '" alt="' + nombre + '" loading="lazy">'
-                            : '<div class="w-full h-full flex items-center justify-center text-white font-bold text-lg">' + esc(ini) + '</div>') +
+                '<div class="card-pie">' +
+                    '<div class="flex items-center gap-2 mb-2">' +
+                        '<div class="card-avatar">' +
+                            (c.avatar_url
+                                ? '<img src="' + esc(c.avatar_url) + '" alt="" loading="lazy">'
+                                : '<span>' + esc(ini) + '</span>') +
+                        '</div>' +
+                        '<div class="min-w-0">' +
+                            '<p class="card-nombre">' + nombre + VERIF_SVG + '</p>' +
+                            '<p class="card-sub">' + esc(c.pais || '') + (subs ? ' · ' + subs : '') + '</p>' +
+                        '</div>' +
                     '</div>' +
-                    '<div class="min-w-0 pb-0.5">' +
-                        '<p class="font-bold text-sm text-c-text leading-tight truncate">' + nombre + '</p>' +
-                        '<p class="text-[11px] text-c-soft">' + esc(c.pais || '') + '</p>' +
+                    '<div class="flex items-center justify-between gap-2">' +
+                        '<span class="card-precio">' + precio + '</span>' +
+                        '<span class="card-ir">' + (c.precio_suscripcion > 0 ? 'Ver perfil' : 'Seguir gratis') + '</span>' +
                     '</div>' +
+                    (tags ? '<div class="flex flex-wrap gap-1 mt-2">' + tags + '</div>' : '') +
                 '</div>' +
-                '<div class="flex items-center justify-between">' +
-                    '<span class="text-xs font-bold text-c-accent">' + precio + '</span>' +
-                    (subs ? '<span class="text-[10px] text-c-soft">' + subs + '</span>' : '') +
-                '</div>' +
-                (c.intereses && c.intereses.length
-                    ? '<div class="flex flex-wrap gap-1 mt-1.5">' +
-                        c.intereses.slice(0,2).map(i =>
-                            '<span class="text-[9px] font-semibold bg-c-border text-c-soft px-2 py-0.5 rounded-full">' + esc(i) + '</span>'
-                        ).join('') +
-                      '</div>'
-                    : '') +
             '</div>';
         grid.appendChild(el);
     });
