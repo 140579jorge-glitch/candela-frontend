@@ -241,20 +241,24 @@
             </div>
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-700 flex items-center gap-2">
                 <span class="ms text-amber-500 flex-shrink-0" style="font-size:16px">schedule</span>
-                <span>Envia el pago antes de que expire. <strong id="countdown-label">--:--</strong></span>
+                <span>Envía el pago antes de que expire. <strong id="countdown-label">--:--</strong></span>
             </div>
             <p class="text-xs font-bold text-c-soft uppercase tracking-wider mb-1.5">
-                Envia exactamente <span id="pay-amount-label" class="text-c-accent font-extrabold">— USDT</span>
+                Envía exactamente <span id="pay-amount-label" class="text-c-accent font-extrabold">— USDT</span>
             </p>
             <button data-on-click="copiarDireccion()" id="pay-addr-btn"
                 class="w-full text-left font-mono text-xs bg-c-bg border border-c-border rounded-xl px-4 py-3 hover:bg-c-champagne transition-colors break-all mb-1 flex items-center gap-2">
                 <span class="ms text-c-soft flex-shrink-0" style="font-size:16px">content_copy</span>
                 <span id="pay-addr-text">—</span>
             </button>
-            <p class="text-[11px] text-c-soft mb-4">Toca para copiar · no envies a otras direcciones</p>
+            <p class="text-[11px] text-c-soft mb-4">Toca para copiar · no envíes a otras direcciones</p>
             <div id="pay-status" class="flex items-center gap-2 text-sm text-c-soft">
                 <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                 <span id="pay-status-text">Esperando pago...</span>
+            </div>
+            <div class="mt-4 rounded-xl border border-c-border bg-c-bg p-3 text-[11px] text-c-soft leading-relaxed space-y-1.5">
+                <p><strong class="text-c-text">Monto exacto:</strong> se acredita solo en unos 5 minutos, cuando la red confirma tu envío.</p>
+                <p><strong class="text-c-text">Otro monto:</strong> no se puede acreditar solo. Lo revisamos a mano y puede tardar más. Escríbenos a <span class="font-semibold">soporte@clubcandela.com</span> con el hash de la transacción.</p>
             </div>
         </div>
 
