@@ -125,7 +125,7 @@ function renderCards(lista) {
         const gr     = TEMA_GR[c.tema_color] || '#FFF4EE,#F2B8C8';
         const nombre = esc(c.nombre_artistico || 'Creadora');
         const ini    = (c.nombre_artistico || 'C')[0].toUpperCase();
-        const img    = c.banner_url || c.card_preview_url;
+        const img    = c.preview_destacado || c.banner_url || c.card_preview_url;
 
         const el = document.createElement('div');
         el.className = 'card-creadora';
@@ -189,3 +189,4 @@ new IntersectionObserver((entries) => {
 })();
 
 cargar();
+cargarVitrina('vitrina-explorar', 14);

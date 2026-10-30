@@ -963,6 +963,8 @@ function renderCarruselPublico() {
         }
     }).join('');
 
+    habilitarRail(wrap);
+
     if (!logueado) {
         wrap.insertAdjacentHTML('afterend', `
             <button data-on-click="window.location.href='../index.html'" class="mt-3 w-full c-btn text-white py-2.5 rounded-xl text-sm font-bold shadow-md">

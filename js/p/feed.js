@@ -57,6 +57,7 @@ async function cargarDescubrir() {
             </a>`;
         }).join('');
         document.getElementById('sec-descubrir').classList.remove('hidden');
+        habilitarRail(row);
 
         // Rail derecho (escritorio)
         const rail = document.getElementById('rail-sugeridas');
@@ -81,6 +82,7 @@ async function cargarDescubrir() {
 }
 
 async function cargarSugeridas() {
+    cargarVitrina('vitrina', 12);
     try {
         const lista = await candela.creadoras.explorar({ limit: 6 });
         if (!lista || !lista.length) return;
@@ -91,14 +93,16 @@ async function cargarSugeridas() {
                 const gr = _GRAD[c.tema_color] || '#B5445C,#F2B8C8';
                 const ini = esc((c.nombre_artistico || 'C')[0].toUpperCase());
                 const precio = c.precio_suscripcion > 0 ? '$' + Number(c.precio_suscripcion) + '/mes' : 'Gratis';
-                const banner = c.banner_url
-                    ? `<img src="${esc(c.banner_url)}" class="absolute inset-0 w-full h-full object-cover">`
+                const imgHero = c.preview_destacado || c.banner_url;
+                const banner = imgHero
+                    ? `<img src="${esc(imgHero)}" class="absolute inset-0 w-full h-full object-cover"><div class="absolute inset-0" style="background:linear-gradient(to top,rgba(26,10,15,.55),rgba(26,10,15,0) 55%)"></div>`
                     : `<div class="absolute inset-0 flex items-center justify-center font-display text-3xl text-white/25" style="background:linear-gradient(135deg,${gr})">${ini}</div>`;
                 return `<a href="creadora.html?slug=${encodeURIComponent(c.slug||'')}" class="block rounded-2xl overflow-hidden border border-c-border bg-white">
                     <div class="relative" style="aspect-ratio:16/10">${banner}</div>
                     <div class="p-2.5">
                         <p class="font-bold text-sm truncate">${esc(c.nombre_artistico||'Creadora')}</p>
                         <p class="text-[11px] text-c-accent font-bold">${precio}</p>
+                        <span class="mt-1.5 block text-center text-[11px] font-extrabold text-white py-1.5 rounded-full" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">${c.precio_suscripcion > 0 ? 'Suscribirme' : 'Seguir gratis'}</span>
                     </div>
                 </a>`;
             }).join('') + '</div>';

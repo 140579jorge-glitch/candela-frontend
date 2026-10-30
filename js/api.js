@@ -321,6 +321,95 @@ function requireAuth(tipo = null) {
     return true;
 }
 
+// En computador no hay "deslizar": un carrusel con elementos cortados debe mostrar flechas y dejarse arrastrar con el mouse.
+function habilitarRail(rail) {
+    if (!rail || rail.dataset.rail) return;
+    rail.dataset.rail = '1';
+    if (!document.getElementById('estilo-rail')) {
+        const st = document.createElement('style');
+        st.id = 'estilo-rail';
+        st.textContent = '.rail-flecha{position:absolute;top:calc(50% - 20px);width:40px;height:40px;border-radius:999px;border:0;background:rgba(255,255,255,.96);color:#B5445C;font:700 24px/1 Nunito,system-ui,sans-serif;box-shadow:0 6px 18px rgba(90,20,45,.28);cursor:pointer;z-index:8;display:none;align-items:center;justify-content:center;padding:0 0 3px}' +
+            '.rail-flecha.on{display:flex}.rail-flecha:hover{background:#fff;transform:scale(1.06)}.rail-flecha.izq{left:-6px}.rail-flecha.der{right:-6px}' +
+            '.rail-arrastrable{cursor:grab}.rail-arrastrable.arrastrando{cursor:grabbing;scroll-snap-type:none!important;scroll-behavior:auto!important}';
+        document.head.appendChild(st);
+    }
+    const padre = rail.parentElement;
+    if (getComputedStyle(padre).position === 'static') padre.style.position = 'relative';
+    const flecha = (dir) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'rail-flecha ' + (dir < 0 ? 'izq' : 'der');
+        b.setAttribute('aria-label', dir < 0 ? 'Anterior' : 'Siguiente');
+        b.textContent = dir < 0 ? '‹' : '›';
+        b.addEventListener('click', () => rail.scrollBy({ left: dir * Math.max(160, rail.clientWidth * 0.8), behavior: 'smooth' }));
+        padre.appendChild(b);
+        return b;
+    };
+    const izq = flecha(-1), der = flecha(1);
+    const actualizar = () => {
+        const sobra = rail.scrollWidth - rail.clientWidth;
+        izq.classList.toggle('on', sobra > 6 && rail.scrollLeft > 6);
+        der.classList.toggle('on', sobra > 6 && rail.scrollLeft < sobra - 6);
+    };
+    rail.addEventListener('scroll', actualizar, { passive: true });
+    window.addEventListener('resize', actualizar);
+    [150, 600, 1500].forEach(t => setTimeout(actualizar, t));  // las imagenes cargan despues
+    // arrastrar con el mouse (en pantallas tactiles ya se desliza con el dedo)
+    rail.classList.add('rail-arrastrable');
+    let x0 = null, s0 = 0, movido = false;
+    rail.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button !== 0) return; x0 = e.clientX; s0 = rail.scrollLeft; movido = false; });
+    window.addEventListener('pointermove', e => {
+        if (x0 === null) return;
+        const dx = e.clientX - x0;
+        if (Math.abs(dx) > 5) { movido = true; rail.classList.add('arrastrando'); }
+        if (movido) rail.scrollLeft = s0 - dx;
+    });
+    window.addEventListener('pointerup', () => { if (x0 === null) return; x0 = null; rail.classList.remove('arrastrando'); });
+    rail.addEventListener('click', e => { if (movido) { e.preventDefault(); e.stopPropagation(); movido = false; } }, true);
+}
+
+// Vitrina: miniaturas de lo mas nuevo (lo de pago llega difuminado desde el servidor). Pensada para que el fan se tiente a entrar.
+function cargarVitrina(idContenedor, limite) {
+    const cont = document.getElementById(idContenedor);
+    if (!cont) return Promise.resolve();
+    if (!document.getElementById('estilo-vitrina')) {
+        const st = document.createElement('style');
+        st.id = 'estilo-vitrina';
+        st.textContent =
+            '.vt-rail{display:flex;gap:.75rem;overflow-x:auto;padding:.25rem .25rem .75rem;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}' +
+            '.vt-rail::-webkit-scrollbar{display:none}' +
+            '.vt-card{position:relative;flex:0 0 150px;aspect-ratio:3/4;border-radius:18px;overflow:hidden;scroll-snap-align:start;background:#2a1520;display:block;box-shadow:0 8px 22px -10px rgba(90,20,45,.55);transition:transform .25s}' +
+            '.vt-card:hover{transform:translateY(-3px)}' +
+            '.vt-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.04)}' +
+            '.vt-vel{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,10,15,.92) 0%,rgba(26,10,15,.25) 48%,rgba(181,68,92,.10) 100%)}' +
+            '.vt-lock{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.2);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;color:#fff}' +
+            '.vt-pie{position:absolute;left:0;right:0;bottom:0;padding:.6rem .6rem .7rem;color:#fff}' +
+            '.vt-nom{display:flex;align-items:center;gap:.4rem;font-weight:800;font-size:.72rem;margin-bottom:.4rem;text-shadow:0 1px 4px rgba(0,0,0,.6)}' +
+            '.vt-nom img{position:static;width:20px;height:20px;border-radius:999px;border:1.5px solid #fff;transform:none}' +
+            '.vt-precio{display:inline-flex;align-items:center;gap:.25rem;font-weight:800;font-size:.7rem;padding:.3rem .65rem;border-radius:999px;background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;box-shadow:0 4px 12px rgba(181,68,92,.5)}' +
+            '.vt-precio.libre{background:rgba(255,255,255,.92);color:#B5445C}';
+        document.head.appendChild(st);
+    }
+    return candela._req('GET', '/api/contenido/destacados?limit=' + (limite || 12)).then(items => {
+        if (!items || !items.length) { cont.classList.add('hidden'); return; }
+        cont.innerHTML = '<div class="vt-rail">' + items.map(it => {
+            const href = 'creadora.html?slug=' + encodeURIComponent(it.creadora_slug || '');
+            const gratis = it.es_gratis || !(it.precio > 0);
+            const precio = gratis ? '<span class="vt-precio libre">Gratis</span>'
+                : '<span class="vt-precio"><span class="ms" style="font-size:13px">lock_open</span>Desbloquear $' + esc(Number(it.precio)) + '</span>';
+            const av = it.creadora_avatar ? '<img src="' + esc(it.creadora_avatar) + '" alt="" loading="lazy">' : '';
+            return '<a class="vt-card" href="' + href + '">' +
+                '<img src="' + esc(it.preview_url) + '" alt="" loading="lazy" draggable="false">' +
+                '<div class="vt-vel"></div>' +
+                (gratis ? '' : '<span class="vt-lock"><span class="ms" style="font-size:15px">lock</span></span>') +
+                '<div class="vt-pie"><div class="vt-nom">' + av + '<span>' + esc(it.creadora_nombre || '') + '</span></div>' + precio + '</div>' +
+            '</a>';
+        }).join('') + '</div>';
+        cont.classList.remove('hidden');
+        habilitarRail(cont.querySelector('.vt-rail'));
+    }).catch(() => { cont.classList.add('hidden'); });
+}
+
 // Aviso fijo cuando el correo aun no esta confirmado (la persona entra a su cuenta sin enterarse de que falta ese paso)
 function reenviarAvisoVerificacion(btn) {
     const u = candela.auth.user();
