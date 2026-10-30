@@ -321,5 +321,52 @@ function requireAuth(tipo = null) {
     return true;
 }
 
+// Aviso fijo cuando el correo aun no esta confirmado (la persona entra a su cuenta sin enterarse de que falta ese paso)
+function reenviarAvisoVerificacion(btn) {
+    const u = candela.auth.user();
+    if (!u || !u.email) return;
+    btn.disabled = true;
+    candela.auth.reenviarVerificacion(u.email)
+        .then(() => toast('Te reenviamos el correo de confirmacion. Revisa tambien spam.', 'success'))
+        .catch(e => toast(e.message || 'No pudimos reenviarlo ahora', 'error'));
+    setTimeout(() => { btn.disabled = false; }, 60000);
+}
+
+(function avisoVerificacion() {
+    if (/verificar-email|login|registro|terminos|privacidad|normas|cookies|2257|dmca|aviso-legal|reporte-abuso|retiro-contenido/.test(location.pathname)) return;
+    async function revisar() {
+        const u = candela.auth.user();
+        if (!u || (u.tipo !== 'suscriptor' && u.tipo !== 'creadora')) return;
+        let verificado = true;
+        try {
+            const c = JSON.parse(sessionStorage.getItem('cdl_ev') || 'null');
+            if (c && Date.now() - c.t < 120000) verificado = c.v;
+            else {
+                const me = await candela._req('GET', '/api/auth/me');
+                verificado = me.email_verificado !== false;
+                sessionStorage.setItem('cdl_ev', JSON.stringify({ t: Date.now(), v: verificado }));
+                if (u.email_verificado !== verificado) { u.email_verificado = verificado; localStorage.setItem('candela_user', JSON.stringify(u)); }
+            }
+        } catch (_) { return; }
+        const previo = document.getElementById('aviso-verificar');
+        if (verificado) { if (previo) previo.remove(); return; }
+        if (previo) return;
+        const d = document.createElement('div');
+        d.id = 'aviso-verificar';
+        d.setAttribute('role', 'status');
+        d.style.cssText = 'position:sticky;top:0;z-index:60;background:#FFF3CD;border-bottom:1px solid #F0D98A;color:#664D03;padding:.6rem 1rem;font:600 .8rem Nunito,system-ui,sans-serif;display:flex;gap:.75rem;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center';
+        const t = document.createElement('span');
+        t.textContent = 'Falta confirmar tu correo' + (u.email ? ' (' + u.email + ')' : '') + '. Sin confirmarlo no puedes depositar ni comprar. Revisa tu bandeja y el spam.';
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = 'Reenviar correo';
+        b.setAttribute('data-on-click', 'reenviarAvisoVerificacion(this)');
+        b.style.cssText = 'background:#B5445C;color:#fff;border:0;border-radius:999px;padding:.35rem .9rem;font:700 .75rem Nunito,system-ui,sans-serif;cursor:pointer';
+        d.append(t, b);
+        document.body.insertBefore(d, document.body.firstChild);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', revisar); else revisar();
+})();
+
 // ui-events.js resuelve los nombres de los data-on-* contra window; una const no es propiedad de window
 window.candela = candela;
