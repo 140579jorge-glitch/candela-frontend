@@ -512,7 +512,7 @@
             <!-- Solicitar retiro -->
             <div class="bg-white border border-c-border rounded-2xl p-5 max-w-md shadow-sm">
                 <h3 class="font-bold text-base mb-1">Solicitar retiro</h3>
-                <p class="text-xs text-c-soft mb-4">Se procesan en hasta 48 horas hábiles. Mínimo $30 USDT.</p>
+                <p id="ret-aviso" class="text-xs text-c-soft mb-4">Pide tu retiro los lunes sin costo adicional. Mínimo $30 USDT. Se procesa en hasta 48 horas hábiles.</p>
                 <!-- Sin metodo configurado -->
                 <div id="retiro-sin-metodo" class="hidden text-center py-4">
                     <span class="ms text-c-accent block mb-2" style="font-size:36px">account_balance_wallet</span>
@@ -1033,35 +1033,20 @@
 
             <form data-on-submit="guardarDatosRetiro(event)" class="max-w-xl space-y-5">
 
-                <!-- Metodo preferido -->
+                <!-- Metodo de retiro: solo USDT por Polygon -->
                 <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-sm mb-3">Método preferido</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                        <label>
-                            <input type="radio" name="metodo_retiro" value="trc20" class="sr-only" data-on-change="actualizarMetodoOpt()">
-                            <div class="metodo-opt-box border-2 border-c-border rounded-xl p-3 text-center cursor-pointer hover:border-c-accent transition-all">
-                                <div class="text-xl mb-1">🔗</div>
-                                <div class="text-xs font-bold">USDT TRC20</div>
-                                <div class="text-[10px] text-c-soft">~$1 de fee</div>
+                    <h3 class="font-bold text-sm mb-1">Cómo te pagamos</h3>
+                    <p class="text-xs text-c-soft mb-3">Los retiros se pagan en USDT por la red Polygon. La comisión de red es de centavos.</p>
+                    <label class="block">
+                        <input type="radio" name="metodo_retiro" value="polygon" class="sr-only" checked data-on-change="actualizarMetodoOpt()">
+                        <div class="metodo-opt-box border-2 border-c-accent bg-c-champagne rounded-xl p-3 flex items-center gap-3">
+                            <span class="material-symbols-outlined text-c-accent">diamond</span>
+                            <div>
+                                <div class="text-sm font-bold">USDT en Polygon</div>
+                                <div class="text-xs text-c-soft">Funciona con MetaMask y cualquier billetera compatible con Polygon</div>
                             </div>
-                        </label>
-                        <label>
-                            <input type="radio" name="metodo_retiro" value="polygon" class="sr-only" data-on-change="actualizarMetodoOpt()">
-                            <div class="metodo-opt-box border-2 border-c-border rounded-xl p-3 text-center cursor-pointer hover:border-c-accent transition-all">
-                                <div class="text-xl mb-1">💎</div>
-                                <div class="text-xs font-bold">USDT Polygon</div>
-                                <div class="text-[10px] text-c-soft">~$0.01 de fee</div>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Billetera TRC20 -->
-                <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm">
-                    <h3 class="font-bold text-sm mb-1">Billetera USDT TRC20</h3>
-                    <p class="text-xs text-c-soft mb-3">Empieza con T, 34 caracteres. Ejemplo: TGFJDTEvC6xTuEQ...</p>
-                    <input id="w-trc20" type="text" maxlength="34" placeholder="T..."
-                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
+                        </div>
+                    </label>
                 </div>
 
                 <!-- Billetera Polygon -->

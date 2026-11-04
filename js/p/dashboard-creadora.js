@@ -194,6 +194,7 @@ async function cargarGanancias() {
             candela.creadoras.miPerfil(),
         ]);
         _perfilCreadora = p;
+        cargarReglasRetiro();
         const fmt = v => '$' + (v||0).toFixed(2);
         document.getElementById('s-balance').textContent = fmt(g.balance_disponible);
         document.getElementById('s-subs').textContent = g.total_suscriptores;
@@ -207,17 +208,13 @@ async function cargarGanancias() {
         const desc = document.getElementById('ret-metodo-desc');
         const sinMetodo = document.getElementById('retiro-sin-metodo');
         const retiroForm = document.getElementById('retiro-form');
-        if (!metodo) {
+        if (metodo !== 'polygon' || !p.wallet_polygon) {
             sinMetodo?.classList.remove('hidden');
             retiroForm?.classList.add('hidden');
         } else {
             sinMetodo?.classList.add('hidden');
             retiroForm?.classList.remove('hidden');
-            const etiquetas = {
-                trc20: `USDT TRC20 — ${p.wallet_trc20 ? p.wallet_trc20.slice(0,8) + '...' + p.wallet_trc20.slice(-4) : 'sin wallet'}`,
-                polygon: `USDT Polygon — ${p.wallet_polygon ? p.wallet_polygon.slice(0,8) + '...' + p.wallet_polygon.slice(-4) : 'sin wallet'}`,
-            };
-            if (desc) desc.textContent = etiquetas[metodo] || metodo;
+            if (desc) desc.textContent = `USDT Polygon — ${p.wallet_polygon ? p.wallet_polygon.slice(0,8) + '...' + p.wallet_polygon.slice(-4) : 'sin billetera'}`;
         }
     } catch(e) {}
 }
@@ -392,39 +389,53 @@ async function guardarPerfil(e) {
     }
 }
 
+let _reglasRetiro = null;
+async function cargarReglasRetiro() {
+    try {
+        _reglasRetiro = await candela.pagos.reglasRetiro();
+        const el = document.getElementById('ret-aviso');
+        if (!el) return;
+        const costo = Number(_reglasRetiro.fee_express) || 0;
+        el.textContent = _reglasRetiro.es_lunes
+            ? `Hoy es lunes: tu retiro no tiene costo adicional. Mínimo $${_reglasRetiro.minimo} USDT. Se procesa en hasta 48 horas hábiles.`
+            : `Los retiros sin costo adicional se piden los lunes (hora de Bolivia). Si lo pides otro día, pagas $${costo.toFixed(2)} adicionales. Mínimo $${_reglasRetiro.minimo} USDT. Se procesa en hasta 48 horas hábiles.`;
+    } catch (e) {}
+}
+
 function previewRetiro() {
     const el = document.getElementById('ret-preview');
     const m = parseFloat(document.getElementById('ret-monto').value);
     if (!el) return;
     if (!m || m < 30) { el.textContent = ''; return; }
     const fee = Math.round(m * 1.5) / 100;
-    el.textContent = `Recibirás $${(m - fee).toFixed(2)} USDT. Comisión de red 1.5%: $${fee.toFixed(2)}.`;
+    const extra = (_reglasRetiro && !_reglasRetiro.es_lunes) ? Number(_reglasRetiro.fee_express) || 0 : 0;
+    el.textContent = `Recibirás $${(m - fee - extra).toFixed(2)} USDT. Comisión de red 1.5%: $${fee.toFixed(2)}.` + (extra ? ` Costo adicional por pedirlo fuera de lunes: $${extra.toFixed(2)}.` : '');
 }
 
 async function solicitarRetiro() {
     const monto = parseFloat(document.getElementById('ret-monto').value);
     if (!monto || monto < 30) { toast('El mínimo de retiro es $30', 'error'); return; }
     const p = _perfilCreadora;
-    const metodo = p?.metodo_retiro || 'trc20';
-    let wallet = null;
-    if (metodo === 'trc20') wallet = p?.wallet_trc20;
-    else if (metodo === 'polygon') wallet = p?.wallet_polygon;
-    if (metodo !== 'qr' && !wallet) {
-        toast('Configura tu wallet primero', 'error');
+    const wallet = p?.wallet_polygon;
+    if (!wallet) {
+        toast('Configura tu billetera Polygon primero', 'error');
         mostrar('metodos-pago');
         return;
     }
-    if (metodo === 'qr' && !p?.qr_pago_url) {
-        toast('Sube tu QR primero', 'error');
-        mostrar('metodos-pago');
-        return;
+    if (!_reglasRetiro) await cargarReglasRetiro();
+    let aceptaExpress = false;
+    if (_reglasRetiro && !_reglasRetiro.es_lunes) {
+        const costo = Number(_reglasRetiro.fee_express) || 0;
+        const seguir = confirm(`Hoy no es lunes (hora de Bolivia).\n\nPedir el retiro hoy tiene un costo adicional de $${costo.toFixed(2)} USDT, que se descuenta de lo que recibes.\n\nSi esperas al lunes no pagas este costo.\n\n¿Quieres pedirlo hoy de todas formas?`);
+        if (!seguir) return;
+        aceptaExpress = true;
     }
     const btn = document.getElementById('btn-solicitar-retiro');
     btn.disabled = true;
     const txt = btn.textContent;
     btn.textContent = 'Procesando...';
     try {
-        const r = await candela.pagos.solicitarRetiro(monto, wallet, metodo);
+        const r = await candela.pagos.solicitarRetiro(monto, wallet, 'polygon', aceptaExpress);
         toast(r.mensaje, 'success');
         cargarGanancias();
     } catch(err) {
@@ -441,7 +452,6 @@ async function cargarDatosRetiro() {
     try {
         _perfilCreadora = await candela.creadoras.miPerfil();
         const p = _perfilCreadora;
-        document.getElementById('w-trc20').value = p.wallet_trc20 || '';
         document.getElementById('w-polygon').value = p.wallet_polygon || '';
 
 
@@ -484,7 +494,6 @@ async function guardarDatosRetiro(e) {
     const btn = document.getElementById('btn-guardar-pago');
     btn.textContent = 'Guardando...'; btn.disabled = true;
     const metodo = document.querySelector('input[name="metodo_retiro"]:checked')?.value;
-    const trc20 = document.getElementById('w-trc20').value.trim();
     const polygon = document.getElementById('w-polygon').value.trim();
     const qrInput = document.getElementById('qr-input');
     try {
@@ -493,7 +502,7 @@ async function guardarDatosRetiro(e) {
             await candela.creadoras.subirQrPago(qrInput.files[0]);
         }
         const codigo = document.getElementById('w-codigo').value.trim();
-        await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined, codigo);
+        await candela.creadoras.actualizarDatosRetiro(undefined, polygon || undefined, 'polygon', codigo);
         document.getElementById('w-codigo').value = '';
         _perfilCreadora = await candela.creadoras.miPerfil();
         toast('Métodos de pago guardados', 'success');
