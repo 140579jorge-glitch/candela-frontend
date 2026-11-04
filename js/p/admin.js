@@ -138,14 +138,15 @@ async function cargarRetiros() {
                     <div class="flex-1 min-w-0">
                         <p class="font-bold text-sm mb-1">${esc(r.creadora || '?')}</p>
                         <div class="flex items-center gap-3 flex-wrap mb-2">
-                            <span class="text-lg font-bold text-c-accent">$${(r.monto||0).toFixed(2)}</span>
+                            <span class="text-lg font-bold text-c-accent">Enviar $${(r.a_enviar != null ? r.a_enviar : (r.monto||0)).toFixed(2)}</span>
                             <span class="text-xs text-c-soft">${r.metodo_red === 'qr' ? 'QR Pago' : r.metodo_red === 'polygon' ? 'USDT Polygon' : 'USDT TRC20'}</span>
+                            ${r.fee_express > 0 ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Fuera de lunes</span>' : ''}
                             ${r.creadora_pais ? `<span class="text-xs text-c-soft">&#183; ${esc(r.creadora_pais)}</span>` : ''}
                         </div>
                         <div class="bg-c-bg rounded-xl px-3 py-2 text-xs font-mono break-all text-c-text border border-c-border mb-2">
                             ${esc(r.wallet_destino || '-')}
                         </div>
-                        <p class="text-xs text-c-soft">Solicitado: ${fmt_fecha(r.fecha_solicitud)}</p>
+                        <p class="text-xs text-c-soft">Pidió $${(r.monto||0).toFixed(2)}${r.fee_red != null ? ` − red $${r.fee_red.toFixed(2)}` : ''}${r.fee_express > 0 ? ` − fuera de lunes $${r.fee_express.toFixed(2)}` : ''} · Solicitado: ${fmt_fecha(r.fecha_solicitud)}</p>
                     </div>
                     <div class="flex gap-2 shrink-0">
                         <button data-on-click="accionRet('${r.retiro_id}','rechazar',this)" class="bg-red-50 text-red-500 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-all flex items-center gap-1">
