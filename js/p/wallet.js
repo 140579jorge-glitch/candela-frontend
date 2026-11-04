@@ -105,7 +105,7 @@ async function actualizarLinkWhatsapp(pais, costoTexto) {
     const user = candela.auth.user();
     const base = 'https://wa.me/18457098595?text=';
     const nombresPais = { bolivia: 'Bolivia', argentina: 'Argentina', peru: 'Peru', brasil: 'Brasil' };
-    const detalle = `Monto deseado: $${montoQR} USD\nPais: ${nombresPais[pais] || pais}${costoTexto ? `\nCosto estimado: ${costoTexto}` : ''}`;
+    const detalle = `Monto deseado: $${montoQR} USD\nPaís: ${nombresPais[pais] || pais}${costoTexto ? `\nCosto estimado: ${costoTexto}` : ''}`;
 
     if (!user?.email) {
         link.href = base + encodeURIComponent(`Hola, quiero recargar mi cuenta de Candela.\n${detalle}`);
@@ -254,7 +254,7 @@ function iniciarPolling() {
                 document.getElementById('step-confirmado').classList.remove('hidden');
                 setTimeout(() => location.reload(), 3000);
             } else if (r.estado === 'failed') {
-                mostrarFallido('Pago rechazado', 'La transaccion fue rechazada por la red. Intenta con un nuevo deposito.');
+                mostrarFallido('Pago rechazado', 'La transacción fue rechazada por la red. Intenta con un nuevo deposito.');
             } else if (r.estado === 'expired') {
                 mostrarFallido('Pago expirado', 'El tiempo para completar el pago vencio. Genera una nueva dirección.');
             } else if (r.estado === 'partially_paid') {

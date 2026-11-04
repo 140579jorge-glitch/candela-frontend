@@ -16,12 +16,12 @@
         .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .2s,transform .15s; }
         .c-btn:hover { filter:brightness(1.06); }
         .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#7B4D5E;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
-        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(244,162,97,.08);border-left-color:#B5445C; }
+        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(181,68,92,.08);border-left-color:#B5445C; }
         .stat-card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem;padding:1.25rem;transition:border-color .15s,box-shadow .15s; }
         .stat-card[data-on-click] { cursor:pointer; }
         .stat-card[data-on-click]:hover { border-color:#B5445C;box-shadow:0 2px 8px rgba(181,68,92,.12); }
         .badge { display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:100px;font-size:.7rem;font-weight:700; }
-        .badge-pendiente { background:rgba(244,162,97,.12);color:#CF6278;border:1px solid rgba(244,162,97,.3); }
+        .badge-pendiente { background:rgba(181,68,92,.12);color:#CF6278;border:1px solid rgba(181,68,92,.3); }
         .badge-activa { background:rgba(46,204,113,.1);color:#27ae60;border:1px solid rgba(46,204,113,.3); }
         .badge-rechazada { background:rgba(231,76,60,.1);color:#e74c3c;border:1px solid rgba(231,76,60,.3); }
         .badge-aprobada { background:rgba(46,204,113,.1);color:#27ae60;border:1px solid rgba(46,204,113,.3); }
@@ -30,14 +30,14 @@
         .sidebar::-webkit-scrollbar { display:none; }
         .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
         .ver-card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem;padding:1.25rem;transition:box-shadow .2s; }
-        .ver-card:hover { box-shadow:0 4px 20px rgba(244,162,97,.1); }
+        .ver-card:hover { box-shadow:0 4px 20px rgba(181,68,92,.1); }
     </style>
     <script src="/js/ui-events.js"></script>
 </head>
 <body class="bg-c-bg text-c-text antialiased">
 
 <!-- Topbar -->
-<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(181,68,92,.07)">
     <div class="flex items-center justify-between h-16 px-4 md:px-6">
         <div class="flex items-center gap-3">
             <button id="btn-hamburger" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full text-c-text hover:bg-c-border transition-colors" data-on-click="toggleMenuMobile()">
@@ -118,7 +118,7 @@
             <span class="ml-auto bg-blue-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-msg">0</span>
         </div>
         <div class="nav-item" data-on-click="mostrar('reclamos',this)"><span class="ms">flag</span>Reclamos
-            <span class="ml-auto bg-orange-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-rec">0</span>
+            <span class="ml-auto bg-c-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-rec">0</span>
         </div>
         <div class="nav-item" data-on-click="mostrar('reportes-abuso',this)"><span class="ms">gpp_maybe</span>Reportes de Abuso
             <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full" id="badge-reportes">0</span>
@@ -182,7 +182,7 @@
             <!-- Acciones rapidas -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="bg-white border border-c-border rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-c-accent transition-all" data-on-click="mostrar('verificaciones')">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(244,162,97,.1)">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(181,68,92,.1)">
                         <span class="ms" style="color:#B5445C">verified_user</span>
                     </div>
                     <div>

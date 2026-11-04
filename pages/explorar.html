@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Explorar creadoras — Candela</title>
-<meta name="description" content="Descubre creadoras latinas exclusivas en Candela. Filtra por pais, precio e intereses.">
+<meta name="description" content="Descubre creadoras latinas exclusivas en Candela. Filtra por país, precio e intereses.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="../css/tailwind.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@ body { font-family:'Nunito',sans-serif; background:#FDF8F5; color:#2D2D2D; }
 .chip:hover { border-color:#B5445C; color:#CF6278; }
 .chip.active { background:#B5445C; border-color:#B5445C; color:#fff; }
 .card-creadora { display:flex; flex-direction:column; border-radius:18px; overflow:hidden; background:#fff; border:1px solid #F5E8EF; cursor:pointer; transition:transform .25s cubic-bezier(.32,.72,0,1), box-shadow .25s cubic-bezier(.32,.72,0,1); }
-.card-creadora:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(244,162,97,.18); }
+.card-creadora:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(181,68,92,.18); }
 .card-banner { position:relative; aspect-ratio:3/4; overflow:hidden; background:linear-gradient(135deg,#F5E8EF,#F2B8C8); }
 .card-banner img { width:100%; height:100%; object-fit:cover; transition:transform .4s cubic-bezier(.32,.72,0,1); }
 .card-creadora:hover .card-banner img { transform:scale(1.04); }
@@ -41,7 +41,7 @@ body { font-family:'Nunito',sans-serif; background:#FDF8F5; color:#2D2D2D; }
 .filtros-mas.open { max-height:360px; }
 .card-mono { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:600; font-size:3rem; color:rgba(255,255,255,.24); user-select:none; }
 .card-verif { position:absolute; bottom:6px; right:6px; filter:drop-shadow(0 1px 3px rgba(0,0,0,.35)); }
-.search-input:focus { outline:none; border-color:#B5445C; box-shadow:0 0 0 3px rgba(244,162,97,.15); }
+.search-input:focus { outline:none; border-color:#B5445C; box-shadow:0 0 0 3px rgba(181,68,92,.15); }
 .c-btn { background:linear-gradient(135deg,#B5445C,#F2B8C8); transition:filter .3s,transform .3s; }
 .c-btn:hover { filter:brightness(1.07); }
 .c-btn:active { transform:scale(.97); }
@@ -170,7 +170,7 @@ body::before { content:''; position:fixed; inset:0; z-index:999; pointer-events:
 <script src="/js/p/explorar.js"></script>
 
 <!-- Bottom nav (solo fans logueados) -->
-<nav id="bottom-nav" class="glass hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+<nav id="bottom-nav" class="glass hidden fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(181,68,92,.1)">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
         <a href="feed.html" class="flex flex-col items-center text-c-soft hover:text-c-accent transition-colors gap-0.5">
             <span class="ms">home</span><span class="text-[10px] font-semibold">Inicio</span>

@@ -126,7 +126,7 @@ function renderSiguiendo() {
     if (!list.length) {
         el.innerHTML = `<div class="text-center py-10">
             <span class="ms text-c-border" style="font-size:48px">favorite_border</span>
-            <p class="text-c-soft text-sm font-semibold mt-3">No sigues a ninguna creadora aun</p>
+            <p class="text-c-soft text-sm font-semibold mt-3">No sigues a ninguna creadora aún</p>
             <a href="explorar.html" class="c-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl inline-block mt-4">Explorar creadoras</a>
         </div>`;
         return;
@@ -204,7 +204,7 @@ function renderSubs() {
 }
 
 async function cancelarSub(slug, btn) {
-    if (!confirm('Cancelar suscripcion? Mantendras acceso hasta la fecha de vencimiento.')) return;
+    if (!confirm('¿Cancelar suscripción? Mantendrás acceso hasta la fecha de vencimiento.')) return;
     btn.disabled = true;
     btn.textContent = '...';
     try {
@@ -357,7 +357,7 @@ async function eliminarMiCuenta() {
     if (document.getElementById('confirm-elim').value !== 'ELIMINAR') {
         toast('Escribe ELIMINAR en mayusculas para confirmar', 'error'); return;
     }
-    if (!confirm('Segura? Esta accion no se puede deshacer.')) return;
+    if (!confirm('¿Segura? Esta acción no se puede deshacer.')) return;
     try {
         await candela.auth.eliminarCuenta();
         toast('Cuenta eliminada. Cerrando sesión...', 'success');

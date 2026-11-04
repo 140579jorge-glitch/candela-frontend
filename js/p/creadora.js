@@ -59,12 +59,9 @@ async function init() {
         // Estado suscripción
         try {
             const subs = await candela._req('GET', '/api/pagos/mis-suscripciones');
-            if (Array.isArray(subs) && subs.some(s => s.creadora_slug === slug)) {
-                suscritoActualmente = true;
-                // Actualizar botón para suscrito (en creadoras gratis decía "Suscribirme gratis")
-                const btnSub = document.getElementById('btn-sub-header');
-                btnSub.textContent = 'Ver contenido';
-                btnSub.onclick = () => document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
+            const miSub = Array.isArray(subs) ? subs.find(s => s.creadora_slug === slug) : null;
+            if (miSub) {
+                aplicarSuscrito(miSub);
             }
         } catch(e) {}
         cargarEncuestas(); // necesita saber antes si esta suscrito
@@ -376,7 +373,7 @@ async function clicContenido(id, precio, desbloqueado, esGratis) {
                 // Refrescar grid para actualizar badge restantes
                 filtrarContenido();
                 if (res.trial_restantes === 0) {
-                    setTimeout(() => toast('Prueba completada. Suscribete para ver mas contenido.', 'info'), 800);
+                    setTimeout(() => toast('Prueba completada. Suscríbete para ver más contenido.', 'info'), 800);
                 }
             }
         } catch(e) {
@@ -459,6 +456,39 @@ function seleccionarPlan(meses, soloActualizar) {
     document.getElementById('btn-confirmar-sub').disabled = insuf;
 }
 
+// Estado "ya suscrito": se usa al cargar la pagina y justo despues de pagar, sin recargar
+function aplicarSuscrito(miSub) {
+    suscritoActualmente = true;
+    const btnSub = document.getElementById('btn-sub-header');
+    if (btnSub) {
+        btnSub.textContent = 'Ver contenido';
+        btnSub.onclick = () => document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (creadoraData && creadoraData.precio_suscripcion > 0) {
+        const caja = document.getElementById('precio-box');
+        if (caja && !document.getElementById('sub-activa')) {
+            caja.classList.add('hidden');
+            const hasta = new Date(miSub.fecha_fin).toLocaleDateString('es', { day: 'numeric', month: 'long' });
+            caja.insertAdjacentHTML('beforebegin',
+                '<div id="sub-activa" class="flex items-center gap-3 rounded-2xl border border-c-border bg-white px-4 py-3 mt-4">' +
+                '<span class="material-symbols-outlined text-c-accent" style="font-size:28px">verified</span>' +
+                '<div><p class="font-bold text-sm text-c-text">Eres parte de su círculo</p>' +
+                '<p class="text-xs text-c-soft">Tu acceso está activo hasta el ' + esc(hasta) + '.</p></div></div>');
+        }
+        document.getElementById('sticky-sub')?.remove();
+    }
+}
+
+async function refrescarTrasPago() {
+    try {
+        const subs = await candela._req('GET', '/api/pagos/mis-suscripciones');
+        const miSub = Array.isArray(subs) ? subs.find(x => x.creadora_slug === slug) : null;
+        if (miSub) aplicarSuscrito(miSub);
+        await cargarContenido();
+        candela.balance.cache(userBalance); candela.balance.showNav();
+    } catch (e) { location.reload(); }
+}
+
 async function confirmarSub() {
     if (userBalance < _planCosto) {
         sessionStorage.setItem('candela_return', location.href);
@@ -471,8 +501,8 @@ async function confirmarSub() {
         const r = await candela.pagos.confirmarSuscripcion({ creadora_slug: slug, meses: _planSel });
         userBalance = r.nuevo_balance != null ? r.nuevo_balance : Math.max(0, userBalance - _planCosto);
         cerrarModal('modal-sub');
-        toast(r.mensaje || 'Suscripción activada', 'success');
-        setTimeout(() => location.reload(), 2000);
+        toast('Suscripción activada', 'success');
+        await refrescarTrasPago();
     } catch(err) {
         toast(err.message, 'error');
         btn.textContent = `Suscribirme por $${_planCosto.toFixed(2)} USDT`; btn.disabled = false;
@@ -492,7 +522,7 @@ async function confirmarCompra() {
         toast('Contenido desbloqueado', 'success');
         const tarjeta = document.querySelector(`[data-on-click^="clicContenido('${String(contenidoSeleccionado.id).replace(/[^a-z0-9-]/gi,'')}'"]`);
         if (tarjeta) tarjeta.classList.add('ct-abriendo');
-        setTimeout(() => location.reload(), 1500);
+        setTimeout(() => { refrescarTrasPago(); }, 1100);
     } catch(err) {
         toast(err.message, 'error');
         btn.textContent = `Desbloquear por $${precio} USDT`; btn.disabled = false;
@@ -584,7 +614,7 @@ function elegirMontoPropina(monto) {
 async function confirmarPropina() {
     if (!candela.auth.isLoggedIn()) { toast('Inicia sesión primero', 'info'); return; }
     const monto = propinaMonto || parseFloat(document.getElementById('propina-monto-custom').value);
-    if (!monto || monto < 1) { toast('Elige un monto valido (minimo $1)', 'error'); return; }
+    if (!monto || monto < 1) { toast('Elige un monto válido (mínimo $1)', 'error'); return; }
     if (userBalance < monto) { window.location.href = 'wallet.html'; return; }
     const mensaje = document.getElementById('propina-mensaje').value.trim();
 
@@ -706,7 +736,7 @@ function _abrirVentanaChat(sesionId, sesionInfo) {
         }
     };
 
-    _chatSesionWs.onerror = () => toast('Error de conexion en el chat', 'error');
+    _chatSesionWs.onerror = () => toast('Error de conexión en el chat', 'error');
 
     // Heartbeat cada 30s
     const hb = setInterval(() => {
@@ -958,7 +988,7 @@ function renderCarruselPublico() {
                 <img src="${_u(url)}" class="w-full h-full object-cover" style="filter:blur(18px);transform:scale(1.1)" draggable="false" data-on-contextmenu="return false">
                 <div class="absolute inset-0 flex flex-col items-center justify-center gap-2" style="background:rgba(45,20,10,.3)">
                     <span class="ms" style="color:#fff;font-size:28px">lock</span>
-                    <span class="text-white text-xs font-bold text-center px-3">Inicia sesion para ver</span>
+                    <span class="text-white text-xs font-bold text-center px-3">Inicia sesión para ver</span>
                 </div>
             </div>`;
         }
@@ -992,7 +1022,7 @@ async function cargarPacksPublicos() {
             const precioFan = Number(pk.precio_fan || 0).toFixed(2);
             const modoBadge = pk.modo === 'venta'
                 ? '<span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-1">Descargable</span>'
-                : '<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full ml-1">PPV</span>';
+                : '<span class="text-[10px] font-bold bg-c-rose/30 text-c-accent px-2 py-0.5 rounded-full ml-1">PPV</span>';
             const archivos = pk.total_archivos || 0;
             return `<div class="bg-white border border-c-border rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
                 <div class="flex-1 min-w-0">
@@ -1151,7 +1181,7 @@ function renderEncuestas(lista) {
             const esElMio = e.mi_voto === i;
             return `
             <button data-on-click="votarEncuesta('${e.id}',${i})" ${yaVoto ? 'disabled' : ''}
-                class="w-full text-left rounded-xl border transition-all mb-2 overflow-hidden ${esElMio ? 'border-c-accent bg-orange-50' : 'border-c-border bg-white hover:border-c-accent'}"
+                class="w-full text-left rounded-xl border transition-all mb-2 overflow-hidden ${esElMio ? 'border-c-accent bg-c-champagne' : 'border-c-border bg-white hover:border-c-accent'}"
                 style="${yaVoto ? 'cursor:default' : ''}">
                 <div class="px-3 py-2.5 relative">
                     ${yaVoto ? `<div class="absolute inset-0 rounded-xl bg-c-accent/10" style="width:${pct}%"></div>` : ''}
@@ -1191,7 +1221,7 @@ function renderEncuestaCard(e) {
     const barras = e.opciones.map((op, i) => {
         const pct = e.total_votos > 0 ? Math.round((e.conteo[i] / e.total_votos) * 100) : 0;
         const esElMio = e.mi_voto === i;
-        return `<button disabled class="w-full text-left rounded-xl border mb-2 overflow-hidden ${esElMio ? 'border-c-accent bg-orange-50' : 'border-c-border bg-white'}" style="cursor:default">
+        return `<button disabled class="w-full text-left rounded-xl border mb-2 overflow-hidden ${esElMio ? 'border-c-accent bg-c-champagne' : 'border-c-border bg-white'}" style="cursor:default">
             <div class="px-3 py-2.5 relative">
                 <div class="absolute inset-0 rounded-xl bg-c-accent/10" style="width:${pct}%"></div>
                 <div class="relative flex justify-between items-center">

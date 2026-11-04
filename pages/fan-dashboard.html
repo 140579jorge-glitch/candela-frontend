@@ -18,7 +18,7 @@
         .c-btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
         .c-btn:active { transform:scale(.97); }
         .nav-item { display:flex;align-items:center;gap:.65rem;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;color:#7B4D5E;border-left:3px solid transparent;cursor:pointer;transition:all .15s;border-radius:0 10px 10px 0;margin-right:.75rem; }
-        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(244,162,97,.08);border-left-color:#B5445C; }
+        .nav-item:hover,.nav-item.active { color:#B5445C;background:rgba(181,68,92,.08);border-left-color:#B5445C; }
         .dash-section { display:none; }
         .dash-section.active { display:block; }
         .sidebar::-webkit-scrollbar { display:none; }
@@ -26,7 +26,7 @@
         .card { background:#fff;border:1px solid #F5E8EF;border-radius:1rem; }
         .badge { display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em; }
         .badge-ok { background:rgba(46,204,113,.1);color:#27ae60; }
-        .badge-warn { background:rgba(244,162,97,.12);color:#CF6278; }
+        .badge-warn { background:rgba(181,68,92,.12);color:#CF6278; }
         .badge-red { background:rgba(231,76,60,.1);color:#e74c3c; }
         .mov-row { display:flex;align-items:center;gap:.85rem;padding:.7rem 0;border-bottom:1px solid #F5E8EF; }
         .mov-row:last-child { border-bottom:none; }
@@ -51,7 +51,7 @@
 <div id="toast-cnt"></div>
 
 <!-- TopBar -->
-<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(181,68,92,.07)">
     <div class="flex items-center justify-between h-16 px-4 md:px-6">
         <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
         <div class="flex items-center gap-2">
@@ -89,7 +89,7 @@
         <div class="nav-item active" data-on-click="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
         <div class="nav-item" data-on-click="mostrar('siguiendo',this)"><span class="ms">favorite_border</span>Siguiendo</div>
         <a href="mensajes.html" class="nav-item" style="text-decoration:none"><span class="ms">forum</span>Mensajes</a>
-        <div class="nav-item" data-on-click="mostrar('suscripciones',this)"><span class="ms">favorite</span>Suscripciones</div>
+        <div class="nav-item" data-on-click="mostrar('suscripciones',this)"><span class="ms">workspace_premium</span>Suscripciones</div>
         <div class="nav-item" data-on-click="mostrar('compras',this)"><span class="ms">shopping_bag</span>Mis compras</div>
         <div class="nav-item" data-on-click="mostrar('wallet',this)"><span class="ms">account_balance_wallet</span>Billetera</div>
         <div class="nav-item" data-on-click="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
@@ -140,7 +140,7 @@
         <!-- SIGUIENDO -->
         <section id="sec-siguiendo" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Siguiendo</h2>
-            <p class="text-c-soft text-sm mb-5">Creadoras que sigues. Recibiras notificaciones cuando publiquen.</p>
+            <p class="text-c-soft text-sm mb-5">Creadoras que sigues. Recibirás notificaciones cuando publiquen.</p>
             <div id="lista-siguiendo">
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <div class="skeleton h-32 rounded-2xl"></div>
@@ -242,7 +242,7 @@
 <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-c-border flex justify-around py-1 z-50" style="padding-bottom:env(safe-area-inset-bottom,0px)">
     <div class="bot-nav-item active" data-on-click="mostrar('inicio',this)"><span class="ms" style="font-size:20px">home</span>Inicio</div>
     <a href="mensajes.html" class="bot-nav-item" style="text-decoration:none"><span class="ms" style="font-size:20px">forum</span>Mensajes</a>
-    <div class="bot-nav-item" data-on-click="mostrar('suscripciones',this)"><span class="ms" style="font-size:20px">favorite</span>Subs</div>
+    <div class="bot-nav-item" data-on-click="mostrar('suscripciones',this)"><span class="ms" style="font-size:20px">workspace_premium</span>Subs</div>
     <div class="bot-nav-item" data-on-click="mostrar('compras',this)"><span class="ms" style="font-size:20px">shopping_bag</span>Compras</div>
     <div class="bot-nav-item" data-on-click="mostrar('cuenta',this)"><span class="ms" style="font-size:20px">manage_accounts</span>Cuenta</div>
 </nav>

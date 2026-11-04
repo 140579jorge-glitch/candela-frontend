@@ -56,7 +56,7 @@
 
     <h2>6. Seguridad</h2>
     <ul>
-        <li>Las contrasenas se almacenan con hash bcrypt (nunca en texto plano).</li>
+        <li>Las contraseñas se almacenan con hash bcrypt (nunca en texto plano).</li>
         <li>Las comunicaciones se realizan sobre HTTPS en produccion.</li>
         <li>El contenido subido por las creadoras lleva una <strong>marca de agua</strong> de la plataforma para desincentivar la distribución no autorizada, y se le elimina toda la metadata original del archivo (ubicación, dispositivo, cuenta) antes de guardarlo.</li>
         <li>Registramos intentos de inicio de sesión fallidos (incluyendo el email usado) en un log de seguridad interno, para detectar accesos no autorizados. Este log se conserva 14 días y solo es accedido por el equipo técnico.</li>

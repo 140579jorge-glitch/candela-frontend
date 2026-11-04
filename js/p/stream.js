@@ -36,7 +36,7 @@ async function init() {
         const r = await fetch(`${API}/api/streams/${STREAM_ID}`);
         if (!r.ok) { mostrarError('Stream no disponible'); return; }
         streamInfo = await r.json();
-    } catch(e) { mostrarError('Error de conexion'); return; }
+    } catch(e) { mostrarError('Error de conexión'); return; }
 
     if (streamInfo.estado !== 'live') { mostrarError('Este stream ha terminado'); return; }
 
@@ -78,7 +78,7 @@ async function intentarUnirse() {
         } else {
             mostrarError(d.detail || 'No se pudo acceder al stream');
         }
-    } catch(e) { mostrarError('Error de conexion'); }
+    } catch(e) { mostrarError('Error de conexión'); }
 }
 
 // ------------------------------------------------------------------ //
@@ -117,7 +117,7 @@ async function pagarEntrada() {
             btn.disabled = false;
         }
     } catch(e) {
-        btn.textContent = 'Error de conexion';
+        btn.textContent = 'Error de conexión';
         btn.disabled = false;
     }
 }
@@ -253,7 +253,7 @@ function manejarObsequio(ev) {
     // toast
     const toast = document.createElement('div');
     toast.className = 'ev-toast';
-    toast.innerHTML = `<span style="color:#B5445C">${esc(ev.remitente)}</span> envio ${ev.obsequio_emoji} ${esc(ev.obsequio_nombre)}`;
+    toast.innerHTML = `<span style="color:#B5445C">${esc(ev.remitente)}</span> envió ${ev.obsequio_emoji} ${esc(ev.obsequio_nombre)}`;
     layer.appendChild(toast);
     setTimeout(() => toast.remove(), 2800);
 
@@ -281,7 +281,7 @@ function actualizarBalance(b) {
 function mostrarLoginPrompt() {
     document.getElementById('loading').innerHTML = `
         <div style="font-size:48px;margin-bottom:16px">ðŸ”’</div>
-        <p style="color:rgba(255,255,255,.8);font-size:15px;font-weight:700;margin-bottom:4px">Inicia sesion para ver este stream</p>
+        <p style="color:rgba(255,255,255,.8);font-size:15px;font-weight:700;margin-bottom:4px">Inicia sesión para ver este stream</p>
         <p style="color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px">${streamInfo.precio_entrada > 0 ? 'Este stream tiene precio de entrada' : ''}</p>
         <button data-on-click="location.href='../index.html?login=1'" style="background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;font-weight:800;padding:13px 32px;border-radius:20px;font-size:15px;border:none;cursor:pointer;font-family:Nunito,sans-serif">
             Iniciar sesion

@@ -109,7 +109,7 @@
       deferredPrompt = e;
       mostrarBanner({
         mostrarBotonInstalar: true,
-        mensaje: 'Acceso mas rapido, notificaciones y una mejor experiencia sin ocupar espacio de una tienda de apps.',
+        mensaje: 'Acceso más rápido, notificaciones y una mejor experiencia sin ocupar espacio de una tienda de apps.',
       });
     });
   }

@@ -39,7 +39,7 @@
         /* no scrollbar sidebar */
         .sidebar::-webkit-scrollbar { display:none; }
         .sidebar { -ms-overflow-style:none;scrollbar-width:none; }
-        /* en movil no entran "Ver mi pagina" + badge de estado junto a los iconos: se ocultan del header y "Ver mi pagina" pasa al menu lateral */
+        /* en movil no entran "Ver mi página" + badge de estado junto a los iconos: se ocultan del header y "Ver mi página" pasa al menu lateral */
         @media (max-width:767px) {
             #link-ver-pagina, #topbar-estado { display:none !important; }
         }
@@ -92,22 +92,26 @@
         </div>
         <a id="link-ver-pagina-mobile" href="#" class="hidden nav-item" target="_blank"><span class="ms">open_in_new</span>Ver mi página</a>
         <div class="nav-item" data-on-click="mostrar('inicio')"><span class="ms ms-fill">home</span>Inicio</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Contenido</p>
         <div class="nav-item" data-on-click="mostrar('subir')"><span class="ms">upload</span>Subir contenido</div>
         <div class="nav-item" data-on-click="mostrar('packs')"><span class="ms">inventory_2</span>Mis Packs</div>
-        <div class="nav-item" data-on-click="mostrar('colaboradores')"><span class="ms">group</span>Colaboradores</div>
         <div class="nav-item" data-on-click="mostrar('stories')"><span class="ms">auto_stories</span>Stories</div>
-        <div class="nav-item" data-on-click="mostrar('encuestas')"><span class="ms">poll</span>Encuestas</div>
-        <div class="nav-item" data-on-click="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
-        <div class="nav-item" data-on-click="mostrar('analitica')"><span class="ms">bar_chart</span>Analítica</div>
         <div class="nav-item" data-on-click="mostrar('medios')"><span class="ms">perm_media</span>Mis medios</div>
-        <div class="nav-item" data-on-click="mostrar('personalizar')"><span class="ms">palette</span>Personalizar</div>
-        <div class="nav-item" data-on-click="mostrar('verificacion')"><span class="ms">verified_user</span>Verificación</div>
-        <div class="nav-item" data-on-click="mostrar('propinas')"><span class="ms">volunteer_activism</span>Propinas</div>
+        <div class="nav-item" data-on-click="mostrar('colaboradores')"><span class="ms">group</span>Colaboradores</div>
+        <div class="nav-item" data-on-click="mostrar('encuestas')"><span class="ms">poll</span>Encuestas</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Audiencia</p>
         <div class="nav-item" data-on-click="mostrar('mensajes')"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" data-on-click="mostrar('chat-sesion')"><span class="ms">videocam</span>Chat privado</div>
+        <div class="nav-item" data-on-click="mostrar('propinas')"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" data-on-click="mostrar('referidas')"><span class="ms">group_add</span>Referidas</div>
-        <div class="nav-item" data-on-click="mostrar('metodos-pago')"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
         <div class="nav-item" style="display:none" data-on-click="mostrar('stream')"><span class="ms">live_tv</span>Stream en vivo</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Dinero</p>
+        <div class="nav-item" data-on-click="mostrar('ganancias')"><span class="ms">payments</span>Ganancias</div>
+        <div class="nav-item" data-on-click="mostrar('analitica')"><span class="ms">bar_chart</span>Analítica</div>
+        <div class="nav-item" data-on-click="mostrar('metodos-pago')"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Cuenta</p>
+        <div class="nav-item" data-on-click="mostrar('personalizar')"><span class="ms">palette</span>Personalizar</div>
+        <div class="nav-item" data-on-click="mostrar('verificacion')"><span class="ms">verified_user</span>Verificación</div>
         <div class="nav-item" data-on-click="mostrar('seguridad')"><span class="ms">security</span>Seguridad</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
         <div class="nav-item" data-on-click="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
@@ -118,36 +122,37 @@
 
     <!-- Sidebar (desktop) -->
     <aside class="sidebar hidden md:flex flex-col w-56 shrink-0 fixed top-16 left-0 bottom-0 bg-white border-r border-c-border overflow-y-auto pt-4 pb-8">
-        <div class="px-4 mb-4">
-            <p class="text-[11px] font-bold text-c-soft uppercase tracking-widest">Mi cuenta</p>
+        <div class="px-4 mb-3">
+            <p class="font-display text-lg text-c-text">Mi espacio</p>
         </div>
         <div class="nav-item active" data-on-click="mostrar('inicio',this)"><span class="ms ms-fill">home</span>Inicio</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Contenido</p>
         <div class="nav-item" data-on-click="mostrar('subir',this)"><span class="ms">upload</span>Subir contenido</div>
         <div class="nav-item" data-on-click="mostrar('packs',this)"><span class="ms">inventory_2</span>Mis Packs</div>
-        <div class="nav-item" data-on-click="mostrar('colaboradores',this)"><span class="ms">group</span>Colaboradores</div>
         <div class="nav-item" data-on-click="mostrar('stories',this)"><span class="ms">auto_stories</span>Stories</div>
-        <div class="nav-item" data-on-click="mostrar('encuestas',this)"><span class="ms">poll</span>Encuestas</div>
-        <div class="nav-item" data-on-click="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
-        <div class="nav-item" data-on-click="mostrar('analitica',this)"><span class="ms">bar_chart</span>Analítica</div>
         <div class="nav-item" data-on-click="mostrar('medios',this)"><span class="ms">perm_media</span>Mis medios</div>
-        <div class="nav-item" data-on-click="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
-        <div class="nav-item" data-on-click="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificación</div>
-        <div class="nav-item" data-on-click="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
+        <div class="nav-item" data-on-click="mostrar('colaboradores',this)"><span class="ms">group</span>Colaboradores</div>
+        <div class="nav-item" data-on-click="mostrar('encuestas',this)"><span class="ms">poll</span>Encuestas</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Audiencia</p>
         <div class="nav-item" data-on-click="mostrar('mensajes',this)"><span class="ms">chat_bubble</span>Mensajes</div>
         <div class="nav-item" data-on-click="mostrar('chat-sesion',this)"><span class="ms">videocam</span>Chat privado</div>
+        <div class="nav-item" data-on-click="mostrar('propinas',this)"><span class="ms">volunteer_activism</span>Propinas</div>
         <div class="nav-item" data-on-click="mostrar('referidas',this)"><span class="ms">group_add</span>Referidas</div>
-        <div class="nav-item" data-on-click="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
         <div class="nav-item" style="display:none" data-on-click="mostrar('stream',this)"><span class="ms">live_tv</span>Stream en vivo</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Dinero</p>
+        <div class="nav-item" data-on-click="mostrar('ganancias',this)"><span class="ms">payments</span>Ganancias</div>
+        <div class="nav-item" data-on-click="mostrar('analitica',this)"><span class="ms">bar_chart</span>Analítica</div>
+        <div class="nav-item" data-on-click="mostrar('metodos-pago',this)"><span class="ms">account_balance_wallet</span>Métodos de pago</div>
+        <p class="px-5 pt-4 pb-1 text-xs font-bold tracking-wide text-c-soft/80">Cuenta</p>
+        <div class="nav-item" data-on-click="mostrar('personalizar',this)"><span class="ms">palette</span>Personalizar</div>
+        <div class="nav-item" data-on-click="mostrar('verificacion',this)"><span class="ms">verified_user</span>Verificación</div>
         <div class="nav-item" data-on-click="mostrar('seguridad',this)"><span class="ms">security</span>Seguridad</div>
         <div class="border-t border-c-border my-4 mx-4"></div>
-        <div class="px-4 mb-2">
-            <p class="text-[11px] font-bold text-c-soft uppercase tracking-widest">Configuración</p>
-        </div>
         <div class="nav-item" data-on-click="candela.auth.logout()"><span class="ms">logout</span>Salir</div>
     </aside>
 
     <!-- Main content -->
-    <main class="flex-1 md:ml-56 px-4 md:px-8 pt-6 pb-24 md:py-6 max-w-4xl">
+    <main class="flex-1 md:ml-56 px-4 md:px-10 pt-6 pb-24 md:py-8 max-w-5xl">
 
         <!-- ══ INICIO ══ -->
         <section id="sec-inicio" class="dash-section active">
@@ -173,9 +178,9 @@
             <div id="card-compartir" class="hidden rounded-2xl p-4 mb-5 shadow-md text-white" style="background:linear-gradient(135deg,#B5445C,#F2B8C8)">
                 <div class="flex items-center gap-2 mb-1">
                     <span class="ms ms-fill" style="font-size:20px">celebration</span>
-                    <span class="font-display text-lg font-semibold">Ya podes invitar a tus fans</span>
+                    <span class="font-display text-lg font-semibold">Ya puedes invitar a tus fans</span>
                 </div>
-                <p class="text-xs opacity-90 mb-3">Comparti el enlace de tu página para que te encuentren y se suscriban.</p>
+                <p class="text-xs opacity-90 mb-3">Comparte el enlace de tu página para que te encuentren y se suscriban.</p>
                 <div class="flex items-center gap-2 bg-white/15 rounded-xl p-2 mb-3">
                     <input id="compartir-link" readonly class="flex-1 bg-transparent text-xs font-semibold px-2 outline-none truncate" style="color:#fff">
                     <button data-on-click="copiarLinkCompartir()" class="shrink-0 bg-white/20 hover:bg-white/30 transition-colors rounded-lg px-3 py-1.5 text-xs font-bold flex items-center gap-1">
@@ -245,13 +250,13 @@
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tipo</label>
                         <div class="flex gap-2">
-                            <label class="flex-1 flex items-center gap-2 p-3 rounded-xl border border-c-border cursor-pointer hover:border-c-accent transition-all has-[:checked]:border-c-accent has-[:checked]:bg-orange-50">
-                                <input type="radio" name="tipo" value="foto" checked class="accent-orange-400">
+                            <label class="flex-1 flex items-center gap-2 p-3 rounded-xl border border-c-border cursor-pointer hover:border-c-accent transition-all has-[:checked]:border-c-accent has-[:checked]:bg-c-champagne">
+                                <input type="radio" name="tipo" value="foto" checked class="accent-c-accent">
                                 <span class="ms" style="font-size:18px">photo_camera</span>
                                 <span class="text-sm font-semibold">Foto</span>
                             </label>
-                            <label class="flex-1 flex items-center gap-2 p-3 rounded-xl border border-c-border cursor-pointer hover:border-c-accent transition-all has-[:checked]:border-c-accent has-[:checked]:bg-orange-50">
-                                <input type="radio" name="tipo" value="video" class="accent-orange-400">
+                            <label class="flex-1 flex items-center gap-2 p-3 rounded-xl border border-c-border cursor-pointer hover:border-c-accent transition-all has-[:checked]:border-c-accent has-[:checked]:bg-c-champagne">
+                                <input type="radio" name="tipo" value="video" class="accent-c-accent">
                                 <span class="ms" style="font-size:18px">videocam</span>
                                 <span class="text-sm font-semibold">Video</span>
                             </label>
@@ -263,7 +268,7 @@
                             <span class="ms" id="upload-icon" style="font-size:2.5rem;color:#FAF2F5">upload_file</span>
                             <img id="upload-preview" src="" alt="" style="display:none;max-height:140px;border-radius:10px;margin:4px auto 0;object-fit:cover;max-width:100%">
                             <p class="text-sm text-c-soft mt-2" id="archivo-nombre">Haz clic para seleccionar archivo</p>
-                            <p class="text-xs text-c-soft mt-1" id="upload-hint">JPG, PNG, MP4, MOV — max 100MB</p>
+                            <p class="text-xs text-c-soft mt-1" id="upload-hint">JPG, PNG, MP4, MOV · máx. 100 MB</p>
                             <input type="file" id="archivo-input" accept="image/*,video/*" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                         </label>
                         <!-- Barra de progreso -->
@@ -275,27 +280,27 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo (opcional)</label>
-                        <input id="sub-titulo" type="text" placeholder="Descripcion breve"
-                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Título (opcional)</label>
+                        <input id="sub-titulo" type="text" placeholder="Descripción breve"
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Descripción</label>
                         <textarea id="sub-desc" rows="3" placeholder="Cuéntale a tus fans..."
-                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all resize-none"></textarea>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Acceso</label>
                         <div class="flex flex-col gap-2">
                             <label class="flex items-center gap-2 cursor-pointer text-sm">
-                                <input type="radio" name="acceso" value="subs" checked class="accent-orange-400">
+                                <input type="radio" name="acceso" value="subs" checked class="accent-c-accent">
                                 <div>
                                     <span class="font-semibold">Solo suscriptores</span>
                                     <span class="text-c-soft text-xs ml-1">(incluido en la suscripción mensual)</span>
                                 </div>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer text-sm">
-                                <input type="radio" name="acceso" value="ppv" class="accent-orange-400" data-on-click="togglePrecio(true)">
+                                <input type="radio" name="acceso" value="ppv" class="accent-c-accent" data-on-click="togglePrecio(true)">
                                 <span class="font-semibold">Pago único (PPV)</span>
                             </label>
                             <div id="precio-ppv" class="hidden pl-6">
@@ -303,7 +308,7 @@
                                     class="w-32 px-3 py-2 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all">
                             </div>
                             <label class="flex items-center gap-2 cursor-pointer text-sm">
-                                <input type="radio" name="acceso" value="gratis" class="accent-orange-400" data-on-click="togglePrecio(false)">
+                                <input type="radio" name="acceso" value="gratis" class="accent-c-accent" data-on-click="togglePrecio(false)">
                                 <span class="font-semibold">Gratis para todos</span>
                                 <span class="text-c-soft text-xs">(preview público)</span>
                             </label>
@@ -327,14 +332,14 @@
                 <h3 class="font-bold text-sm mb-4">Crear nuevo pack</h3>
                 <form id="form-pack" data-on-submit="crearPack(event)" class="flex flex-col gap-4">
                     <div>
-                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo del pack</label>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Título del pack</label>
                         <input id="pk-titulo" type="text" maxlength="120" placeholder="Ej: Sesión de verano"
-                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all" required>
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all" required>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Descripción (opcional)</label>
                         <textarea id="pk-desc" rows="2" maxlength="500" placeholder="Describe que incluye este pack..."
-                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all resize-none"></textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -342,7 +347,7 @@
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
                                 <input id="pk-precio" type="number" min="1" max="999" step="0.5" placeholder="5.00"
-                                    class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all" required>
+                                    class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all" required>
                             </div>
                         </div>
                         <div>
@@ -359,7 +364,7 @@
                         <label class="upload-zone block cursor-pointer" id="pk-upload-zone">
                             <span class="ms" style="font-size:2.5rem;color:#FAF2F5">add_photo_alternate</span>
                             <p class="text-sm font-bold text-c-soft mt-2">Arrastra archivos o toca para seleccionar</p>
-                            <p class="text-xs text-c-soft mt-1">JPG, PNG, MP4, MOV — max 100MB cada uno</p>
+                            <p class="text-xs text-c-soft mt-1">JPG, PNG, MP4, MOV · máx. 100 MB cada uno</p>
                             <input type="file" id="pk-archivos" accept="image/*,video/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
                         </label>
                         <div id="pk-preview" class="grid grid-cols-4 gap-2 mt-3 hidden"></div>
@@ -381,7 +386,7 @@
             <div>
                 <h3 class="font-bold text-sm mb-3">Mis packs publicados</h3>
                 <div id="lista-mis-packs">
-                    <p class="text-c-soft text-sm py-8 text-center" id="packs-empty-msg">Aun no tienes packs creados.</p>
+                    <p class="text-c-soft text-sm py-8 text-center" id="packs-empty-msg">Aún no tienes packs creados.</p>
                 </div>
             </div>
         </section>
@@ -393,8 +398,8 @@
             <div class="bg-white border border-c-border rounded-2xl p-5 max-w-lg shadow-sm mb-5">
                 <h3 class="font-bold text-sm mb-3">Invitar a alguien</h3>
                 <form id="form-invitar" data-on-submit="invitarColaborador(event)" class="flex flex-col gap-3">
-                    <input id="colab-email" type="email" required maxlength="200" autocomplete="off" placeholder="Correo de la persona" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
-                    <input id="colab-alias" type="text" maxlength="80" autocomplete="off" placeholder="Cómo la llamas (opcional, ej: Ana)" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                    <input id="colab-email" type="email" required maxlength="200" autocomplete="off" placeholder="Correo de la persona" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
+                    <input id="colab-alias" type="text" maxlength="80" autocomplete="off" placeholder="Cómo la llamas (opcional, ej: Ana)" class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                     <button type="submit" id="colab-btn" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Enviar invitación</button>
                 </form>
                 <p class="text-[11px] text-c-soft mt-3 leading-relaxed">El enlace vence en 7 días y solo lo puede usar esa persona. Si no respondió, puedes reenviarlo.</p>
@@ -462,7 +467,7 @@
                 </div>
                 <div class="flex gap-2 mb-3">
                     <button data-on-click="agregarOpcion()" id="btn-add-opcion"
-                        class="text-xs font-semibold text-c-accent border border-c-accent px-3 py-1.5 rounded-xl hover:bg-orange-50 transition-colors">
+                        class="text-xs font-semibold text-c-accent border border-c-accent px-3 py-1.5 rounded-xl hover:bg-c-champagne transition-colors">
                         + Agregar opción
                     </button>
                     <span class="text-xs text-c-soft self-center">(max 4)</span>
@@ -507,7 +512,7 @@
             <!-- Solicitar retiro -->
             <div class="bg-white border border-c-border rounded-2xl p-5 max-w-md shadow-sm">
                 <h3 class="font-bold text-base mb-1">Solicitar retiro</h3>
-                <p class="text-xs text-c-soft mb-4">Se procesan cada lunes. Mínimo $20 USDT.</p>
+                <p class="text-xs text-c-soft mb-4">Se procesan en hasta 48 horas hábiles. Mínimo $30 USDT.</p>
                 <!-- Sin metodo configurado -->
                 <div id="retiro-sin-metodo" class="hidden text-center py-4">
                     <span class="ms text-c-accent block mb-2" style="font-size:36px">account_balance_wallet</span>
@@ -522,8 +527,9 @@
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Monto a retirar ($)</label>
-                        <input id="ret-monto" type="number" min="30" step="1" placeholder="Mínimo $30"
-                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                        <input id="ret-monto" type="number" min="30" step="1" placeholder="Mínimo $30" data-on-input="previewRetiro()"
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
+                        <p id="ret-preview" class="text-xs text-c-soft mt-1.5 min-h-4"></p>
                     </div>
                     <button id="btn-solicitar-retiro" data-on-click="solicitarRetiro()" class="c-btn text-white py-3 rounded-xl font-bold text-sm shadow-md">Solicitar retiro</button>
                     <button type="button" data-on-click="mostrar('metodos-pago')" class="text-xs text-c-accent font-semibold text-center hover:text-c-accent-d transition-colors">Cambiar método de pago →</button>
@@ -656,14 +662,14 @@
                         <div>
                             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Bio</label>
                             <textarea id="p-bio" rows="3" placeholder="Cuéntale a tu audiencia quien eres..."
-                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all resize-none"></textarea>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio suscripción mensual ($)</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-c-soft font-bold">$</span>
                                 <input id="p-precio" type="number" min="0" max="100" step="0.5" placeholder="0 = sin suscripción"
-                                    class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                                    class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                             </div>
                         </div>
                     </div>
@@ -687,13 +693,13 @@
                         <div>
                             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Intereses (separados por coma)</label>
                             <input id="p-intereses" type="text" maxlength="300" placeholder="Ej: fitness, fotografía, cocina, viajes"
-                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                             <p class="text-[10px] text-c-soft mt-1">Hasta 10 tags. Ayuda a que tus fans te encuentren.</p>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tipo de contenido (separados por coma)</label>
                             <input id="p-tipos" type="text" maxlength="300" placeholder="Ej: fotos, videos, livestream, packs"
-                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                             <p class="text-[10px] text-c-soft mt-1">Que tipo de contenido produces.</p>
                         </div>
                     </div>
@@ -1055,7 +1061,7 @@
                     <h3 class="font-bold text-sm mb-1">Billetera USDT TRC20</h3>
                     <p class="text-xs text-c-soft mb-3">Empieza con T, 34 caracteres. Ejemplo: TGFJDTEvC6xTuEQ...</p>
                     <input id="w-trc20" type="text" maxlength="34" placeholder="T..."
-                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                 </div>
 
                 <!-- Billetera Polygon -->
@@ -1063,7 +1069,7 @@
                     <h3 class="font-bold text-sm mb-1">Billetera USDT Polygon (POS)</h3>
                     <p class="text-xs text-c-soft mb-3">Empieza con 0x, 42 caracteres. Es la misma que tu MetaMask o billetera EVM.</p>
                     <input id="w-polygon" type="text" maxlength="42" placeholder="0x..."
-                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                        class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm font-mono focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                 </div>
 
                 <!-- Confirmacion -->
@@ -1101,16 +1107,16 @@
             <div id="stream-sin-activo">
                 <div class="bg-white border border-c-border rounded-2xl p-5 shadow-sm space-y-4 max-w-sm mb-5">
                     <div>
-                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Titulo del live</label>
+                        <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Título del live</label>
                         <input id="stream-titulo-inp" type="text" maxlength="200" placeholder="Ej: Noche especial de preguntas..."
-                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                            class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Precio de entrada (USD)</label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-c-soft font-bold text-sm">$</span>
                             <input id="stream-precio-inp" type="number" min="0" step="0.50" value="0" placeholder="0.00"
-                                class="w-full pl-7 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all">
+                                class="w-full pl-7 pr-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all">
                         </div>
                         <p class="text-[11px] text-c-soft mt-1">Pon 0 para live gratuito</p>
                     </div>
@@ -1250,7 +1256,7 @@
                 <div id="2fa-confirm-box" class="hidden mt-4 border-t border-c-border pt-4">
                     <p class="text-xs text-c-soft mb-2">Confirma tu contraseña para continuar:</p>
                     <div class="flex gap-2">
-                        <input id="2fa-password-inp" type="password" placeholder="Tu contrasena actual"
+                        <input id="2fa-password-inp" type="password" placeholder="Tu contraseña actual"
                             class="flex-1 px-3 py-2 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent transition-all">
                         <button data-on-click="confirmarToggle2FA()"
                             class="px-4 py-2 bg-c-accent text-white rounded-xl text-sm font-semibold hover:bg-c-accent/90 transition-colors">

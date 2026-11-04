@@ -92,7 +92,7 @@ const candela = {
         eliminarCuenta: () => candela._req('DELETE', '/api/auth/cuenta'),
         cambiarPassword: (password_actual, nueva_password) => candela._req('POST', '/api/auth/cambiar-password', { password_actual, nueva_password }),
         async logout(sinConfirmar = false) {
-            if (!sinConfirmar && !confirm('¿Seguro que queres cerrar sesion?')) return;
+            if (!sinConfirmar && !confirm('¿Seguro que quieres cerrar sesión?')) return;
             try { await candela._req('POST', '/api/auth/logout'); } catch (_) {}  // la API borra la cookie
             localStorage.removeItem('candela_user'); localStorage.removeItem('candela_balance');
             const isFile = location.protocol === 'file:';
@@ -376,12 +376,15 @@ function cargarVitrina(idContenedor, limite, modo) {
         const st = document.createElement('style');
         st.id = 'estilo-vitrina';
         st.textContent =
-            '.vt-rail{display:flex;justify-content:safe center;gap:.75rem;overflow-x:auto;padding:.25rem .25rem .75rem;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}' +
+            '.vt-rail{display:flex;justify-content:flex-start;gap:.75rem;overflow-x:auto;padding:.25rem .25rem .75rem;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}' +
             '.vt-rail::-webkit-scrollbar{display:none}' +
             '.vt-card .ms{font-family:"Material Symbols Outlined";font-style:normal;font-weight:normal;line-height:1;letter-spacing:normal;white-space:nowrap}' +
             '.vt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}.vt-grid .vt-card{flex:none;aspect-ratio:3/4}' +
             '.vt-card{position:relative;flex:0 0 150px;aspect-ratio:3/4;border-radius:18px;overflow:hidden;scroll-snap-align:start;background:#2a1520;display:block;box-shadow:0 8px 22px -10px rgba(90,20,45,.55);transition:transform .25s}' +
             '.vt-card:hover{transform:translateY(-3px)}' +
+            '.vt-hero{grid-template-columns:repeat(auto-fit,minmax(190px,250px));justify-content:center;gap:1.2rem;position:relative;padding:.5rem 0 1.5rem}.vt-hero::before{content:"";position:absolute;inset:-12% -8%;background:radial-gradient(closest-side,rgba(181,68,92,.24),rgba(181,68,92,0));z-index:-1}' +
+            '.vt-hero .vt-card{border-radius:24px;box-shadow:0 22px 48px -16px rgba(90,20,45,.6)}.vt-hero .vt-card:nth-child(odd){transform:rotate(-2.5deg)}.vt-hero .vt-card:nth-child(even){transform:rotate(2deg) translateY(16px)}.vt-hero .vt-card:hover{transform:translateY(-6px) rotate(0)}' +
+            '.vt-hero .vt-nom{font-size:.92rem}.vt-hero .vt-nom img{width:26px;height:26px}.vt-hero .vt-precio{font-size:.82rem;padding:.4rem .9rem}.vt-hero .vt-pie{padding:.8rem .8rem .9rem}' +
             '.vt-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.04)}' +
             '.vt-vel{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,10,15,.92) 0%,rgba(26,10,15,.25) 48%,rgba(181,68,92,.10) 100%)}' +
             '.vt-lock{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.2);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;color:#fff}' +
@@ -394,7 +397,7 @@ function cargarVitrina(idContenedor, limite, modo) {
     }
     return candela._req('GET', '/api/contenido/destacados?limit=' + (limite || 12)).then(items => {
         if (!items || !items.length) { cont.classList.add('hidden'); return; }
-        cont.innerHTML = '<div class="' + (modo === 'grid' ? 'vt-grid' : 'vt-rail') + '">' + items.map(it => {
+        cont.innerHTML = '<div class="' + (modo === 'hero' ? 'vt-grid vt-hero' : modo === 'grid' ? 'vt-grid' : 'vt-rail') + '">' + items.map(it => {
             const href = 'creadora.html?slug=' + encodeURIComponent(it.creadora_slug || '');
             const gratis = it.es_gratis || !(it.precio > 0);
             const precio = gratis ? '<span class="vt-precio libre">Gratis</span>'
@@ -418,7 +421,7 @@ function reenviarAvisoVerificacion(btn) {
     if (!u || !u.email) return;
     btn.disabled = true;
     candela.auth.reenviarVerificacion(u.email)
-        .then(() => toast('Te reenviamos el correo de confirmacion. Revisa tambien spam.', 'success'))
+        .then(() => toast('Te reenviamos el correo de confirmación. Revisa también spam.', 'success'))
         .catch(e => toast(e.message || 'No pudimos reenviarlo ahora', 'error'));
     setTimeout(() => { btn.disabled = false; }, 60000);
 }

@@ -41,13 +41,13 @@ async function cargarBalance() {
         }
         document.getElementById('bal-recargador').textContent = '$0.00';
         document.getElementById('bal-consumo').textContent = '$0.00';
-        document.getElementById('mov-lista').innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aun.</p>';
+        document.getElementById('mov-lista').innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aún.</p>';
     }
 }
 
 function _renderMovimientos(movs) {
     const c = document.getElementById('mov-lista');
-    if (!movs.length) { c.innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aun.</p>'; return; }
+    if (!movs.length) { c.innerHTML = '<p class="text-sm text-c-soft">No hay movimientos aún.</p>'; return; }
     const iconos = { deposito:'add_circle', recarga_transferencia:'send', recarga_consumo:'swap_horiz', bonus:'star' };
     const colores = { deposito:'#27ae60', recarga_transferencia:'#B5445C', recarga_consumo:'#e67e22', bonus:'#8e44ad' };
     c.innerHTML = movs.map(m => {

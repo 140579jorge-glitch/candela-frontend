@@ -184,8 +184,8 @@ async function verificarStreamsActivos() {
 
 // ─── PUBLIC TEASERS (guests) ─────────────────────────────────────────
 function cargarPreviewPublico() {
-    cargarVitrina('hero-vitrina', 6, 'grid');
-    cargarVitrina('vitrina-home', 6, 'grid').then(() => {
+    cargarVitrina('hero-vitrina', 3, 'hero');
+    cargarVitrina('vitrina-home', 2, 'hero').then(() => {
         if (!document.getElementById('vitrina-home').classList.contains('hidden'))
             document.getElementById('preview-section')?.classList.remove('hidden');
     });

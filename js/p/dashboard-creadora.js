@@ -76,7 +76,7 @@ async function cargarEstado2FA() {
     const btn = document.getElementById('btn-toggle-2fa');
     if (!label || !btn) return;
     if (_2faActivo) {
-        label.textContent = 'Activo — tu cuenta esta protegida con verificación de dos pasos';
+        label.textContent = 'Activo — tu cuenta está protegida con verificación de dos pasos';
         label.className = 'text-xs mt-1 font-semibold text-green-600';
         btn.textContent = 'Desactivar';
     } else {
@@ -131,10 +131,10 @@ async function cargarPerfil() {
             alerta.classList.remove('hidden');
         } else if (perfilData.estado === 'rechazada') {
             alerta.className = 'rounded-2xl p-4 mb-5 text-sm border badge-rechazada';
-            alerta.innerHTML = '❌ <strong>Tu cuenta fue rechazada.</strong> Contacta a soporte para mas informacion.';
+            alerta.innerHTML = '❌ <strong>Tu cuenta fue rechazada.</strong> Contacta a soporte para más informacion.';
             alerta.classList.remove('hidden');
         } else {
-            document.getElementById('bienvenida-estado').textContent = `${perfilData.nombre_artistico} · Todo listo para brillar 🔥`;
+            document.getElementById('bienvenida-estado').textContent = `${perfilData.nombre_artistico} · Todo listo para brillar`;
         }
 
         // Pre-rellenar formulario personalizar
@@ -181,7 +181,7 @@ async function cargarPerfil() {
             vFormCard.classList.add('hidden');
         } else if (v && v.estado === 'rechazado') {
             vBox.className = 'rounded-2xl p-4 mb-5 border text-sm badge-rechazada';
-            vBox.innerHTML = `❌ Tu verificacion fue rechazada${v.notas_admin ? ': ' + esc(v.notas_admin) : '.'} Podes volver a enviar tus documentos.`;
+            vBox.innerHTML = `❌ Tu verificación fue rechazada${v.notas_admin ? ': ' + esc(v.notas_admin) : '.'} Podes volver a enviar tus documentos.`;
             vBox.classList.remove('hidden');
         }
     } catch(e) { console.error('cargarPerfil:', e); }
@@ -274,30 +274,30 @@ async function cargarMisPosts() {
 
         grid.innerHTML = lista.map(c => {
             const oculto = c.visible === false;
-            const tipoIcon = c.tipo === 'video' ? '🎬' : '📸';
+            const tipoIcon = c.tipo === 'video' ? 'movie' : 'photo_camera';
             const accesoLabel = c.precio > 0 ? `$${c.precio}` : c.es_gratis ? 'Gratis' : 'Subs';
             return `
-            <div class="relative rounded-xl overflow-hidden group" style="aspect-ratio:1;background:#FAF2F5${oculto?';opacity:.5':''}">
+            <div class="relative rounded-xl overflow-hidden group" tabindex="0" style="aspect-ratio:1;outline-offset:2px;background:#FAF2F5${oculto?';opacity:.5':''}">
                 ${c.preview_url
                     ? `<img src="${c.preview_url}" alt="" class="w-full h-full object-cover">`
-                    : `<div class="w-full h-full flex items-center justify-center text-3xl">${tipoIcon}</div>`}
-                ${oculto ? `<div class="absolute top-1.5 left-1.5 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">OCULTO</div>` : ''}
-                ${c.mod_estado === 'pendiente' ? `<div class="absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" style="background:rgba(217,119,6,.92)" title="${esc(c.mod_razon || 'Pendiente de revisión')}">${c.mod_razon ? 'ESPERANDO COLABORADOR' : 'EN REVISIÓN'}</div>` : ''}
-                ${c.mod_estado === 'rechazado' ? `<div class="absolute top-1.5 right-1.5 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" style="background:rgba(220,38,38,.92)" title="${esc(c.mod_razon || 'No cumple las normas de contenido')}">RECHAZADO</div>` : ''}
+                    : `<div class="w-full h-full flex items-center justify-center"><span class="material-symbols-outlined text-c-soft" style="font-size:36px">${tipoIcon}</span></div>`}
+                ${oculto ? `<div class="absolute top-1.5 left-1.5 bg-black/70 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">Oculto</div>` : ''}
+                ${c.mod_estado === 'pendiente' ? `<div class="absolute top-1.5 right-1.5 text-white text-[11px] font-bold px-2 py-0.5 rounded-full" style="background:rgba(217,119,6,.92)" title="${esc(c.mod_razon || 'Pendiente de revisión')}">${c.mod_razon ? 'Esperando colaborador' : 'En revisión'}</div>` : ''}
+                ${c.mod_estado === 'rechazado' ? `<div class="absolute top-1.5 right-1.5 text-white text-[11px] font-bold px-2 py-0.5 rounded-full" style="background:rgba(220,38,38,.92)" title="${esc(c.mod_razon || 'No cumple las normas de contenido')}">Rechazado</div>` : ''}
                 <!-- Acciones al hover -->
-                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex flex-col items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
-                    <button data-on-click="toggleOcultar('${c.id}',${oculto})" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:${oculto?'rgba(34,197,94,.8)':'rgba(251,191,36,.8)'}">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/55 group-focus-within:bg-black/55 transition-all flex flex-col items-center justify-center gap-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto">
+                    <button data-on-click="toggleOcultar('${c.id}',${oculto})" class="text-xs font-bold px-3.5 py-2 rounded-full text-white" style="background:${oculto?'rgba(34,197,94,.8)':'rgba(251,191,36,.8)'}">
                         ${oculto ? 'Mostrar' : 'Ocultar'}
                     </button>
-                    ${c.precio === 0 ? `<button data-on-click="toggleMuestra('${c.id}',${!!c.es_gratis})" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:${c.es_gratis?'rgba(251,191,36,.85)':'rgba(99,102,241,.85)'}">
+                    ${c.precio === 0 ? `<button data-on-click="toggleMuestra('${c.id}',${!!c.es_gratis})" class="text-xs font-bold px-3.5 py-2 rounded-full text-white" style="background:${c.es_gratis?'rgba(251,191,36,.85)':'rgba(99,102,241,.85)'}">
                         ${c.es_gratis ? 'Quitar muestra' : 'Muestra gratis'}
                     </button>` : ''}
-                    <button data-on-click="eliminarPost('${c.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style="background:rgba(239,68,68,.8)">
+                    <button data-on-click="eliminarPost('${c.id}')" class="text-xs font-bold px-3.5 py-2 rounded-full text-white" style="background:rgba(239,68,68,.8)">
                         Eliminar
                     </button>
                 </div>
-                <div class="absolute bottom-0 left-0 right-0 px-2 py-1.5" style="background:linear-gradient(transparent,rgba(0,0,0,.65))">
-                    <p class="text-white text-[9px] font-bold">${accesoLabel}</p>
+                <div class="absolute bottom-0 left-0 right-0 px-2 py-2" style="background:linear-gradient(transparent,rgba(0,0,0,.6))">
+                    <p class="inline-block bg-white/90 text-c-accent text-[11px] font-extrabold px-2 py-0.5 rounded-full">${accesoLabel}</p>
                 </div>
             </div>`;
         }).join('');
@@ -392,9 +392,18 @@ async function guardarPerfil(e) {
     }
 }
 
+function previewRetiro() {
+    const el = document.getElementById('ret-preview');
+    const m = parseFloat(document.getElementById('ret-monto').value);
+    if (!el) return;
+    if (!m || m < 30) { el.textContent = ''; return; }
+    const fee = Math.round(m * 1.5) / 100;
+    el.textContent = `Recibirás $${(m - fee).toFixed(2)} USDT. Comisión de red 1.5%: $${fee.toFixed(2)}.`;
+}
+
 async function solicitarRetiro() {
     const monto = parseFloat(document.getElementById('ret-monto').value);
-    if (!monto || monto < 30) { toast('Minimo $30', 'error'); return; }
+    if (!monto || monto < 30) { toast('El mínimo de retiro es $30', 'error'); return; }
     const p = _perfilCreadora;
     const metodo = p?.metodo_retiro || 'trc20';
     let wallet = null;
@@ -449,9 +458,9 @@ async function cargarDatosRetiro() {
 }
 
 function actualizarMetodoOpt() {
-    document.querySelectorAll('.metodo-opt-box').forEach(b => b.classList.remove('border-c-accent', 'bg-orange-50'));
+    document.querySelectorAll('.metodo-opt-box').forEach(b => b.classList.remove('border-c-accent', 'bg-c-champagne'));
     const checked = document.querySelector('input[name="metodo_retiro"]:checked');
-    if (checked) checked.closest('label')?.querySelector('.metodo-opt-box')?.classList.add('border-c-accent', 'bg-orange-50');
+    if (checked) checked.closest('label')?.querySelector('.metodo-opt-box')?.classList.add('border-c-accent', 'bg-c-champagne');
 }
 
 function previsualizarQr(input) {
@@ -487,13 +496,13 @@ async function guardarDatosRetiro(e) {
         await candela.creadoras.actualizarDatosRetiro(trc20 || undefined, polygon || undefined, metodo || undefined, codigo);
         document.getElementById('w-codigo').value = '';
         _perfilCreadora = await candela.creadoras.miPerfil();
-        toast('Metodos de pago guardados', 'success');
+        toast('Métodos de pago guardados', 'success');
     } catch(err) { toast(err.message, 'error'); }
     finally { btn.textContent = 'Guardar metodos de pago'; btn.disabled = false; }
 }
 
 async function eliminarCuentaCreadora() {
-    const ok = confirm('¿Estas segura de que quieres eliminar tu cuenta?\n\nEsta accion es permanente. Tus datos personales se eliminaran en 30 dias. Si tienes balance debes retirarlo primero.\n\nEscribe ELIMINAR en el siguiente cuadro para confirmar.');
+    const ok = confirm('¿Estás segura de que quieres eliminar tu cuenta?\n\nEsta acción es permanente. Tus datos personales se eliminarán en 30 días. Si tienes balance debes retirarlo primero.\n\nEscribe ELIMINAR en el siguiente cuadro para confirmar.');
     if (!ok) return;
     const conf = prompt('Escribe ELIMINAR para confirmar:');
     if (conf !== 'ELIMINAR') { toast('Cancelado. No escribiste ELIMINAR.', 'error'); return; }
@@ -520,7 +529,7 @@ async function enviarVerificacion(e) {
         box.innerHTML = '⏳ Documentos enviados. Revisaremos en 24-48h y te notificaremos.';
         box.classList.remove('hidden');
     } catch(err) { toast(err.message, 'error'); }
-    finally { btn.textContent = 'Enviar para revision'; btn.disabled = false; }
+    finally { btn.textContent = 'Enviar para revisión'; btn.disabled = false; }
 }
 
 async function toggleOcultar(id, estaOculto) {
@@ -540,7 +549,7 @@ async function toggleMuestra(id, esGratis) {
 }
 
 async function eliminarPost(id) {
-    if (!confirm('Eliminar permanentemente esta publicacion? Esta accion no se puede deshacer.')) return;
+    if (!confirm('¿Eliminar permanentemente esta publicación? Esta acción no se puede deshacer.')) return;
     try {
         await candela.contenido.eliminar(id);
         toast('Publicación eliminada', 'success');
@@ -696,7 +705,7 @@ function montarQuienAparece(id) {
     const filas = vigentes.map(c => {
         const bloqueado = (esPack && c.estado !== 'aprobado') || c.vencido;
         return `<label class="flex items-center gap-2 py-1 text-sm ${bloqueado ? 'opacity-50' : 'cursor-pointer'}">
-            <input type="checkbox" data-colab value="${esc(c.id)}" ${marcados.has(c.id) ? 'checked' : ''} ${bloqueado ? 'disabled' : ''} class="accent-orange-400">
+            <input type="checkbox" data-colab value="${esc(c.id)}" ${marcados.has(c.id) ? 'checked' : ''} ${bloqueado ? 'disabled' : ''} class="accent-c-accent">
             <span class="font-semibold text-c-text">${esc(c.alias)}</span>${chipColab(c)}
         </label>`;
     }).join('');
@@ -710,11 +719,11 @@ function montarQuienAparece(id) {
         <div class="rounded-xl bg-c-bg border border-c-border p-3 text-xs text-c-soft leading-relaxed">
             <p class="font-bold text-c-text mb-2">¿Quién aparece en este contenido?</p>
             <label class="flex items-center gap-2 cursor-pointer text-sm mb-1">
-                <input type="radio" name="${id}-modo" value="solo" ${modo === 'solo' ? 'checked' : ''} data-on-change="montarQuienAparece('${id}')" class="accent-orange-400">
+                <input type="radio" name="${id}-modo" value="solo" ${modo === 'solo' ? 'checked' : ''} data-on-change="montarQuienAparece('${id}')" class="accent-c-accent">
                 <span class="font-semibold text-c-text">Solo yo</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer text-sm">
-                <input type="radio" name="${id}-modo" value="otros" ${modo === 'otros' ? 'checked' : ''} data-on-change="montarQuienAparece('${id}')" class="accent-orange-400">
+                <input type="radio" name="${id}-modo" value="otros" ${modo === 'otros' ? 'checked' : ''} data-on-change="montarQuienAparece('${id}')" class="accent-c-accent">
                 <span class="font-semibold text-c-text">Yo y otras personas</span>
             </label>
             <div class="${modo === 'otros' ? '' : 'hidden'} mt-3 pt-3 border-t border-c-border">
@@ -950,7 +959,7 @@ async function cargarMensajes() {
         }
         const badges = { confirmado: 'bg-green-100 text-green-700', pendiente: 'bg-amber-100 text-amber-700', rechazado: 'bg-red-100 text-red-700' };
         lista.innerHTML = data.mensajes.map(m => `
-            <div class="px-5 py-4 border-b border-c-border last:border-0 ${!m.leido && m.estado==='confirmado' ? 'bg-orange-50' : ''}">
+            <div class="px-5 py-4 border-b border-c-border last:border-0 ${!m.leido && m.estado==='confirmado' ? 'bg-c-champagne' : ''}">
                 <div class="flex items-center justify-between mb-1">
                     <p class="font-semibold text-sm">${esc(m.remitente_nombre)}</p>
                     <div class="flex items-center gap-2">
@@ -1397,7 +1406,7 @@ function conectarMonitorWs(streamId) {
             div.innerHTML = `<span class="text-yellow-500 font-semibold">${esc(d.obsequio_emoji||'')} ${esc(d.remitente||'Fan')}</span> envio ${esc(d.obsequio_nombre||'')} <span class="text-c-accent font-bold">+$${(d.monto||0).toFixed(2)}</span>`;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
-            toast(`${d.obsequio_emoji} ${d.remitente} envio ${d.obsequio_nombre}!`, 'success');
+            toast(`${d.obsequio_emoji} ${d.remitente} envió ${d.obsequio_nombre}!`, 'success');
             actualizarIngresos();
         } else if (d.tipo === 'viewers') {
             document.getElementById('monitor-viewers').textContent = d.count || 0;
@@ -1571,7 +1580,7 @@ async function cargarScore(contexto) {
                         : label;
                 }).join(', ');
             } else if (pct >= 80) {
-                hintEl.textContent = 'Perfil completo. Tus fans te encontraran mas facil.';
+                hintEl.textContent = 'Perfil completo. Tus fans te encontrarán más fácil.';
             }
         }
     } catch(e) { /* silencioso */ }
@@ -1673,7 +1682,7 @@ async function crearPack(e) {
     e.preventDefault();
     const archivos = document.getElementById('pk-archivos').files;
     if (!archivos.length) { toast('Selecciona al menos un archivo', 'error'); return; }
-    if (archivos.length > 10) { toast('Maximo 10 archivos', 'error'); return; }
+    if (archivos.length > 10) { toast('Máximo 10 archivos', 'error'); return; }
 
     let interpretesIds;
     try { interpretesIds = leerQuienAparece('qa-pack'); } catch (err) { toast(err.message, 'error'); return; }
@@ -1852,7 +1861,7 @@ async function cargarMisStories() {
                     ${s.mod_estado === 'pendiente' ? '<p class="text-[11px] font-bold text-amber-600">En revision: aun no la ven tus suscriptores</p>' : ''}
                 </div>
                 <div class="flex gap-1">
-                    <button data-on-click="verVistasStory('${s.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-c-champagne text-c-soft hover:bg-orange-100 transition-colors">
+                    <button data-on-click="verVistasStory('${s.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-c-champagne text-c-soft hover:bg-c-rose/30 transition-colors">
                         Ver vistas
                     </button>
                     <button data-on-click="eliminarStory('${s.id}')" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
@@ -1867,7 +1876,7 @@ async function cargarMisStories() {
 async function verVistasStory(id) {
     try {
         const vistas = await candela._req('GET', `/api/stories/${id}/vistas`);
-        if (!vistas.length) { toast('Nadie ha visto esta story aun', 'success'); return; }
+        if (!vistas.length) { toast('Nadie ha visto esta story aún', 'success'); return; }
         const lineas = vistas.map((v,i) => {
             const medal = ['🥇','🥈','🥉'][i] || (i+1)+'.';
             const aporte = v.aporte_total > 0 ? ` · $${v.aporte_total} aportados` : '';
@@ -1885,7 +1894,7 @@ function agregarOpcion() {
     const inp = document.createElement('input');
     inp.type = 'text';
     inp.className = 'enc-opcion border border-c-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-c-accent transition-all';
-    inp.placeholder = `Opcion ${inputs.length + 1}`;
+    inp.placeholder = `Opción ${inputs.length + 1}`;
     inp.maxLength = 100;
     cont.appendChild(inp);
     if (inputs.length + 1 >= 4) document.getElementById('btn-add-opcion').classList.add('hidden');
@@ -2041,13 +2050,13 @@ function _renderChartMensual(meses) {
         const h = Math.max(3, Math.round((m.total / max) * 85));
         const x = 20 + i * gap + (gap - barW) / 2;
         const y = 100 - h;
-        ctx.fillStyle = '#F4A261';
+        ctx.fillStyle = '#B5445C';
         ctx.beginPath();
         ctx.roundRect ? ctx.roundRect(x, y, barW, h, 4) : ctx.rect(x, y, barW, h);
         ctx.fill();
         // value on tallest
         if (m.total === max) {
-            ctx.fillStyle = '#F4A261';
+            ctx.fillStyle = '#B5445C';
             ctx.font = 'bold 10px DM Sans, sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText('$' + m.total.toFixed(0), x + barW / 2, y - 4);

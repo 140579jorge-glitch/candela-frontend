@@ -208,7 +208,7 @@
 <div class="pt-14">
     <div id="banner-wrap" class="relative w-full overflow-hidden" style="height:200px;background:linear-gradient(140deg,var(--t-a,#B5445C),var(--t-b,#F2B8C8))">
         <div id="banner-monogram" class="absolute inset-0 flex items-center justify-center pointer-events-none select-none font-display font-semibold" style="font-size:9rem;line-height:1;color:rgba(255,255,255,.16)">?</div>
-        <img id="banner-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover hidden">
+        <img id="banner-img" alt="" class="absolute inset-0 w-full h-full object-cover hidden">
         <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent 45%,rgba(20,8,2,.42) 100%)"></div>
     </div>
 </div>
@@ -222,7 +222,7 @@
             <div id="avatar-wrap" class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden flex items-center justify-center text-4xl font-bold text-white transition-all"
                 style="background:linear-gradient(135deg,var(--t-b,#FAF2F5),var(--t-a,#B5445C))">
                 <span id="avatar-initial">?</span>
-                <img id="avatar-img" src="" alt="" class="w-full h-full object-cover hidden">
+                <img id="avatar-img" alt="" class="w-full h-full object-cover hidden">
             </div>
         </div>
     </div>
@@ -294,15 +294,15 @@
 
     <!-- Tabs: Fotos / Videos / Medios -->
     <div class="flex border-b border-c-border mb-4 gap-0">
-        <button class="tab active pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" data-on-click="switchTab('fotos',this)">
+        <button class="tab active py-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" data-on-click="switchTab('fotos',this)">
             <span class="ms ms-fill" style="font-size:16px;vertical-align:-3px;">photo_camera</span> Fotos
             <span id="tab-count-fotos" class="ml-1 text-xs opacity-60"></span>
         </button>
-        <button class="tab pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" data-on-click="switchTab('videos',this)">
+        <button class="tab py-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" data-on-click="switchTab('videos',this)">
             <span class="ms" style="font-size:16px;vertical-align:-3px;">videocam</span> Videos
             <span id="tab-count-videos" class="ml-1 text-xs opacity-60"></span>
         </button>
-        <button class="tab pb-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" data-on-click="switchTab('medios',this)">
+        <button class="tab py-3 px-5 text-sm text-c-soft border-b-2 border-transparent transition-all" data-on-click="switchTab('medios',this)">
             <span class="ms" style="font-size:16px;vertical-align:-3px;">grid_view</span> Medios
             <span id="tab-count-medios" class="ml-1 text-xs opacity-60"></span>
         </button>
@@ -319,9 +319,12 @@
         <div class="skeleton" style="aspect-ratio:1"></div>
     </div>
 
-    <p id="empty-content" class="hidden text-center text-c-soft text-sm py-10">
-        Esta creadora no ha publicado contenido aún.
-    </p>
+    <div id="empty-content" class="hidden text-center py-12 px-4">
+        <span class="material-symbols-outlined" style="font-size:40px;color:#CF6278">hourglass_top</span>
+        <p class="font-display text-lg text-c-text mt-2">Todavía no publica nada</p>
+        <p class="text-c-soft text-sm mt-1 mb-5">Sigue su perfil para ser de los primeros en verlo cuando suba contenido.</p>
+        <a href="explorar.html" class="inline-block text-sm font-bold px-5 py-2.5 rounded-full border-2 border-c-accent text-c-accent">Ver otras creadoras</a>
+    </div>
 
     <!-- Packs de la creadora -->
     <div id="packs-section" class="hidden mt-6 mb-8">
@@ -361,7 +364,7 @@
     </div>
     <!-- Media -->
     <div class="flex-1 relative flex items-center justify-center overflow-hidden" data-on-click="avanzarStory(event)">
-        <img id="sv-img" src="" alt="" class="max-h-full max-w-full object-contain hidden">
+        <img id="sv-img" alt="" class="max-h-full max-w-full object-contain hidden">
         <video id="sv-video" src="" class="max-h-full max-w-full object-contain hidden" muted playsinline></video>
         <!-- Tap zones -->
         <div class="absolute inset-y-0 left-0 w-1/3" data-on-click="retrocederStory(event)"></div>
@@ -563,14 +566,14 @@
         </div>
         <div class="mb-4">
             <input id="propina-monto-custom" type="number" min="1" max="500" step="1" placeholder="Otro monto ($)"
-                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all"
+                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all"
                 data-on-input="setPropinaMonto(this.value)">
         </div>
 
         <div class="mb-4">
             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Mensaje (opcional)</label>
             <textarea id="propina-mensaje" rows="2" maxlength="500" placeholder="Escribe algo bonito..."
-                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all resize-none"></textarea>
         </div>
 
         <div class="bg-c-bg border border-c-border rounded-xl p-4 mb-4">
@@ -612,7 +615,7 @@
         <div class="mb-4">
             <label class="block text-[11px] font-bold text-c-soft uppercase tracking-wider mb-1.5">Tu mensaje</label>
             <textarea id="dm-contenido" rows="4" maxlength="2000" placeholder="Escribe tu mensaje aquí..."
-                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-orange-100 transition-all resize-none"></textarea>
+                class="w-full px-4 py-2.5 rounded-xl border border-c-border text-sm focus:outline-none focus:border-c-accent focus:ring-2 focus:ring-c-rose/50 transition-all resize-none"></textarea>
             <p class="text-[11px] text-c-soft mt-1 text-right"><span id="dm-char-count">0</span>/2000</p>
         </div>
 
@@ -651,7 +654,7 @@
         <span class="ms" style="color:#fff;font-size:20px">close</span>
     </button>
     <div style="position:relative;display:inline-block;" id="visor-wrap">
-        <img id="visor-img" src="" alt="" style="display:none">
+        <img id="visor-img" alt="" style="display:none">
         <video id="visor-video" controls controlsList="nodownload nofullscreen noplaybackrate" disablePictureInPicture style="display:none" data-on-contextmenu="return false"></video>
         <!-- Watermark en visor -->
         <div class="wm-layer" id="visor-wm"></div>

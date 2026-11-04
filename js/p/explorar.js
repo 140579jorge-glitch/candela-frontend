@@ -104,13 +104,14 @@ function mostrarCtaCreadora() {
     el.id = 'cta-creadora';
     el.className = 'card-creadora';
     el.style.background = 'linear-gradient(150deg,#1A0A06,#3D1A0A)';
-    el.onclick = () => window.location.href = '../index.html';
+    el.onclick = () => window.location.href = 'gana-con-candela.html';
+    el.style.cursor = 'pointer';
     el.innerHTML =
-        '<div class="p-5 text-center">' +
-            '<span class="ms" style="font-size:30px;color:#B5445C">auto_awesome</span>' +
-            '<p class="text-white font-bold text-sm mt-2 mb-1">&iquest;Eres creadora?</p>' +
-            '<p class="text-white/60 text-xs mb-3">S&eacute; de las primeras de tu pa&iacute;s. 84% para ti.</p>' +
-            '<span class="inline-block text-[11px] font-extrabold px-4 py-1.5 rounded-full" style="background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff">Empezar gratis</span>' +
+        '<div class="p-5 text-center flex-1 flex flex-col items-center justify-center">' +
+            '<span class="ms" style="font-size:36px;color:#F2B8C8">auto_awesome</span>' +
+            '<p class="text-white font-bold text-base mt-3 mb-1">&iquest;Eres creadora?</p>' +
+            '<p class="text-white/80 text-sm mb-4">S&eacute; de las primeras de tu pa&iacute;s. 84% para ti.</p>' +
+            '<span class="inline-block text-xs font-extrabold px-5 py-2.5 rounded-full" style="background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff">Empezar gratis</span>' +
         '</div>';
     document.getElementById('grid-creadoras').appendChild(el);
 }

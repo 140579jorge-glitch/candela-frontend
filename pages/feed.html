@@ -16,7 +16,7 @@
         .ms-fill { font-variation-settings:'FILL' 1; }
         /* Feed card */
         .feed-card { background:#fff;border:1px solid #F5E8EF;border-radius:1.25rem;overflow:hidden;transition:box-shadow .2s; }
-        .feed-card:hover { box-shadow:0 8px 32px rgba(244,162,97,.12); }
+        .feed-card:hover { box-shadow:0 8px 32px rgba(181,68,92,.12); }
         /* Media protegida */
         .media-wrap { position:relative;overflow:hidden;background:#FAF2F5; }
         .media-wrap img, .media-wrap video {
@@ -35,7 +35,7 @@
         /* Contenido bloqueado */
         .locked-blur { filter:blur(22px); transform:scale(1.12); }
         .locked-scrim { position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;background:linear-gradient(180deg,rgba(26,10,6,.12) 0%,rgba(26,10,6,.5) 100%); }
-        .locked-chip { font-weight:800;font-size:13px;padding:8px 16px;border-radius:999px;background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;box-shadow:0 4px 16px rgba(244,162,97,.5); }
+        .locked-chip { font-weight:800;font-size:13px;padding:8px 16px;border-radius:999px;background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;box-shadow:0 4px 16px rgba(181,68,92,.5); }
         .locked-chip--subs { background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3); }
         /* Skeleton */
         @keyframes shimmer { 0%{background-position:-300% 0} 100%{background-position:300% 0} }
@@ -46,7 +46,7 @@
 <body class="bg-c-bg text-c-text antialiased min-h-screen pb-24">
 
 <!-- TopBar -->
-<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(244,162,97,.07)">
+<header class="glass fixed top-0 w-full z-50 border-b border-c-border" style="box-shadow:0 2px 16px rgba(181,68,92,.07)">
     <div class="flex items-center justify-between h-14 px-4 max-w-2xl lg:max-w-5xl mx-auto">
         <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
         <div class="flex items-center gap-2">
@@ -149,7 +149,7 @@
 </div>
 
 <!-- Bottom nav -->
-<nav class="glass fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(244,162,97,.1)">
+<nav class="glass fixed bottom-0 w-full z-50 border-t border-c-border rounded-t-2xl" style="box-shadow:0 -4px 20px rgba(181,68,92,.1)">
     <div class="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
         <button data-on-click="window.scrollTo({top:0,behavior:'smooth'})" class="flex flex-col items-center text-c-accent gap-0.5">
             <span class="ms ms-fill">home</span><span class="text-[10px] font-bold">Inicio</span>

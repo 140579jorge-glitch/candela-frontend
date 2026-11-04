@@ -43,7 +43,7 @@ function irPaso2() {
 
 function irPaso3() {
     if (!document.getElementById('r-artistico').value.trim()) { toast('Ingresa tu nombre artistico', 'error'); return; }
-    if (!paisSel) { toast('Selecciona tu pais', 'error'); return; }
+    if (!paisSel) { toast('Selecciona tu país', 'error'); return; }
     irPaso(3);
 }
 

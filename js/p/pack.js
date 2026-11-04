@@ -68,7 +68,7 @@ async function init() {
         modeEl.className = 'text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700';
     } else {
         modeEl.textContent = 'PPV — Ver en plataforma';
-        modeEl.className = 'text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-orange-700';
+        modeEl.className = 'text-xs font-bold px-3 py-1 rounded-full bg-c-rose/30 text-c-accent';
     }
 
     // Preview — portada borrosa + placeholders para el resto

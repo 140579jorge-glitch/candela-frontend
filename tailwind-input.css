@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Zonas tactiles comodas (min ~40px) en pies de pagina y enlaces sueltos de texto */
-footer a { display: inline-block; padding-block: .6rem; }
+footer a { display: inline-block; padding-block: .75rem; }
 footer a[aria-label] { padding: .65rem; margin: -.65rem; }
 
 /* Accesibilidad y respuesta tactil */
@@ -13,3 +13,5 @@ footer a[aria-label] { padding: .65rem; margin: -.65rem; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+input[type=radio], input[type=checkbox], input[type=range] { accent-color: #B5445C; }
