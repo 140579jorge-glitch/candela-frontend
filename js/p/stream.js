@@ -280,7 +280,7 @@ function actualizarBalance(b) {
 
 function mostrarLoginPrompt() {
     document.getElementById('loading').innerHTML = `
-        <div style="font-size:48px;margin-bottom:16px">ðŸ”’</div>
+        <span class="material-symbols-outlined" style="font-size:48px;margin-bottom:16px;display:block;color:#F2B8C8">lock</span>
         <p style="color:rgba(255,255,255,.8);font-size:15px;font-weight:700;margin-bottom:4px">Inicia sesión para ver este stream</p>
         <p style="color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px">${streamInfo.precio_entrada > 0 ? 'Este stream tiene precio de entrada' : ''}</p>
         <button data-on-click="location.href='../index.html?login=1'" style="background:linear-gradient(135deg,#B5445C,#F2B8C8);color:#fff;font-weight:800;padding:13px 32px;border-radius:20px;font-size:15px;border:none;cursor:pointer;font-family:Nunito,sans-serif">
@@ -294,7 +294,7 @@ function mostrarError(msg) {
     if (hls) { hls.destroy(); hls = null; }
     document.getElementById('loading').style.display = 'flex';
     document.getElementById('loading').innerHTML = `
-        <div style="font-size:48px;margin-bottom:14px">ðŸ“º</div>
+        <span class="material-symbols-outlined" style="font-size:48px;margin-bottom:14px;display:block;color:#F2B8C8">live_tv</span>
         <p style="color:rgba(255,255,255,.85);font-size:16px;font-weight:700">${esc(msg)}</p>
         <button data-on-click="volverAtras()" style="margin-top:22px;color:#B5445C;font-size:14px;background:none;border:none;cursor:pointer;font-family:Nunito,sans-serif">Volver</button>
     `;

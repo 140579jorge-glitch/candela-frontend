@@ -114,8 +114,8 @@ async function cargar() {
     renderCuenta();
 
     // Mostrar acceso al panel de agente si el usuario tiene rol recargador
-    candela._req('GET', '/api/recargadores/mi-balance').then(() => {
-        document.getElementById('nav-agente').style.display = 'flex';
+    candela._req('GET', '/api/auth/me').then(me => {
+        if (me && me.es_recargador) document.getElementById('nav-agente').style.display = 'flex';
     }).catch(() => {});
 }
 
