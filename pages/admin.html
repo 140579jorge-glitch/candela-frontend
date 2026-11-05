@@ -534,13 +534,13 @@
                         <p class="text-[9px] text-c-soft uppercase">a cobrar en S/</p>
                     </div>
                 </div>
-                <div class="bg-white border border-c-border rounded-2xl p-4" data-pais="brasil">
-                    <p class="text-sm font-bold mb-2">🇧🇷 Brasil</p>
-                    <label class="text-[10px] text-c-soft block mb-1">R$/USD</label>
-                    <input class="calc-tasa w-full border border-c-border rounded-lg px-2 py-1.5 text-xs font-bold outline-none focus:border-c-accent font-body mb-2" type="number" value="5.18" step="0.01" data-on-input="calcularRecargas()">
+                <div class="bg-white border border-c-border rounded-2xl p-4" data-pais="venezuela">
+                    <p class="text-sm font-bold mb-2">🇻🇪 Venezuela</p>
+                    <label class="text-[10px] text-c-soft block mb-1">Bs.S/USD (paralelo)</label>
+                    <input class="calc-tasa w-full border border-c-border rounded-lg px-2 py-1.5 text-xs font-bold outline-none focus:border-c-accent font-body mb-2" type="number" value="1010" step="1" data-on-input="calcularRecargas()">
                     <div class="bg-green-50 rounded-lg py-2 text-center">
                         <p class="calc-resultado text-base font-bold text-green-700">—</p>
-                        <p class="text-[9px] text-c-soft uppercase">a cobrar en R$ (PIX)</p>
+                        <p class="text-[9px] text-c-soft uppercase">a cobrar en Bs.S</p>
                     </div>
                 </div>
             </div>
@@ -550,7 +550,7 @@
                 <p id="tasas-estado" class="text-xs text-c-soft"></p>
             </div>
             <p class="text-xs text-c-soft mt-2 max-w-2xl">Estas tasas son las que ve el fan en su vista previa antes de pedir la recarga por WhatsApp — guardalas apenas las actualices, si no, el fan va a ver un número viejo.</p>
-            <p class="text-xs text-c-soft mt-4 max-w-2xl">Fórmula: (monto USD + fee fijo) × tasa del día × (1 + margen%). Bolivia y Argentina usan tasa paralela/P2P, no la oficial. Brasil se cobra vía PIX, no QR bancario.</p>
+            <p class="text-xs text-c-soft mt-4 max-w-2xl">Fórmula: (monto USD + fee fijo) × tasa del día × (1 + margen%). Bolivia, Argentina y Venezuela usan tasa paralela/P2P, no la oficial. Las tasas se renuevan solas cada 3 horas; si guardas una a mano, se respeta 12 horas.</p>
         </section>
 
         <!-- MENSAJES -->

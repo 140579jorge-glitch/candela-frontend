@@ -43,7 +43,7 @@ async function actualizarLinkWhatsapp(pais, costoTexto) {
     let user = null;
     try { user = JSON.parse(localStorage.getItem('candela_user')); } catch {}
     const base = 'https://wa.me/18457098595?text=';
-    const nombresPais = { bolivia: 'Bolivia', argentina: 'Argentina', peru: 'Peru' };
+    const nombresPais = { bolivia: 'Bolivia', argentina: 'Argentina', peru: 'Peru', venezuela: 'Venezuela' };
     const detalle = `Monto deseado: $${montoQR} USD\nPaís: ${nombresPais[pais] || pais}${costoTexto ? `\nCosto estimado: ${costoTexto}` : ''}`;
 
     if (!user?.email) {

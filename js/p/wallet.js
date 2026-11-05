@@ -104,7 +104,7 @@ async function actualizarLinkWhatsapp(pais, costoTexto) {
     if (!link) return;
     const user = candela.auth.user();
     const base = 'https://wa.me/18457098595?text=';
-    const nombresPais = { bolivia: 'Bolivia', argentina: 'Argentina', peru: 'Peru' };
+    const nombresPais = { bolivia: 'Bolivia', argentina: 'Argentina', peru: 'Peru', venezuela: 'Venezuela' };
     const detalle = `Monto deseado: $${montoQR} USD\nPaís: ${nombresPais[pais] || pais}${costoTexto ? `\nCosto estimado: ${costoTexto}` : ''}`;
 
     if (!user?.email) {
