@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagos a creadoras — Candela</title>
+    <meta name="description" content="Cuánto ha pagado Candela a sus creadoras, cuándo se paga y qué descuentos hay. Cifras reales y actualizadas, sin nombres.">
+    <meta property="og:title" content="Pagos a creadoras — Candela">
+    <meta property="og:description" content="Transparencia de pagos de Candela: totales reales, calendario y descuentos.">
+    <meta property="og:image" content="https://clubcandela.com/img/og-cover.jpg">
+    <meta property="og:url" content="https://www.clubcandela.com/pages/pagos-creadoras.html">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body{font-family:'Nunito',sans-serif;}
+        .logo-text{background:linear-gradient(90deg,#B5445C,#F2B8C8,#D4869D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        h2{font-size:1.1rem;font-weight:700;margin-top:2rem;margin-bottom:.5rem;color:#2D2D2D;}
+        p,li{color:#7B4D5E;line-height:1.7;font-size:.925rem;}
+        strong{color:#2D2D2D;}
+        .cifra{background:#fff;border:1px solid #F5E8EF;border-radius:18px;padding:1rem;text-align:center;}
+        .cifra .n{font-family:'Playfair Display',serif;font-size:1.7rem;color:#B5445C;line-height:1.1;}
+        .cifra .t{font-size:.72rem;color:#7B4D5E;margin-top:.3rem;}
+        table{width:100%;border-collapse:collapse;font-size:.88rem;margin:.5rem 0 1rem;}
+        td,th{border-bottom:1px solid #F5E8EF;padding:.55rem .4rem;text-align:left;color:#7B4D5E;}
+        th{color:#2D2D2D;font-weight:700;}
+    </style>
+    <script src="/js/ui-events.js"></script>
+</head>
+<body class="bg-c-bg text-c-text min-h-screen">
+<header class="bg-white border-b border-c-border sticky top-0 z-10">
+    <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+        <a href="../index.html" class="font-display text-xl font-semibold logo-text">Candela</a>
+        <a href="gana-con-candela.html" class="text-c-soft text-sm hover:text-c-text">← Para creadoras</a>
+    </div>
+</header>
+<main class="max-w-2xl mx-auto px-5 py-10">
+    <h1 class="font-display text-3xl font-semibold mb-2">Pagos a creadoras</h1>
+    <p class="text-c-soft text-sm mb-6">Aquí se ve lo que Candela ha pagado de verdad. Son totales, sin nombres ni datos personales. Se actualiza solo.</p>
+
+    <div id="aviso-inicio" class="hidden rounded-2xl border border-c-border bg-c-champagne px-4 py-4 mb-5">
+        <p class="font-bold text-c-text text-sm mb-1">Estamos empezando</p>
+        <p class="text-sm">Candela es una plataforma nueva y todavía no hemos procesado retiros. No vamos a inventar cifras: cuando se pague el primer retiro, aparecerá aquí, y se irá actualizando con cada uno.</p>
+    </div>
+
+    <div id="cifras" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-2">
+        <div class="cifra"><div class="n" id="c-total">...</div><div class="t">USDT pagados</div></div>
+        <div class="cifra"><div class="n" id="c-retiros">...</div><div class="t">retiros pagados</div></div>
+        <div class="cifra"><div class="n" id="c-creadoras">...</div><div class="t">creadoras pagadas</div></div>
+        <div class="cifra"><div class="n" id="c-horas">...</div><div class="t">tiempo típico de pago</div></div>
+    </div>
+    <p id="fechas" class="text-xs text-c-soft"></p>
+
+    <h2>Cuándo y cómo se paga</h2>
+    <ul class="list-disc pl-6">
+        <li>Los retiros se piden los <strong>lunes</strong> (hora de Bolivia) sin costo adicional.</li>
+        <li>Se pagan en <strong>USDT por la red Polygon</strong>, a la billetera que la creadora tiene guardada.</li>
+        <li>El mínimo de retiro es de <strong id="min-retiro">$30</strong>.</li>
+        <li>Se procesan en <strong>hasta 48 horas hábiles</strong>.</li>
+    </ul>
+
+    <h2>Qué se descuenta</h2>
+    <table>
+        <thead><tr><th>Concepto</th><th>Cuánto</th></tr></thead>
+        <tbody>
+            <tr><td>Comisión de Candela</td><td>16% de cada venta, la creadora se queda con el 84%</td></tr>
+            <tr><td>Comisión de red al retirar</td><td>1,5% del monto retirado</td></tr>
+            <tr><td>Retiro fuera de lunes</td><td>$2 adicionales, se avisan y se confirman antes de enviar</td></tr>
+            <tr><td>Cobro de registro</td><td>Ninguno</td></tr>
+            <tr><td>Inactividad</td><td>0,5% mensual del saldo, solo si pasan más de 90 días sin retirar</td></tr>
+        </tbody>
+    </table>
+    <p class="text-xs">Un ejemplo con números: si una creadora retira $100 un lunes, recibe $98,50 (se descuentan $1,50 de red).</p>
+
+    <h2>Cómo se calculan estas cifras</h2>
+    <p>Se cuentan solo los retiros que el equipo de Candela marcó como pagados. El monto es el que la creadora solicitó, antes del descuento de red. El tiempo típico es la mediana entre el pedido y el pago. No se incluyen retiros rechazados ni pendientes.</p>
+
+    <h2>¿Dudas?</h2>
+    <p>Escríbenos a <a href="mailto:soporte@clubcandela.com" class="text-c-accent font-bold">soporte@clubcandela.com</a>. Si eres creadora y tu retiro tarda más de lo indicado, avísanos con la fecha de tu solicitud.</p>
+</main>
+
+<footer class="border-t border-c-border bg-white px-5 py-8 mt-10">
+  <div class="max-w-2xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-xs text-c-soft mb-5">
+      <a href="/pages/terminos.html" class="hover:text-c-accent transition-colors">Términos de Servicio</a>
+      <a href="/pages/privacidad.html" class="hover:text-c-accent transition-colors">Privacidad</a>
+      <a href="/pages/normas.html" class="hover:text-c-accent transition-colors">Normas de Contenido</a>
+      <a href="/pages/aviso-legal.html" class="hover:text-c-accent transition-colors">Aviso Legal</a>
+      <a href="/pages/2257.html" class="hover:text-c-accent transition-colors">18 U.S.C. § 2257</a>
+      <a href="/pages/proteccion-menores.html" class="hover:text-c-accent transition-colors">Protección a Menores</a>
+      <a href="/pages/dmca.html" class="hover:text-c-accent transition-colors">DMCA / Copyright</a>
+      <a href="mailto:soporte@clubcandela.com" class="hover:text-c-accent transition-colors">Soporte</a>
+    </div>
+    <p class="text-[11px] text-c-soft">© 2026 Candela. Plataforma exclusiva para mayores de 18 años.</p>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/p/pagos-creadoras.js"></script>
+<script src="/js/cookie-consent.js"></script>
+<script src="/js/pwa-install.js"></script>
+</body>
+</html>
