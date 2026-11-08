@@ -855,6 +855,8 @@ async function cargarReferidas() {
         const activas = data.referidas.filter(r => r.estado === 'activa').length;
         document.getElementById('ref-activas').textContent = activas;
         document.getElementById('ref-balance').textContent = `$${(data.balance_referidos||0).toFixed(2)}`;
+        const retEl = document.getElementById('ref-retenido');
+        if (retEl) retEl.textContent = data.retenido > 0 ? `$${Number(data.retenido).toFixed(2)} retenido` : '';
         const lista = document.getElementById('lista-referidas');
         if (!data.referidas.length) {
             lista.innerHTML = '<p class="text-center text-c-soft text-sm py-8">Aun no tienes referidas. Comparte tu enlace para empezar a ganar.</p>';
@@ -864,10 +866,11 @@ async function cargarReferidas() {
             <div class="flex items-center justify-between px-5 py-3.5 border-b border-c-border last:border-0">
                 <div>
                     <p class="font-semibold text-sm">${esc(r.nombre_artistico)}</p>
-                    <p class="text-xs text-c-soft">@${esc(r.slug)}</p>
+                    <p class="text-xs text-c-soft">@${esc(r.slug)}${r.meses_restantes != null ? ` · ${r.meses_restantes > 0 ? 'faltan ' + r.meses_restantes + ' mes(es)' : 'ventana cerrada'}` : ' · aún sin ventas'}</p>
                 </div>
                 <div class="text-right">
                     <p class="text-sm font-bold text-c-accent">$${(Number(r.total_comision_generada)||0).toFixed(2)}</p>
+                    ${r.retenido > 0 ? `<p class="text-[10px] text-c-soft">$${Number(r.retenido).toFixed(2)} retenido</p>` : ''}
                     <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${r.estado==='activa'?'bg-green-100 text-green-700':'bg-amber-100 text-amber-700'}">${esc(r.estado)}</span>
                 </div>
             </div>

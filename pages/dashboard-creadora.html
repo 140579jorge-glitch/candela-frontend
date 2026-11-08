@@ -884,7 +884,16 @@
         <!-- SECCION: REFERIDAS -->
         <section id="sec-referidas" class="dash-section">
             <h2 class="font-display text-2xl font-semibold mb-1">Programa de referidas</h2>
-            <p class="text-c-soft text-sm mb-5">Invita a otras creadoras y gana el <strong>1% de todo lo que generen, de por vida.</strong></p>
+            <p class="text-c-soft text-sm mb-3">Invita a otras creadoras y gana el <strong>5% de sus ventas durante sus primeros 6 meses</strong>, desde su primera venta.</p>
+            <div class="max-w-lg rounded-2xl border border-c-border bg-c-champagne px-4 py-3 mb-5 text-xs text-c-soft leading-relaxed">
+                <ul class="list-disc pl-4 space-y-1">
+                    <li><b class="text-c-text">Bono de $10</b> si tu referida llega a $100 en ventas durante sus primeros 30 días.</li>
+                    <li>Tope de <b class="text-c-text">$500</b> por cada referida, bono incluido.</li>
+                    <li>Lo ganado queda <b class="text-c-text">retenido</b> hasta que tu referida tenga su primer retiro pagado. Entonces pasa a tu saldo.</li>
+                    <li>Las dos deben tener la identidad aprobada y billeteras de retiro distintas.</li>
+                    <li>Esto sale de la comisión de Candela: tu referida recibe lo mismo que cualquier otra creadora.</li>
+                </ul>
+            </div>
 
             <!-- Tu enlace -->
             <div class="bg-white border border-c-border rounded-2xl p-5 mb-5 shadow-sm max-w-lg">
@@ -893,7 +902,7 @@
                     <input id="link-ref" readonly class="flex-1 px-4 py-2.5 rounded-xl border border-c-border text-sm bg-c-bg text-c-text" value="">
                     <button data-on-click="copiarLink()" class="c-btn text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm">Copiar</button>
                 </div>
-                <p class="text-xs text-c-soft mt-2">Comparte este link con otras creadoras. Si se registran con el, quedan vinculadas a ti para siempre.</p>
+                <p class="text-xs text-c-soft mt-2">Comparte este enlace con otras creadoras. Si se registran con él, quedan vinculadas a ti.</p>
             </div>
 
             <!-- Stats -->
@@ -908,7 +917,7 @@
                 </div>
                 <div class="bg-white border border-c-border rounded-2xl p-4 text-center shadow-sm">
                     <p class="text-2xl font-bold text-c-accent" id="ref-balance">$0</p>
-                    <p class="text-xs text-c-soft mt-1">Ganado</p>
+                    <p class="text-xs text-c-soft mt-1">Ganado <span id="ref-retenido" class="block text-[10px]"></span></p>
                 </div>
             </div>
 
