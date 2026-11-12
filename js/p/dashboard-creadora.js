@@ -203,6 +203,15 @@ async function cargarGanancias() {
         document.getElementById('g-total').textContent = fmt(g.total_ganancias);
         document.getElementById('g-subs').textContent = g.suscripciones_activas;
 
+        const badgeFundadora = document.getElementById('g-fundadora-badge');
+        if (g.fundadora_hasta) {
+            document.getElementById('g-fundadora-pct').textContent = (100 - g.comision_pct) + '%';
+            document.getElementById('g-fundadora-fecha').textContent = new Date(g.fundadora_hasta).toLocaleDateString('es-BO', { year: 'numeric', month: 'long', day: 'numeric' });
+            badgeFundadora?.classList.remove('hidden');
+        } else {
+            badgeFundadora?.classList.add('hidden');
+        }
+
         // Mostrar metodo de retiro configurado
         const metodo = p.metodo_retiro;
         const desc = document.getElementById('ret-metodo-desc');
